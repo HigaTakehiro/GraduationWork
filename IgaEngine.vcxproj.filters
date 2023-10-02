@@ -343,7 +343,6 @@
     <ClInclude Include="Engine\Object2d\Collision2d.h">
       <Filter>ソース ファイル\Engine\Object2d</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Scenes\SelectScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
