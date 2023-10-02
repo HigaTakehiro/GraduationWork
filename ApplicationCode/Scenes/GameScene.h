@@ -16,6 +16,7 @@
 #include "SceneManager.h"
 #include "TextDraw.h"
 #include "JsonLoader.h"
+#include "Player.h"
 
 class GameScene : public BaseScene
 {
@@ -57,6 +58,8 @@ private: //メンバ変数
 	std::unique_ptr<LightGroup> light_;
 	//カメラ
 	std::unique_ptr<Camera> camera_;
+	//プレイヤー
+	Player* player_;
 
 	//テキスト描画
 	TextDraw* text_;

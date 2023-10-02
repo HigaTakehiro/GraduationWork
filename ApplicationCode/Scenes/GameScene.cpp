@@ -36,6 +36,8 @@ void GameScene::Initialize()
 	//3dオブジェクト初期化
 	ground_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 	ground_->SetScale({ 0.2f, 0.2f, 0.2f });
+	player_ = new Player;
+	player_->Initialize();
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -44,6 +46,7 @@ void GameScene::Initialize()
 void GameScene::Update()
 {
 	ground_->Update();
+	player_->Update();
 
 	camera_->SetEye(cameraPos_);
 	light_->Update();
@@ -65,6 +68,7 @@ void GameScene::Draw()
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	ground_->Draw();
+	player_->Draw();
 	Object3d::PostDraw();
 
 	//スプライト描画処理(UI等)
@@ -92,6 +96,8 @@ void GameScene::Draw()
 void GameScene::Finalize()
 {
 	safe_delete(text_);
+	player_->Finalize();
+	safe_delete(player_);
 }
 
 void GameScene::SceneChange()
