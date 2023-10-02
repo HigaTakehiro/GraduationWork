@@ -10,6 +10,15 @@ void ResultScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
+	//カメラ初期化
+	cameraPos_ = { 0, 8, 30 };
+	targetPos_ = { 0, 0, 0 };
+
+	camera_ = std::make_unique<Camera>();
+	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
+
+	//ライト初期化
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -19,11 +28,15 @@ void ResultScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
+	//3dオブジェクト初期化
+
 	postEffectNo_ = PostEffect::NONE;
 }
 
 void ResultScene::Update()
 {
+	light_->Update();
+	camera_->SetEye(cameraPos_);
 	//シーン切り替え
 	SceneChange();
 }

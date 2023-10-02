@@ -5,6 +5,9 @@
 
 void GameScene::Initialize()
 {
+	ShowCursor(true);
+	//ポストエフェクト初期化
+	//画面大きさ設定
 	const Vector3 LB = { -1.0f, -1.0f, 0.0f };
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
@@ -12,6 +15,15 @@ void GameScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
+	//カメラ初期化
+	cameraPos_ = { 0, 8, 30 };
+	targetPos_ = { 0, 0, 0 };
+
+	camera_ = std::make_unique<Camera>();
+	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
+
+	//ライト初期化
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -21,12 +33,20 @@ void GameScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
+	//3dオブジェクト初期化
+	ground_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+	ground_->SetScale({ 0.2f, 0.2f, 0.2f });
+
 	postEffectNo_ = PostEffect::NONE;
 
 }
 
 void GameScene::Update()
 {
+	ground_->Update();
+
+	camera_->SetEye(cameraPos_);
+	light_->Update();
 	//シーン切り替え
 	SceneChange();
 }
@@ -44,6 +64,7 @@ void GameScene::Draw()
 
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	ground_->Draw();
 	Object3d::PostDraw();
 
 	//スプライト描画処理(UI等)
