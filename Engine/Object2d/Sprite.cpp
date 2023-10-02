@@ -442,7 +442,7 @@ void Sprite::Draw() {
 	color.w = alpha;
 
 	if (SUCCEEDED(result)) {
-		constMap->mat = matWorld;
+		constMap->mat = matWorld * matProjection;
 		constMap->color = color;
 		this->constBuff->Unmap(0, nullptr);
 	}
