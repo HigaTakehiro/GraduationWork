@@ -55,7 +55,15 @@ private: //メンバ変数
 	PostEffect::PostEffectNo postEffectNo_;
 	//ライト
 	std::unique_ptr<LightGroup> light_;
+	//カメラ
+	std::unique_ptr<Camera> camera_;
+
 	//テキスト描画
 	TextDraw* text_;
+	//仮地面
+	std::unique_ptr<Object3d> ground_;
+	//カメラ座標
+	Vector3 cameraPos_;
+	//注視点
+	Vector3 targetPos_;
 };
-
