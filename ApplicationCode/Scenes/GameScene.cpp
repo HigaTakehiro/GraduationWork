@@ -2,6 +2,7 @@
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
+#include "Shapes.h"
 
 void GameScene::Initialize()
 {
@@ -47,6 +48,19 @@ void GameScene::Update()
 {
 	ground_->Update();
 	player_->Update();
+
+	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
+		cameraPos_.z += 1.0f;
+	}
+	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
+		cameraPos_.z -= 1.0f;
+	}
+	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
+		cameraPos_.x += 1.0f;
+	}
+	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
+		cameraPos_.x -= 1.0f;
+	}
 
 	camera_->SetEye(cameraPos_);
 	light_->Update();
