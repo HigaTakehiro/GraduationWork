@@ -18,6 +18,7 @@
 #include "JsonLoader.h"
 #include "Player.h"
 
+#include"BaseEnemy.h"
 class GameScene : public BaseScene
 {
 public: //メンバ関数
@@ -48,6 +49,8 @@ private: //メンバ関数
 	/// シーン切り替え処理
 	/// </summary>
 	void SceneChange();
+
+	BaseEnemy* ene;
 
 private: //メンバ変数
 	//ポストエフェクト

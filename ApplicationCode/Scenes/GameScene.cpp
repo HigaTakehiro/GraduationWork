@@ -2,8 +2,7 @@
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
-#include "Shapes.h"
-
+#include"NormalEnemyA.h"
 void GameScene::Initialize()
 {
 	ShowCursor(true);
@@ -42,6 +41,8 @@ void GameScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
+	ene = new NormalEnemyA();
+	ene->Init();
 }
 
 void GameScene::Update()
@@ -64,6 +65,7 @@ void GameScene::Update()
 
 	camera_->SetEye(cameraPos_);
 	light_->Update();
+	ene->Upda(camera_.get());
 	//シーン切り替え
 	SceneChange();
 }
@@ -85,6 +87,7 @@ void GameScene::Draw()
 	player_->Draw();
 	Object3d::PostDraw();
 
+	ene->Draw();
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
@@ -120,6 +123,6 @@ void GameScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
+		//SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
 }

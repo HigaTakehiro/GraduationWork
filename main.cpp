@@ -48,6 +48,7 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 
 	//Sprite & DebugTextの初期化
 	Sprite::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+	Texture::StaticInitialize(dxCommon, WinApp::window_width, WinApp::window_height);
 
 	Sprite::LoadTexture(debugTextNumber, L"Engine/Resources/Images/debugfont.png");
 	DebugText debugText; //デバッグテキスト表示用クラス

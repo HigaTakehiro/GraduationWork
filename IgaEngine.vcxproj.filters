@@ -84,6 +84,15 @@
     <Filter Include="ソース ファイル\Engine\Object3d">
       <UniqueIdentifier>{ba496a77-61e5-4391-ba80-8710154294fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\Texture">
+      <UniqueIdentifier>{2428a05e-5ceb-4f60-bcbe-4b3ac1355f78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Enemies\Base">
+      <UniqueIdentifier>{83777728-e2c2-4d56-b4b9-35ac310b06de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Enemies\Derivative">
+      <UniqueIdentifier>{4c8aaada-19f4-464e-b964-9216abf7f7fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -205,6 +214,15 @@
     </ClCompile>
     <ClCompile Include="Engine\Object2d\Collision2d.cpp">
       <Filter>ソース ファイル\Engine\Object2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Texture\Texture.cpp">
+      <Filter>ソース ファイル\Engine\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\BaseEnemy.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Enemies\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Enemies\Derivative</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -349,6 +367,15 @@
     <ClInclude Include="Engine\Object2d\Collision2d.h">
       <Filter>ソース ファイル\Engine\Object2d</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Texture\Texture.h">
+      <Filter>ソース ファイル\Engine\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\BaseEnemy.h">
+      <Filter>ソース ファイル\ApplicationCode\Enemies\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h">
+      <Filter>ソース ファイル\ApplicationCode\Enemies\Derivative</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
@@ -376,6 +403,9 @@
     </None>
     <None Include="Engine\Resources\shaders\Object3d\obj\OBJShaderHeader.hlsli">
       <Filter>シェーダーファイル\Object3d\obj</Filter>
+    </None>
+    <None Include="Engine\Resources\shaders\Object2d\Texture.hlsli">
+      <Filter>シェーダーファイル\Object2d</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -447,6 +477,12 @@
     </FxCompile>
     <FxCompile Include="Engine\Resources\shaders\Object3d\obj\WaveVS.hlsl">
       <Filter>シェーダーファイル\Object3d\obj</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Resources\shaders\Object2d\TexturePS.hlsl">
+      <Filter>シェーダーファイル\Object2d</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Resources\shaders\Object2d\TextureVS.hlsl">
+      <Filter>シェーダーファイル\Object2d</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
