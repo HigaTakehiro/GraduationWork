@@ -21,6 +21,9 @@ public: //‰æ‘œ–¼
 		Image = 1,
 	};
 
+	enum Image2DName {
+		AL = 0
+	};
 public: //ƒƒ“ƒoŠÖ”
 	/// <summary>
 	/// ‰Šú‰»
