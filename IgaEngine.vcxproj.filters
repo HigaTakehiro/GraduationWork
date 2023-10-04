@@ -317,7 +317,7 @@
       <Filter>ソース ファイル\ApplicationCode\Maths</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Players\Player.h">
-      <Filter>ソース ファイル\ApplicationCode\Player</Filter>
+      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
