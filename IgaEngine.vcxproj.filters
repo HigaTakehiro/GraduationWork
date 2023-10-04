@@ -176,6 +176,9 @@
     <ClCompile Include="Engine\Base\ExternalFileLoader.cpp">
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClCompile>
+      <ClCompile Include="ApplicationCode\Players\Player.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
+    </ClCompile>
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp">
       <Filter>ソース ファイル\ApplicationCode\Maths</Filter>
     </ClCompile>
@@ -312,6 +315,9 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h">
       <Filter>ソース ファイル\ApplicationCode\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Players\Player.h">
+      <Filter>ソース ファイル\ApplicationCode\Player</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
