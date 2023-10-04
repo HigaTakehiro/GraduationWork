@@ -64,6 +64,12 @@ public: //メンバ関数
 	/// <param name="keyNumber">キー番号</param>
 	/// <returns>トリガーか</returns>
 	bool TriggerKey(BYTE keyNumber);
+	/// <summary>
+	/// キーの押下が離されたかをチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号</param>
+	/// <returns>キーが離されたか</returns>
+	bool ReleaseKey(BYTE keyNumber);
 
 	/// <summary>
 	/// インスタンス取得用関数

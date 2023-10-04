@@ -5,6 +5,7 @@
 #include "TextDraw.h"
 #include "ImageManager.h"
 #include "Sprite.h"
+#include "Vector3.h"
 
 class ExternalFileLoader final
 {
