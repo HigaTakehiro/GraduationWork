@@ -5,4 +5,5 @@ scale 0.03 0.03 0.03
 rot 0 180 0
 Smove 0.1
 Srot 10.0
-RrotTime 10.0
+RrotTime 60.0
+throwSpeed 0.4

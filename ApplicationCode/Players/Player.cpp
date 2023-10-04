@@ -33,7 +33,7 @@ void Player::Update()
 	Move();
 	Attack();
 	if (isHammerRelease_) {
-		//HammerThrow();
+		HammerThrow();
 	}
 
 	if (KeyInput::GetIns()->TriggerKey(DIK_N)) {
@@ -71,6 +71,7 @@ void Player::PlayerStatusSetting() {
 	Vector3 rot{};
 	float moveSpeed;
 	float rotSpeed;
+	float throwSpeed;
 	float rotResetTime;
 	std::stringstream stream;
 
@@ -108,6 +109,9 @@ void Player::PlayerStatusSetting() {
 		if (word.find("RrotTime") == 0) {
 			line_stream >> rotResetTime;
 		}
+		if (word.find("throwSpeed") == 0) {
+			line_stream >> throwSpeed;
+		}
 	}
 
 	//初期化
@@ -119,7 +123,8 @@ void Player::PlayerStatusSetting() {
 	moveSpeed_ = moveSpeed;
 	rotSpeed_ = rotSpeed;
 	rotResetTimer_ = rotResetTime_ = rotResetTime;
-
+	throwSpeed_ = throwSpeed;
+	
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
 	player_->SetRotation(rot_);
@@ -155,8 +160,12 @@ void Player::Attack() {
 		}
 		//スペースキーを離したとき
 		else if (KeyInput::GetIns()->ReleaseKey(DIK_SPACE)) {
-			//isHammerRelease_ = true;
-			hammerThrowRot_ = rot_.y;
+			isHammerRelease_ = true;
+			hammer_->SetParent(nullptr);
+			hammer_->SetScale(scale_);
+			Vector3 hammerPos = hammer_->GetMatWorld().r[3];
+			hammerPos.y = 30.0f;
+			hammer_->SetPosition(hammerPos);
 		}
 	}
 	//攻撃キーを離している時プレイヤーの向きを修正
@@ -183,5 +192,10 @@ void Player::Attack() {
 }
 
 void Player::HammerThrow() {
-
+	Vector3 vec = hammer_->GetMatWorld().r[3];
+	vec.normalize();
+	vec.y = 0.0f;
+	hammerPos_ += vec * throwSpeed_;
+	hammerPos_.y = 2.0f;
+	hammer_->SetPosition(hammerPos_);
 }

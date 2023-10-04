@@ -77,7 +77,9 @@ private: //メンバ変数
 	Model* hammerModel_;
 	//ハンマー投げフラグ
 	bool isHammerRelease_;
-	//ハンマー投げ時角度
-	float hammerThrowRot_;
+	//ハンマー座標
+	Vector3 hammerPos_;
+	//ハンマー投げ速度
+	float throwSpeed_;
 };
 
