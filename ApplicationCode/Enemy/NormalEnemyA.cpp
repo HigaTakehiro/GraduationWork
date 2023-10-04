@@ -9,7 +9,7 @@ void NormalEnemyA::Init()
 
 void NormalEnemyA::Upda(Camera*camera)
 {
-	_status.Tex->SetScale({ 5,5,5 });
+	_status.Tex->SetScale({ 1,1,1 });
 
 	_status.Tex->SetBillboard(TRUE);
 	_status.Tex->Update(camera);
