@@ -4,13 +4,16 @@
 #include<memory>
 #include <DirectXMath.h>
 #include <d3dx12.h>
-
+//#include
 using namespace DirectX;
 
 class BaseEnemy
 {
 protected:
+
 	/*敵の各パラメータ*/
+	//*************************************
+	
 	struct Status
 	{
 		//体力
@@ -21,13 +24,44 @@ protected:
 		float KnockTime;
 		//移動スピード
 		float MoveSpeed;
+		//索敵半径
+		float SearchRange;
 		//2D
 		std::shared_ptr<Texture>Tex;
 		//座標・回転・スケール
 		XMFLOAT3 Pos,Rot,Scl;
 	}_status;
+	//**************************************
 
-	
+	/*行動*/
+	//**************************************
+	enum BaseAction
+	{
+		IDLE,
+		WALK,
+		FOLLOW,
+		KNOCK,
+		ATTACK,
+		DEATH
+	};
+	BaseAction _action=IDLE;
+
+	static void(BaseEnemy::* stateTable[])();
+
+	void Idle(),
+		 Walk(),
+		 Follow(),
+		 Knock(),
+		 Attack(),
+		 Death();
+
+	void MoveDirection();
+	//**************************************
+
+	//プレイヤー
+	std::shared_ptr<XMFLOAT3>_player;
+	int AnimTim;
+	bool RecvDamage;
 public:
 	/** 初期化 **/
 	virtual void Init()=0;

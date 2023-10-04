@@ -6,6 +6,15 @@ Collision* Collision::GetIns()
 	return &instance;
 }
 
+float Collision::GetLength(XMFLOAT3 position, XMFLOAT3 position2)
+{
+	float len;
+	len = sqrtf(
+		(position.x - position2.x) * (position.x - position2.x) + (position.y - position2.y) * (position.y - position2.
+			y) + (position.z - position2.z) * (position.z - position2.z));
+	return len;
+}
+
 bool Collision::HitCircle(XMFLOAT2 pos1, float radius1, XMFLOAT2 pos2, float radius2)
 {
 	float temp = sqrtf(pow(pos1.x - pos2.x, 2) + pow(pos1.y - pos2.y, 2));

@@ -7,6 +7,7 @@ class Collision final
 {
 private:
 	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMVECTOR = DirectX::XMVECTOR;
 
 private:
@@ -23,6 +24,7 @@ public: //Ã“Iƒƒ“ƒoŠÖ”
 	static Collision* GetIns();
 
 public: //ƒƒ“ƒoŠÖ”
+	static float GetLength(XMFLOAT3 position, XMFLOAT3 position2);
 
 	static bool HitCircle(XMFLOAT2 pos1, float radius1, XMFLOAT2 pos2, float radius2);
 

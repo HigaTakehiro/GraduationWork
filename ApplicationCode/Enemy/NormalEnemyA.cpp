@@ -9,6 +9,8 @@ void NormalEnemyA::Init()
 
 void NormalEnemyA::Upda(Camera*camera)
 {
+	(this->*stateTable[_action])();
+
 	_status.Tex->SetScale({ 1,1,1 });
 
 	_status.Tex->SetBillboard(TRUE);
