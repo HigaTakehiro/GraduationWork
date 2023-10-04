@@ -33,9 +33,14 @@ private: //メンバ変数
 	//回転角
 	float rot_;
 
-	//オブジェクト
+	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
-	//モデル
-	Model* model_[5];
+	//プレイヤーモデル
+	Model* playerModel_[5];
+
+	//ハンマーオブジェクト
+	std::unique_ptr<Object3d> hammer_;
+	//ハンマーモデル
+	Model* hammerModel_;
 };
 
