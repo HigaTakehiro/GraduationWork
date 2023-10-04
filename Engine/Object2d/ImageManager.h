@@ -22,7 +22,9 @@ public: //‰æ‘œ–¼
 	};
 
 	enum Image2DName {
-		AL = 0
+		USA_1,
+		USA_2,
+		USA_3
 	};
 public: //ƒƒ“ƒoŠÖ”
 	/// <summary>

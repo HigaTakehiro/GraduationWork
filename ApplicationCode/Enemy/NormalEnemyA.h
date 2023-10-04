@@ -10,7 +10,8 @@ public:
     void Upda(Camera*camera) override;
     /** ï`âÊ **/
     void Draw() override;
-
+    /** Ç†Ç…ÇﬂÅ[ÇµÇÂÇÒ **/
+	void TextureAnimation() override;
 private:
 
 };

@@ -104,6 +104,6 @@ void GameScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
+		//SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
 }

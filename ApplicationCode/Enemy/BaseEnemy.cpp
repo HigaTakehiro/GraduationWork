@@ -1,6 +1,7 @@
 #include "BaseEnemy.h"
 
 #include "Collision.h"
+#include "MouseInput.h"
 
 
 /***                    GETTER                      ***/
@@ -20,8 +21,8 @@ void (BaseEnemy::* BaseEnemy::stateTable[])() = {
 	&BaseEnemy::Idle,
 	&BaseEnemy::Walk,
 	&BaseEnemy::Follow,
-	&BaseEnemy::Attack,
 	&BaseEnemy::Knock,
+	&BaseEnemy::Attack,
 	&BaseEnemy::Death
 };
 
@@ -31,6 +32,12 @@ void BaseEnemy::Idle()
 	_player = std::make_shared<XMFLOAT3>();
 	*_player = { 10,0,0 };
 
+	//索敵範囲入ったら追従
+	if (Collision::GetLength(*_player, _status.Pos) < _status.SearchRange)
+		_action = FOLLOW;
+
+	//向いた方向に移動
+	//MoveDirection();
 }
 
 void BaseEnemy::Walk()
@@ -45,8 +52,10 @@ void BaseEnemy::Walk()
 
 void BaseEnemy::Follow()
 {
+	AnimTim = 0;
+
 	//角度の取得 プレイヤーが敵の索敵位置に入ったら向きをプレイヤーの方に
-	XMVECTOR PositionA = { _player->x,_player->y,_player->z };
+	XMVECTOR PositionA = {10,0,0};
 	XMVECTOR PositionB = { _status.Pos.x, _status.Pos.y, _status.Pos.z };
 
 	//プレイヤーと敵のベクトルの長さ(差)を求める
@@ -61,6 +70,8 @@ void BaseEnemy::Follow()
 	if (Collision::GetLength(*_player, _status.Pos) < 1.f)
 		_action = ATTACK;
 
+	if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK))RecvDamage = TRUE;
+
 	//仰け反り判定
 	if (RecvDamage)
 		_action = KNOCK;
@@ -71,13 +82,33 @@ void BaseEnemy::Follow()
 
 void BaseEnemy::Attack()
 {
+	RecvDamage = FALSE;
+
+	//アニメーションカウンタ進める
+	AnimTim++;
 	if (AnimTim > 120)
 		_action = FOLLOW;
 }
 
 void BaseEnemy::Knock()
 {
-	
+	//向いた方に移動する
+	XMVECTOR move = { 0.f,0.f, 0.1f, 0.0f };
+	XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(_status.Rot.y+180.f));
+
+	move = XMVector3TransformNormal(move, matRot);
+
+	_status.Pos = {
+					_status.Pos.x + move.m128_f32[0] * _status.MoveSpeed,
+				_status.Pos.y,
+				_status.Pos.z + move.m128_f32[2] * _status.MoveSpeed
+	};
+
+	if(_status.KnockTime>120)
+	{
+		_action = IDLE;
+	}
+
 }
 
 void BaseEnemy::Death()

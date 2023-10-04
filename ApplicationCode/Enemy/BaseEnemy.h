@@ -28,6 +28,7 @@ protected:
 		float SearchRange;
 		//2D
 		std::shared_ptr<Texture>Tex;
+		size_t TexSize;
 		//座標・回転・スケール
 		XMFLOAT3 Pos,Rot,Scl;
 	}_status;
@@ -60,8 +61,15 @@ protected:
 
 	//プレイヤー
 	std::shared_ptr<XMFLOAT3>_player;
+
+	//アニメーション関連
 	int AnimTim;
+	unsigned int AnimationCount;
+	unsigned int AnimationInterval;
+
+	//攻撃受けたか？
 	bool RecvDamage;
+
 public:
 	/** 初期化 **/
 	virtual void Init()=0;
@@ -72,6 +80,8 @@ public:
 	/** 描画 **/
 	virtual void Draw()=0;
 
+	/** アニメーション **/
+	virtual void TextureAnimation()=0;
 public:
 	bool DeathJudg();
 
