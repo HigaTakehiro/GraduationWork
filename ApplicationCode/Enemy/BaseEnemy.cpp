@@ -1,6 +1,7 @@
 #include "BaseEnemy.h"
 
 #include "Collision.h"
+#include "KeyInput.h"
 #include "MouseInput.h"
 
 
@@ -28,12 +29,9 @@ void (BaseEnemy::* BaseEnemy::stateTable[])() = {
 
 void BaseEnemy::Idle()
 {
-	//プレイヤー仮(クラス作ったらインスタンスは合わせる)
-	_player = std::make_shared<XMFLOAT3>();
-	*_player = { 10,0,0 };
-
+	_status.KnockTime = 0;
 	//索敵範囲入ったら追従
-	if (Collision::GetLength(*_player, _status.Pos) < _status.SearchRange)
+	if (Collision::GetLength(_player->GetPos(), _status.Pos) < _status.SearchRange)
 		_action = FOLLOW;
 
 	//向いた方向に移動
@@ -43,7 +41,7 @@ void BaseEnemy::Idle()
 void BaseEnemy::Walk()
 {
 	//索敵範囲入ったら追従
-	if (Collision::GetLength(*_player, _status.Pos) < _status.SearchRange)
+	if (Collision::GetLength(_player->GetPos(), _status.Pos) < _status.SearchRange)
 		_action = FOLLOW;
 
 	//向いた方向に移動
@@ -55,7 +53,7 @@ void BaseEnemy::Follow()
 	AnimTim = 0;
 
 	//角度の取得 プレイヤーが敵の索敵位置に入ったら向きをプレイヤーの方に
-	XMVECTOR PositionA = {10,0,0};
+	XMVECTOR PositionA = {_player->GetPos().x,_player->GetPos().y,_player->GetPos().z};
 	XMVECTOR PositionB = { _status.Pos.x, _status.Pos.y, _status.Pos.z };
 
 	//プレイヤーと敵のベクトルの長さ(差)を求める
@@ -67,10 +65,12 @@ void BaseEnemy::Follow()
 	_status.Rot={ 0.f, RottoPlayer * 60.f + 180.f,0.f };
 
 	//攻撃判定
-	if (Collision::GetLength(*_player, _status.Pos) < 1.f)
-		_action = ATTACK;
+	//if (Collision::GetLength(_player->GetPos(), _status.Pos) < 1.f)
+		//_action = ATTACK;
 
-	if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK))RecvDamage = TRUE;
+	if (KeyInput::GetIns()->TriggerKey(DIK_K)) {
+		RecvDamage = TRUE;
+	}
 
 	//仰け反り判定
 	if (RecvDamage)
@@ -92,6 +92,8 @@ void BaseEnemy::Attack()
 
 void BaseEnemy::Knock()
 {
+	RecvDamage = FALSE;
+
 	//向いた方に移動する
 	XMVECTOR move = { 0.f,0.f, 0.1f, 0.0f };
 	XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(_status.Rot.y+180.f));
@@ -104,7 +106,7 @@ void BaseEnemy::Knock()
 				_status.Pos.z + move.m128_f32[2] * _status.MoveSpeed
 	};
 
-	if(_status.KnockTime>120)
+	if(++_status.KnockTime>180)
 	{
 		_action = IDLE;
 	}
@@ -141,4 +143,12 @@ bool BaseEnemy::DeathJudg()
 
 	if (l_judg)return true;
 	return false;
+}
+
+void BaseEnemy::CollideHummmer()
+{
+	_status.Obb.SetParam_Pos(_status.Pos);
+	_status.Obb.SetParam_Rot(_status.Tex->GetMatRot());
+	_status.Obb.SetParam_Scl({1,1,1});
+	//弾の更新
 }

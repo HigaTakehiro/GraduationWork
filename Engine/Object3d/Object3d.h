@@ -309,6 +309,13 @@ public: // メンバ関数
 	/// <returns>ヒットフラグ</returns>
 	bool GetIsHit() { return isHit_; }
 
+	/// <summary>
+	/// 行列の取得
+	/// </summary>
+	/// <returns>行列</returns>
+	XMMATRIX GetMatRot()const { return matRot; }
+	XMMATRIX GetMatTrans()const { return matTrans; }
+	XMMATRIX GetMatWorld()const { return matWorld; }
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	// 色
@@ -345,5 +352,7 @@ private: // メンバ変数
 	float hitRadius_ = 1.0f;
 	//当たり判定フラグ
 	bool isHit_;
+	//各行列
+	XMMATRIX matScale, matRot, matTrans;
 };
 
