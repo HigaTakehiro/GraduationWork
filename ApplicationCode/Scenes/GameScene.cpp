@@ -67,14 +67,19 @@ void GameScene::Update()
 	camera_->SetEye(cameraPos_);
 	light_->Update();
 
+	//プレイヤーのOBB設定
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
 	};
-	_hummmerObb.SetParam_Pos(trans);
-	_hummmerObb.SetParam_Rot(player_->GetHammer()->GetMatRot());
-	_hummmerObb.SetParam_Scl({ 1.0f,2.50f,10.0f });
-	ene->SetHammerObb(_hummmerObb);
+	OBB l_obb;
+	l_obb.SetParam_Pos(trans);
+	l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
+	l_obb.SetParam_Scl({ 1.0f,2.50f,10.0f });
+
+	_hummmerObb = &l_obb;
+	ene->SetHammerObb(*_hummmerObb);
+
 
 	ene->Upda(camera_.get());
 	//シーン切り替え
