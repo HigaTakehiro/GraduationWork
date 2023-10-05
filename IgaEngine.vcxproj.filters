@@ -93,6 +93,9 @@
     <Filter Include="ソース ファイル\ApplicationCode\Enemies\Derivative">
       <UniqueIdentifier>{4c8aaada-19f4-464e-b964-9216abf7f7fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Collision">
+      <UniqueIdentifier>{eef28ece-d348-4b41-ad2c-ac7f1b5a880c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -185,7 +188,7 @@
     <ClCompile Include="Engine\Base\ExternalFileLoader.cpp">
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClCompile>
-      <ClCompile Include="ApplicationCode\Players\Player.cpp">
+    <ClCompile Include="ApplicationCode\Players\Player.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp">
@@ -223,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp">
       <Filter>ソース ファイル\ApplicationCode\Enemies\Derivative</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Collision\CollisionManager.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Collision\SphereAndSphere.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -375,6 +384,15 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h">
       <Filter>ソース ファイル\ApplicationCode\Enemies\Derivative</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Collision\CollisionManager.h">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Collision\SphereAndSphere.h">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Collision\BaseCollision.h">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
