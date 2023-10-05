@@ -25,6 +25,12 @@ public: //メンバ関数
 	/// </summary>
 	void Finalize();
 
+	/// <summary>
+	/// 回転角取得
+	/// </summary>
+	/// <returns>回転角</returns>
+	Vector3 GetRot() { return rot_; }
+
 private: //メンバ関数
 
 	/// <summary>
@@ -64,6 +70,8 @@ private: //メンバ変数
 	Vector3 scale_;
 	//回転角
 	Vector3 rot_;
+	//HP
+	int32_t hp_;
 
 	//移動速度
 	float moveSpeed_;
@@ -101,5 +109,11 @@ private: //メンバ変数
 	Vector3 initHammerPos_;
 	Vector3 initHammerScale_;
 	Vector3 initHammerRot_;
+
+	//矢印オブジェクト
+	std::unique_ptr<Object3d> arrow_;
+	//矢印モデル
+	Model* arrowModel_;
+
 };
 

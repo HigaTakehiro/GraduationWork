@@ -3,6 +3,8 @@
 #include "Shapes.h"
 #include "KeyInput.h"
 #include "ExternalFileLoader.h"
+#include <DirectXMath.h>
+#include "Quaternion.h"
 
 void Player::Initialize()
 {
@@ -34,6 +36,12 @@ void Player::Initialize()
 	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
 	hammer_->SetHitRadius(1.0f);
 
+	//矢印初期化
+	arrowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Arrow.png");
+	arrow_ = Object3d::UniquePtrCreate(arrowModel_);
+	arrow_->SetParent(player_.get());
+	arrow_->SetPosition({ -60, -30, 200 });
+	arrow_->SetRotation(initHammerRot_);
 }
 
 void Player::Update()
@@ -60,12 +68,16 @@ void Player::Update()
 	player_->SetRotation(rot_);
 	player_->Update();
 	hammer_->Update();
+	arrow_->Update();
 }
 
 void Player::Draw()
 {
 	player_->Draw();
 	hammer_->Draw();
+	if (KeyInput::GetIns()->HoldKey(DIK_SPACE) && !isHammerRelease_) {
+		arrow_->Draw();
+	}
 }
 
 void Player::Finalize()
@@ -85,6 +97,7 @@ void Player::PlayerStatusSetting() {
 	float rotSpeed;
 	float throwSpeed;
 	float rotResetTime;
+	int32_t hp;
 	std::stringstream stream;
 
 	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("PlayerStatus.csv");
@@ -124,19 +137,22 @@ void Player::PlayerStatusSetting() {
 		if (word.find("throwSpeed") == 0) {
 			line_stream >> throwSpeed;
 		}
+		if (word.find("hp") == 0) {
+			line_stream >> hp;
+		}
 	}
 
 	//初期化
 	pos_ = pos;
 	initRot_ = rot_ = rot;
-
 	scale_ = scale;
+	hp_ = hp;
 
 	moveSpeed_ = moveSpeed;
 	rotSpeed_ = rotSpeed;
 	rotResetTimer_ = rotResetTime_ = rotResetTime;
 	throwSpeed_ = throwSpeed;
-	
+
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
 	player_->SetRotation(rot_);
@@ -180,7 +196,7 @@ void Player::Attack() {
 			hammer_->SetScale(scale_);
 
 			//進行ベクトルを求める
-			Vector3 vec = hammer_->GetMatWorld().r[3];
+			Vector3 vec = arrow_->GetMatWorld().r[3] - hammer_->GetMatWorld().r[3];
 			vec.normalize();
 			//Y軸ベクトルは余計なので0を入れる
 			vec.y = 0.0f;
