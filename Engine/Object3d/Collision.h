@@ -3,6 +3,7 @@
 #include "Vector3.h"
 #include "DirectXMath.h"
 #include"WinApp.h"
+#include"CollisionPrimitive.h"
 class Collision final
 {
 private:
@@ -45,6 +46,10 @@ public: //メンバ関数
 	/// <param name="objScale2">判定したいオブジェクトの半径2</param>
 	/// <returns>当たった</returns>
 	bool OBJSphereCollision(Object3d* object1, Object3d* object2, float objScale1, float objScale2);
+
+	static bool OBBCollision(OBB& obbA, OBB& obbB);
+
+	static double LenSegOnSeparateAxis(XMVECTOR* Sep, XMVECTOR* e1, XMVECTOR* e2, XMVECTOR* e3=0);
 
 private: //メンバ変数
 	Vector3 object1Pos = { 0, 0, 0 };

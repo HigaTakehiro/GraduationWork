@@ -251,4 +251,6 @@ public:
 	void TransferVertices();
 	void SetAnchorPoint(XMFLOAT2 anchorpoint);
 	void SetTextureRect(XMFLOAT2 texBase, XMFLOAT2 texSize);
+	XMMATRIX matScale, matRot, matTrans;
+	XMMATRIX GetMatRot() { return matRot; }
 };

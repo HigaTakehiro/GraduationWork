@@ -51,7 +51,7 @@ private: //メンバ関数
 	void SceneChange();
 
 	BaseEnemy* ene;
-
+	OBB _hummmerObb;
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;

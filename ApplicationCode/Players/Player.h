@@ -79,5 +79,10 @@ private: //メンバ変数
 	bool isHammerRelease_;
 	//ハンマー投げ時角度
 	float hammerThrowRot_;
+
+
+public:
+	Object3d* GetHammer() { return hammer_.get(); }
+	DirectX::XMFLOAT3 GetPos(){ return player_->GetPosition(); }
 };
 

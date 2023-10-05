@@ -43,6 +43,7 @@ void GameScene::Initialize()
 
 	ene = new NormalEnemyA();
 	ene->Init();
+	ene->SetPlayerIns(player_);
 }
 
 void GameScene::Update()
@@ -65,6 +66,16 @@ void GameScene::Update()
 
 	camera_->SetEye(cameraPos_);
 	light_->Update();
+
+	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
+		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
+		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
+	};
+	_hummmerObb.SetParam_Pos(trans);
+	_hummmerObb.SetParam_Rot(player_->GetHammer()->GetMatRot());
+	_hummmerObb.SetParam_Scl({ 1.0f,2.50f,10.0f });
+	ene->SetHammerObb(_hummmerObb);
+
 	ene->Upda(camera_.get());
 	//シーン切り替え
 	SceneChange();
@@ -85,8 +96,8 @@ void GameScene::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	ground_->Draw();
 	player_->Draw();
+	
 	Object3d::PostDraw();
-
 	ene->Draw();
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());

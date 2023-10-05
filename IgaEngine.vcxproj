@@ -192,6 +192,7 @@
     <ClCompile Include="Engine\Object2d\TextDraw.cpp" />
     <ClCompile Include="Engine\Object3d\BaseLight.cpp" />
     <ClCompile Include="Engine\Object3d\Collision.cpp" />
+    <ClCompile Include="Engine\Object3d\CollisionPrimitive.cpp" />
     <ClCompile Include="Engine\Object3d\MapChip.cpp" />
     <ClCompile Include="Engine\Object3d\Model.cpp" />
     <ClCompile Include="Engine\Object3d\ModelManager.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="Engine\Object2d\TextDraw.h" />
     <ClInclude Include="Engine\Object3d\BaseLight.h" />
     <ClInclude Include="Engine\Object3d\Collision.h" />
+    <ClInclude Include="Engine\Object3d\CollisionPrimitive.h" />
     <ClInclude Include="Engine\Object3d\MapChip.h" />
     <ClInclude Include="Engine\Object3d\Model.h" />
     <ClInclude Include="Engine\Object3d\ModelManager.h" />

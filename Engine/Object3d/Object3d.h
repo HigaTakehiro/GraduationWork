@@ -228,6 +228,13 @@ public: // メンバ関数
 	/// <returns>親オブジェクト(カメラ)</returns>
 	Camera* GetCameraParent() { return cameraParent; }
 
+	/// <summary>
+	/// 行列の取得
+	/// </summary>
+	/// <returns>行列</returns>
+	XMMATRIX GetMatRot()const { return matRot; }
+	XMMATRIX GetMatTrans()const { return matTrans; }
+	XMMATRIX GetMatWorld()const { return matWorld; }
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	// 色
@@ -256,5 +263,7 @@ private: // メンバ変数
 	bool isWave;
 	//シェーダー用タイマー
 	float timer = 0.0f;
+	//各行列
+	XMMATRIX matScale, matRot, matTrans;
 };
 
