@@ -66,6 +66,7 @@ void GameScene::Update()
 	camera_->SetEye(cameraPos_);
 	light_->Update();
 	ene->Upda(camera_.get());
+	colManager_->Update();
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
 	SceneChange();
 }
@@ -115,6 +116,7 @@ void GameScene::Finalize()
 	safe_delete(text_);
 	player_->Finalize();
 	safe_delete(player_);
+	colManager_->Finalize();
 }
 
 void GameScene::SceneChange()

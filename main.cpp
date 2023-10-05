@@ -10,6 +10,7 @@
 #include "LightGroup.h"
 #include "SoundManager.h"
 #include "ExternalFileLoader.h"
+#include "CollisionManager.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -24,6 +25,7 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	SceneManager* scene = nullptr;
 	Sound* sound = nullptr;
 	ExternalFileLoader* externalFileLoader = nullptr;
+	CollisionManager* colManager = nullptr;
 
 	//WindowsAPIの初期化
 	winApp = new WinApp();
@@ -55,6 +57,8 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	debugText.Initialize(debugTextNumber);
 
 	ImageManager::GetIns()->Initialize();
+	//当たり判定マネージャーの初期化
+	colManager = new CollisionManager();
 
 	//FBXの初期化
 	FbxLoader::GetInstance()->Initialize(DirectXSetting::GetIns()->GetDev());
@@ -64,10 +68,12 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	//Object3dの初期化
 	Object3d::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 	ModelManager::GetIns()->Initialize();
+	Object3d::SetCollisionManager(colManager);
 	LightGroup::StaticInitialize();
 
 	scene = new SceneManager();
 	scene->Initialize();
+	scene->SetCollsionManager(colManager);
 
 	// DirectX初期化処理　ここまで
 

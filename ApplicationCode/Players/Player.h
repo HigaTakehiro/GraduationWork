@@ -47,6 +47,11 @@ private: //メンバ関数
 	/// </summary>
 	void HammerThrow();
 
+	/// <summary>
+	/// ハンマー入手
+	/// </summary>
+	void HammerGet();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -66,6 +71,10 @@ private: //メンバ変数
 	//初期回転角
 	Vector3 initRot_;
 
+	//仮ハンマー投げ時間
+	int32_t hammerTime = 60;
+	int32_t hammerTimer = 0;
+
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル
@@ -81,5 +90,11 @@ private: //メンバ変数
 	Vector3 hammerPos_;
 	//ハンマー投げ速度
 	float throwSpeed_;
+	//ハンマー投げベクトル
+	Vector3 hammerVec_;
+	//ハンマー初期値
+	Vector3 initHammerPos_;
+	Vector3 initHammerScale_;
+	Vector3 initHammerRot_;
 };
 

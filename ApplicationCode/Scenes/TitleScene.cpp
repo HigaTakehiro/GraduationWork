@@ -84,6 +84,7 @@ void TitleScene::Draw()
 void TitleScene::Finalize()
 {
 	safe_delete(text_);
+	//colManager_->Finalize();
 }
 
 void TitleScene::SceneChange()
