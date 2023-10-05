@@ -15,7 +15,7 @@ void Player::Initialize()
 	player_->SetIsBillboardY(true);
 	player_->SetColType(Object3d::CollisionType::Sphere);
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
-	player_->SetHitRadius(1.0f);
+	player_->SetHitRadius(0.5f);
 
 	PlayerStatusSetting();
 
@@ -32,7 +32,7 @@ void Player::Initialize()
 	hammer_->SetRotation(initHammerRot_);
 	hammer_->SetColType(Object3d::CollisionType::Sphere);
 	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
-	hammer_->SetHitRadius(2.0f);
+	hammer_->SetHitRadius(1.0f);
 
 }
 
@@ -233,6 +233,7 @@ void Player::HammerThrow() {
 void Player::HammerGet()
 {
 	if (hammerTimer >= hammerTime) {
+		HammerReturn();
 		if (player_->GetIsHit() && hammer_->GetIsHit()) {
 			hammer_->SetParent(player_.get());
 			hammer_->SetPosition(initHammerPos_);
@@ -242,4 +243,21 @@ void Player::HammerGet()
 			hammerTimer = 0;
 		}
 	}
+}
+
+void Player::HammerReturn()
+{
+	//‰ñ“]Šp‚ð‹‚ß‚é
+	Vector3 rot = hammer_->GetRotation();
+	rot.y += 5.0f;
+	if (rot.y >= 360.0f) {
+		rot.y = 0.0f;
+	}
+
+	Vector3 hammerToPlayerVec = pos_ - hammerPos_;
+	hammerToPlayerVec.normalize();
+	hammerPos_ += hammerToPlayerVec * throwSpeed_;
+	hammerPos_.y = 2.0f;
+	hammer_->SetPosition(hammerPos_);
+	hammer_->SetRotation(rot);
 }

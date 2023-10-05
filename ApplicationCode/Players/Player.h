@@ -52,6 +52,11 @@ private: //メンバ関数
 	/// </summary>
 	void HammerGet();
 
+	/// <summary>
+	/// ハンマー戻り処理
+	/// </summary>
+	void HammerReturn();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
