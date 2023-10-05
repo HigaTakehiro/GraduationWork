@@ -82,6 +82,7 @@ void GameScene::Update()
 
 
 	ene->Upda(camera_.get());
+	colManager_->Update();
 	//シーン切り替え
 	SceneChange();
 }
@@ -112,7 +113,8 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 	D2D1_RECT_F textDrawRange = { 0, 0, 500, 500 };
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックでタイトルシーン\n右クリックでリザルトシーン", textDrawRange);
+	std::wstring rot = std::to_wstring(player_->GetRot().y);
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックでタイトルシーン\n右クリックでリザルトシーン\n" + rot, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -131,6 +133,7 @@ void GameScene::Finalize()
 	safe_delete(text_);
 	player_->Finalize();
 	safe_delete(player_);
+	colManager_->Finalize();
 }
 
 void GameScene::SceneChange()

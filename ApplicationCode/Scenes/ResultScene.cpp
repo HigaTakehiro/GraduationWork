@@ -79,6 +79,7 @@ void ResultScene::Draw()
 void ResultScene::Finalize()
 {
 	safe_delete(text_);
+	//colManager_->Finalize();
 }
 
 void ResultScene::SceneChange()

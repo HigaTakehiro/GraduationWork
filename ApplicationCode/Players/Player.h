@@ -25,6 +25,12 @@ public: //メンバ関数
 	/// </summary>
 	void Finalize();
 
+	/// <summary>
+	/// 回転角取得
+	/// </summary>
+	/// <returns>回転角</returns>
+	Vector3 GetRot() { return rot_; }
+
 private: //メンバ関数
 
 	/// <summary>
@@ -47,6 +53,16 @@ private: //メンバ関数
 	/// </summary>
 	void HammerThrow();
 
+	/// <summary>
+	/// ハンマー入手
+	/// </summary>
+	void HammerGet();
+
+	/// <summary>
+	/// ハンマー戻り処理
+	/// </summary>
+	void HammerReturn();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -54,6 +70,8 @@ private: //メンバ変数
 	Vector3 scale_;
 	//回転角
 	Vector3 rot_;
+	//HP
+	int32_t hp_;
 
 	//移動速度
 	float moveSpeed_;
@@ -66,6 +84,10 @@ private: //メンバ変数
 	//初期回転角
 	Vector3 initRot_;
 
+	//仮ハンマー投げ時間
+	int32_t hammerTime = 60;
+	int32_t hammerTimer = 0;
+
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル
@@ -77,6 +99,22 @@ private: //メンバ変数
 	Model* hammerModel_;
 	//ハンマー投げフラグ
 	bool isHammerRelease_;
+	//ハンマー座標
+	Vector3 hammerPos_;
+	//ハンマー投げ速度
+	float throwSpeed_;
+	//ハンマー投げベクトル
+	Vector3 hammerVec_;
+	//ハンマー初期値
+	Vector3 initHammerPos_;
+	Vector3 initHammerScale_;
+	Vector3 initHammerRot_;
+
+	//矢印オブジェクト
+	std::unique_ptr<Object3d> arrow_;
+	//矢印モデル
+	Model* arrowModel_;
+
 	//ハンマー投げ時角度
 	float hammerThrowRot_;
 

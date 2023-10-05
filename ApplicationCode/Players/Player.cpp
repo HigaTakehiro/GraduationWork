@@ -3,6 +3,8 @@
 #include "Shapes.h"
 #include "KeyInput.h"
 #include "ExternalFileLoader.h"
+#include <DirectXMath.h>
+#include "Quaternion.h"
 
 void Player::Initialize()
 {
@@ -13,28 +15,46 @@ void Player::Initialize()
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
+	player_->SetColType(Object3d::CollisionType::Sphere);
+	player_->SetObjType((int32_t)Object3d::OBJType::Player);
+	player_->SetHitRadius(0.5f);
 
 	PlayerStatusSetting();
+
+	initHammerPos_ = { -60, -30, 60 };
+	initHammerScale_ = { 1, 1, 1 };
+	initHammerRot_ = { -90, 0, 180 };
 
 	//ハンマー初期化
 	hammerModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Hammer.png");
 	hammer_ = Object3d::UniquePtrCreate(hammerModel_);
 	hammer_->SetParent(player_.get());
-	hammer_->SetPosition({ -60, -30, 60 });
-	hammer_->SetScale({ 1, 1, 1 });
-	hammer_->SetRotation({ -90, 0, 180 });
+	hammer_->SetPosition(initHammerPos_);
+	hammer_->SetScale(initHammerScale_);
+	hammer_->SetRotation(initHammerRot_);
+	hammer_->SetColType(Object3d::CollisionType::Sphere);
+	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
+	hammer_->SetHitRadius(1.0f);
 
+	//矢印初期化
+	arrowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Arrow.png");
+	arrow_ = Object3d::UniquePtrCreate(arrowModel_);
+	arrow_->SetParent(player_.get());
+	arrow_->SetPosition({ -60, -30, 200 });
+	arrow_->SetRotation(initHammerRot_);
 }
 
 void Player::Update()
 {
 	static int32_t animeCount = 0;
 
+	if (isHammerRelease_) {
+		HammerThrow();
+		HammerGet();
+	}
 	Move();
 	Attack();
-	if (isHammerRelease_) {
-		//HammerThrow();
-	}
+
 
 	if (KeyInput::GetIns()->TriggerKey(DIK_N)) {
 		if (++animeCount >= 5) {
@@ -48,12 +68,16 @@ void Player::Update()
 	player_->SetRotation(rot_);
 	player_->Update();
 	hammer_->Update();
+	arrow_->Update();
 }
 
 void Player::Draw()
 {
 	player_->Draw();
 	hammer_->Draw();
+	if (KeyInput::GetIns()->HoldKey(DIK_SPACE) && !isHammerRelease_) {
+		arrow_->Draw();
+	}
 }
 
 void Player::Finalize()
@@ -71,7 +95,9 @@ void Player::PlayerStatusSetting() {
 	Vector3 rot{};
 	float moveSpeed;
 	float rotSpeed;
+	float throwSpeed;
 	float rotResetTime;
+	int32_t hp;
 	std::stringstream stream;
 
 	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("PlayerStatus.csv");
@@ -108,17 +134,24 @@ void Player::PlayerStatusSetting() {
 		if (word.find("RrotTime") == 0) {
 			line_stream >> rotResetTime;
 		}
+		if (word.find("throwSpeed") == 0) {
+			line_stream >> throwSpeed;
+		}
+		if (word.find("hp") == 0) {
+			line_stream >> hp;
+		}
 	}
 
 	//初期化
 	pos_ = pos;
 	initRot_ = rot_ = rot;
-
 	scale_ = scale;
+	hp_ = hp;
 
 	moveSpeed_ = moveSpeed;
 	rotSpeed_ = rotSpeed;
 	rotResetTimer_ = rotResetTime_ = rotResetTime;
+	throwSpeed_ = throwSpeed;
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -155,8 +188,20 @@ void Player::Attack() {
 		}
 		//スペースキーを離したとき
 		else if (KeyInput::GetIns()->ReleaseKey(DIK_SPACE)) {
-			//isHammerRelease_ = true;
-			hammerThrowRot_ = rot_.y;
+			isHammerRelease_ = true;
+			Vector3 hammerPos = pos_;
+			hammerPos.y = 30.0f;
+			hammerPos_ = hammerPos;
+			hammer_->SetParent(nullptr);
+			hammer_->SetScale(scale_);
+
+			//進行ベクトルを求める
+			Vector3 vec = arrow_->GetMatWorld().r[3] - hammer_->GetMatWorld().r[3];
+			vec.normalize();
+			//Y軸ベクトルは余計なので0を入れる
+			vec.y = 0.0f;
+			hammerVec_ = vec;
+			hammer_->SetPosition(hammerPos);
 		}
 	}
 	//攻撃キーを離している時プレイヤーの向きを修正
@@ -183,5 +228,52 @@ void Player::Attack() {
 }
 
 void Player::HammerThrow() {
+	if (++hammerTimer <= hammerTime) {
+		//回転角を求める
+		Vector3 rot = hammer_->GetRotation();
+		rot.y += 5.0f;
+		if (rot.y >= 360.0f) {
+			rot.y = 0.0f;
+		}
 
+		hammerPos_ += hammerVec_ * throwSpeed_;
+		hammerPos_.y = 2.0f;
+		hammer_->SetPosition(hammerPos_);
+		hammer_->SetRotation(rot);
+	}
+	else {
+		hammerTimer = hammerTime;
+	}
+}
+
+void Player::HammerGet()
+{
+	if (hammerTimer >= hammerTime) {
+		HammerReturn();
+		if (player_->GetIsHit() && hammer_->GetIsHit()) {
+			hammer_->SetParent(player_.get());
+			hammer_->SetPosition(initHammerPos_);
+			hammer_->SetScale(initHammerScale_);
+			hammer_->SetRotation(initHammerRot_);
+			isHammerRelease_ = false;
+			hammerTimer = 0;
+		}
+	}
+}
+
+void Player::HammerReturn()
+{
+	//回転角を求める
+	Vector3 rot = hammer_->GetRotation();
+	rot.y += 5.0f;
+	if (rot.y >= 360.0f) {
+		rot.y = 0.0f;
+	}
+
+	Vector3 hammerToPlayerVec = pos_ - hammerPos_;
+	hammerToPlayerVec.normalize();
+	hammerPos_ += hammerToPlayerVec * throwSpeed_;
+	hammerPos_.y = 2.0f;
+	hammer_->SetPosition(hammerPos_);
+	hammer_->SetRotation(rot);
 }

@@ -7,6 +7,7 @@
 #include "Sprite.h"
 #include "Easing.h"
 #include "SafeDelete.h"
+#include "CollisionManager.h"
 
 class BaseScene
 {
@@ -39,7 +40,13 @@ protected: //仮想メンバ関数
 	virtual void SceneChange() = 0;
 
 public: //メンバ関数
+	/// <summary>
+	/// 当たり判定クラスをセット
+	/// </summary>
+	/// <param name="colManager">当たり判定クラス</param>
+	void SetCollisionManager(CollisionManager* colManager) { colManager_ = colManager; }
 
-protected: //静的メンバ変数
-
+protected: //メンバ変数
+	//当たり判定クラス
+	CollisionManager* colManager_;
 };
