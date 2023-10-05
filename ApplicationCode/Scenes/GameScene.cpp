@@ -75,7 +75,7 @@ void GameScene::Update()
 	OBB l_obb;
 	l_obb.SetParam_Pos(trans);
 	l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
-	l_obb.SetParam_Scl({ 1.0f,2.50f,10.0f });
+	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
 	_hummmerObb = &l_obb;
 	ene->SetHammerObb(*_hummmerObb);

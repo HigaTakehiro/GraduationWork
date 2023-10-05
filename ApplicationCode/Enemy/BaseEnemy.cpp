@@ -29,8 +29,7 @@ void (BaseEnemy::* BaseEnemy::stateTable[])() = {
 
 void BaseEnemy::Idle()
 {
-	//プレイヤー仮(クラス作ったらインスタンスは合わせる)
-
+	_status.KnockTime = 0;
 	//索敵範囲入ったら追従
 	if (Collision::GetLength(_player->GetPos(), _status.Pos) < _status.SearchRange)
 		_action = FOLLOW;

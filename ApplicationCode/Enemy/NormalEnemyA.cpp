@@ -11,7 +11,7 @@ void NormalEnemyA::Init()
 	_status.Tex->CreateTexture();
 	_status.Tex->SetAnchorPoint({ 0.5f,0.5f });
 	_status.SearchRange = 5.f;
-	_status.MoveSpeed = 0.1f;
+	_status.MoveSpeed = 0.3f;
 	_status.Pos = { 10,1.5f,0 };
 
 
@@ -42,6 +42,9 @@ void NormalEnemyA::Upda(Camera* camera)
 		_status.Tex->SetRotation({ 180,0,0 });
 		
 		_status.Tex->Update(camera);_status.Tex->SetBillboard(TRUE);
+	}
+	if (Collision::OBBCollision(_status.Obb, _playerOBB)) {
+		RecvDamage = TRUE;
 	}
 }
 

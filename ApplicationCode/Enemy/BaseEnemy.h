@@ -71,13 +71,13 @@ protected:
 	int AnimTim;
 	unsigned int AnimationCount;
 	unsigned int AnimationInterval;
-
+	bool RecvDamage;
 	std::shared_ptr<Player>_player;
 	OBB _playerOBB;
 private:
 
 	//UŒ‚ó‚¯‚½‚©H
-	bool RecvDamage;
+	
 public:
 	/** ‰Šú‰» **/
 	virtual void Init() = 0;
