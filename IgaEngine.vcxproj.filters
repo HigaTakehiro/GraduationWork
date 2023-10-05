@@ -227,6 +227,9 @@
     <ClCompile Include="Engine\Object3d\CollisionPrimitive.cpp">
       <Filter>ソース ファイル\Engine\Object3d</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Base\CsvLoader.cpp">
+      <Filter>ソース ファイル\Engine\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -381,6 +384,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Object3d\CollisionPrimitive.h">
       <Filter>ソース ファイル\Engine\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Base\CsvLoader.h">
+      <Filter>ソース ファイル\Engine\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,19 +1,26 @@
 #include "NormalEnemyA.h"
 
+#include <any>
+
 #include "Collision.h"
+#include "CsvLoader.h"
 #include"ImageManager.h"
 #include"ImageManager.h"
 void NormalEnemyA::Init()
 {
 	_status.TexSize = 3;
-
+	
 	_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
 	_status.Tex->CreateTexture();
 	_status.Tex->SetAnchorPoint({ 0.5f,0.5f });
-	_status.SearchRange = 5.f;
-	_status.MoveSpeed = 0.3f;
-	_status.Pos = { 10,1.5f,0 };
 
+	//CSVì«Ç›çûÇ›
+	_status.HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Engine/Resources/GameData/NormalEnemyA.csv", "HP")));
+	_status.SearchRange = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Engine/Resources/GameData/NormalEnemyA.csv", "SearchRange")));
+	_status.MoveSpeed = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Engine/Resources/GameData/NormalEnemyA.csv", "MoveSpeed")));
+
+	//XMFLOAT3ÇæÇØÇÕç°ÇÃéûì_ÇæÇ∆Ç±Ç§
+	LoadCSV::LoadCsvParam_XMFLOAT3("Engine/Resources/GameData/NormalEnemyA.csv", _status.Pos, "Position");
 
 	/*
 	 * 	for (auto i = 0; i < _status.TexSize; i++)
@@ -43,19 +50,18 @@ void NormalEnemyA::Upda(Camera* camera)
 		
 		_status.Tex->Update(camera);_status.Tex->SetBillboard(TRUE);
 	}
-	if (Collision::OBBCollision(_status.Obb, _playerOBB)) {
+	if (!RecvDamage&&Collision::OBBCollision(_status.Obb, _playerOBB)) {
+		_status.HP--;
 		RecvDamage = TRUE;
 	}
 }
 
 void NormalEnemyA::Draw()
 {
+	if (_status.HP <= 0)return;
+	if (_status.Tex == nullptr)return;
 	Texture::PreDraw();
-	if (!Collision::OBBCollision(_status.Obb, _playerOBB)) {
-		if (_status.Tex != nullptr) {
-			_status.Tex->Draw();
-		}
-	}
+	_status.Tex->Draw();
 	Texture::PostDraw();
 }
 

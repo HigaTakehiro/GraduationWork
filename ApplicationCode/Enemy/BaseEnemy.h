@@ -19,7 +19,7 @@ protected:
 	struct Status
 	{
 		//体力
-		unsigned int HP;
+		int HP;
 		//攻撃値
 		unsigned int DamageValue;
 		//被ダメージ後の仰け反り時間

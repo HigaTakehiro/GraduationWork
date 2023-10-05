@@ -92,6 +92,7 @@ void BaseEnemy::Attack()
 
 void BaseEnemy::Knock()
 {
+
 	RecvDamage = FALSE;
 
 	//Œü‚¢‚½•û‚ÉˆÚ“®‚·‚é
