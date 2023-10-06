@@ -85,7 +85,7 @@ void BaseEnemy::Follow()
 
 void BaseEnemy::Attack()
 {
-	RecvDamage = FALSE;
+	//RecvDamage = FALSE;
 	_isAttack = true;
 
 	RotforPlayer();

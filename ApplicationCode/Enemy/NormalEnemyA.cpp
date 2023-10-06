@@ -51,19 +51,17 @@ void NormalEnemyA::Upda(Camera* camera)
 	CollideHummmer();
 
 	RecvFlashColor();
+
 	Jump();
-
-
 
 	if (_status.Tex != nullptr) {
 
 		_status.Tex->SetPosition(_status.Pos);
 		_status.Tex->SetScale(_status.Scl);
 		_status.Tex->SetRotation({ _status.Rot.x,_status.Rot.y,_status.Rot.z});
-		//_status.Tex->({0,0,0,1});
 		_status.Tex->Update(camera);
 	}
-	if (KeyInput::GetIns()->PushKey(DIK_SPACE)&&!RecvDamage&&Collision::OBBCollision(_status.Obb, _playerOBB)) {
+	if (!_isAttack&& KeyInput::GetIns()->PushKey(DIK_SPACE)&&!RecvDamage&&Collision::OBBCollision(_status.Obb, _playerOBB)) {
 		_status.HP--;
 		RecvDamage = TRUE;
 	}

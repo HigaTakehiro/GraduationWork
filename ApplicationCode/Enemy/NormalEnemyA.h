@@ -17,8 +17,10 @@ public:
 
     void AttackAction() override;
 private:
-    float JFrame;
+    /*‚¶‚á‚ñ‚Õ*/
+	float JFrame;
     void Jump();
+    /*‚±‚¤‚°‚«*/
     void Attack();
 };
 
