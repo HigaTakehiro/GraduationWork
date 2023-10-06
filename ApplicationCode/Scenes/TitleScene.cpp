@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include <random>
 #include "SoundManager.h"
+#include "PadInput.h"
 
 void TitleScene::Initialize()
 {
@@ -67,8 +68,8 @@ void TitleScene::Draw()
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
-	D2D1_RECT_F textDrawRange = { 0, 0, 500, 500 };
-	text_->Draw("meiryo", "white", L"タイトルシーン\n左クリックでリザルトシーン\n右クリックでゲームシーン", textDrawRange);
+	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
+	text_->Draw("meiryo", "white", L"タイトルシーン\n左クリックまたはLボタンでリザルトシーン\n右クリックまたはRボタンでゲームシーン", textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -89,10 +90,10 @@ void TitleScene::Finalize()
 
 void TitleScene::SceneChange()
 {
-	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK)) {
+	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
-	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK)) {
+	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 }

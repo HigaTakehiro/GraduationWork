@@ -4,6 +4,7 @@
 #include "SoundManager.h"
 #include "NormalEnemyA.h"
 #include "ExternalFileLoader.h"
+#include "PadInput.h"
 
 void GameScene::Initialize()
 {
@@ -109,9 +110,9 @@ void GameScene::Draw()
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
-	D2D1_RECT_F textDrawRange = { 0, 0, 500, 500 };
+	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring rot = std::to_wstring(player_->GetRot().y);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックでタイトルシーン\n右クリックでリザルトシーン\n" + rot, textDrawRange);
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\n" + rot, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -135,11 +136,11 @@ void GameScene::Finalize()
 
 void GameScene::SceneChange()
 {
-	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK)) {
+	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
-	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK)) {
-		//SceneManager::SceneChange(SceneManager::SceneName::Result);
+	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
 }
 
