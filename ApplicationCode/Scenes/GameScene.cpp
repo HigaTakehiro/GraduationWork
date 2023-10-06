@@ -2,7 +2,9 @@
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
-#include"NormalEnemyA.h"
+#include "NormalEnemyA.h"
+#include "ExternalFileLoader.h"
+
 void GameScene::Initialize()
 {
 	ShowCursor(true);
@@ -16,12 +18,7 @@ void GameScene::Initialize()
 	postEffect_->Initialize(LT, LB, RT, RB);
 
 	//ƒJƒƒ‰‰Šú‰»
-	cameraPos_ = { 0, 8, 30 };
-	targetPos_ = { 0, 0, 0 };
-
-	camera_ = std::make_unique<Camera>();
-	camera_->SetEye(cameraPos_);
-	camera_->SetTarget(targetPos_);
+	CameraSetting();
 
 	//ƒ‰ƒCƒg‰Šú‰»
 	light_ = LightGroup::UniquePtrCreate();
@@ -143,5 +140,42 @@ void GameScene::SceneChange()
 	}
 	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK)) {
 		//SceneManager::SceneChange(SceneManager::SceneName::Result);
+	}
+}
+
+void GameScene::CameraSetting()
+{
+	std::string line;
+	Vector3 pos{};
+	Vector3 target{};
+	std::stringstream stream;
+
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("CameraSetting.csv");
+
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+		if (word.find("#") == 0) {
+			continue;
+		}
+		if (word.find("pos") == 0) {
+			line_stream >> pos.x;
+			line_stream >> pos.y;
+			line_stream >> pos.z;
+		}
+		if (word.find("target") == 0) {
+			line_stream >> target.x;
+			line_stream >> target.y;
+			line_stream >> target.z;
+		}
+
+		cameraPos_ = pos;
+		targetPos_ = target;
+
+		camera_ = std::make_unique<Camera>();
+		camera_->SetEye(cameraPos_);
+		camera_->SetTarget(targetPos_);
 	}
 }
