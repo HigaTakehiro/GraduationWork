@@ -3,7 +3,13 @@
 #include "Collision.h"
 #include "KeyInput.h"
 #include "MouseInput.h"
+#include"Easing.h"
 
+BaseEnemy::~BaseEnemy()
+{
+	_status.Tex.reset();
+	_player.reset();
+}
 
 /***                    GETTER                      ***/
 /******************************************************/
@@ -62,7 +68,7 @@ void BaseEnemy::Follow()
 	float RottoPlayer;
 	RottoPlayer = atan2f(SubVector.m128_f32[0], SubVector.m128_f32[2]);
 
-	_status.Rot={ 0.f, RottoPlayer * 60.f + 180.f,0.f };
+	_status.Rot={ 0.f, RottoPlayer * 70.f + 180.f,0.f };
 
 	//çUåÇîªíË
 	//if (Collision::GetLength(_player->GetPos(), _status.Pos) < 1.f)
@@ -92,7 +98,7 @@ void BaseEnemy::Attack()
 
 void BaseEnemy::Knock()
 {
-
+	_isFlash = TRUE;
 	RecvDamage = FALSE;
 
 	//å¸Ç¢ÇΩï˚Ç…à⁄ìÆÇ∑ÇÈ
@@ -152,4 +158,19 @@ void BaseEnemy::CollideHummmer()
 	_status.Obb.SetParam_Rot(_status.Tex->GetMatRot());
 	_status.Obb.SetParam_Scl({1,1,1});
 	//íeÇÃçXêV
+}
+
+void BaseEnemy::RecvFlashColor()
+{
+	constexpr float MaxCount = 60;
+
+	if (!_isFlash&&RecvDamage)_isFlash = true;
+	if(FlashCount<3&& _isFlash)
+	{
+		_color = { 0,0,0,0 };
+		//éûä‘ÇÃäÑçáÇãÅÇﬂÇÈ
+	
+	}
+
+	if (!_isFlash)FlashCount = 0;
 }

@@ -1,15 +1,23 @@
 #include "NormalEnemyA.h"
 
+#include <algorithm>
 #include <any>
 
 #include "Collision.h"
 #include "CsvLoader.h"
 #include"ImageManager.h"
 #include"ImageManager.h"
+
+NormalEnemyA::~NormalEnemyA()
+{
+	//_status.Tex.reset();
+}
+
+#define PI 3.14
 void NormalEnemyA::Init()
 {
 	_status.TexSize = 3;
-	
+	_color = XMFLOAT4(1, 1, 1, 1);
 	_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
 	_status.Tex->CreateTexture();
 	_status.Tex->SetAnchorPoint({ 0.5f,0.5f });
@@ -42,13 +50,16 @@ void NormalEnemyA::Upda(Camera* camera)
 	TextureAnimation();
 
 	CollideHummmer();
+
+	RecvFlashColor();
+	Jump();
 	if (_status.Tex != nullptr) {
 		_status.Scl = { 1,1,1 };
 		_status.Tex->SetPosition(_status.Pos);
 		_status.Tex->SetScale(_status.Scl);
-		_status.Tex->SetRotation({ 180,0,0 });
-		
-		_status.Tex->Update(camera);_status.Tex->SetBillboard(TRUE);
+		_status.Tex->SetRotation({ 180,_status.Rot.y,_status.Rot.z});
+		//_status.Tex->({0,0,0,1});
+		_status.Tex->Update(camera);
 	}
 	if (!RecvDamage&&Collision::OBBCollision(_status.Obb, _playerOBB)) {
 		_status.HP--;
@@ -80,6 +91,25 @@ void NormalEnemyA::TextureAnimation()
 		_status.Tex->CreateTexture();
 		AnimationCount = 0;
 	}
+}
+
+
+void NormalEnemyA::Jump()
+{
+	float SubPower = 0.001f;
+	//落下の緩急
+	constexpr float Distortion = 3.f;
+	//地面の高さ
+	constexpr float GroundY = 0.5f;
+	//ジャンプ高さ
+	constexpr float Height = 1.5f;
+
+	//ドッスン挙動
+	JFrame += 1.f / 60.f;
+	_status.Pos.y = GroundY + (1.0f - pow(1.0f - sin(PI * JFrame), Distortion)) * Height;
+
+	if (JFrame >= 1.f)JFrame = 0.f;
+	std::clamp(JFrame, 0.f, 1.f);
 }
 
 

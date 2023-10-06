@@ -4,6 +4,8 @@ class NormalEnemyA :
     public BaseEnemy
 {
 public:
+    ~NormalEnemyA();
+public:
     /** ‰Šú‰» **/
     void Init() override;
     /** XV **/
@@ -13,6 +15,7 @@ public:
     /** ‚ ‚É‚ß[‚µ‚å‚ñ **/
 	void TextureAnimation() override;
 private:
-
+    float JFrame;
+    void Jump();
 };
 
