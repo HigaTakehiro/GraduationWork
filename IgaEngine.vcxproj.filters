@@ -96,6 +96,9 @@
     <Filter Include="ソース ファイル\ApplicationCode\Collision">
       <UniqueIdentifier>{5f4982f8-2bc4-4258-82cc-fb1a3a14435e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Shake">
+      <UniqueIdentifier>{2d71da12-0523-41f6-9811-20ef8a0d049b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Shake\Shake.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -410,6 +416,9 @@
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />
+    <ClInclude Include="ApplicationCode\Shake\Shake.h">
+      <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
