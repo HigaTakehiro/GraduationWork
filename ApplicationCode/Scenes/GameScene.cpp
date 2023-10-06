@@ -2,9 +2,12 @@
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
-
+#include"NormalEnemyA.h"
 void GameScene::Initialize()
 {
+	ShowCursor(true);
+	//ポストエフェクト初期化
+	//画面大きさ設定
 	const Vector3 LB = { -1.0f, -1.0f, 0.0f };
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
@@ -12,6 +15,15 @@ void GameScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
+	//カメラ初期化
+	cameraPos_ = { 0, 8, 30 };
+	targetPos_ = { 0, 0, 0 };
+
+	camera_ = std::make_unique<Camera>();
+	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
+
+	//ライト初期化
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -21,12 +33,56 @@ void GameScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
+	//3dオブジェクト初期化
+	ground_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+	ground_->SetScale({ 0.2f, 0.2f, 0.2f });
+	player_ = new Player;
+	player_->Initialize();
+
 	postEffectNo_ = PostEffect::NONE;
 
+	ene = new NormalEnemyA();
+	ene->Init();
+	ene->SetPlayerIns(player_);
 }
 
 void GameScene::Update()
 {
+	ground_->Update();
+	player_->Update();
+
+	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
+		cameraPos_.z += 1.0f;
+	}
+	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
+		cameraPos_.z -= 1.0f;
+	}
+	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
+		cameraPos_.x += 1.0f;
+	}
+	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
+		cameraPos_.x -= 1.0f;
+	}
+
+	camera_->SetEye(cameraPos_);
+	light_->Update();
+
+	//プレイヤーのOBB設定
+	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
+		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
+		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
+	};
+	OBB l_obb;
+	l_obb.SetParam_Pos(trans);
+	l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
+	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
+
+	_hummmerObb = &l_obb;
+	ene->SetHammerObb(*_hummmerObb);
+
+
+	ene->Upda(camera_.get());
+	colManager_->Update();
 	//シーン切り替え
 	SceneChange();
 }
@@ -44,8 +100,11 @@ void GameScene::Draw()
 
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	ground_->Draw();
+	player_->Draw();
+	
 	Object3d::PostDraw();
-
+	ene->Draw();
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
@@ -54,7 +113,8 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 	D2D1_RECT_F textDrawRange = { 0, 0, 500, 500 };
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックでタイトルシーン\n右クリックでリザルトシーン", textDrawRange);
+	std::wstring rot = std::to_wstring(player_->GetRot().y);
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックでタイトルシーン\n右クリックでリザルトシーン\n" + rot, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -71,6 +131,9 @@ void GameScene::Draw()
 void GameScene::Finalize()
 {
 	safe_delete(text_);
+	player_->Finalize();
+	safe_delete(player_);
+	colManager_->Finalize();
 }
 
 void GameScene::SceneChange()
@@ -79,6 +142,6 @@ void GameScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
+		//SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
 }

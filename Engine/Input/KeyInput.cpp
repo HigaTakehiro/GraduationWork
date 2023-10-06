@@ -36,15 +36,27 @@ bool KeyInput::PushKey(BYTE keyNumber) {
 }
 
 bool KeyInput::HoldKey(BYTE keyNumber) {
+	//キーが押されっぱなしの場合trueを返す
 	if (keyPre[keyNumber] && key[keyNumber]) {
 		return true;
 	}
+	//そうでなければfalseを返す
 	return false;
 }
 
 bool KeyInput::TriggerKey(BYTE keyNumber) {
 	//前回は押していなくて、今回は押していればtrueを返す
 	if (!keyPre[keyNumber] && key[keyNumber]) {
+		return true;
+	}
+	//そうでなければfalseを返す
+	return false;
+}
+
+bool KeyInput::ReleaseKey(BYTE keyNumber)
+{
+	//前回は押されていて、今回押されていなければtrueを返す
+	if (keyPre[keyNumber] && !key[keyNumber]) {
 		return true;
 	}
 	//そうでなければfalseを返す

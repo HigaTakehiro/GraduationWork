@@ -16,7 +16,7 @@ void WinApp::Initialize() {
 	//ウィンドウクラスの設定
 	w.cbSize = sizeof(WNDCLASSEX);
 	w.lpfnWndProc = (WNDPROC)WindowProc; // ウィンドウプロシージャを設定
-	w.lpszClassName = L"AngelicIron"; // ウィンドウクラス名
+	w.lpszClassName = L"IgaEngine"; // ウィンドウクラス名
 	w.hInstance = GetModuleHandle(nullptr); // ウィンドウハンドル
 	w.hCursor = LoadCursor(NULL, IDC_ARROW); // カーソル指定
 
@@ -38,7 +38,7 @@ void WinApp::Initialize() {
 
 	// ウィンドウオブジェクトの生成
 	hwnd = CreateWindow(w.lpszClassName, // クラス名
-		L"転血",         // タイトルバーの文字
+		w.lpszClassName,         // タイトルバーの文字
 		windowStyle,        // 標準的なウィンドウスタイル
 		display_width / 6,              // 表示X座標（OSに任せる）
 		display_height / 6,              // 表示Y座標（OSに任せる）

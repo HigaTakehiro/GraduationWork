@@ -10,6 +10,9 @@
 #include "Model.h"
 #include "Camera.h"
 #include "LightGroup.h"
+#include "CollisionManager.h"
+
+class CollisionManager;
 
 /// <summary>
 /// 3Dオブジェクト
@@ -40,6 +43,22 @@ public: // サブクラス
 	enum VSPipelineNo {
 		Normal,
 		Wave,
+	};
+
+	//当たり判定タイプ
+	enum class CollisionType {
+		Sphere,
+		Box,
+		None
+	};
+
+	//オブジェクトタイプ
+	enum class OBJType : int32_t {
+		None = 0x00,
+		Player = 0x01,
+		Enemy = 0x02,
+		Hammer = 0x04,
+		Wall = 0x08
 	};
 
 public: // 静的メンバ関数
@@ -89,6 +108,8 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12PipelineState> pipelinestate[vsSize];
 	//ライト
 	static LightGroup* light;
+	//当たり判定マネージャー
+	static CollisionManager* colManager_;
 
 private:// 静的メンバ関数
 	/// <summary>
@@ -117,6 +138,12 @@ public: //静的メンバ関数
 	/// </summary>
 	/// <param name="light">ライト</param>
 	static void SetLight(LightGroup* light) { Object3d::light = light; }
+
+	/// <summary>
+	/// コリジョンマネージャーセット
+	/// </summary>
+	/// <param name="colManager">コリジョンマネージャー</param>
+	static void SetCollisionManager(CollisionManager* colManager) { Object3d::colManager_ = colManager; }
 
 public: // メンバ関数
 	bool Initialize();
@@ -217,6 +244,12 @@ public: // メンバ関数
 	void SetIsWave(bool isWave) { this->isWave = isWave; }
 
 	/// <summary>
+	/// ヒットフラグをセット
+	/// </summary>
+	/// <param name="isHit">ヒットフラグ</param>
+	void SetIsHit(bool isHit) { isHit_ = isHit; }
+
+	/// <summary>
 	/// 親オブジェクト取得
 	/// </summary>
 	/// <returns>親オブジェクト</returns>
@@ -228,6 +261,61 @@ public: // メンバ関数
 	/// <returns>親オブジェクト(カメラ)</returns>
 	Camera* GetCameraParent() { return cameraParent; }
 
+	/// <summary>
+	/// オブジェクトタイプ取得
+	/// </summary>
+	/// <returns>オブジェクトタイプ</returns>
+	int32_t GetObjType() { return objType_; }
+
+	/// <summary>
+	/// オブジェクトタイプセット
+	/// </summary>
+	/// <param name="objType">オブジェクトタイプ</param>
+	void SetObjType(int32_t objType);
+
+	/// <summary>
+	/// コリジョンタイプ取得
+	/// </summary>
+	/// <returns>コリジョンタイプ</returns>
+	CollisionType GetColType() { return colType_; }
+
+	/// <summary>
+	/// コリジョンタイプセット
+	/// </summary>
+	/// <param name="colType">コリジョンタイプ</param>
+	void SetColType(CollisionType colType) { colType_ = colType; }
+
+	/// <summary>
+	/// 球の当たり判定半径をセット
+	/// </summary>
+	/// <param name="hitRadius">球の当たり判定半径</param>
+	void SetHitRadius(float hitRadius) { hitRadius_ = hitRadius; }
+
+	/// <summary>
+	/// 球の当たり判定を取得
+	/// </summary>
+	/// <returns>球の当たり判定</returns>
+	float GetHitRadius() { return hitRadius_; }
+
+	/// <summary>
+	/// ヒット時コールバック関数
+	/// </summary>
+	/// <returns>当たっている</returns>
+	void OnCollision() { isHit_ = true; }
+
+	/// <summary>
+	/// ヒットフラグ取得
+	/// </summary>
+	/// <returns>ヒットフラグ</returns>
+	bool GetIsHit() { return isHit_; }
+
+	/// <summary>
+	/// 行列の取得
+	/// </summary>
+	/// <returns>行列</returns>
+	XMMATRIX GetMatRot()const { return matRot; }
+	XMMATRIX GetMatTrans()const { return matTrans; }
+	XMMATRIX GetMatWorld()const { return matWorld; }
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	// 色
@@ -256,5 +344,15 @@ private: // メンバ変数
 	bool isWave;
 	//シェーダー用タイマー
 	float timer = 0.0f;
+	//オブジェクトタイプ
+	int32_t objType_ = (int32_t)OBJType::None;
+	//当たり判定タイプ
+	CollisionType colType_ = CollisionType::None;
+	//球の当たり判定半径
+	float hitRadius_ = 1.0f;
+	//当たり判定フラグ
+	bool isHit_;
+	//各行列
+	XMMATRIX matScale, matRot, matTrans;
 };
 

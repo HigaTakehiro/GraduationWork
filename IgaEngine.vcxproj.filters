@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="ソース ファイル">
@@ -39,7 +39,7 @@
     <Filter Include="ソース ファイル\ApplicationCode\CameraMove">
       <UniqueIdentifier>{f592ee56-c219-4ab0-b5d8-f5db7062530d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\ApplicationCode\Enemies">
+    <Filter Include="ソース ファイル\ApplicationCode\Enemy">
       <UniqueIdentifier>{7ef8022d-10d5-48f7-ab06-0f2aa77c548e}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\ApplicationCode\Players">
@@ -83,6 +83,18 @@
     </Filter>
     <Filter Include="ソース ファイル\Engine\Object3d">
       <UniqueIdentifier>{ba496a77-61e5-4391-ba80-8710154294fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Texture">
+      <UniqueIdentifier>{2428a05e-5ceb-4f60-bcbe-4b3ac1355f78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Enemy\Base">
+      <UniqueIdentifier>{83777728-e2c2-4d56-b4b9-35ac310b06de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Enemy\Derivative">
+      <UniqueIdentifier>{4c8aaada-19f4-464e-b964-9216abf7f7fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Collision">
+      <UniqueIdentifier>{5f4982f8-2bc4-4258-82cc-fb1a3a14435e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +188,9 @@
     <ClCompile Include="Engine\Base\ExternalFileLoader.cpp">
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Players\Player.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
+    </ClCompile>
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp">
       <Filter>ソース ファイル\ApplicationCode\Maths</Filter>
     </ClCompile>
@@ -202,6 +217,30 @@
     </ClCompile>
     <ClCompile Include="Engine\Object2d\Collision2d.cpp">
       <Filter>ソース ファイル\Engine\Object2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Texture\Texture.cpp">
+      <Filter>ソース ファイル\Engine\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\BaseEnemy.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Enemy\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Enemy\Derivative</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Collision\CollisionManager.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Collision\SphereAndSphere.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Object3d\CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\Engine\Object3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Base\CsvLoader.cpp">
+      <Filter>ソース ファイル\Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Map\GameMap.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +352,9 @@
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h">
       <Filter>ソース ファイル\ApplicationCode\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="ApplicationCode\Players\Player.h">
+      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
+    </ClInclude>
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
@@ -343,7 +385,31 @@
     <ClInclude Include="Engine\Object2d\Collision2d.h">
       <Filter>ソース ファイル\Engine\Object2d</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Scenes\SelectScene.h" />
+    <ClInclude Include="Engine\Texture\Texture.h">
+      <Filter>ソース ファイル\Engine\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\BaseEnemy.h">
+      <Filter>ソース ファイル\ApplicationCode\Enemy\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h">
+      <Filter>ソース ファイル\ApplicationCode\Enemy\Derivative</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Collision\BaseCollision.h">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Collision\CollisionManager.h">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Collision\SphereAndSphere.h">
+      <Filter>ソース ファイル\ApplicationCode\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Object3d\CollisionPrimitive.h">
+      <Filter>ソース ファイル\Engine\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Base\CsvLoader.h">
+      <Filter>ソース ファイル\Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Map\GameMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
@@ -371,6 +437,9 @@
     </None>
     <None Include="Engine\Resources\shaders\Object3d\obj\OBJShaderHeader.hlsli">
       <Filter>シェーダーファイル\Object3d\obj</Filter>
+    </None>
+    <None Include="Engine\Resources\shaders\Object2d\Texture.hlsli">
+      <Filter>シェーダーファイル\Object2d</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -442,6 +511,12 @@
     </FxCompile>
     <FxCompile Include="Engine\Resources\shaders\Object3d\obj\WaveVS.hlsl">
       <Filter>シェーダーファイル\Object3d\obj</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Resources\shaders\Object2d\TexturePS.hlsl">
+      <Filter>シェーダーファイル\Object2d</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Resources\shaders\Object2d\TextureVS.hlsl">
+      <Filter>シェーダーファイル\Object2d</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

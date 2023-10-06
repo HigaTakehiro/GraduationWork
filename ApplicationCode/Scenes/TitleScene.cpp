@@ -11,6 +11,15 @@ void TitleScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
+	//カメラ初期化
+	cameraPos_ = { 0, 8, 30 };
+	targetPos_ = { 0, 0, 0 };
+
+	camera_ = std::make_unique<Camera>();
+	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
+
+	//ライト初期化
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -20,11 +29,15 @@ void TitleScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
+	//3dオブジェクト初期化
+
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::game, true, 0.1f);
 }
 
 void TitleScene::Update()
 {
+	camera_->SetEye(cameraPos_);
+	light_->Update();
 	//シーン切り替え
 	SceneChange();
 }
@@ -71,6 +84,7 @@ void TitleScene::Draw()
 void TitleScene::Finalize()
 {
 	safe_delete(text_);
+	//colManager_->Finalize();
 }
 
 void TitleScene::SceneChange()

@@ -21,6 +21,11 @@ public: //‰æ‘œ–¼
 		Image = 1,
 	};
 
+	enum Image2DName {
+		USA_1,
+		USA_2,
+		USA_3
+	};
 public: //ƒƒ“ƒoŠÖ”
 	/// <summary>
 	/// ‰Šú‰»

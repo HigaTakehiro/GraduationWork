@@ -9,6 +9,7 @@
 #include "KeyInput.h"
 #include "SafeDelete.h"
 #include "TextDraw.h"
+#include "CollisionManager.h"
 
 class SceneManager
 {
@@ -70,6 +71,12 @@ public: //静的メンバ関数
 	static void SetStageNo(const int32_t stageNo);
 
 	/// <summary>
+	/// 当たり判定マネージャーをセット
+	/// </summary>
+	/// <param name="colManager">当たり判定クラス</param>
+	static void SetCollsionManager(CollisionManager* colManager) { colManager_ = colManager; }
+
+	/// <summary>
 	/// ステージ番号取得
 	/// </summary>
 	/// <returns>ステージ番号</returns>
@@ -85,6 +92,7 @@ private: //静的メンバ変数
 	static BaseScene* nowScene;
 	static int32_t stageNo_;
 	static int32_t score;
+	static CollisionManager* colManager_;
 
 private: //メンバ変数
 	std::unique_ptr<TextDraw> textDraw;

@@ -20,6 +20,7 @@ ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootsignature;
 ComPtr<ID3D12PipelineState> Object3d::pipelinestate[] = {};
 LightGroup* Object3d::light = nullptr;
+CollisionManager* Object3d::colManager_ = nullptr;
 
 bool Object3d::StaticInitialize(ID3D12Device* device, int32_t window_width, int32_t window_height)
 {
@@ -142,8 +143,8 @@ bool Object3d::InitializeGraphicsPipeline()
 		gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 		// ラスタライザステート
 		gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		/*gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-		gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;*/
+		gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 		// デプスステンシルステート
 		gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
@@ -242,8 +243,7 @@ void Object3d::Update(const float maxTime)
 	if (timer >= maxTime) {
 		timer = 0.0f;
 	}
-
-	XMMATRIX matScale, matRot, matTrans;
+	isHit_ = false;
 
 	// スケール、回転、平行移動行列の計算
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
@@ -310,6 +310,15 @@ void Object3d::Draw()
 	
 	light->Draw(3);
 	model->Draw(cmdList);
+}
+
+void Object3d::SetObjType(int32_t objType)
+{
+	if (objType == (int32_t)OBJType::None) {
+		return;
+	}
+	objType_ = objType;
+	colManager_->AddObj(*this);
 }
 
 void Object3d::LoadVS(const wchar_t* vsName, ComPtr<ID3DBlob>& vsBlob) {

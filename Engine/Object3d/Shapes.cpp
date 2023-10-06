@@ -27,14 +27,35 @@ Model* Shapes::CreateTriangle(const XMFLOAT2& vertices_1, const XMFLOAT2& vertic
     return triangleModel;
 }
 
-Model* Shapes::CreateSquare(XMFLOAT2 upperLeft, XMFLOAT2 lowerBottom, const std::string& textureName)
+Model* Shapes::CreateSquare(XMFLOAT2 upperLeft, XMFLOAT2 lowerBottom, const std::string& textureName, const XMFLOAT2 imageSize)
 {
+
+    //UV設定
+    XMFLOAT2 uvLT, uvLB, uvRT, uvRB;
+
+    uvLT = { 0, 0 };
+    uvLB = { 0, 1 };
+    uvRT = { 1, 0 };
+    uvRB = { 1, 1 };
+
+    if (imageSize.x != 0.0f && imageSize.y != 0.0f) {
+        float tex_left = upperLeft.x / imageSize.x;
+        float tex_right = (upperLeft.x + lowerBottom.x) / imageSize.x;
+        float tex_top = upperLeft.y / imageSize.y;
+        float tex_bottom = (upperLeft.y + lowerBottom.y) / imageSize.y;
+
+        uvLB = { tex_left, tex_bottom };
+        uvLT = { tex_left, tex_top };
+        uvRB = { tex_right, tex_bottom };
+        uvRT = { tex_right, tex_top };
+    }
+
     Model* squareModel = nullptr;
     Model::VertexPosNormalUv verticesSquare[] = {
-        {{upperLeft.x, lowerBottom.y, 0.0f}, {0, 0, 1}, {0, 1}},  //左下
-        {{upperLeft.x, upperLeft.y, 0.0f}, {0, 0, 1}, {0, 0}},    //左上
-        {{lowerBottom.x, lowerBottom.y, 0.0f}, {0, 0, 1}, {1, 1}},//右下
-        {{lowerBottom.x, upperLeft.y, 0.0f}, {0, 0, 1}, {1, 0}},  //右上
+        {{-upperLeft.x, -lowerBottom.y, 0.0f}, {0, 0, 1}, uvLB},  //左下
+        {{-upperLeft.x, -upperLeft.y, 0.0f}, {0, 0, 1}, uvLT},    //左上
+        {{-lowerBottom.x, -lowerBottom.y, 0.0f}, {0, 0, 1}, uvRB},//右下
+        {{-lowerBottom.x, -upperLeft.y, 0.0f}, {0, 0, 1}, uvRT},  //右上
     };
 
     unsigned short indicesSquare[] = {

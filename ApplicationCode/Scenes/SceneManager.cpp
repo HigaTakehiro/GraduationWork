@@ -3,6 +3,7 @@
 BaseScene* SceneManager::nowScene = nullptr;
 int32_t SceneManager::stageNo_ = 1;
 int32_t SceneManager::score = 0;
+CollisionManager* SceneManager::colManager_ = nullptr;
 
 void SceneManager::Initialize() {
 	//マウスカーソルを非表示にする
@@ -55,17 +56,17 @@ void SceneManager::SceneChange(SceneName scene) {
 	case SceneName::Title:
 		nowScene = new TitleScene();
 		nowScene->Initialize();
-
+		nowScene->SetCollisionManager(colManager_);
 		break;
 	case SceneName::Game:
 		nowScene = new GameScene();
 		nowScene->Initialize();
-		ShowCursor(false);
+		nowScene->SetCollisionManager(colManager_);
 		break;
 	case SceneName::Result:
 		nowScene = new ResultScene();
 		nowScene->Initialize();
-		ShowCursor(true);
+		nowScene->SetCollisionManager(colManager_);
 		break;
 	default:
 		break;

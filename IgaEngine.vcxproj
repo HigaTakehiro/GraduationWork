@@ -82,7 +82,7 @@
     <IncludePath>$(ProjectDir)ApplicationCode\Command;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(IncludePath)</IncludePath>
     <IncludePath>$(ProjectDir)ApplicationCode\ScrollCamera;$(ProjectDir)ApplicationCode\Tower;$(ProjectDir)ApplicationCode\Blood;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(IncludePath)</IncludePath>
     <IncludePath>$(ProjectDir)ApplicationCode\Tower;$(ProjectDir)ApplicationCode\Blood;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(IncludePath)</IncludePath>
-    <IncludePath>$(ProjectDir)ApplicationCode\MapChip;$(ProjectDir)ApplicationCode\Camera2D;$(ProjectDir)ApplicationCode\Blood;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(ProjectDir)ApplicationCode\Enemys;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)ApplicationCode\Collision;$(ProjectDir)ApplicationCode\MapChip;$(ProjectDir)ApplicationCode\Camera2D;$(ProjectDir)ApplicationCode\Blood;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(ProjectDir)ApplicationCode\Enemy;$(ProjectDir)Engine\Texture;$(ProjectDir)ApplicationCode\Map;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)External\fbx_sdk\lib;$(ProjectDir)External\DirectXTex\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -90,7 +90,7 @@
     <IncludePath>$(ProjectDir)ApplicationCode\Command;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(IncludePath)</IncludePath>
     <IncludePath>$(ProjectDir)ApplicationCode\ScrollCamera;$(ProjectDir)ApplicationCode\Tower;$(ProjectDir)ApplicationCode\Blood;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(IncludePath)</IncludePath>
     <IncludePath>$(ProjectDir)ApplicationCode\Tower;$(ProjectDir)ApplicationCode\Blood;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(IncludePath)</IncludePath>
-    <IncludePath>$(ProjectDir)ApplicationCode\MapChip;$(ProjectDir)ApplicationCode\Camera2D;$(ProjectDir)ApplicationCode\Blood;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(ProjectDir)ApplicationCode\Enemys;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)ApplicationCode\Collision;$(ProjectDir)ApplicationCode\MapChip;$(ProjectDir)ApplicationCode\Camera2D;$(ProjectDir)ApplicationCode\Blood;$(ProjectDir)ApplicationCode\UI;$(ProjectDir)ApplicationCode\Scenes;$(ProjectDir)ApplicationCode\Players;$(ProjectDir)ApplicationCode\Effects;$(ProjectDir)ApplicationCode\Enemies;$(ProjectDir)ApplicationCode\CameraMove;$(ProjectDir)ApplicationCode\Bosses;$(ProjectDir)ApplicationCode\Maths;$(ProjectDir)External\DirectXTex\inc;$(ProjectDir)Engine\Object3d;$(ProjectDir)Engine\Object2d;$(ProjectDir)External\nlohmann;$(ProjectDir)External\fbx_sdk\include;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\FBX;$(ProjectDir)Engine\Camera;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Light;$(ProjectDir)ApplicationCode\Enemy;$(ProjectDir)Engine\Texture;$(ProjectDir)ApplicationCode\Map;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)External\DirectXTex\lib\$(Configuration);$(ProjectDir)External\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -128,6 +128,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)External\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,6 +147,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)External\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,7 +159,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ApplicationCode\Collision\CollisionManager.cpp" />
+    <ClCompile Include="ApplicationCode\Collision\SphereAndSphere.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\BaseEnemy.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp" />
+    <ClCompile Include="ApplicationCode\Map\GameMap.cpp" />
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp" />
+    <ClCompile Include="ApplicationCode\Players\Player.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\GameScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\ResultScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\SceneManager.cpp" />
@@ -165,6 +173,7 @@
     <ClCompile Include="ApplicationCode\UI\Button.cpp" />
     <ClCompile Include="Engine\Audio\Sound.cpp" />
     <ClCompile Include="Engine\Audio\SoundManager.cpp" />
+    <ClCompile Include="Engine\Base\CsvLoader.cpp" />
     <ClCompile Include="Engine\Base\DirectXSetting.cpp" />
     <ClCompile Include="Engine\Base\ExternalFileLoader.cpp" />
     <ClCompile Include="Engine\Base\JsonLoader.cpp" />
@@ -189,16 +198,25 @@
     <ClCompile Include="Engine\Object2d\TextDraw.cpp" />
     <ClCompile Include="Engine\Object3d\BaseLight.cpp" />
     <ClCompile Include="Engine\Object3d\Collision.cpp" />
+    <ClCompile Include="Engine\Object3d\CollisionPrimitive.cpp" />
     <ClCompile Include="Engine\Object3d\MapChip.cpp" />
     <ClCompile Include="Engine\Object3d\Model.cpp" />
     <ClCompile Include="Engine\Object3d\ModelManager.cpp" />
     <ClCompile Include="Engine\Object3d\Object3d.cpp" />
     <ClCompile Include="Engine\Object3d\ParticleManager.cpp" />
     <ClCompile Include="Engine\Object3d\Shapes.cpp" />
+    <ClCompile Include="Engine\Texture\Texture.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ApplicationCode\Collision\BaseCollision.h" />
+    <ClInclude Include="ApplicationCode\Collision\CollisionManager.h" />
+    <ClInclude Include="ApplicationCode\Collision\SphereAndSphere.h" />
+    <ClInclude Include="ApplicationCode\Enemy\BaseEnemy.h" />
+    <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h" />
+    <ClInclude Include="ApplicationCode\Map\GameMap.h" />
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h" />
+    <ClInclude Include="ApplicationCode\Players\Player.h" />
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\GameScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\ResultScene.h" />
@@ -207,6 +225,7 @@
     <ClInclude Include="ApplicationCode\UI\Button.h" />
     <ClInclude Include="Engine\Audio\Sound.h" />
     <ClInclude Include="Engine\Audio\SoundManager.h" />
+    <ClInclude Include="Engine\Base\CsvLoader.h" />
     <ClInclude Include="Engine\Base\DirectXSetting.h" />
     <ClInclude Include="Engine\Base\Easing.h" />
     <ClInclude Include="Engine\Base\ExternalFileLoader.h" />
@@ -238,18 +257,21 @@
     <ClInclude Include="Engine\Object2d\TextDraw.h" />
     <ClInclude Include="Engine\Object3d\BaseLight.h" />
     <ClInclude Include="Engine\Object3d\Collision.h" />
+    <ClInclude Include="Engine\Object3d\CollisionPrimitive.h" />
     <ClInclude Include="Engine\Object3d\MapChip.h" />
     <ClInclude Include="Engine\Object3d\Model.h" />
     <ClInclude Include="Engine\Object3d\ModelManager.h" />
     <ClInclude Include="Engine\Object3d\Object3d.h" />
     <ClInclude Include="Engine\Object3d\ParticleManager.h" />
     <ClInclude Include="Engine\Object3d\Shapes.h" />
+    <ClInclude Include="Engine\Texture\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Resources\shaders\Object2d\Sprite.hlsli" />
+    <None Include="Engine\Resources\shaders\Object2d\Texture.hlsli" />
     <None Include="Engine\Resources\shaders\Object3d\fbx\FBX.hlsli" />
     <None Include="Engine\Resources\shaders\Object3d\obj\Basic.hlsli" />
     <None Include="Engine\Resources\shaders\Object3d\obj\BasicShaderHeader.hlsli" />
@@ -265,6 +287,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Engine\Resources\shaders\Object2d\SpriteVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Engine\Resources\shaders\Object2d\TexturePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Engine\Resources\shaders\Object2d\TextureVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
