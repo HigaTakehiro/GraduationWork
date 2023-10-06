@@ -113,6 +113,11 @@ public: //メンバ関数
 	bool TriggerButton(BYTE buttonNumber);
 
 	/// <summary>
+	/// ボタンを離したかどうかを検知
+	/// </summary>
+	bool ReleaseButton(BYTE buttonNumber);
+
+	/// <summary>
 	/// 十字キー押下検知
 	/// </summary>
 	bool PushCrossKey(LONG crossKeyNumber);

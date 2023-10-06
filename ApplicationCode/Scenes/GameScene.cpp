@@ -2,7 +2,9 @@
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
-#include"NormalEnemyA.h"
+#include "NormalEnemyA.h"
+#include "ExternalFileLoader.h"
+
 void GameScene::Initialize()
 {
 	ShowCursor(true);
@@ -16,12 +18,7 @@ void GameScene::Initialize()
 	postEffect_->Initialize(LT, LB, RT, RB);
 
 	//カメラ初期化
-	cameraPos_ = { 0, 8, 30 };
-	targetPos_ = { 0, 0, 0 };
-
-	camera_ = std::make_unique<Camera>();
-	camera_->SetEye(cameraPos_);
-	camera_->SetTarget(targetPos_);
+	CameraSetting();
 
 	//ライト初期化
 	light_ = LightGroup::UniquePtrCreate();
@@ -34,8 +31,6 @@ void GameScene::Initialize()
 	Object3d::SetLight(light_.get());
 
 	//3dオブジェクト初期化
-	ground_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-	ground_->SetScale({ 0.2f, 0.2f, 0.2f });
 	player_ = new Player;
 	player_->Initialize();
 
@@ -44,27 +39,34 @@ void GameScene::Initialize()
 	ene = new NormalEnemyA();
 	ene->Init();
 	ene->SetPlayerIns(player_);
+
+	map_ = make_unique<GameMap>();
+	map_->Initalize();
 }
 
 void GameScene::Update()
 {
-	ground_->Update();
 	player_->Update();
 
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
+		targetPos_.z += 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f;
+		cameraPos_.z -= 1.0f; 
+		targetPos_.z -= 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
 		cameraPos_.x += 1.0f;
+		targetPos_.x += 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
 		cameraPos_.x -= 1.0f;
+		targetPos_.x -= 1.0f;
 	}
 
 	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
 	light_->Update();
 
 	//プレイヤーのOBB設定
@@ -78,9 +80,13 @@ void GameScene::Update()
 	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
 	_hummmerObb = &l_obb;
+
+	count_=map_->GetCount(player_->GetPos());
+
+
 	ene->SetHammerObb(*_hummmerObb);
 
-
+	map_->Update();
 	ene->Upda(camera_.get());
 	colManager_->Update();
 	//シーン切り替え
@@ -100,9 +106,8 @@ void GameScene::Draw()
 
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	ground_->Draw();
+	map_->Draw();
 	player_->Draw();
-	
 	Object3d::PostDraw();
 	ene->Draw();
 	//スプライト描画処理(UI等)
@@ -113,7 +118,7 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 	D2D1_RECT_F textDrawRange = { 0, 0, 500, 500 };
-	std::wstring rot = std::to_wstring(player_->GetRot().y);
+	std::wstring rot = std::to_wstring(count_);
 	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックでタイトルシーン\n右クリックでリザルトシーン\n" + rot, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -145,5 +150,42 @@ void GameScene::SceneChange()
 	}
 	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK)) {
 		//SceneManager::SceneChange(SceneManager::SceneName::Result);
+	}
+}
+
+void GameScene::CameraSetting()
+{
+	std::string line;
+	Vector3 pos{};
+	Vector3 target{};
+	std::stringstream stream;
+
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("CameraSetting.csv");
+
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+		if (word.find("#") == 0) {
+			continue;
+		}
+		if (word.find("pos") == 0) {
+			line_stream >> pos.x;
+			line_stream >> pos.y;
+			line_stream >> pos.z;
+		}
+		if (word.find("target") == 0) {
+			line_stream >> target.x;
+			line_stream >> target.y;
+			line_stream >> target.z;
+		}
+
+		cameraPos_ = pos;
+		targetPos_ = target;
+
+		camera_ = std::make_unique<Camera>();
+		camera_->SetEye(cameraPos_);
+		camera_->SetTarget(targetPos_);
 	}
 }
