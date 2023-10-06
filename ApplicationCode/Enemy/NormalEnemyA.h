@@ -4,6 +4,8 @@ class NormalEnemyA :
     public BaseEnemy
 {
 public:
+
+public:
     /** ‰Šú‰» **/
     void Init() override;
     /** XV **/
@@ -12,7 +14,11 @@ public:
     void Draw() override;
     /** ‚ ‚É‚ß[‚µ‚å‚ñ **/
 	void TextureAnimation() override;
-private:
 
+    void AttackAction() override;
+private:
+    float JFrame;
+    void Jump();
+    void Attack();
 };
 

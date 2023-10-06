@@ -11,6 +11,7 @@ using namespace DirectX;
 
 class BaseEnemy
 {
+public:
 protected:
 
 	/*敵の各パラメータ*/
@@ -74,6 +75,13 @@ protected:
 	bool RecvDamage;
 	std::shared_ptr<Player>_player;
 	OBB _playerOBB;
+
+	bool _isFlash;
+	bool _isAttack;
+	float t = 0.0f;
+	int FlashCount;
+	float back_t;
+	XMFLOAT4 _color;
 private:
 
 	//攻撃受けたか？
@@ -90,13 +98,20 @@ public:
 
 	/** アニメーション **/
 	virtual void TextureAnimation() = 0;
+
+	virtual void AttackAction()=0;
 public:
 	bool DeathJudg();
 
 	void CollideHummmer();
+
+	void RecvFlashColor();
 	//プレイヤーのインスタンス引き継ぎ　あとで直す部分
 	void SetPlayerIns(Player* player) { _player.reset(player); }
 	void SetHammerObb(OBB obb) { _playerOBB=obb; }
+
+private:
+	void RotforPlayer();
 public:
 	unsigned int GetHP()const;
 	unsigned int GetAttackVal()const;

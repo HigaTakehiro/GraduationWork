@@ -1,8 +1,9 @@
 #Player Status
 
-pos 0 3 0
+pos 0 2.5 0
 scale 0.03 0.03 0.03
 rot 0 180 0
+#プレイヤーの速度
 Smove 0.1
 Srot 10.0
 RrotTime 60.0

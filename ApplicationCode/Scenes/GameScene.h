@@ -17,6 +17,7 @@
 #include "TextDraw.h"
 #include "JsonLoader.h"
 #include "Player.h"
+#include"GameMap.h"
 
 #include"BaseEnemy.h"
 class GameScene : public BaseScene
@@ -55,6 +56,11 @@ private: //メンバ関数
 	/// </summary>
 	void CameraSetting();
 
+	/// <summary>
+	/// 次への移動
+	/// </summary>
+	void EasingNextPos();
+
 	BaseEnemy* ene;
 	OBB* _hummmerObb;
 
@@ -73,9 +79,15 @@ private: //メンバ変数
 	//テキスト描画
 	TextDraw* text_;
 	//仮地面
-	std::unique_ptr<Object3d> ground_;
+	std::unique_ptr<GameMap> map_;
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点
 	Vector3 targetPos_;
+
+	int count_ = 0;
+	int oldcount_ = 0;
+	float oldcamerapos_ = 0;
+	float time_ = 0;
+	XMFLOAT3 nextPos_{};
 };

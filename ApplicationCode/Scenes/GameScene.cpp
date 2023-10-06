@@ -20,7 +20,7 @@ void GameScene::Initialize()
 
 	//カメラ初期化
 	CameraSetting();
-
+	oldcamerapos_ = cameraPos_.z;
 	//ライト初期化
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
@@ -32,8 +32,6 @@ void GameScene::Initialize()
 	Object3d::SetLight(light_.get());
 
 	//3dオブジェクト初期化
-	ground_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-	ground_->SetScale({ 0.2f, 0.2f, 0.2f });
 	player_ = new Player;
 	player_->Initialize();
 
@@ -42,27 +40,36 @@ void GameScene::Initialize()
 	ene = new NormalEnemyA();
 	ene->Init();
 	ene->SetPlayerIns(player_);
+
+	map_ = make_unique<GameMap>();
+	map_->Initalize();
+	count_ = map_->GetCount(player_->GetPos());
+	oldcount_ = count_;
 }
 
 void GameScene::Update()
 {
-	ground_->Update();
 	player_->Update();
 
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
+		targetPos_.z += 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f;
+		cameraPos_.z -= 1.0f; 
+		targetPos_.z -= 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
 		cameraPos_.x += 1.0f;
+		targetPos_.x += 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
 		cameraPos_.x -= 1.0f;
+		targetPos_.x -= 1.0f;
 	}
 
 	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
 	light_->Update();
 
 	//プレイヤーのOBB設定
@@ -76,9 +83,13 @@ void GameScene::Update()
 	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
 	_hummmerObb = &l_obb;
+
+	count_=map_->GetCount(player_->GetPos());
+
+
 	ene->SetHammerObb(*_hummmerObb);
-
-
+	EasingNextPos();
+	map_->Update();
 	ene->Upda(camera_.get());
 	colManager_->Update();
 	//シーン切り替え
@@ -98,9 +109,8 @@ void GameScene::Draw()
 
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	ground_->Draw();
+	map_->Draw();
 	player_->Draw();
-	
 	Object3d::PostDraw();
 	ene->Draw();
 	//スプライト描画処理(UI等)
@@ -131,7 +141,10 @@ void GameScene::Finalize()
 	safe_delete(text_);
 	player_->Finalize();
 	safe_delete(player_);
+	//safe_delete(ene);
+	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
+	map_->Finalize();
 }
 
 void GameScene::SceneChange()
@@ -179,4 +192,28 @@ void GameScene::CameraSetting()
 		camera_->SetEye(cameraPos_);
 		camera_->SetTarget(targetPos_);
 	}
+}
+
+void GameScene::EasingNextPos()
+{
+	if (count_ == oldcount_) { return; }
+	float NextTarget = 0;
+	if (count_ == 0 || count_ == 1 || count_ == 2) {
+		NextTarget = oldcamerapos_;
+	}
+	if (count_ == 3 || count_ == 4 || count_ == 5) {
+		NextTarget = oldcamerapos_ +50;
+	}
+	if (count_ == 6 || count_ == 7 || count_ == 8) {
+		NextTarget = oldcamerapos_ +100;
+	}
+
+
+	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
+	time_ += 0.01f;
+	cameraPos_.x = Easing::easeIn(time_, 1, cameraPos_.x, NextPos_.x);
+	targetPos_.x = Easing::easeIn(time_, 1, targetPos_.x, NextPos_.x);
+	cameraPos_.z = Easing::easeIn(time_, 1, cameraPos_.z, NextTarget);
+	targetPos_.z = Easing::easeIn(time_, 1, targetPos_.z, NextPos_.z);
+	if (time_ > 1) { oldcount_ = count_; time_ = 0; }
 }

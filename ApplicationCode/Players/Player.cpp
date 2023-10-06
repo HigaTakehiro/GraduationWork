@@ -74,7 +74,7 @@ void Player::Draw()
 {
 	player_->Draw();
 	hammer_->Draw();
-	if (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B) && !isHammerRelease_) {
+	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
 		arrow_->Draw();
 	}
 }
@@ -295,7 +295,7 @@ void Player::Attack() {
 		}
 	}
 	//攻撃キーを離している時プレイヤーの向きを修正
-	if (!KeyInput::GetIns()->PushKey(DIK_SPACE)) {
+	else {
 		//時間の割合を求める
 		float t = 0.0f;
 		if (++rotResetTimer_ < rotResetTime_) {
