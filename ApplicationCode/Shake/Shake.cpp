@@ -1,13 +1,12 @@
 #include "Shake.h"
 #include "KeyInput.h"
 #include"time.h"
+#include "ExternalFileLoader.h"
 void Shake::Initialize()
 {
-	shakeMaxTimer = 10;
 	shakeTimer = 0;
-	shakePos = 0;
 	shakeFlag = false;
-	srand((unsigned)time(NULL));
+	ShakeSet();
 }
 
 void Shake::Update()
@@ -21,12 +20,40 @@ void Shake::Update()
 		if (shakeTimer < shakeMaxTimer) {
 			shakeTimer++;
 			//-10~10‚Ì”ÍˆÍ‚Åƒ‰ƒ“ƒ_ƒ€
-			shakePos= rand() % 7 - 3;
+			shakePos = rand() % (int)pos.x - (int)pos.y;
 		}
 		else {
 			shakeTimer = 0;
 			shakeFlag = false;
 			shakePos = 0;
 		}
+	}
+}
+
+void Shake::ShakeSet()
+{
+	std::string line;
+	std::stringstream stream;
+
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Shake.csv");
+
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+		if (word.find("#") == 0) {
+			continue;
+		}
+		if (word.find("pos") == 0) {
+			line_stream >> pos.x;
+			line_stream >> pos.y;
+			line_stream >> pos.z;
+		}
+		if (word.find("timer") == 0) {
+			line_stream >> timer;
+		}
+		shakeMaxTimer = timer;
+
 	}
 }

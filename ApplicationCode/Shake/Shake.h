@@ -12,6 +12,7 @@ public:
 	/// 更新処理
 	/// </summary>
 	void Update();
+	void ShakeSet();
 	/// <summary>
 	/// シェイク時の揺れる数値の取得
 	/// </summary>
@@ -27,6 +28,7 @@ private:
 	bool shakeFlag;
 	//シェイクの揺れる数値(カメラのeyeに代入する)
 	float shakePos;
-
+	Vector3 pos{};
+	float timer{};
 };
 

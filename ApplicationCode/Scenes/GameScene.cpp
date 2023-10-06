@@ -79,8 +79,6 @@ void GameScene::Update()
 
 	}
 
-
-
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	light_->Update();
