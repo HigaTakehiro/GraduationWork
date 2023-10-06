@@ -9,3 +9,7 @@ Srot 10.0
 RrotTime 60.0
 throwSpeed 0.3
 hp 3
+#ハンマー攻撃時移動速度
+Sacc 0.02
+#最大移動スピード
+maxS 0.2
