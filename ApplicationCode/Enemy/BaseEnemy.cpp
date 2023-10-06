@@ -5,11 +5,6 @@
 #include "MouseInput.h"
 #include"Easing.h"
 
-BaseEnemy::~BaseEnemy()
-{
-	_status.Tex.reset();
-	_player.reset();
-}
 
 /***                    GETTER                      ***/
 /******************************************************/
@@ -39,7 +34,7 @@ void BaseEnemy::Idle()
 	//索敵範囲入ったら追従
 	if (Collision::GetLength(_player->GetPos(), _status.Pos) < _status.SearchRange)
 		_action = FOLLOW;
-
+	
 	//向いた方向に移動
 	//MoveDirection();
 }
@@ -54,12 +49,10 @@ void BaseEnemy::Walk()
 	MoveDirection();
 }
 
-void BaseEnemy::Follow()
+void BaseEnemy::RotforPlayer()
 {
-	AnimTim = 0;
-
 	//角度の取得 プレイヤーが敵の索敵位置に入ったら向きをプレイヤーの方に
-	XMVECTOR PositionA = {_player->GetPos().x,_player->GetPos().y,_player->GetPos().z};
+	XMVECTOR PositionA = { _player->GetPos().x,_player->GetPos().y,_player->GetPos().z };
 	XMVECTOR PositionB = { _status.Pos.x, _status.Pos.y, _status.Pos.z };
 
 	//プレイヤーと敵のベクトルの長さ(差)を求める
@@ -68,16 +61,20 @@ void BaseEnemy::Follow()
 	float RottoPlayer;
 	RottoPlayer = atan2f(SubVector.m128_f32[0], SubVector.m128_f32[2]);
 
-	_status.Rot={ 0.f, RottoPlayer * 70.f + 180.f,0.f };
+	_status.Rot.y =RottoPlayer * 70.f + 180.f;
 
+}
+
+void BaseEnemy::Follow()
+{
+	AnimTim = 0;
+
+	RotforPlayer();
 	//攻撃判定
-	//if (Collision::GetLength(_player->GetPos(), _status.Pos) < 1.f)
-		//_action = ATTACK;
-
-	if (KeyInput::GetIns()->TriggerKey(DIK_K)) {
-		RecvDamage = TRUE;
+	if (!_isAttack && Collision::GetLength(_player->GetPos(), _status.Pos) < 2.f) {
+		_action = ATTACK;
 	}
-
+	
 	//仰け反り判定
 	if (RecvDamage)
 		_action = KNOCK;
@@ -89,11 +86,10 @@ void BaseEnemy::Follow()
 void BaseEnemy::Attack()
 {
 	RecvDamage = FALSE;
+	_isAttack = true;
 
-	//アニメーションカウンタ進める
-	AnimTim++;
-	if (AnimTim > 120)
-		_action = FOLLOW;
+	RotforPlayer();
+	AttackAction();
 }
 
 void BaseEnemy::Knock()

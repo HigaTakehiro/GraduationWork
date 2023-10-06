@@ -12,7 +12,6 @@ using namespace DirectX;
 class BaseEnemy
 {
 public:
-	~BaseEnemy();
 protected:
 
 	/*敵の各パラメータ*/
@@ -78,8 +77,10 @@ protected:
 	OBB _playerOBB;
 
 	bool _isFlash;
+	bool _isAttack;
 	float t = 0.0f;
 	int FlashCount;
+	float back_t;
 	XMFLOAT4 _color;
 private:
 
@@ -97,6 +98,8 @@ public:
 
 	/** アニメーション **/
 	virtual void TextureAnimation() = 0;
+
+	virtual void AttackAction()=0;
 public:
 	bool DeathJudg();
 
@@ -106,6 +109,9 @@ public:
 	//プレイヤーのインスタンス引き継ぎ　あとで直す部分
 	void SetPlayerIns(Player* player) { _player.reset(player); }
 	void SetHammerObb(OBB obb) { _playerOBB=obb; }
+
+private:
+	void RotforPlayer();
 public:
 	unsigned int GetHP()const;
 	unsigned int GetAttackVal()const;
