@@ -56,6 +56,11 @@ private: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void CameraSetting();
 
+	/// <summary>
+	/// Ÿ‚Ö‚ÌˆÚ“®
+	/// </summary>
+	void EasingNextPos();
+
 	BaseEnemy* ene;
 	OBB* _hummmerObb;
 
@@ -81,4 +86,8 @@ private: //ƒƒ“ƒo•Ï”
 	Vector3 targetPos_;
 
 	int count_ = 0;
+	int oldcount_ = 0;
+	float oldcamerapos_ = 0;
+	float time_ = 0;
+	XMFLOAT3 nextPos_{};
 };

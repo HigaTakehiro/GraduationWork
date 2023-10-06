@@ -40,8 +40,7 @@ public:
 	
 	int GetCount(const XMFLOAT3& pos);
 
-private:
-	void CheckState();
+	XMFLOAT3 GetNowMapPos();
 	
 private:
 	
