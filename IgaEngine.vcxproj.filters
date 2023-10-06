@@ -239,6 +239,9 @@
     <ClCompile Include="Engine\Base\CsvLoader.cpp">
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Map\GameMap.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -406,6 +409,7 @@
     <ClInclude Include="Engine\Base\CsvLoader.h">
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClInclude>
+    <ClInclude Include="ApplicationCode\Map\GameMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
