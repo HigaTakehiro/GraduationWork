@@ -96,6 +96,8 @@ void Player::PlayerStatusSetting() {
 	float rotSpeed;
 	float throwSpeed;
 	float rotResetTime;
+	float maxSpeed;
+	float acc;
 	int32_t hp;
 	std::stringstream stream;
 
@@ -139,6 +141,12 @@ void Player::PlayerStatusSetting() {
 		if (word.find("hp") == 0) {
 			line_stream >> hp;
 		}
+		if (word.find("maxS") == 0) {
+			line_stream >> maxSpeed;
+		}
+		if (word.find("Sacc") == 0) {
+			line_stream >> acc;
+		}
 	}
 
 	//èâä˙âª
@@ -151,6 +159,8 @@ void Player::PlayerStatusSetting() {
 	rotSpeed_ = rotSpeed;
 	rotResetTimer_ = rotResetTime_ = rotResetTime;
 	throwSpeed_ = throwSpeed;
+	maxMoveSpeed_ = maxSpeed;
+	hammerAcc_ = acc;
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -163,34 +173,98 @@ void Player::Move() {
 	const Vector3 leftRightMoveVec = { 1.0f, 0.0f, 0.0f };
 
 	float leftStick = PadInput::GetIns()->leftStickX();
-	if (leftStick > 0) {
-		pos_ += leftRightMoveVec * -moveSpeed_;
-	}
-	if (leftStick < 0) {
-		pos_ += leftRightMoveVec * moveSpeed_;
-	}
-	leftStick = PadInput::GetIns()->leftStickY();
-	if (leftStick > 0) {
-		pos_ += upDownMoveVec * moveSpeed_;
-	}
-	if (leftStick < 0) {
-		pos_ += upDownMoveVec * -moveSpeed_;
-	}
-	
-	//if (PadInput::GetIns()->leftStickX())
 
-	if (KeyInput::GetIns()->HoldKey(DIK_LEFT)) {
-		pos_ += leftRightMoveVec * moveSpeed_;
+	//å∏ë¨èàóù
+	if (acc_.x < 0) {
+		acc_.x += hammerAcc_ / 5;
 	}
-	if (KeyInput::GetIns()->HoldKey(DIK_RIGHT)) {
-		pos_ += leftRightMoveVec * -moveSpeed_;
+	else if (acc_.x > 0) {
+		acc_.x -= hammerAcc_ / 5;
 	}
-	if (KeyInput::GetIns()->HoldKey(DIK_UP)) {
-		pos_ += upDownMoveVec * -moveSpeed_;
+	if (acc_.z < 0) {
+		acc_.z += hammerAcc_ / 5;
 	}
-	if (KeyInput::GetIns()->HoldKey(DIK_DOWN)) {
-		pos_ += upDownMoveVec * moveSpeed_;
+	else if (acc_.z > 0) {
+		acc_.z -= hammerAcc_ / 5;
 	}
+
+	//í èÌà⁄ìÆ
+	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
+		if (leftStick > 0) {
+			acc_ += leftRightMoveVec * -hammerAcc_;
+		}
+		if (leftStick < 0) {
+			acc_ += leftRightMoveVec * hammerAcc_;
+		}
+		leftStick = PadInput::GetIns()->leftStickY();
+		if (leftStick > 0) {
+			acc_ += upDownMoveVec * hammerAcc_;
+		}
+		if (leftStick < 0) {
+			acc_ += upDownMoveVec * -hammerAcc_;
+		}
+
+		if (KeyInput::GetIns()->HoldKey(DIK_LEFT)) {
+			acc_ += leftRightMoveVec * hammerAcc_;
+		}
+		if (KeyInput::GetIns()->HoldKey(DIK_RIGHT)) {
+			acc_ += leftRightMoveVec * -hammerAcc_;
+		}
+		if (KeyInput::GetIns()->HoldKey(DIK_UP)) {
+			acc_ += upDownMoveVec * -hammerAcc_;
+		}
+		if (KeyInput::GetIns()->HoldKey(DIK_DOWN)) {
+			acc_ += upDownMoveVec * hammerAcc_;
+		}
+
+		//â¡ë¨ìxï‚ê≥
+		if (acc_.x >= maxMoveSpeed_) {
+			acc_.x = maxMoveSpeed_;
+		}
+		else if (acc_.x <= -maxMoveSpeed_) {
+			acc_.x = -maxMoveSpeed_;
+		}
+		if (acc_.z >= maxMoveSpeed_) {
+			acc_.z = maxMoveSpeed_;
+		}
+		else if (acc_.z <= -maxMoveSpeed_) {
+			acc_.z = -maxMoveSpeed_;
+		}
+
+		//ÉvÉåÉCÉÑÅ[Ç…à⁄ìÆë¨ìxÇâ¡éZ
+		pos_ += acc_;
+	}
+	//âÒì]çUåÇéûà⁄ìÆ
+	else {
+
+		if (leftStick > 0) {
+			pos_ += leftRightMoveVec * -moveSpeed_;
+		}
+		if (leftStick < 0) {
+			pos_ += leftRightMoveVec * moveSpeed_;
+		}
+		leftStick = PadInput::GetIns()->leftStickY();
+		if (leftStick > 0) {
+			pos_ += upDownMoveVec * moveSpeed_;
+		}
+		if (leftStick < 0) {
+			pos_ += upDownMoveVec * -moveSpeed_;
+		}
+
+		if (KeyInput::GetIns()->HoldKey(DIK_LEFT)) {
+			pos_ += leftRightMoveVec * moveSpeed_;
+		}
+		if (KeyInput::GetIns()->HoldKey(DIK_RIGHT)) {
+			pos_ += leftRightMoveVec * -moveSpeed_;
+		}
+		if (KeyInput::GetIns()->HoldKey(DIK_UP)) {
+			pos_ += upDownMoveVec * -moveSpeed_;
+		}
+		if (KeyInput::GetIns()->HoldKey(DIK_DOWN)) {
+			pos_ += upDownMoveVec * moveSpeed_;
+		}
+	}
+
 }
 
 void Player::Attack() {
