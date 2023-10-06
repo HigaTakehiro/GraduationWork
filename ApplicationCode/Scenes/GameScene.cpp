@@ -42,6 +42,8 @@ void GameScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize();
+	shake_ = new Shake();
+	shake_->Initialize();
 }
 
 void GameScene::Update()
@@ -53,7 +55,7 @@ void GameScene::Update()
 		targetPos_.z += 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f; 
+		cameraPos_.z -= 1.0f;
 		targetPos_.z -= 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
@@ -64,6 +66,18 @@ void GameScene::Update()
 		cameraPos_.x -= 1.0f;
 		targetPos_.x -= 1.0f;
 	}
+
+	if (shake_->GetShakeFlag() == true) {
+		cameraPos_.y += shake_->GetShakePos();
+		targetPos_.y += shake_->GetShakePos();
+	}
+	else {
+		cameraPos_.y = 12;
+		targetPos_.y = 0;
+
+	}
+
+
 
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
@@ -81,13 +95,14 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-	count_=map_->GetCount(player_->GetPos());
+	count_ = map_->GetCount(player_->GetPos());
 
 
 	ene->SetHammerObb(*_hummmerObb);
 
 	map_->Update();
 	ene->Upda(camera_.get());
+	shake_->Update();
 	colManager_->Update();
 	//シーン切り替え
 	SceneChange();
@@ -118,7 +133,7 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 	D2D1_RECT_F textDrawRange = { 0, 0, 500, 500 };
-	std::wstring rot = std::to_wstring(count_);
+	std::wstring rot = std::to_wstring(shake_->GetShakePos());
 	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックでタイトルシーン\n右クリックでリザルトシーン\n" + rot, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 

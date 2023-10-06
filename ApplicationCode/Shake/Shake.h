@@ -16,8 +16,9 @@ public:
 	/// シェイク時の揺れる数値の取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetShakePos() { return shakePos; }
+	float GetShakePos() { return shakePos; }
 	float GetShakeTimer() { return shakeTimer; }
+	bool GetShakeFlag() { return shakeFlag; }
 private:
 	//シェイク時の最大時間
 	float shakeMaxTimer;
@@ -25,7 +26,7 @@ private:
 	float shakeTimer;
 	bool shakeFlag;
 	//シェイクの揺れる数値(カメラのeyeに代入する)
-	Vector3 shakePos;
+	float shakePos;
 
 };
 

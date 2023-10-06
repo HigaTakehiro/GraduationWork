@@ -20,6 +20,7 @@
 #include"GameMap.h"
 
 #include"BaseEnemy.h"
+#include"Shake.h"
 class GameScene : public BaseScene
 {
 public: //ƒƒ“ƒoŠÖ”
@@ -79,6 +80,7 @@ private: //ƒƒ“ƒo•Ï”
 	Vector3 cameraPos_;
 	//’‹“_
 	Vector3 targetPos_;
-
 	int count_ = 0;
+
+	Shake* shake_;
 };
