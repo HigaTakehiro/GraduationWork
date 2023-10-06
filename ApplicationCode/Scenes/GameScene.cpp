@@ -19,7 +19,7 @@ void GameScene::Initialize()
 
 	//ƒJƒƒ‰‰Šú‰»
 	CameraSetting();
-
+	oldcamerapos_ = cameraPos_.z;
 	//ƒ‰ƒCƒg‰Šú‰»
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
@@ -42,6 +42,8 @@ void GameScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize();
+	count_ = map_->GetCount(player_->GetPos());
+	oldcount_ = count_;
 }
 
 void GameScene::Update()
@@ -85,7 +87,7 @@ void GameScene::Update()
 
 
 	ene->SetHammerObb(*_hummmerObb);
-
+	EasingNextPos();
 	map_->Update();
 	ene->Upda(camera_.get());
 	colManager_->Update();
@@ -139,6 +141,7 @@ void GameScene::Finalize()
 	player_->Finalize();
 	safe_delete(player_);
 	colManager_->Finalize();
+	map_->Finalize();
 }
 
 void GameScene::SceneChange()
@@ -186,4 +189,28 @@ void GameScene::CameraSetting()
 		camera_->SetEye(cameraPos_);
 		camera_->SetTarget(targetPos_);
 	}
+}
+
+void GameScene::EasingNextPos()
+{
+	if (count_ == oldcount_) { return; }
+	float NextTarget = 0;
+	if (count_ == 0 || count_ == 1 || count_ == 2) {
+		NextTarget = oldcamerapos_;
+	}
+	if (count_ == 3 || count_ == 4 || count_ == 5) {
+		NextTarget = oldcamerapos_ +50;
+	}
+	if (count_ == 6 || count_ == 7 || count_ == 8) {
+		NextTarget = oldcamerapos_ +100;
+	}
+
+
+	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
+	time_ += 0.01f;
+	cameraPos_.x = Easing::easeIn(time_, 1, cameraPos_.x, NextPos_.x);
+	targetPos_.x = Easing::easeIn(time_, 1, targetPos_.x, NextPos_.x);
+	cameraPos_.z = Easing::easeIn(time_, 1, cameraPos_.z, NextTarget);
+	targetPos_.z = Easing::easeIn(time_, 1, targetPos_.z, NextPos_.z);
+	if (time_ > 1) { oldcount_ = count_; time_ = 0; }
 }
