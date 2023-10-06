@@ -16,9 +16,6 @@ void GameMap::Initalize()
 			Count += 1;
 		}
 	}
-
-	
-
 }
 
 void GameMap::Update()
@@ -36,6 +33,15 @@ void GameMap::Draw()
 		for (int j = 0; j < 3; j++) {
 			if(count_==sta[j][i]->num)
 			sta[j][i]->stage_->Draw();
+		}
+	}
+}
+
+void GameMap::Finalize()
+{
+	for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 3; i++) {
+			delete sta[j][i];
 		}
 	}
 }
@@ -61,13 +67,14 @@ int GameMap::GetCount(const XMFLOAT3& pos)
 	return count_;
 }
 
-void GameMap::CheckState()
+XMFLOAT3 GameMap::GetNowMapPos()
 {
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			
+			if (count_ == sta[j][i]->num) {
+				return sta[j][i]->stagePos_;
+			}
 		}
 	}
-
-
 }
+
