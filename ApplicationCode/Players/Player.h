@@ -83,6 +83,12 @@ private: //メンバ変数
 	float rotResetTime_;
 	//初期回転角
 	Vector3 initRot_;
+	//最高移動速度
+	float maxMoveSpeed_;
+	//加速度
+	Vector3 acc_;
+	//ハンマー攻撃時加速度
+	float hammerAcc_;
 
 	//仮ハンマー投げ時間
 	int32_t hammerTime = 60;
