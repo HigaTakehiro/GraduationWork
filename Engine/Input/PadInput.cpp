@@ -385,6 +385,12 @@ bool PadInput::TriggerButton(BYTE buttonNumber) {
 	//そうでなければfalseを返す
 	return false;
 }
+bool PadInput::ReleaseButton(BYTE buttonNumber)
+{
+	//前回は押していて、今回は押していなければtrueを返す
+	if (prePadState.rgbButtons[buttonNumber] && !padState.rgbButtons[buttonNumber]) return true;
+	return false;
+}
 bool PadInput::PushCrossKey(LONG crossKeyNumber) {
 	if (padState.rgdwPOV[0] != 0xFFFFFFFF) {
 		//指定キーを押していればtrueを返す

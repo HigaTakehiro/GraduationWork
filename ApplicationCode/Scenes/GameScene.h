@@ -50,6 +50,11 @@ private: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void SceneChange();
 
+	/// <summary>
+	/// ƒJƒƒ‰‰Šú‰»İ’è
+	/// </summary>
+	void CameraSetting();
+
 	BaseEnemy* ene;
 	OBB* _hummmerObb;
 

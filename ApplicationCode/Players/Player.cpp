@@ -3,8 +3,7 @@
 #include "Shapes.h"
 #include "KeyInput.h"
 #include "ExternalFileLoader.h"
-#include <DirectXMath.h>
-#include "Quaternion.h"
+#include "PadInput.h"
 
 void Player::Initialize()
 {
@@ -75,7 +74,7 @@ void Player::Draw()
 {
 	player_->Draw();
 	hammer_->Draw();
-	if (KeyInput::GetIns()->HoldKey(DIK_SPACE) && !isHammerRelease_) {
+	if (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B) && !isHammerRelease_) {
 		arrow_->Draw();
 	}
 }
@@ -163,6 +162,23 @@ void Player::Move() {
 	const Vector3 upDownMoveVec = { 0.0f, 0.0f, 1.0f };
 	const Vector3 leftRightMoveVec = { 1.0f, 0.0f, 0.0f };
 
+	float leftStick = PadInput::GetIns()->leftStickX();
+	if (leftStick > 0) {
+		pos_ += leftRightMoveVec * -moveSpeed_;
+	}
+	if (leftStick < 0) {
+		pos_ += leftRightMoveVec * moveSpeed_;
+	}
+	leftStick = PadInput::GetIns()->leftStickY();
+	if (leftStick > 0) {
+		pos_ += upDownMoveVec * moveSpeed_;
+	}
+	if (leftStick < 0) {
+		pos_ += upDownMoveVec * -moveSpeed_;
+	}
+	
+	//if (PadInput::GetIns()->leftStickX())
+
 	if (KeyInput::GetIns()->HoldKey(DIK_LEFT)) {
 		pos_ += leftRightMoveVec * moveSpeed_;
 	}
@@ -180,14 +196,14 @@ void Player::Move() {
 void Player::Attack() {
 	//ハンマーをもっているか
 	if (!isHammerRelease_) {
-		//スペースキーが押されているか
-		if (KeyInput::GetIns()->HoldKey(DIK_SPACE)) {
+		//スペースキーまたはBボタンが押されているか
+		if (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) {
 			//回転攻撃
 			rotResetTimer_ = 0.0f;
 			rot_.y -= rotSpeed_;
 		}
-		//スペースキーを離したとき
-		else if (KeyInput::GetIns()->ReleaseKey(DIK_SPACE)) {
+		//スペースキーまたはBボタンを離したとき
+		else if (KeyInput::GetIns()->ReleaseKey(DIK_SPACE) || PadInput::GetIns()->ReleaseButton(PadInput::Button_B)) {
 			isHammerRelease_ = true;
 			Vector3 hammerPos = pos_;
 			hammerPos.y = 30.0f;
