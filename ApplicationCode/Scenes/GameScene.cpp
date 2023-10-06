@@ -136,7 +136,7 @@ void GameScene::Draw()
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring rot = std::to_wstring(player_->GetRot().y);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\n" + rot, textDrawRange);
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\n" + rot, textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
