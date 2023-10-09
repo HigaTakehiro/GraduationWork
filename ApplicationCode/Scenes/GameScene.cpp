@@ -201,10 +201,10 @@ void GameScene::EasingNextPos()
 		NextTarget = oldcamerapos_;
 	}
 	if (count_ == 3 || count_ == 4 || count_ == 5) {
-		NextTarget = oldcamerapos_ +50;
+		NextTarget = oldcamerapos_ +16;
 	}
 	if (count_ == 6 || count_ == 7 || count_ == 8) {
-		NextTarget = oldcamerapos_ +100;
+		NextTarget = oldcamerapos_ +32;
 	}
 
 
