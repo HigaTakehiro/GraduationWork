@@ -50,10 +50,30 @@ void GameScene::Initialize()
 
 	ore_ = std::make_unique<Ore>();
 	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
+
+	for (int32_t i = 0; i < 3; i++) {
+		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
+		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
+		oreItems_.push_back(std::move(newOre));
+	}
 }
 
 void GameScene::Update()
 {
+	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
+
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			if (ore->GetIsHit()) {
+				player_->AddHammerPower();
+				ore.release();
+			}
+		}
+		if (ore != nullptr) {
+			ore->Update();
+		}
+	}
+
 	if (ore_ != nullptr) {
 		if (ore_->GetIsHit()) {
 			player_->AddHammerPower();
@@ -141,6 +161,11 @@ void GameScene::Draw()
 	if (ore_ != nullptr) {
 		ore_->Draw();
 	}
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			ore->Draw();
+		}
+	}
 	Object3d::PostDraw();
 	ene->Draw();
 	//スプライト描画処理(UI等)
@@ -181,7 +206,7 @@ void GameScene::Finalize()
 
 void GameScene::SceneChange()
 {
-	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {

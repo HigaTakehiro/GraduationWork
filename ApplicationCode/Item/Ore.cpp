@@ -13,7 +13,7 @@ void Ore::Initialize(Vector3 pos, Vector3 vec)
 	ore_->SetObjType((int32_t)Object3d::OBJType::Item);
 	ore_->SetIsBillboardY(true);
 	ore_->SetHitRadius(0.5f);
-	speed_ = 0.3f;
+	speed_ = 1.0f;
 }
 
 void Ore::Update()

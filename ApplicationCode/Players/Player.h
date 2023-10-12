@@ -68,6 +68,11 @@ private: //メンバ関数
 	/// </summary>
 	void HammerReturn();
 
+	/// <summary>
+	/// ハンマー強化処理
+	/// </summary>
+	void HammerPowerUp();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -114,6 +119,8 @@ private: //メンバ変数
 	bool isHammerRelease_;
 	//ハンマー座標
 	Vector3 hammerPos_;
+	//ハンマーサイズ
+	Vector3 hammerSize_;
 	//ハンマー投げ速度
 	float throwSpeed_;
 	//ハンマー投げベクトル

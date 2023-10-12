@@ -79,6 +79,8 @@ private: //メンバ変数
 	Player* player_;
 	//アイテム
 	std::unique_ptr<Ore> ore_;
+	//鉱石アイテム
+	std::list<std::unique_ptr<Ore>> oreItems_;
 
 	//テキスト描画
 	TextDraw* text_;
