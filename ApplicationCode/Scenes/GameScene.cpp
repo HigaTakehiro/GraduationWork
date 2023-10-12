@@ -213,18 +213,10 @@ void GameScene::EasingNextPos()
 {
 	if (count_ == oldcount_) { return; }
 	float NextTarget = 0;
-	if (count_ == 0 || count_ == 1 || count_ == 2) {
-		NextTarget = oldcamerapos_;
-	}
-	if (count_ == 3 || count_ == 4 || count_ == 5) {
-		NextTarget = oldcamerapos_ +16;
-	}
-	if (count_ == 6 || count_ == 7 || count_ == 8) {
-		NextTarget = oldcamerapos_ +32;
-	}
-
-
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
+	NextTarget = oldcamerapos_+NextPos_.z;
+
+
 	time_ += 0.01f;
 	cameraPos_.x = Easing::easeIn(time_, 1, cameraPos_.x, NextPos_.x);
 	targetPos_.x = Easing::easeIn(time_, 1, targetPos_.x, NextPos_.x);

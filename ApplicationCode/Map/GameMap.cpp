@@ -10,6 +10,7 @@ void GameMap::LoadCsv()
 	int NUMBER = 0;
 	int NEXTVERT = 0;
 	int NEXTHORY = 0;
+	int COUNT = 0;
 	XMFLOAT3 Pos= { 30.f ,0.f,30.f };
 
 	std::stringstream stream;
@@ -45,35 +46,41 @@ void GameMap::LoadCsv()
 		if (NUMBER == 1) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			Map->num = NUMBER;
+			Map->num = COUNT;
 			Map->state_ = Map::Normal;
 			Pos = { 30.f*NEXTVERT ,0.f,30.f*NEXTHORY };
+			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
+			COUNT += 1;
 		}
 		else if (NUMBER == 2) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			Map->num = NUMBER;
+			Map->num = COUNT;
 			Map->state_ = Map::Forest;
 			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
+			COUNT += 1;
 		}
 		else if (NUMBER == 3) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			Map->num = NUMBER;
+			Map->num = COUNT;
 			Map->state_ = Map::Enemy;
 			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
+			COUNT += 1;
 		}
 
 	
@@ -137,15 +144,14 @@ void GameMap::Finalize()
 void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 {
 	int Value = 10;
-	if ((pos.x < sta[0][0]->stagePos_.x + Value && sta[0][0]->stagePos_.x - Value < pos.x) && (pos.z < sta[0][0]->stagePos_.z + Value && sta[0][0]->stagePos_.z - Value < pos.z)) { count_ = sta[0][0]->num;}
-	else if ((pos.x < sta[0][1]->stagePos_.x + Value && sta[0][1]->stagePos_.x - Value < pos.x) && (pos.z < sta[0][1]->stagePos_.z + Value && sta[0][1]->stagePos_.z - Value < pos.z)) {count_ = sta[0][1]->num;}
-	else if ((pos.x < sta[0][2]->stagePos_.x + Value && sta[0][2]->stagePos_.x - Value < pos.x) && (pos.z < sta[0][2]->stagePos_.z + Value && sta[0][2]->stagePos_.z - Value < pos.z)) {count_ = sta[0][2]->num;}
-	else if ((pos.x < sta[1][0]->stagePos_.x + Value && sta[1][0]->stagePos_.x - Value < pos.x) && (pos.z < sta[1][0]->stagePos_.z + Value && sta[1][0]->stagePos_.z - Value < pos.z)) {count_ = sta[1][0]->num;}
-	else if ((pos.x < sta[1][1]->stagePos_.x + Value && sta[1][1]->stagePos_.x - Value < pos.x) && (pos.z < sta[1][1]->stagePos_.z + Value && sta[1][1]->stagePos_.z - Value < pos.z)) {count_ = sta[1][1]->num;}
-	else if ((pos.x < sta[1][2]->stagePos_.x + Value && sta[1][2]->stagePos_.x - Value < pos.x) && (pos.z < sta[1][2]->stagePos_.z + Value && sta[1][2]->stagePos_.z - Value < pos.z)) {count_ = sta[1][2]->num;}
-	else if ((pos.x < sta[2][0]->stagePos_.x + Value && sta[2][0]->stagePos_.x - Value < pos.x) && (pos.z < sta[2][0]->stagePos_.z + Value && sta[2][0]->stagePos_.z - Value < pos.z)) {count_ = sta[2][0]->num; }
-	else if ((pos.x < sta[2][1]->stagePos_.x + Value && sta[2][1]->stagePos_.x - Value < pos.x) && (pos.z < sta[2][1]->stagePos_.z + Value && sta[2][1]->stagePos_.z - Value < pos.z)) {count_ = sta[2][1]->num; }
-	else if ((pos.x < sta[2][2]->stagePos_.x + Value && sta[2][2]->stagePos_.x - Value < pos.x) && (pos.z < sta[2][2]->stagePos_.z + Value && sta[2][2]->stagePos_.z - Value < pos.z)) {count_ = sta[2][2]->num; }
+	for (unique_ptr<Stage>& Map : maps_) {
+		if ((pos.x < Map->stagePos_.x + Value && Map->stagePos_.x - Value < pos.x) && 
+			(pos.z < Map->stagePos_.z + Value && Map->stagePos_.z - Value < pos.z)) 
+		{
+			count_ = Map->num; return;
+		}
+	}
+		
 }
 
 int GameMap::GetCount(const XMFLOAT3& pos)
@@ -157,11 +163,18 @@ int GameMap::GetCount(const XMFLOAT3& pos)
 
 XMFLOAT3 GameMap::GetNowMapPos()
 {
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			if (count_ == sta[j][i]->num) {
-				return sta[j][i]->stagePos_;
-			}
+	//for (int i = 0; i < 3; i++) {
+	//	for (int j = 0; j < 3; j++) {
+	//		if (count_ == sta[j][i]->num) {
+	//			return sta[j][i]->stagePos_;
+	//		}
+	//	}
+	//}
+
+	for (unique_ptr<Stage>& Map : maps_) {
+		if (count_==Map->num)
+		{
+			return Map->stagePos_;
 		}
 	}
 }
