@@ -47,10 +47,24 @@ void GameScene::Initialize()
 	shake_->Initialize();
 	count_ = map_->GetCount(player_->GetPos());
 	oldcount_ = count_;
+
+	ore_ = std::make_unique<Ore>();
+	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
 }
 
 void GameScene::Update()
 {
+	if (ore_ != nullptr) {
+		if (ore_->GetIsHit()) {
+			player_->AddHammerPower();
+			ore_.release();
+		}
+	}
+
+	if (ore_ != nullptr) {
+		ore_->Update();
+	}
+
 	player_->Update();
 
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
@@ -124,6 +138,9 @@ void GameScene::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->Draw();
 	player_->Draw();
+	if (ore_ != nullptr) {
+		ore_->Draw();
+	}
 	Object3d::PostDraw();
 	ene->Draw();
 	//スプライト描画処理(UI等)
