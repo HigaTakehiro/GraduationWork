@@ -50,11 +50,12 @@ void Player::Update()
 	static int32_t animeCount = 0;
 
 	Repulsion();
+	HammerPowerUp();
+
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
 	}
-	HammerPowerUp();
 	Move();
 	Attack();
 
@@ -282,6 +283,7 @@ void Player::Attack() {
 	if (!isHammerRelease_) {
 		//ƒXƒy[ƒXƒL[‚Ü‚½‚ÍBƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©
 		if (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) {
+			isAttack_ = true;
 			//‰ñ“]UŒ‚
 			rotResetTimer_ = 0.0f;
 			rot_.y -= rotSpeed_;
@@ -328,6 +330,10 @@ void Player::Attack() {
 }
 
 void Player::HammerThrow() {
+	const Vector3 hammerSize = { 0.03f, 0.03f, 0.03f };
+	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
+	hammerSize_ = hammerSize + hammerScaleCorrection * (float)hammerPower_;
+	hammer_->SetScale(hammerSize_);
 	if (++hammerTimer <= hammerTime) {
 		//‰ñ“]Šp‚ð‹‚ß‚é
 		Vector3 rot = hammer_->GetRotation();
@@ -356,6 +362,7 @@ void Player::HammerGet()
 			hammer_->SetScale(initHammerScale_);
 			hammer_->SetRotation(initHammerRot_);
 			isHammerRelease_ = false;
+			isAttack_ = false;
 			hammerTimer = 0;
 		}
 	}
@@ -380,7 +387,7 @@ void Player::HammerReturn()
 
 void Player::HammerPowerUp()
 {
-	const Vector3 hammerScale = { 0.5f, 0.5f, 0.5f };
+	const Vector3 hammerScale = { 0.2f, 0.2f, 0.2f };
 	hammerSize_ = initHammerScale_ + (hammerScale * (float)hammerPower_);
 	//hammerPos_ = initHammerPos_ + initHammerPos_ * 0.5f;
 	//hammerPos_.y = -30;

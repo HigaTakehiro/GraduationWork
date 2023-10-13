@@ -89,7 +89,7 @@ void GameScene::Update()
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos = ene->GetPos();
-	if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos.x, enemyPos.z }, 1.0f)) {
+	if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos.x, enemyPos.z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 		Vector3 playerPos = player_->GetPos();
 		Vector3 vec = playerPos - enemyPos;
 		vec.normalize();
