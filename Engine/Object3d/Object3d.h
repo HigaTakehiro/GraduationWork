@@ -61,7 +61,6 @@ public: // サブクラス
 		Hammer = 0x04,
 		Wall = 0x08,
 		Item = 0x0a
->>>>>>> 77536ca37f83a6391c98baacf678f6b2fe639972
 	};
 
 public: // 静的メンバ関数

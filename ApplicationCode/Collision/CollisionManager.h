@@ -45,6 +45,8 @@ private: //メンバ変数
 	//オブジェクトリスト
 	std::list<Object3d*> objList_;
 	//コリジョンチェック
+
+
 	BaseCollision* collision_[1][1];
 };
 
