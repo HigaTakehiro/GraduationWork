@@ -18,6 +18,7 @@
 #include "JsonLoader.h"
 #include "Player.h"
 #include"GameMap.h"
+#include "Ore.h"
 
 #include"BaseEnemy.h"
 #include"Shake.h"
@@ -76,6 +77,10 @@ private: //メンバ変数
 	std::unique_ptr<Camera> camera_;
 	//プレイヤー
 	Player* player_;
+	//アイテム
+	std::unique_ptr<Ore> ore_;
+	//鉱石アイテム
+	std::list<std::unique_ptr<Ore>> oreItems_;
 
 	//テキスト描画
 	TextDraw* text_;

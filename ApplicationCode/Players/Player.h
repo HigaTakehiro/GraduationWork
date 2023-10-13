@@ -31,6 +31,11 @@ public: //メンバ関数
 	/// <returns>回転角</returns>
 	Vector3 GetRot() { return rot_; }
 
+	/// <summary>
+	/// ハンマーのパワーを上げる
+	/// </summary>
+	void AddHammerPower() { hammerPower_++; }
+
 private: //メンバ関数
 
 	/// <summary>
@@ -63,6 +68,11 @@ private: //メンバ関数
 	/// </summary>
 	void HammerReturn();
 
+	/// <summary>
+	/// ハンマー強化処理
+	/// </summary>
+	void HammerPowerUp();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -72,6 +82,8 @@ private: //メンバ変数
 	Vector3 rot_;
 	//HP
 	int32_t hp_;
+	//ハンマーパワー
+	int32_t hammerPower_;
 
 	//移動速度
 	float moveSpeed_;
@@ -107,6 +119,8 @@ private: //メンバ変数
 	bool isHammerRelease_;
 	//ハンマー座標
 	Vector3 hammerPos_;
+	//ハンマーサイズ
+	Vector3 hammerSize_;
 	//ハンマー投げ速度
 	float throwSpeed_;
 	//ハンマー投げベクトル
