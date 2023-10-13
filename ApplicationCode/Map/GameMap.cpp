@@ -167,7 +167,9 @@ void GameMap::Update()
 void GameMap::Draw()
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		Map->stage_->Draw();
+		if (count_ == Map->num) {
+			Map->stage_->Draw();
+		}
 	}
 
 	for (unique_ptr<Object3d>& Bridge : bridge_) {
