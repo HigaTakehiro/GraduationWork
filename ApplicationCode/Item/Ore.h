@@ -13,7 +13,7 @@ public: //メンバ関数
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Ore() = default;
+	~Ore();
 	/// <summary>
 	/// 初期化
 	/// </summary>

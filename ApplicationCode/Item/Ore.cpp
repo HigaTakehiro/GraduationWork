@@ -2,6 +2,10 @@
 #include "Shapes.h"
 #include "SafeDelete.h"
 
+Ore::~Ore() {
+	safe_delete(oreModel_);
+}
+
 void Ore::Initialize(Vector3 pos, Vector3 vec)
 {
 	pos_ = pos;

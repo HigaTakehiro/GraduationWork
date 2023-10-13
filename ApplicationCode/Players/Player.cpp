@@ -9,7 +9,7 @@ void Player::Initialize()
 {
 	//ƒvƒŒƒCƒ„[‰Šú‰»
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f * ((float)i + 1), 128.0f }, "tuyu_idle.png", { 320, 64 });
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 72.0f * ((float)i + 1), 64.0f }, "tuyu_idle.png", { 320, 64 });
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -49,6 +49,7 @@ void Player::Update()
 {
 	static int32_t animeCount = 0;
 
+	Repulsion();
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
@@ -88,6 +89,12 @@ void Player::Finalize()
 		safe_delete(playerModel_[i]);
 	}
 	safe_delete(hammerModel_);
+}
+
+void Player::HitHammerToEnemy(Vector3 vec)
+{
+	repulsionVec_ = vec;
+	repulsionSpeed_ = 1.0f;
 }
 
 void Player::PlayerStatusSetting() {
@@ -375,8 +382,19 @@ void Player::HammerPowerUp()
 {
 	const Vector3 hammerScale = { 0.5f, 0.5f, 0.5f };
 	hammerSize_ = initHammerScale_ + (hammerScale * (float)hammerPower_);
-	hammerPos_ = initHammerPos_ + initHammerPos_ * 0.5f;
-	hammerPos_.y = -30;
+	//hammerPos_ = initHammerPos_ + initHammerPos_ * 0.5f;
+	//hammerPos_.y = -30;
 	hammer_->SetScale(hammerSize_);
-	hammer_->SetPosition(hammerPos_);
+	//hammer_->SetPosition(hammerPos_);
+}
+
+void Player::Repulsion()
+{
+	if (repulsionSpeed_ >= 0.0f) {
+		pos_ += repulsionVec_ * repulsionSpeed_;
+		repulsionSpeed_ -= 0.1f;
+	}
+	else {
+		repulsionSpeed_ = 0.0f;
+	}
 }
