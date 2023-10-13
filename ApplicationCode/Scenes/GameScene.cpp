@@ -178,7 +178,7 @@ void GameScene::Draw()
 
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	map_->Draw();
+	map_->Draw(oldcount_);
 	player_->Draw();
 	if (ore_ != nullptr) {
 		ore_->Draw();

@@ -164,10 +164,10 @@ void GameMap::Update()
 	}*/
 }
 
-void GameMap::Draw()
+void GameMap::Draw(int OldCount)
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		if (count_ == Map->num) {
+		if (count_ == Map->num||OldCount==Map->num) {
 			Map->stage_->Draw();
 		}
 	}
