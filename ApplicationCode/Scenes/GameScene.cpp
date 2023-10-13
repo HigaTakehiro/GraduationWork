@@ -38,10 +38,15 @@ void GameScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
-	ene = new NormalEnemyA();
-	ene->Init();
-	ene->SetPlayerIns(player_);
-
+	for (auto i = 0; i < enemys_.size(); i++) {
+		enemys_[i] = new NormalEnemyA();
+		enemys_[i]->Init();
+		
+		enemys_[i]->SetPlayerIns(player_);
+	}
+enemys_[0]->SetPos(Vector3(10, -30, 10));
+enemys_[2]->SetPos(Vector3(-15, -30, -5));
+enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_ = make_unique<GameMap>();
 	map_->Initalize();
 	shake_ = new Shake();
@@ -88,13 +93,16 @@ void GameScene::Update()
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos = ene->GetPos();
-	if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos.x, enemyPos.z }, 1.0f)) {
-		Vector3 playerPos = player_->GetPos();
-		Vector3 vec = playerPos - enemyPos;
-		vec.normalize();
-		vec.y = 0.0f;
-		player_->HitHammerToEnemy(vec);
+	Vector3 enemyPos[3] = { enemys_[0]->GetPos(),enemys_[1]->GetPos() ,enemys_[2]->GetPos() };
+	Vector3 vec[3];
+	for (auto i = 0; i < enemys_.size(); i++) {
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z}, 1.0f)) {
+			Vector3 playerPos = player_->GetPos();
+			vec[i] = playerPos - enemyPos[i];
+			vec[i].normalize();
+			vec[i].y = 0.0f;
+			player_->HitHammerToEnemy(vec[i]);
+		}
 	}
 
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
@@ -142,11 +150,15 @@ void GameScene::Update()
 
 	count_ = map_->GetCount(player_->GetPos());
 
-
-	ene->SetHammerObb(*_hummmerObb);
+	for(auto i=0;i<enemys_.size();i++)
+	{
+		enemys_[i]->SetHammerObb(*_hummmerObb);
+		enemys_[i]->Upda(camera_.get());
+	}
+	
 	EasingNextPos();
 	map_->Update();
-	ene->Upda(camera_.get());
+	
 	shake_->Update();
 	colManager_->Update();
 	//シーン切り替え
@@ -177,7 +189,8 @@ void GameScene::Draw()
 		}
 	}
 	Object3d::PostDraw();
-	ene->Draw();
+	for(auto i=0;i<enemys_.size();i++)
+	enemys_[i]->Draw();
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();

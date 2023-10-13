@@ -63,7 +63,7 @@ private: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void EasingNextPos();
 
-	BaseEnemy* ene;
+	std::array<BaseEnemy*,3> enemys_;
 	OBB* _hummmerObb;
 
 private: //ƒƒ“ƒo•Ï”
