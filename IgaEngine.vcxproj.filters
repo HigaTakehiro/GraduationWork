@@ -102,6 +102,9 @@
     <Filter Include="ソース ファイル\ApplicationCode\Item">
       <UniqueIdentifier>{81adeeb8-f88e-48ff-bac6-36f9a3e5ac48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\GameMap">
+      <UniqueIdentifier>{a68b8726-d559-4235-8f86-7bb9548b413f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -245,14 +248,17 @@
     <ClCompile Include="Engine\Base\CsvLoader.cpp">
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Map\GameMap.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp">
       <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Item\Ore.cpp">
       <Filter>ソース ファイル\ApplicationCode\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ObbAndObb.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Map\GameMap.cpp">
+      <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -421,12 +427,15 @@
     <ClInclude Include="Engine\Base\CsvLoader.h">
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Map\GameMap.h" />
     <ClInclude Include="ApplicationCode\Shake\Shake.h">
       <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Item\Ore.h">
       <Filter>ソース ファイル\ApplicationCode\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ObbAndObb.h" />
+    <ClInclude Include="ApplicationCode\Map\GameMap.h">
+      <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

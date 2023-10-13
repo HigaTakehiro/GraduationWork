@@ -42,6 +42,10 @@ public: //メンバ関数
 	/// <param name="vec"></param>
 	void HitHammerToEnemy(Vector3 vec);
 
+	void SetPos(Vector3 pos) { this->pos_ = pos; }
+
+	void SetStop(bool stop) { this->stop_ = stop; }
+
 	/// <summary>
 	/// ハンマー投げフラグを取得
 	/// </summary>
@@ -167,7 +171,8 @@ private: //メンバ変数
 	Vector3 repulsionVec_;
 	//反発攻撃速度
 	float repulsionSpeed_;
-
+	//操作を止める
+	bool stop_ = false;
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
 	DirectX::XMFLOAT3 GetPos(){ return player_->GetPosition(); }

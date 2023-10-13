@@ -49,6 +49,7 @@ public: // サブクラス
 	enum class CollisionType {
 		Sphere,
 		Box,
+		Obb,
 		None
 	};
 
