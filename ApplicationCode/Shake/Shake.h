@@ -26,16 +26,16 @@ public:
 private:
 	//シェイク時の最大時間
 	float shakeMaxTimer;
-
 	float shakeTimer;
 	bool shakeFlag;
-	bool iwaFlag;
-	float iwaCount;
-	Vector2 iwaPos[2];
 	//シェイクの揺れる数値(カメラのeyeに代入する)
 	float shakePos;
 	Vector3 pos{};
 	float timer{};
+	//崩れる処理
 	IwaEffect* iwa[2];
+	bool iwaFlag;
+	float iwaCount;
+	Vector2 iwaPos[2];
 };
 

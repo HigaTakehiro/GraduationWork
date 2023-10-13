@@ -14,8 +14,8 @@ void Shake::Initialize(ID3D12Device* device, Camera* camera)
 		iwa[i]->Initialize(device, camera);
 	}
 	iwaCount = 0;
-	iwaPos[0] = { 100,0 };
-	iwaPos[1] = { 1200,0 };
+	iwaPos[0] = { -200,0 };
+	iwaPos[1] = { 1400,0 };
 }
 
 void Shake::Update()
@@ -26,8 +26,6 @@ void Shake::Update()
 		iwaCount = 0;
 		shakeFlag = true;
 		iwaFlag = true;
-		iwaPos[0].y = 0;
-		iwaPos[1].y = 0;
 	}
 	if (shakeFlag == true) {
 		if (shakeTimer < shakeMaxTimer) {
@@ -44,9 +42,7 @@ void Shake::Update()
 
 	if (iwaFlag == true) {
 		iwaCount++;
-		iwaPos[0].y += 8;
-		iwaPos[1].y += 8;
-		if (iwaCount < 50) {
+		if (iwaCount < 100) {
 			for (int i = 0; i < 2; i++) {
 				iwa[i]->Update(iwaPos[i]);
 			}
@@ -84,7 +80,7 @@ void Shake::ShakeSet()
 
 void Shake::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	if (iwaCount < 50) {
+	if (iwaCount < 100) {
 		for (int i = 0; i < 2; i++) {
 			iwa[i]->Draw(cmdList);
 		}
