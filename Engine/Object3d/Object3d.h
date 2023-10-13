@@ -58,7 +58,8 @@ public: // サブクラス
 		Player = 0x01,
 		Enemy = 0x02,
 		Hammer = 0x04,
-		Wall = 0x08
+		Wall = 0x08,
+		Item = 0x0a
 	};
 
 public: // 静的メンバ関数
