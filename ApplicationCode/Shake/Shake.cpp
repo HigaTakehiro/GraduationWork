@@ -2,11 +2,14 @@
 #include "KeyInput.h"
 #include"time.h"
 #include "ExternalFileLoader.h"
-void Shake::Initialize()
+
+void Shake::Initialize(ID3D12Device* device, Camera* camera)
 {
 	shakeTimer = 0;
 	shakeFlag = false;
 	ShakeSet();
+	iwa = new IwaEffect();
+	iwa->Initialize(device,camera);
 }
 
 void Shake::Update()
@@ -28,6 +31,7 @@ void Shake::Update()
 			shakePos = 0;
 		}
 	}
+	iwa->Update({100,100});
 }
 
 void Shake::ShakeSet()
@@ -56,4 +60,9 @@ void Shake::ShakeSet()
 		shakeMaxTimer = timer;
 
 	}
+}
+
+void Shake::Draw(ID3D12GraphicsCommandList* cmdList)
+{
+	iwa->Draw(cmdList);
 }

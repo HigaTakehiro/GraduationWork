@@ -44,7 +44,7 @@ void GameScene::Initialize()
 	map_ = make_unique<GameMap>();
 	map_->Initalize();
 	shake_ = new Shake();
-	shake_->Initialize();
+	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
 	count_ = map_->GetCount(player_->GetPos());
 	oldcount_ = count_;
 
@@ -168,6 +168,7 @@ void GameScene::Draw()
 	}
 	Object3d::PostDraw();
 	ene->Draw();
+	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();

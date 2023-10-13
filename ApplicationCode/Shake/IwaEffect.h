@@ -20,10 +20,11 @@ public:
 	/// çXêVèàóù
 	/// </summary>
 	void Update(Vector2 particle2dPos);
-	void ConvertParticlePos(Vector2 particle2dPos);
-	
-	void particleCreate();
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 private:
+	void ConvertParticlePos(Vector2 particle2dPos);
+
+	void particleCreate();
 	Vector3 particlePos{};
 	std::unique_ptr <ParticleManager> particle;
 };

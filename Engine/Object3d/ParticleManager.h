@@ -154,7 +154,7 @@ public: // メンバ関数
 	/// テクスチャ読み込み
 	/// </summary>
 	/// <returns>成否</returns>
-	void LoadTexture(const std::string& textureName = "defaultEffect");
+	void LoadTexture(const std::string& textureName = "tubu");
 
 	/// <summary>
 	/// モデル作成
