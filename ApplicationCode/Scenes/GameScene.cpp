@@ -5,6 +5,7 @@
 #include "NormalEnemyA.h"
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
+#include "Collision.h"
 
 void GameScene::Initialize()
 {
@@ -86,6 +87,15 @@ void GameScene::Update()
 	}
 
 	player_->Update();
+	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
+	Vector3 enemyPos = ene->GetPos();
+	if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos.x, enemyPos.z }, 1.0f)) {
+		Vector3 playerPos = player_->GetPos();
+		Vector3 vec = playerPos - enemyPos;
+		vec.normalize();
+		vec.y = 0.0f;
+		player_->HitHammerToEnemy(vec);
+	}
 
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;

@@ -36,6 +36,12 @@ public: //メンバ関数
 	/// </summary>
 	void AddHammerPower() { hammerPower_++; }
 
+	/// <summary>
+	/// 反発設定
+	/// </summary>
+	/// <param name="vec"></param>
+	void HitHammerToEnemy(Vector3 vec);
+
 private: //メンバ関数
 
 	/// <summary>
@@ -73,6 +79,11 @@ private: //メンバ関数
 	/// </summary>
 	void HammerPowerUp();
 
+	/// <summary>
+	/// 反発処理
+	/// </summary>
+	void Repulsion();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -109,7 +120,7 @@ private: //メンバ変数
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル
-	Model* playerModel_[5];
+	Model* playerModel_[4];
 
 	//ハンマーオブジェクト
 	std::unique_ptr<Object3d> hammer_;
@@ -138,6 +149,10 @@ private: //メンバ変数
 	//ハンマー投げ時角度
 	float hammerThrowRot_;
 
+	//反発攻撃ベクトル
+	Vector3 repulsionVec_;
+	//反発攻撃速度
+	float repulsionSpeed_;
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
