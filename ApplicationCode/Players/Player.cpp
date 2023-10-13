@@ -8,8 +8,8 @@
 void Player::Initialize()
 {
 	//ƒvƒŒƒCƒ„[‰Šú‰»
-	for (int32_t i = 0; i < 5; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f * ((float)i + 1), 64.0f }, "Player.png", { 320, 64 });
+	for (int32_t i = 0; i < 4; i++) {
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f * ((float)i + 1), 128.0f }, "tuyu_idle.png", { 320, 64 });
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -56,7 +56,7 @@ void Player::Update()
 
 
 	if (KeyInput::GetIns()->TriggerKey(DIK_N)) {
-		if (++animeCount >= 5) {
+		if (++animeCount >= 4) {
 			animeCount = 0;
 		}
 		player_->SetModel(playerModel_[animeCount]);
@@ -81,7 +81,7 @@ void Player::Draw()
 
 void Player::Finalize()
 {
-	for (int32_t i = 0; i < 5; i++) {
+	for (int32_t i = 0; i < 4; i++) {
 		safe_delete(playerModel_[i]);
 	}
 	safe_delete(hammerModel_);

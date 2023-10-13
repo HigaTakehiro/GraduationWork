@@ -97,7 +97,7 @@ private: //メンバ変数
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル
-	Model* playerModel_[5];
+	Model* playerModel_[4];
 
 	//ハンマーオブジェクト
 	std::unique_ptr<Object3d> hammer_;
