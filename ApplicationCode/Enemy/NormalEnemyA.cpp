@@ -29,6 +29,8 @@ void NormalEnemyA::Init()
 	//XMFLOAT3‚¾‚¯‚Í¡‚ÌŽž“_‚¾‚Æ‚±‚¤
 	LoadCSV::LoadCsvParam_XMFLOAT3("Engine/Resources/GameData/NormalEnemyA.csv", _status.Pos, "Position");
 
+	//this->SetColType(Object3d::CollisionType::Obb);
+	//this->SetObjType(Object3d::CollisionType::Enemy);
 	/*
 	 * 	for (auto i = 0; i < _status.TexSize; i++)
 		_status.TexModel[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f * ((float)i + 1), 64.0f }, "usa_idle.png", { 320, 64 });
@@ -45,6 +47,8 @@ void NormalEnemyA::Init()
 void NormalEnemyA::Upda(Camera* camera)
 {
 	(this->*stateTable[_action])();
+
+	//_status.Tex->
 
 	TextureAnimation();
 

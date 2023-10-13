@@ -242,6 +242,9 @@
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ObbAndObb.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -410,6 +413,7 @@
       <Filter>ソース ファイル\Engine\Base</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />
+    <ClInclude Include="ObbAndObb.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
