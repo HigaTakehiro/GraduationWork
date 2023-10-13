@@ -189,13 +189,9 @@ void GameScene::Draw()
 		}
 	}
 	Object3d::PostDraw();
-<<<<<<< HEAD
-	ene->Draw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-=======
 	for(auto i=0;i<enemys_.size();i++)
 	enemys_[i]->Draw();
->>>>>>> main
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
