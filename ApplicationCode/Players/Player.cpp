@@ -55,9 +55,10 @@ void Player::Update()
 		HammerGet();
 	}
 	HammerPowerUp();
-	Move();
-	Attack();
-
+	if (!stop_) {
+		Move();
+		Attack();
+	}
 
 	if (KeyInput::GetIns()->TriggerKey(DIK_N)) {
 		if (++animeCount >= 4) {
@@ -260,7 +261,6 @@ void Player::Move() {
 		if (leftStick < 0) {
 			pos_ += upDownMoveVec * -moveSpeed_;
 		}
-
 		if (KeyInput::GetIns()->HoldKey(DIK_LEFT)) {
 			pos_ += leftRightMoveVec * moveSpeed_;
 		}

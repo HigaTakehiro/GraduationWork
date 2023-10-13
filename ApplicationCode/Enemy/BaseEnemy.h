@@ -119,5 +119,8 @@ public:
 	XMFLOAT3 GetPos() const;
 	XMFLOAT3 GetRot() const;
 	XMFLOAT3 GetScl() const;
+
+public:
+	void SetPos(Vector3 pos) { _status.Pos = pos; }
 };
 

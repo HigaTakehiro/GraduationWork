@@ -27,6 +27,8 @@ public:
 	
 	void LoadCsv();
 	
+	void CreateBridge();
+
 	/// <summary>
 	/// èâä˙âª
 	/// </summary>
@@ -51,18 +53,26 @@ public:
 	
 	int GetCount(const XMFLOAT3& pos);
 
+	void SetStop(bool flag) { this->stopCount_ = flag; }
+
+	int GetNextVal() { return nextval_; }
+
 	XMFLOAT3 GetNowMapPos();
 	
 private:
-	
-	unique_ptr<Object3d> map_[3][3];
 
 	list<unique_ptr<Stage>> maps_;
+
+	list<unique_ptr<Object3d>> bridge_;
 
 	Stage* sta[3][3];
 
 	XMFLOAT3 pos_[3][3];
 
 	int count_ = 0;
+
+	bool stopCount_ = false;
+
+	int nextval_ = 0;
 };
 

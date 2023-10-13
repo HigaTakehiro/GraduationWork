@@ -11,6 +11,7 @@ void GameMap::LoadCsv()
 	int NEXTVERT = 0;
 	int NEXTHORY = 0;
 	int COUNT = 0;
+	bool NEXTCOUNT = false;
 	XMFLOAT3 Pos= { 30.f ,0.f,30.f };
 
 	std::stringstream stream;
@@ -33,6 +34,18 @@ void GameMap::LoadCsv()
 			NEXTHORY += 1;
 			NEXTVERT = 0;
 			NUMBER = 99;
+			if (!NEXTCOUNT) {
+				if (COUNT == 1) {
+					nextval_ = 1;
+				}
+				else if (COUNT == 2) {
+					nextval_ = 2;
+				}
+				else if (COUNT == 3) {
+					nextval_ = 3;
+				}
+				NEXTCOUNT = true;
+			}
 		}
 
 		if (word.find("END") == 0) {
@@ -41,6 +54,7 @@ void GameMap::LoadCsv()
 
 		if (NUMBER == 0) {
 			NEXTVERT += 1;
+			COUNT += 1;
 			continue;
 		}
 		if (NUMBER == 1) {
@@ -82,9 +96,35 @@ void GameMap::LoadCsv()
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
+	}
+}
 
-	
+void GameMap::CreateBridge()
+{
+	for (unique_ptr<Stage>& Map : maps_) {
+		for (unique_ptr<Stage>& Map2 : maps_) {
+			if (Map->num == Map2->num) { continue; }
+			if (Map->stagePos_.x + 30 == Map2->stagePos_.x && Map->num + 1 == Map2->num) {
+				unique_ptr<Object3d> Bridge = make_unique<Object3d>();
+				Bridge = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
+				XMFLOAT3 Pos = Map->stagePos_;
+				Pos.x = Pos.x + 16;
+				Bridge->SetPosition(Pos);
+				Bridge->SetScale({ 2.f,1.f,2.4f });
+				Bridge->SetRotation({ 0.f,90.f,0.f });
+				bridge_.push_back(move(Bridge));
+			}
 
+			if (Map->stagePos_.z + 30 == Map2->stagePos_.z && Map->num + nextval_ == Map2->num) {
+				unique_ptr<Object3d> Bridge = make_unique<Object3d>();
+				Bridge = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
+				XMFLOAT3 Pos = Map->stagePos_;
+				Pos.z = Pos.z + 16;
+				Bridge->SetPosition(Pos);
+				Bridge->SetScale({ 2.f,1.f,2.4f });
+				bridge_.push_back(move(Bridge));
+			}
+		}
 	}
 }
 
@@ -92,7 +132,9 @@ void GameMap::Initalize()
 {
 	LoadCsv();
 
-	for (int i = 0; i < 3; i++) {
+
+	CreateBridge();
+	/*for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			sta[j][i] = new Stage;
 			sta[j][i]->stage_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
@@ -102,13 +144,17 @@ void GameMap::Initalize()
 			sta[j][i]->num = Count;
 			Count += 1;
 		}
-	}
+	}*/
 }
 
 void GameMap::Update()
 {
 	for (unique_ptr<Stage>& Map : maps_) {
 		Map->stage_->Update();
+	}
+
+	for (unique_ptr<Object3d>& Bridge : bridge_) {
+		Bridge->Update();
 	}
 
 	/*for (int i = 0; i < 3; i++) {
@@ -121,34 +167,61 @@ void GameMap::Update()
 void GameMap::Draw()
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		Map->stage_->Draw();
+		if (count_ == Map->num) {
+			Map->stage_->Draw();
+		}
 	}
 
-	//for (int i = 0; i < 3; i++) {
-	//	for (int j = 0; j < 3; j++) {
-	//	//	if(count_==sta[j][i]->num)
-	//		sta[j][i]->stage_->Draw();
-	//	}
-	//}
+	for (unique_ptr<Object3d>& Bridge : bridge_) {
+		Bridge->Draw();
+	}
+
 }
 
 void GameMap::Finalize()
 {
-	for (int j = 0; j < 3; j++) {
-		for (int i = 0; i < 3; i++) {
-			delete sta[j][i];
-		}
-	}
+	maps_.clear();
+	bridge_.clear();
 }
 
 void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 {
 	int Value = 10;
 	for (unique_ptr<Stage>& Map : maps_) {
-		if ((pos.x < Map->stagePos_.x + Value && Map->stagePos_.x - Value < pos.x) && 
-			(pos.z < Map->stagePos_.z + Value && Map->stagePos_.z - Value < pos.z)) 
-		{
-			count_ = Map->num; return;
+		for (unique_ptr<Stage>& Map2 : maps_) {
+			if (Map->num != count_) { continue; }
+			//¶
+			if (pos.x >= Map->stagePos_.x+10 && Map->num + 1 == Map2->num) {
+				if (Map->stagePos_.x + 30 == Map2->stagePos_.x) {
+					count_ = Map2->num;
+					stopCount_ = true;
+					return;
+				}
+			}
+			//‰E
+			if (pos.x <= Map->stagePos_.x - 5 && Map->num - 1 == Map2->num) {
+				if (Map->stagePos_.x - 30 == Map2->stagePos_.x) {
+					count_ = Map2->num;
+					stopCount_ = true;
+					return;
+				}
+			}
+
+			if (pos.z >= Map->stagePos_.z + 10) {
+				if (Map->stagePos_.z + 30 == Map2->stagePos_.z && Map->num + nextval_ == Map2->num) {
+					count_ = Map2->num;
+					stopCount_ = true;
+					return;
+				}
+			}
+
+			if (pos.z <= Map->stagePos_.z - 5) {
+				if (Map->stagePos_.z - 30 == Map2->stagePos_.z && Map->num - nextval_ == Map2->num) {
+					count_ = Map2->num;
+					stopCount_ = true;
+					return;
+				}
+			}
 		}
 	}
 		
@@ -156,21 +229,14 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 
 int GameMap::GetCount(const XMFLOAT3& pos)
 {
-	CheckNowNumber(pos);
-
+	if (!stopCount_) {
+		CheckNowNumber(pos);
+	}
 	return count_;
 }
 
 XMFLOAT3 GameMap::GetNowMapPos()
 {
-	//for (int i = 0; i < 3; i++) {
-	//	for (int j = 0; j < 3; j++) {
-	//		if (count_ == sta[j][i]->num) {
-	//			return sta[j][i]->stagePos_;
-	//		}
-	//	}
-	//}
-
 	for (unique_ptr<Stage>& Map : maps_) {
 		if (count_==Map->num)
 		{
