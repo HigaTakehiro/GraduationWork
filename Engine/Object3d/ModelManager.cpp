@@ -19,6 +19,7 @@ ModelManager* ModelManager::GetIns()
 
 void ModelManager::Initialize() {
 	LoadModel("ground", "ground");
+	LoadModel("bridge", "bridge");
 }
 
 void ModelManager::LoadModel(const std::string modelName, const std::string modelKey, bool isSmoothing) {
