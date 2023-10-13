@@ -34,6 +34,8 @@ void Player::Initialize()
 	hammer_->SetColType(Object3d::CollisionType::Sphere);
 	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
 	hammer_->SetHitRadius(1.0f);
+	hammerPower_ = 0;
+	hammerSize_ = initHammerScale_;
 
 	//–îˆó‰Šú‰»
 	arrowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Arrow.png");
@@ -51,6 +53,7 @@ void Player::Update()
 		HammerThrow();
 		HammerGet();
 	}
+	HammerPowerUp();
 	Move();
 	Attack();
 
@@ -366,4 +369,14 @@ void Player::HammerReturn()
 	hammerPos_.y = 2.0f;
 	hammer_->SetPosition(hammerPos_);
 	hammer_->SetRotation(rot);
+}
+
+void Player::HammerPowerUp()
+{
+	const Vector3 hammerScale = { 0.5f, 0.5f, 0.5f };
+	hammerSize_ = initHammerScale_ + (hammerScale * (float)hammerPower_);
+	hammerPos_ = initHammerPos_ + initHammerPos_ * 0.5f;
+	hammerPos_.y = -30;
+	hammer_->SetScale(hammerSize_);
+	hammer_->SetPosition(hammerPos_);
 }
