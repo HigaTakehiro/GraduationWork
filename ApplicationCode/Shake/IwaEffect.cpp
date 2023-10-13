@@ -1,4 +1,5 @@
 #include "IwaEffect.h"
+#include "KeyInput.h"
 using namespace DirectX;
 
 void IwaEffect::Initialize(ID3D12Device* device, Camera* camera)
@@ -67,10 +68,10 @@ void IwaEffect::particleCreate()
 		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 
 		Vector3 acc{};
-		//const float rnd_acc = 0.01f;
+		//const float rnd_acc = 0.00001f;
 		//acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
 		// ’Ç‰Á
-		particle->Add(30, ppos, vel, acc, 0.003f, 0.003f, { 1,1,1 }, { 1,1,1 });
+		particle->Add(90, ppos, vel, acc, 0.003f, 0.003f, { 1,1,1 }, { 1,1,1 });
 	}
 }

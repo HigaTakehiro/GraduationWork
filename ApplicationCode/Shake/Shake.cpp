@@ -8,8 +8,14 @@ void Shake::Initialize(ID3D12Device* device, Camera* camera)
 	shakeTimer = 0;
 	shakeFlag = false;
 	ShakeSet();
-	iwa = new IwaEffect();
-	iwa->Initialize(device,camera);
+	iwaFlag = false;
+	for (int i = 0; i < 2; i++) {
+		iwa[i] = new IwaEffect();
+		iwa[i]->Initialize(device, camera);
+	}
+	iwaCount = 0;
+	iwaPos[0] = { 100,0 };
+	iwaPos[1] = { 1200,0 };
 }
 
 void Shake::Update()
@@ -17,7 +23,11 @@ void Shake::Update()
 	//今はエンターキーを押したらシェイクするようになってい
 	//壁ができたら壁に当たったらシェイクする処理に変更する
 	if (KeyInput::GetIns()->TriggerKey(DIK_RETURN)) {
+		iwaCount = 0;
 		shakeFlag = true;
+		iwaFlag = true;
+		iwaPos[0].y = 0;
+		iwaPos[1].y = 0;
 	}
 	if (shakeFlag == true) {
 		if (shakeTimer < shakeMaxTimer) {
@@ -31,7 +41,17 @@ void Shake::Update()
 			shakePos = 0;
 		}
 	}
-	iwa->Update({100,100});
+
+	if (iwaFlag == true) {
+		iwaCount++;
+		iwaPos[0].y += 8;
+		iwaPos[1].y += 8;
+		if (iwaCount < 50) {
+			for (int i = 0; i < 2; i++) {
+				iwa[i]->Update(iwaPos[i]);
+			}
+		}
+	}
 }
 
 void Shake::ShakeSet()
@@ -64,5 +84,9 @@ void Shake::ShakeSet()
 
 void Shake::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	iwa->Draw(cmdList);
+	if (iwaCount < 50) {
+		for (int i = 0; i < 2; i++) {
+			iwa[i]->Draw(cmdList);
+		}
+	}
 }

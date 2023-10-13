@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3.h"
+#include "Vector2.h"
 #include "TextDraw.h"
 #include "IwaEffect.h"
 class Shake
@@ -28,10 +29,13 @@ private:
 
 	float shakeTimer;
 	bool shakeFlag;
+	bool iwaFlag;
+	float iwaCount;
+	Vector2 iwaPos[2];
 	//シェイクの揺れる数値(カメラのeyeに代入する)
 	float shakePos;
 	Vector3 pos{};
 	float timer{};
-	IwaEffect* iwa;
+	IwaEffect* iwa[2];
 };
 
