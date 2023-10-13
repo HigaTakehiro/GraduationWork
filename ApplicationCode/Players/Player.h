@@ -46,6 +46,18 @@ public: //メンバ関数
 
 	void SetStop(bool stop) { this->stop_ = stop; }
 
+	/// <summary>
+	/// ハンマー投げフラグを取得
+	/// </summary>
+	/// <returns>ハンマー投げフラグ</returns>
+	bool GetIsHammerRelease() { return isHammerRelease_; }
+
+	/// <summary>
+	/// 攻撃フラグを取得
+	/// </summary>
+	/// <returns>攻撃フラグ</returns>
+	bool GetIsAttack() { return isAttack_; }
+
 private: //メンバ関数
 
 	/// <summary>
@@ -132,6 +144,8 @@ private: //メンバ変数
 	Model* hammerModel_;
 	//ハンマー投げフラグ
 	bool isHammerRelease_;
+	//攻撃フラグ
+	bool isAttack_;
 	//ハンマー座標
 	Vector3 hammerPos_;
 	//ハンマーサイズ
