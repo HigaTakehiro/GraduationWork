@@ -251,13 +251,8 @@
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp">
       <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="ApplicationCode\Shake\IwaEffect.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
-=======
     <ClCompile Include="ApplicationCode\Item\Ore.cpp">
       <Filter>ソース ファイル\ApplicationCode\Item</Filter>
->>>>>>> main
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -430,13 +425,8 @@
     <ClInclude Include="ApplicationCode\Shake\Shake.h">
       <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="ApplicationCode\Shake\IwaEffect.h">
-      <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
-=======
     <ClInclude Include="ApplicationCode\Item\Ore.h">
       <Filter>ソース ファイル\ApplicationCode\Item</Filter>
->>>>>>> main
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
