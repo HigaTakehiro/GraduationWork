@@ -274,5 +274,5 @@ void GameScene::EasingNextPos()
 	targetPos_.x = Easing::easeIn(time_, 1, targetPos_.x, NextPos_.x);
 	cameraPos_.z = Easing::easeIn(time_, 1, cameraPos_.z, NextTarget);
 	targetPos_.z = Easing::easeIn(time_, 1, targetPos_.z, NextPos_.z);
-	if (time_ > 1) { oldcount_ = count_; time_ = 0; }
+	if (time_ > 1) { oldcount_ = count_; time_ = 0; map_->SetStop(false); }
 }
