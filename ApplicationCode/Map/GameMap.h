@@ -55,6 +55,8 @@ public:
 
 	void SetStop(bool flag) { this->stopCount_ = flag; }
 
+	int GetNextVal() { return nextval_; }
+
 	XMFLOAT3 GetNowMapPos();
 	
 private:
