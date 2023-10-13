@@ -1,15 +1,102 @@
 #include "GameMap.h"
 #include"Modelmanager.h"
+#include "ExternalFileLoader.h"
 
 int Count=0;
 
+void GameMap::LoadCsv()
+{
+	std::string line;
+	int NUMBER = 0;
+	int NEXTVERT = 0;
+	int NEXTHORY = 0;
+	int COUNT = 0;
+	XMFLOAT3 Pos= { 30.f ,0.f,30.f };
+
+	std::stringstream stream;
+
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map.csv");
+
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+
+		if (word.find("MAP") == 0) {
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+			NUMBER = x;
+		}
+
+		if (word.find("NEXT") == 0) {
+			NEXTHORY += 1;
+			NEXTVERT = 0;
+			NUMBER = 99;
+		}
+
+		if (word.find("END") == 0) {
+			return;
+		}
+
+		if (NUMBER == 0) {
+			NEXTVERT += 1;
+			continue;
+		}
+		if (NUMBER == 1) {
+			unique_ptr<Stage> Map = make_unique<Stage>();
+			Map->stage_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+			Map->num = COUNT;
+			Map->state_ = Map::Normal;
+			Pos = { 30.f*NEXTVERT ,0.f,30.f*NEXTHORY };
+			Map->stagePos_ = Pos;
+			Map->stage_->SetPosition(Pos);
+			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
+			maps_.push_back(move(Map));
+			NEXTVERT += 1;
+			COUNT += 1;
+		}
+		else if (NUMBER == 2) {
+			unique_ptr<Stage> Map = make_unique<Stage>();
+			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+			Map->num = COUNT;
+			Map->state_ = Map::Forest;
+			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Map->stagePos_ = Pos;
+			Map->stage_->SetPosition(Pos);
+			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
+			maps_.push_back(move(Map));
+			NEXTVERT += 1;
+			COUNT += 1;
+		}
+		else if (NUMBER == 3) {
+			unique_ptr<Stage> Map = make_unique<Stage>();
+			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+			Map->num = COUNT;
+			Map->state_ = Map::Enemy;
+			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Map->stagePos_ = Pos;
+			Map->stage_->SetPosition(Pos);
+			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
+			maps_.push_back(move(Map));
+			NEXTVERT += 1;
+			COUNT += 1;
+		}
+
+	
+
+	}
+}
+
 void GameMap::Initalize()
 {
+	LoadCsv();
+
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			sta[j][i] = new Stage;
 			sta[j][i]->stage_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			sta[j][i]->stagePos_ = { 50.f * j-101.f,0.f,50.f * i-60};
+			sta[j][i]->stagePos_ = { 30.f * j,0.f,30.f * i};
 			sta[j][i]->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			sta[j][i]->stage_->SetPosition(sta[j][i]->stagePos_);
 			sta[j][i]->num = Count;
@@ -20,21 +107,29 @@ void GameMap::Initalize()
 
 void GameMap::Update()
 {
-	for (int i = 0; i < 3; i++) {
+	for (unique_ptr<Stage>& Map : maps_) {
+		Map->stage_->Update();
+	}
+
+	/*for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			sta[j][i]->stage_->Update();
 		}
-	}
+	}*/
 }
 
 void GameMap::Draw()
 {
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			if(count_==sta[j][i]->num)
-			sta[j][i]->stage_->Draw();
-		}
+	for (unique_ptr<Stage>& Map : maps_) {
+		Map->stage_->Draw();
 	}
+
+	//for (int i = 0; i < 3; i++) {
+	//	for (int j = 0; j < 3; j++) {
+	//	//	if(count_==sta[j][i]->num)
+	//		sta[j][i]->stage_->Draw();
+	//	}
+	//}
 }
 
 void GameMap::Finalize()
@@ -48,16 +143,15 @@ void GameMap::Finalize()
 
 void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 {
-
-	if ((pos.x < sta[0][0]->stagePos_.x + 25 && sta[0][0]->stagePos_.x - 25 < pos.x) && (pos.z < sta[0][0]->stagePos_.z + 25 && sta[0][0]->stagePos_.z - 25 < pos.z)) { count_ = sta[0][0]->num;}
-	else if ((pos.x < sta[0][1]->stagePos_.x + 25 && sta[0][1]->stagePos_.x - 25 < pos.x) && (pos.z < sta[0][1]->stagePos_.z + 25 && sta[0][1]->stagePos_.z - 25 < pos.z)) {count_ = sta[0][1]->num;}
-	else if ((pos.x < sta[0][2]->stagePos_.x + 25 && sta[0][2]->stagePos_.x - 25 < pos.x) && (pos.z < sta[0][2]->stagePos_.z + 25 && sta[0][2]->stagePos_.z - 25 < pos.z)) {count_ = sta[0][2]->num;}
-	else if ((pos.x < sta[1][0]->stagePos_.x + 25 && sta[1][0]->stagePos_.x - 25 < pos.x) && (pos.z < sta[1][0]->stagePos_.z + 25 && sta[1][0]->stagePos_.z - 25 < pos.z)) {count_ = sta[1][0]->num;}
-	else if ((pos.x < sta[1][1]->stagePos_.x + 25 && sta[1][1]->stagePos_.x - 25 < pos.x) && (pos.z < sta[1][1]->stagePos_.z + 25 && sta[1][1]->stagePos_.z - 25 < pos.z)) {count_ = sta[1][1]->num;}
-	else if ((pos.x < sta[1][2]->stagePos_.x + 25 && sta[1][2]->stagePos_.x - 25 < pos.x) && (pos.z < sta[1][2]->stagePos_.z + 25 && sta[1][2]->stagePos_.z - 25 < pos.z)) {count_ = sta[1][2]->num;}
-	else if ((pos.x < sta[2][0]->stagePos_.x + 25 && sta[2][0]->stagePos_.x - 25 < pos.x) && (pos.z < sta[2][0]->stagePos_.z + 25 && sta[2][0]->stagePos_.z - 25 < pos.z)) {count_ = sta[2][0]->num; }
-	else if ((pos.x < sta[2][1]->stagePos_.x + 25 && sta[2][1]->stagePos_.x - 25 < pos.x) && (pos.z < sta[2][1]->stagePos_.z + 25 && sta[2][1]->stagePos_.z - 25 < pos.z)) {count_ = sta[2][1]->num; }
-	else if ((pos.x < sta[2][2]->stagePos_.x + 25 && sta[2][2]->stagePos_.x - 25 < pos.x) && (pos.z < sta[2][2]->stagePos_.z + 25 && sta[2][2]->stagePos_.z - 25 < pos.z)) {count_ = sta[2][2]->num; }
+	int Value = 10;
+	for (unique_ptr<Stage>& Map : maps_) {
+		if ((pos.x < Map->stagePos_.x + Value && Map->stagePos_.x - Value < pos.x) && 
+			(pos.z < Map->stagePos_.z + Value && Map->stagePos_.z - Value < pos.z)) 
+		{
+			count_ = Map->num; return;
+		}
+	}
+		
 }
 
 int GameMap::GetCount(const XMFLOAT3& pos)
@@ -69,11 +163,18 @@ int GameMap::GetCount(const XMFLOAT3& pos)
 
 XMFLOAT3 GameMap::GetNowMapPos()
 {
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			if (count_ == sta[j][i]->num) {
-				return sta[j][i]->stagePos_;
-			}
+	//for (int i = 0; i < 3; i++) {
+	//	for (int j = 0; j < 3; j++) {
+	//		if (count_ == sta[j][i]->num) {
+	//			return sta[j][i]->stagePos_;
+	//		}
+	//	}
+	//}
+
+	for (unique_ptr<Stage>& Map : maps_) {
+		if (count_==Map->num)
+		{
+			return Map->stagePos_;
 		}
 	}
 }

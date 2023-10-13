@@ -96,6 +96,12 @@
     <Filter Include="ソース ファイル\ApplicationCode\Collision">
       <UniqueIdentifier>{5f4982f8-2bc4-4258-82cc-fb1a3a14435e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Shake">
+      <UniqueIdentifier>{2d71da12-0523-41f6-9811-20ef8a0d049b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Item">
+      <UniqueIdentifier>{81adeeb8-f88e-48ff-bac6-36f9a3e5ac48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -244,6 +250,11 @@
     </ClCompile>
     <ClCompile Include="ObbAndObb.cpp">
       <Filter>ソース ファイル</Filter>
+    <ClCompile Include="ApplicationCode\Shake\Shake.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Item\Ore.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -414,6 +425,12 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />
     <ClInclude Include="ObbAndObb.h" />
+    <ClInclude Include="ApplicationCode\Shake\Shake.h">
+      <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Item\Ore.h">
+      <Filter>ソース ファイル\ApplicationCode\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">

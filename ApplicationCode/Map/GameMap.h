@@ -7,15 +7,26 @@ using namespace DirectX;
 class GameMap
 {
 private:
-	
+	enum Map {
+		None = 0,
+		Normal,
+		Forest,
+		Enemy,
+	};
+
 	struct Stage
 	{
 		unique_ptr<Object3d> stage_;
 		XMFLOAT3 stagePos_;
 		int num;
+		Map state_;
 	};
 
+
 public:
+	
+	void LoadCsv();
+	
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>
@@ -45,6 +56,8 @@ public:
 private:
 	
 	unique_ptr<Object3d> map_[3][3];
+
+	list<unique_ptr<Stage>> maps_;
 
 	Stage* sta[3][3];
 

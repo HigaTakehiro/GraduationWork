@@ -5,6 +5,7 @@
 #include "NormalEnemyA.h"
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
+#include "Collision.h"
 
 void GameScene::Initialize()
 {
@@ -43,20 +44,65 @@ void GameScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize();
+	shake_ = new Shake();
+	shake_->Initialize();
 	count_ = map_->GetCount(player_->GetPos());
 	oldcount_ = count_;
+
+	ore_ = std::make_unique<Ore>();
+	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
+
+	for (int32_t i = 0; i < 3; i++) {
+		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
+		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
+		oreItems_.push_back(std::move(newOre));
+	}
 }
 
 void GameScene::Update()
 {
+	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
+
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			if (ore->GetIsHit()) {
+				player_->AddHammerPower();
+				ore.release();
+			}
+		}
+		if (ore != nullptr) {
+			ore->Update();
+		}
+	}
+
+	if (ore_ != nullptr) {
+		if (ore_->GetIsHit()) {
+			player_->AddHammerPower();
+			ore_.release();
+		}
+	}
+
+	if (ore_ != nullptr) {
+		ore_->Update();
+	}
+
 	player_->Update();
+	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
+	Vector3 enemyPos = ene->GetPos();
+	if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos.x, enemyPos.z }, 1.0f)) {
+		Vector3 playerPos = player_->GetPos();
+		Vector3 vec = playerPos - enemyPos;
+		vec.normalize();
+		vec.y = 0.0f;
+		player_->HitHammerToEnemy(vec);
+	}
 
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f; 
+		cameraPos_.z -= 1.0f;
 		targetPos_.z -= 1.0f;
 	}
 	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
@@ -66,6 +112,16 @@ void GameScene::Update()
 	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
 		cameraPos_.x -= 1.0f;
 		targetPos_.x -= 1.0f;
+	}
+
+	if (shake_->GetShakeFlag() == true) {
+		cameraPos_.y += shake_->GetShakePos();
+		targetPos_.y += shake_->GetShakePos();
+	}
+	else {
+		cameraPos_.y = 12;
+		targetPos_.y = 0;
+
 	}
 
 	camera_->SetEye(cameraPos_);
@@ -84,13 +140,14 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-	count_=map_->GetCount(player_->GetPos());
+	count_ = map_->GetCount(player_->GetPos());
 
 
 	ene->SetHammerObb(*_hummmerObb);
 	EasingNextPos();
 	map_->Update();
 	ene->Upda(camera_.get());
+	shake_->Update();
 	colManager_->Update();
 	//シーン切り替え
 	SceneChange();
@@ -111,6 +168,14 @@ void GameScene::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->Draw();
 	player_->Draw();
+	if (ore_ != nullptr) {
+		ore_->Draw();
+	}
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			ore->Draw();
+		}
+	}
 	Object3d::PostDraw();
 	ene->Draw();
 	//スプライト描画処理(UI等)
@@ -120,9 +185,11 @@ void GameScene::Draw()
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
+
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring rot = std::to_wstring(player_->GetRot().y);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\n" + rot, textDrawRange);
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\n" + rot, textDrawRange);
+
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -149,7 +216,7 @@ void GameScene::Finalize()
 
 void GameScene::SceneChange()
 {
-	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
@@ -198,18 +265,10 @@ void GameScene::EasingNextPos()
 {
 	if (count_ == oldcount_) { return; }
 	float NextTarget = 0;
-	if (count_ == 0 || count_ == 1 || count_ == 2) {
-		NextTarget = oldcamerapos_;
-	}
-	if (count_ == 3 || count_ == 4 || count_ == 5) {
-		NextTarget = oldcamerapos_ +50;
-	}
-	if (count_ == 6 || count_ == 7 || count_ == 8) {
-		NextTarget = oldcamerapos_ +100;
-	}
-
-
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
+	NextTarget = oldcamerapos_+NextPos_.z;
+
+
 	time_ += 0.01f;
 	cameraPos_.x = Easing::easeIn(time_, 1, cameraPos_.x, NextPos_.x);
 	targetPos_.x = Easing::easeIn(time_, 1, targetPos_.x, NextPos_.x);

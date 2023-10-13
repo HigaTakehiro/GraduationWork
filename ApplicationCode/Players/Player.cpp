@@ -8,8 +8,8 @@
 void Player::Initialize()
 {
 	//ƒvƒŒƒCƒ„[‰Šú‰»
-	for (int32_t i = 0; i < 5; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f * ((float)i + 1), 64.0f }, "Player.png", { 320, 64 });
+	for (int32_t i = 0; i < 4; i++) {
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 72.0f * ((float)i + 1), 64.0f }, "tuyu_idle.png", { 320, 64 });
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -34,6 +34,8 @@ void Player::Initialize()
 	hammer_->SetColType(Object3d::CollisionType::Sphere);
 	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
 	hammer_->SetHitRadius(1.0f);
+	hammerPower_ = 0;
+	hammerSize_ = initHammerScale_;
 
 	//–îˆó‰Šú‰»
 	arrowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Arrow.png");
@@ -47,16 +49,18 @@ void Player::Update()
 {
 	static int32_t animeCount = 0;
 
+	Repulsion();
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
 	}
+	HammerPowerUp();
 	Move();
 	Attack();
 
 
 	if (KeyInput::GetIns()->TriggerKey(DIK_N)) {
-		if (++animeCount >= 5) {
+		if (++animeCount >= 4) {
 			animeCount = 0;
 		}
 		player_->SetModel(playerModel_[animeCount]);
@@ -81,10 +85,16 @@ void Player::Draw()
 
 void Player::Finalize()
 {
-	for (int32_t i = 0; i < 5; i++) {
+	for (int32_t i = 0; i < 4; i++) {
 		safe_delete(playerModel_[i]);
 	}
 	safe_delete(hammerModel_);
+}
+
+void Player::HitHammerToEnemy(Vector3 vec)
+{
+	repulsionVec_ = vec;
+	repulsionSpeed_ = 1.0f;
 }
 
 void Player::PlayerStatusSetting() {
@@ -366,4 +376,25 @@ void Player::HammerReturn()
 	hammerPos_.y = 2.0f;
 	hammer_->SetPosition(hammerPos_);
 	hammer_->SetRotation(rot);
+}
+
+void Player::HammerPowerUp()
+{
+	const Vector3 hammerScale = { 0.5f, 0.5f, 0.5f };
+	hammerSize_ = initHammerScale_ + (hammerScale * (float)hammerPower_);
+	//hammerPos_ = initHammerPos_ + initHammerPos_ * 0.5f;
+	//hammerPos_.y = -30;
+	hammer_->SetScale(hammerSize_);
+	//hammer_->SetPosition(hammerPos_);
+}
+
+void Player::Repulsion()
+{
+	if (repulsionSpeed_ >= 0.0f) {
+		pos_ += repulsionVec_ * repulsionSpeed_;
+		repulsionSpeed_ -= 0.1f;
+	}
+	else {
+		repulsionSpeed_ = 0.0f;
+	}
 }

@@ -18,8 +18,10 @@
 #include "JsonLoader.h"
 #include "Player.h"
 #include"GameMap.h"
+#include "Ore.h"
 
 #include"BaseEnemy.h"
+#include"Shake.h"
 class GameScene : public BaseScene
 {
 public: //メンバ関数
@@ -75,6 +77,10 @@ private: //メンバ変数
 	std::unique_ptr<Camera> camera_;
 	//プレイヤー
 	Player* player_;
+	//アイテム
+	std::unique_ptr<Ore> ore_;
+	//鉱石アイテム
+	std::list<std::unique_ptr<Ore>> oreItems_;
 
 	//テキスト描画
 	TextDraw* text_;
@@ -84,8 +90,9 @@ private: //メンバ変数
 	Vector3 cameraPos_;
 	//注視点
 	Vector3 targetPos_;
-
 	int count_ = 0;
+
+	Shake* shake_;
 	int oldcount_ = 0;
 	float oldcamerapos_ = 0;
 	float time_ = 0;
