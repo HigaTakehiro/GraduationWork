@@ -154,7 +154,8 @@ void ParticleManager::Update()
 	int32_t constMapCount = 0;
 	ConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
-	constMap->mat = camera->GetMatView() * camera->GetMatProjection();
+	matV = camera->GetMatView() * camera->GetMatProjection();
+	constMap->mat = matV;
 	constMap->matBillboard = camera->GetMatBillboard();
 	constBuff->Unmap(0, nullptr);
 }

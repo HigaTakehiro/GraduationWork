@@ -161,6 +161,7 @@ public: // メンバ関数
 	/// </summary>
 	void CreateModel();
 
+	XMMATRIX GetMat() { return matV; };
 private: // メンバ変数
 	// デバイス
 	ID3D12Device* device = nullptr;
@@ -188,6 +189,7 @@ private: // メンバ変数
 	std::forward_list<Particle> particles;
 	// カメラ
 	Camera* camera = nullptr;
-
+	
+	XMMATRIX matV;
 };
 

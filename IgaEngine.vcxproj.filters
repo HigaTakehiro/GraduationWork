@@ -248,6 +248,9 @@
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp">
       <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Shake\IwaEffect.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -417,6 +420,9 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />
     <ClInclude Include="ApplicationCode\Shake\Shake.h">
+      <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Shake\IwaEffect.h">
       <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
     </ClInclude>
   </ItemGroup>
