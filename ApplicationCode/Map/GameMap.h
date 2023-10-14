@@ -42,7 +42,7 @@ public:
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
-	void Draw();
+	void Draw(int OldCount);
 
 	/// <summary>
 	/// I—¹ˆ—
