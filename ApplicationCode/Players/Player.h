@@ -171,6 +171,8 @@ private: //ƒƒ“ƒo•Ï”
 	Vector3 repulsionVec_;
 	//”½”­UŒ‚‘¬“x
 	float repulsionSpeed_;
+	//”½”­ŒW”
+	float repulsionPower_;
 	//‘€ì‚ğ~‚ß‚é
 	bool stop_ = false;
 public:
