@@ -58,6 +58,8 @@ public: //メンバ関数
 	/// <returns>攻撃フラグ</returns>
 	bool GetIsAttack() { return isAttack_; }
 
+	bool GetNotNext() { return notnext_; }
+
 private: //メンバ関数
 
 	/// <summary>
@@ -173,6 +175,8 @@ private: //メンバ変数
 	float repulsionSpeed_;
 	//操作を止める
 	bool stop_ = false;
+	//攻撃中にステージ移動しない様に
+	bool notnext_ = false;
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
 	DirectX::XMFLOAT3 GetPos(){ return player_->GetPosition(); }

@@ -14,6 +14,11 @@ private:
 		Enemy,
 	};
 
+	enum Direction {
+		Vertical=0,
+		Beside,
+	};
+
 	struct Stage
 	{
 		unique_ptr<Object3d> stage_;
@@ -22,6 +27,12 @@ private:
 		Map state_;
 	};
 
+	struct Bridge
+	{
+		unique_ptr<Object3d> bridge_;
+		int num;
+		Direction state_;
+	};
 
 public:
 	
@@ -62,6 +73,8 @@ public:
 private:
 
 	list<unique_ptr<Stage>> maps_;
+
+	list<unique_ptr<Bridge>> bridge;
 
 	list<unique_ptr<Object3d>> bridge_;
 
