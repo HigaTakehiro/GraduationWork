@@ -121,7 +121,7 @@ void GameMap::CreateBridge()
 				unique_ptr<Bridge> Bridges = make_unique<Bridge>();
 				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
 				XMFLOAT3 Pos = Map->stagePos_;
-				Pos.z = Pos.z + 16;
+				Pos.z = Pos.z + 15;
 				Bridges->bridge_->SetPosition(Pos);
 				Bridges->bridge_->SetScale({ 2.f,1.f,2.4f });
 				Bridges->num = Map->num;
@@ -218,6 +218,31 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 		}
 	}
 		
+}
+
+void GameMap::CheckHitTest(Player* player)
+{
+	XMFLOAT3 PlayerPos = player->GetPos();
+	for (unique_ptr<Stage>& Map : maps_) {
+		
+		if(count_!=Map->num){continue;}
+		//¶
+		if (PlayerPos.x >= Map->stagePos_.x + 11 ) {
+			PlayerPos.x = Map->stagePos_.x + 11;
+		}
+		if (PlayerPos.x <= Map->stagePos_.x - 6) {
+			PlayerPos.x = Map->stagePos_.x - 6;
+		}
+
+		if (PlayerPos.z >= Map->stagePos_.z + 10) {
+			PlayerPos.z = Map->stagePos_.z + 10;
+		}
+
+		if (PlayerPos.z <= Map->stagePos_.z - 6) {
+			PlayerPos.z = Map->stagePos_.z - 6;
+		}
+	}
+	player->SetPos(PlayerPos);
 }
 
 int GameMap::GetCount(const XMFLOAT3& pos)

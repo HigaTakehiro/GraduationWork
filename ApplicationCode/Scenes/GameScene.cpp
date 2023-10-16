@@ -157,6 +157,7 @@ void GameScene::Update()
 	}
 	
 	EasingNextPos();
+	//map_->CheckHitTest(player_);
 	map_->Update();
 	
 	shake_->Update();
