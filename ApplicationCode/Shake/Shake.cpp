@@ -14,8 +14,8 @@ void Shake::Initialize(ID3D12Device* device, Camera* camera)
 		iwa[i]->Initialize(device, camera);
 	}
 	iwaCount = 0;
-	iwaPos[0] = { -200,0 };
-	iwaPos[1] = { 1400,0 };
+	iwaPos[0] = { -300,-100 };
+	iwaPos[1] = { 1500,-100 };
 }
 
 void Shake::Update()
