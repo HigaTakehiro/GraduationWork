@@ -96,7 +96,7 @@ void Player::Finalize()
 void Player::HitHammerToEnemy(Vector3 vec)
 {
 	repulsionVec_ = vec;
-	repulsionSpeed_ = 1.0f;
+	repulsionSpeed_ = repulsionPower_;
 }
 
 void Player::PlayerStatusSetting() {
@@ -110,6 +110,7 @@ void Player::PlayerStatusSetting() {
 	float rotResetTime;
 	float maxSpeed;
 	float acc;
+	float ref;
 	int32_t hp;
 	std::stringstream stream;
 
@@ -159,6 +160,9 @@ void Player::PlayerStatusSetting() {
 		if (word.find("Sacc") == 0) {
 			line_stream >> acc;
 		}
+		if (word.find("refPower") == 0) {
+			line_stream >> ref;
+		}
 	}
 
 	//èâä˙âª
@@ -173,6 +177,10 @@ void Player::PlayerStatusSetting() {
 	throwSpeed_ = throwSpeed;
 	maxMoveSpeed_ = maxSpeed;
 	hammerAcc_ = acc;
+	repulsionPower_ = ref;
+	if (repulsionPower_ <= 0.0f) {
+		repulsionPower_ = 1.0f;
+	}
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -345,7 +353,7 @@ void Player::HammerThrow() {
 		hammerPos_ += hammerVec_ * throwSpeed_;
 		hammerPos_.y = 2.0f;
 		hammer_->SetPosition(hammerPos_);
-		hammer_->SetRotation(rot);
+		//hammer_->SetRotation(rot);
 	}
 	else {
 		hammerTimer = hammerTime;
