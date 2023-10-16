@@ -1,7 +1,7 @@
 //体力
-HP,200
+HP,10
 //追従スピード
-MoveSpeed,0.3
+MoveSpeed,0.2
 //索敵範囲
 SearchRange,10.0
 //初期座標
