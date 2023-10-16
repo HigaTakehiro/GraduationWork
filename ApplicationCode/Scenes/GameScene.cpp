@@ -148,7 +148,7 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-	count_ = map_->GetCount(player_->GetPos());
+	
 
 	for(auto i=0;i<enemys_.size();i++)
 	{
@@ -277,13 +277,15 @@ void GameScene::CameraSetting()
 
 void GameScene::EasingNextPos()
 {
+	if (player_->GetNotNext()) { return; }
+	count_ = map_->GetCount(player_->GetPos());
 	if (count_ == oldcount_) { return; }
 	player_->SetStop(true);
 	float NextTarget = 0;
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
 	XMFLOAT3 PlayerPos= player_->GetPos();
 	XMFLOAT3 NEXTPLAYERPOS{};
-	NextTarget = oldcamerapos_+NextPos_.z;
+	NextTarget = oldcamerapos_+NextPos_.z-2.f;
 	int NextVal = map_->GetNextVal();
 	if (count_ == oldcount_ + 1) {
 		NEXTPLAYERPOS.x = NextPos_.x - 4;
