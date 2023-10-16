@@ -291,6 +291,7 @@ void Player::Attack() {
 	if (!isHammerRelease_) {
 		//スペースキーまたはBボタンが押されているか
 		if (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) {
+			notnext_ = true;
 			isAttack_ = true;
 			//回転攻撃
 			rotResetTimer_ = 0.0f;
@@ -372,6 +373,7 @@ void Player::HammerGet()
 			isHammerRelease_ = false;
 			isAttack_ = false;
 			hammerTimer = 0;
+			notnext_ = false;
 		}
 	}
 }

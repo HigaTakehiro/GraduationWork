@@ -105,24 +105,28 @@ void GameMap::CreateBridge()
 		for (unique_ptr<Stage>& Map2 : maps_) {
 			if (Map->num == Map2->num) { continue; }
 			if (Map->stagePos_.x + 30 == Map2->stagePos_.x && Map->num + 1 == Map2->num) {
-				unique_ptr<Object3d> Bridge = make_unique<Object3d>();
-				Bridge = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
+				unique_ptr<Bridge> Bridges = make_unique<Bridge>();
+				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
 				XMFLOAT3 Pos = Map->stagePos_;
 				Pos.x = Pos.x + 16;
-				Bridge->SetPosition(Pos);
-				Bridge->SetScale({ 2.f,1.f,2.4f });
-				Bridge->SetRotation({ 0.f,90.f,0.f });
-				bridge_.push_back(move(Bridge));
+				Bridges->bridge_->SetPosition(Pos);
+				Bridges->bridge_->SetScale({ 2.f,1.f,2.4f });
+				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
+				Bridges->num = Map->num;
+				Bridges->state_ = Direction::Beside;
+				bridge.push_back(move(Bridges));
 			}
 
 			if (Map->stagePos_.z + 30 == Map2->stagePos_.z && Map->num + nextval_ == Map2->num) {
-				unique_ptr<Object3d> Bridge = make_unique<Object3d>();
-				Bridge = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
+				unique_ptr<Bridge> Bridges = make_unique<Bridge>();
+				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
 				XMFLOAT3 Pos = Map->stagePos_;
 				Pos.z = Pos.z + 16;
-				Bridge->SetPosition(Pos);
-				Bridge->SetScale({ 2.f,1.f,2.4f });
-				bridge_.push_back(move(Bridge));
+				Bridges->bridge_->SetPosition(Pos);
+				Bridges->bridge_->SetScale({ 2.f,1.f,2.4f });
+				Bridges->num = Map->num;
+				Bridges->state_ = Direction::Vertical;
+				bridge.push_back(move(Bridges));
 			}
 		}
 	}
@@ -134,17 +138,7 @@ void GameMap::Initalize()
 
 
 	CreateBridge();
-	/*for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			sta[j][i] = new Stage;
-			sta[j][i]->stage_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			sta[j][i]->stagePos_ = { 30.f * j,0.f,30.f * i};
-			sta[j][i]->stage_->SetScale({ 0.1f,0.1f,0.1f });
-			sta[j][i]->stage_->SetPosition(sta[j][i]->stagePos_);
-			sta[j][i]->num = Count;
-			Count += 1;
-		}
-	}*/
+	
 }
 
 void GameMap::Update()
@@ -153,15 +147,10 @@ void GameMap::Update()
 		Map->stage_->Update();
 	}
 
-	for (unique_ptr<Object3d>& Bridge : bridge_) {
-		Bridge->Update();
+	for (unique_ptr<Bridge>& Bridge : bridge) {
+		Bridge->bridge_->Update();
 	}
 
-	/*for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			sta[j][i]->stage_->Update();
-		}
-	}*/
 }
 
 void GameMap::Draw(int OldCount)
@@ -172,8 +161,12 @@ void GameMap::Draw(int OldCount)
 		}
 	}
 
-	for (unique_ptr<Object3d>& Bridge : bridge_) {
-		Bridge->Draw();
+	for (unique_ptr<Bridge>& Bridge : bridge) {
+		if (Bridge->num == count_ || 
+			(Bridge->num==count_ - nextval_&&Bridge->state_==Direction::Vertical)||
+			(Bridge->num==count_-1&&Bridge->state_==Direction::Beside)) {
+			Bridge->bridge_->Draw();
+		}
 	}
 
 }
