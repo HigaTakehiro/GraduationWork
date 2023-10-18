@@ -98,6 +98,7 @@ void GameScene::Update()
 	for (auto i = 0; i < enemys_.size(); i++) {
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z}, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
+			enemys_[i]->GetDamage();
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;

@@ -65,10 +65,7 @@ void NormalEnemyA::Upda(Camera* camera)
 		_status.Tex->SetRotation({ _status.Rot.x,_status.Rot.y,_status.Rot.z});
 		_status.Tex->Update(camera);
 	}
-	if (!_isAttack&& KeyInput::GetIns()->PushKey(DIK_SPACE)&&!RecvDamage&&Collision::OBBCollision(_status.Obb, _playerOBB)) {
-		_status.HP--;
-		RecvDamage = TRUE;
-	}
+	
 
 	if (!_isAttack) {back_t = 0.f; }
 }
