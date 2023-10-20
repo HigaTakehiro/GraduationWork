@@ -19,12 +19,24 @@ public:
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update(Vector2 particle2dPos);
+	void Update(Vector2 particle2dPos, float fade);
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList"></param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	Vector3 GetParticlePos() { return particlePos; }
 private:
+	/// <summary>
+	/// パーティクルの2D座標を3D座標に変換
+	/// </summary>
+	/// <param name="particle2dPos">2Dの座標</param>
 	void ConvertParticlePos(Vector2 particle2dPos);
+	/// <summary>
+	/// パーティクル
+	/// </summary>
+	void particleCreate(float fade);
 
-	void particleCreate();
 	Vector3 particlePos{};
 	std::unique_ptr <ParticleManager> particle;
 };

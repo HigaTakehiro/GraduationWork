@@ -263,6 +263,12 @@
     <ClCompile Include="ApplicationCode\Shake\IwaEffect.cpp">
       <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\BossBase.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\Dogom.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -442,6 +448,12 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Shake\IwaEffect.h">
       <Filter>ソース ファイル\ApplicationCode\Shake</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\BossBase.h">
+      <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\Dogom.h">
+      <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

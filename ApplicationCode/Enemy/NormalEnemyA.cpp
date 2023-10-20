@@ -75,7 +75,7 @@ void NormalEnemyA::Draw()
 	if (_status.HP <= 0)return;
 	if (_status.Tex == nullptr)return;
 	Texture::PreDraw();
-	_status.Tex->Draw();
+	///_status.Tex->Draw();
 	Texture::PostDraw();
 }
 

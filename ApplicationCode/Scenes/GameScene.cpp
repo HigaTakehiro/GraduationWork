@@ -6,6 +6,7 @@
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
 #include "Collision.h"
+#include "Dogom.h"
 #include "SoundManager.h"
 
 void GameScene::Initialize()
@@ -39,6 +40,10 @@ void GameScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
+	boss_.reset(new Dogom());
+	boss_->Init();
+	boss_->SetPlayerIns(player_);
+	
 	for (auto i = 0; i < enemys_.size(); i++) {
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
@@ -158,11 +163,11 @@ void GameScene::Update()
 		enemys_[i]->SetHammerObb(*_hummmerObb);
 		enemys_[i]->Upda(camera_.get());
 	}
-	
+	boss_->Upda();
 	EasingNextPos();
 	//map_->CheckHitTest(player_);
 	map_->Update();
-	
+	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
 	//シーン切り替え
@@ -179,10 +184,17 @@ void GameScene::Draw()
 	//スプライト描画処理(背景)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
-
-	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->Draw(oldcount_);
+	Object3d::PostDraw();
+
+for(auto i=0;i<enemys_.size();i++)
+	enemys_[i]->Draw();
+
+	boss_->Draw2();
+	//3Dオブジェクト描画処理
+	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	//map_->Draw(oldcount_);
 	player_->Draw();
 	if (ore_ != nullptr) {
 		ore_->Draw();
@@ -191,11 +203,10 @@ void GameScene::Draw()
 		if (ore != nullptr) {
 			ore->Draw();
 		}
-	}
+	}boss_->Draw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	for(auto i=0;i<enemys_.size();i++)
-	enemys_[i]->Draw();
+	
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
@@ -225,6 +236,7 @@ void GameScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
+	boss_->Finalize();
 	safe_delete(player_);
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
@@ -284,6 +296,8 @@ void GameScene::EasingNextPos()
 	if (player_->GetNotNext()) { return; }
 	count_ = map_->GetCount(player_->GetPos());
 	if (count_ == oldcount_) { return; }
+
+
 	player_->SetStop(true);
 	float NextTarget = 0;
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
@@ -291,19 +305,24 @@ void GameScene::EasingNextPos()
 	XMFLOAT3 NEXTPLAYERPOS{};
 	NextTarget = oldcamerapos_+NextPos_.z-2.f;
 	int NextVal = map_->GetNextVal();
-	if (count_ == oldcount_ + 1) {
+	if (time_ == 0) {
+		direction = map_->CheckHitBridge(PlayerPos);
+	}
+	if (direction == 0) {player_->SetStop(false); return;}
+	//if (count_ == oldcount_ + 1) {
+	if (direction == 2) {
 		NEXTPLAYERPOS.x = NextPos_.x - 4;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
-	else if (count_ == oldcount_ - 1) {
+	else if (direction == 1) {//if (count_ == oldcount_ - 1) {
 		NEXTPLAYERPOS.x = NextPos_.x + 7;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
-	else if (count_ == oldcount_+ NextVal) {
+	else if (direction == 4) {//if (count_ == oldcount_+ NextVal) {
 		NEXTPLAYERPOS.z= NextPos_.z - 3;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
-	else if (count_ == oldcount_ - NextVal) {
+	else if (direction == 3) {//if (count_ == oldcount_ - NextVal) {
 		NEXTPLAYERPOS.z = NextPos_.z + 7;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
