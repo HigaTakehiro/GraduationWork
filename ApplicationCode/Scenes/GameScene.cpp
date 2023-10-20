@@ -6,6 +6,7 @@
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
 #include "Collision.h"
+#include "Dogom.h"
 
 void GameScene::Initialize()
 {
@@ -38,6 +39,10 @@ void GameScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
+	boss_.reset(new Dogom());
+	boss_->Init();
+	boss_->SetPlayerIns(player_);
+	
 	for (auto i = 0; i < enemys_.size(); i++) {
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
@@ -156,11 +161,11 @@ void GameScene::Update()
 		enemys_[i]->SetHammerObb(*_hummmerObb);
 		enemys_[i]->Upda(camera_.get());
 	}
-	
+	boss_->Upda();
 	EasingNextPos();
 	//map_->CheckHitTest(player_);
 	map_->Update();
-	
+	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
 	//シーン切り替え
@@ -177,10 +182,17 @@ void GameScene::Draw()
 	//スプライト描画処理(背景)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
-
-	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->Draw(oldcount_);
+	Object3d::PostDraw();
+
+for(auto i=0;i<enemys_.size();i++)
+	enemys_[i]->Draw();
+
+	boss_->Draw2();
+	//3Dオブジェクト描画処理
+	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	//map_->Draw(oldcount_);
 	player_->Draw();
 	if (ore_ != nullptr) {
 		ore_->Draw();
@@ -189,11 +201,10 @@ void GameScene::Draw()
 		if (ore != nullptr) {
 			ore->Draw();
 		}
-	}
+	}boss_->Draw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	for(auto i=0;i<enemys_.size();i++)
-	enemys_[i]->Draw();
+	
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
@@ -223,6 +234,7 @@ void GameScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
+	boss_->Finalize();
 	safe_delete(player_);
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
