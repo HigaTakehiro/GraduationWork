@@ -97,4 +97,5 @@ private: //ƒƒ“ƒo•Ï”
 	float oldcamerapos_ = 0;
 	float time_ = 0;
 	XMFLOAT3 nextPos_{};
+	int direction = 0;
 };
