@@ -4,6 +4,7 @@
 #include "KeyInput.h"
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
+#include "SoundManager.h"
 
 void Player::Initialize()
 {
@@ -34,7 +35,7 @@ void Player::Initialize()
 	hammer_->SetColType(Object3d::CollisionType::Sphere);
 	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
 	hammer_->SetHitRadius(1.0f);
-	hammerPower_ = 0;
+	oreCount_ = 0;
 	hammerSize_ = initHammerScale_;
 
 	//矢印初期化
@@ -112,6 +113,10 @@ void Player::PlayerStatusSetting() {
 	float acc;
 	float ref;
 	int32_t hp;
+	int32_t atk;
+	int32_t maxOreCount;
+	float hammerRotCoeff;
+	Vector3 sizeUp;
 	std::stringstream stream;
 
 	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("PlayerStatus.csv");
@@ -163,6 +168,20 @@ void Player::PlayerStatusSetting() {
 		if (word.find("refPower") == 0) {
 			line_stream >> ref;
 		}
+		if (word.find("atk") == 0) {
+			line_stream >> atk;
+		}
+		if (word.find("maxOre") == 0) {
+			line_stream >> maxOreCount;
+		}
+		if (word.find("hammerRotCoeff") == 0) {
+			line_stream >> hammerRotCoeff;
+		}
+		if (word.find("sizeUp") == 0) {
+			line_stream >> sizeUp.x;
+			line_stream >> sizeUp.y;
+			line_stream >> sizeUp.z;
+		}
 	}
 
 	//初期化
@@ -172,12 +191,16 @@ void Player::PlayerStatusSetting() {
 	hp_ = hp;
 
 	moveSpeed_ = moveSpeed;
-	rotSpeed_ = rotSpeed;
+	rotSpeed_ = initRotSpeed_ = rotSpeed;
 	rotResetTimer_ = rotResetTime_ = rotResetTime;
 	throwSpeed_ = throwSpeed;
 	maxMoveSpeed_ = maxSpeed;
 	hammerAcc_ = acc;
 	repulsionPower_ = ref;
+	attackPoint_ = initAtkPoint_ = atk;
+	maxOreCount_ = maxOreCount;
+	hammerRotCoeff_ = hammerRotCoeff;
+	hammerSizeUp_ = sizeUp;
 	if (repulsionPower_ <= 0.0f) {
 		repulsionPower_ = 1.0f;
 	}
@@ -287,11 +310,14 @@ void Player::Move() {
 }
 
 void Player::Attack() {
+	rotSpeed_ = initRotSpeed_ - (hammerRotCoeff_ * (float)oreCount_);
 	//ハンマーをもっているか
 	if (!isHammerRelease_) {
 		//スペースキーまたはBボタンが押されているか
 		if (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) {
+			notnext_ = true;
 			isAttack_ = true;
+			isHammerSwing_ = true;
 			//回転攻撃
 			rotResetTimer_ = 0.0f;
 			rot_.y -= rotSpeed_;
@@ -299,12 +325,13 @@ void Player::Attack() {
 		//スペースキーまたはBボタンを離したとき
 		else if (KeyInput::GetIns()->ReleaseKey(DIK_SPACE) || PadInput::GetIns()->ReleaseButton(PadInput::Button_B)) {
 			isHammerRelease_ = true;
+			isHammerSwing_ = false;
 			Vector3 hammerPos = pos_;
 			hammerPos.y = 30.0f;
 			hammerPos_ = hammerPos;
 			hammer_->SetParent(nullptr);
 			hammer_->SetScale(scale_);
-
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerRelease, 0.2f);
 			//進行ベクトルを求める
 			Vector3 vec = arrow_->GetMatWorld().r[3] - hammer_->GetMatWorld().r[3];
 			vec.normalize();
@@ -340,7 +367,7 @@ void Player::Attack() {
 void Player::HammerThrow() {
 	const Vector3 hammerSize = { 0.03f, 0.03f, 0.03f };
 	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
-	hammerSize_ = hammerSize + hammerScaleCorrection * (float)hammerPower_;
+	hammerSize_ = hammerSize + hammerScaleCorrection * (float)oreCount_;
 	hammer_->SetScale(hammerSize_);
 	if (++hammerTimer <= hammerTime) {
 		//回転角を求める
@@ -372,6 +399,7 @@ void Player::HammerGet()
 			isHammerRelease_ = false;
 			isAttack_ = false;
 			hammerTimer = 0;
+			notnext_ = false;
 		}
 	}
 }
@@ -396,10 +424,11 @@ void Player::HammerReturn()
 void Player::HammerPowerUp()
 {
 	const Vector3 hammerScale = { 0.2f, 0.2f, 0.2f };
-	hammerSize_ = initHammerScale_ + (hammerScale * (float)hammerPower_);
+	hammerSize_ = initHammerScale_ + (hammerSizeUp_ * (float)oreCount_);
 	//hammerPos_ = initHammerPos_ + initHammerPos_ * 0.5f;
 	//hammerPos_.y = -30;
 	hammer_->SetScale(hammerSize_);
+	attackPoint_ = 1 + oreCount_;
 	//hammer_->SetPosition(hammerPos_);
 }
 

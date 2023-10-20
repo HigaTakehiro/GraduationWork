@@ -1,17 +1,25 @@
 #Player Status
 
 pos 0 2.5 0
-scale 0.03 0.03 0.03
+scale 0.028 0.028 0.028
 rot 0 180 0
 #プレイヤーの速度
-Smove 0.1
+Smove 0.12
 Srot 10.0
 RrotTime 60.0
 throwSpeed 0.3
 hp 3
 #ハンマー攻撃時移動速度
-Sacc 0.02
+Sacc 0.01
 #最大移動スピード
-maxS 0.2
+maxS 0.08
 #反発係数
-refPower 1.0
+refPower 0.25
+#攻撃力
+atk 1
+#鉱石の最大取得数
+maxOre 3
+#鉱石取得ごとの回転速度係数
+hammerRotCoeff 0.8
+#鉱石取得ごとの大きさ
+sizeUp 0.2 0.2 0.2

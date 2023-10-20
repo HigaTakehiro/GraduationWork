@@ -48,6 +48,7 @@ void NormalEnemyA::Upda(Camera* camera)
 {
 	(this->*stateTable[_action])();
 
+	if (_status.Rot.y >= 360.f || _status.Rot.y <= -360.f)_status.Rot.y = 0.f;
 	//_status.Tex->
 
 	TextureAnimation();
@@ -62,13 +63,11 @@ void NormalEnemyA::Upda(Camera* camera)
 
 		_status.Tex->SetPosition(_status.Pos);
 		_status.Tex->SetScale(_status.Scl);
-		_status.Tex->SetRotation({ _status.Rot.x,_status.Rot.y,_status.Rot.z});
+		_status.Tex->SetRotation({ _status.Rot.x,0,_status.Rot.z});
+		_status.Tex->SetBillboard(FALSE);
 		_status.Tex->Update(camera);
 	}
-	if (!_isAttack&& KeyInput::GetIns()->PushKey(DIK_SPACE)&&!RecvDamage&&Collision::OBBCollision(_status.Obb, _playerOBB)) {
-		_status.HP--;
-		RecvDamage = TRUE;
-	}
+	
 
 	if (!_isAttack) {back_t = 0.f; }
 }
@@ -85,21 +84,93 @@ void NormalEnemyA::Draw()
 void NormalEnemyA::TextureAnimation()
 {
 	AnimationCount++;
+	if (abs(0 - _status.Rot.y) < 45) {
+		if (AnimationCount == AnimationInterval) {
 
-	if (AnimationCount == AnimationInterval) {
-		_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-		_status.Tex->CreateTexture();
-		_status.Tex->SetAnchorPoint({ 0.5f,1.f });
-	} else if (AnimationCount == 2 * AnimationInterval) {
-		_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_2, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-		_status.Tex->CreateTexture();
-		_status.Tex->SetAnchorPoint({ 0.5f,1.f });
-	} else if (AnimationCount == 3 * AnimationInterval) {
-		_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_3, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-		_status.Tex->CreateTexture();
-		_status.Tex->SetAnchorPoint({ 0.5f,1.f });
-		AnimationCount = 0;
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 2 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_2, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 3 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_3, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+			AnimationCount = 0;
+		}
+	} else if (abs(0 - _status.Rot.y) < 135) {
+		if (AnimationCount == AnimationInterval) {
+
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->RUSA1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 2 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->RUSA2, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 3 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->RUSA3, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+			AnimationCount = 0;
+		}
 	}
+
+	else if (abs(0 - _status.Rot.y) < 225) {
+		if (AnimationCount == AnimationInterval) {
+
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->BUSA1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 2 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->BUSA2, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 3 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->BUSA3, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+			AnimationCount = 0;
+		}
+	}
+
+	else if (abs(0 - _status.Rot.y) < 315) {
+
+		if (AnimationCount == AnimationInterval) {
+
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->LUSA1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 2 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->LUSA2, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 3 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->LUSA3, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+			AnimationCount = 0;
+		}
+	} else {
+		if (AnimationCount == AnimationInterval) {
+
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 2 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_2, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+		} else if (AnimationCount == 3 * AnimationInterval) {
+			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_3, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
+			_status.Tex->CreateTexture();
+			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
+			AnimationCount = 0;
+		}
+	}
+
 }
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include"Object3d.h"
+#include"Player.h"
 #include<memory.h>
 #include<DirectXMath.h>
 using namespace std;
@@ -12,6 +13,12 @@ private:
 		Normal,
 		Forest,
 		Enemy,
+		Boss,
+	};
+
+	enum Direction {
+		Vertical=0,
+		Beside,
 	};
 
 	struct Stage
@@ -22,6 +29,12 @@ private:
 		Map state_;
 	};
 
+	struct Bridge
+	{
+		unique_ptr<Object3d> bridge_;
+		int num;
+		Direction state_;
+	};
 
 public:
 	
@@ -50,7 +63,13 @@ public:
 	void Finalize();
 
 	void CheckNowNumber(const XMFLOAT3& pos);
+
+	void CheckHitTest(Player* player);
+
+	void CheckBridge();
 	
+	int CheckHitBridge(const XMFLOAT3& pos);
+
 	int GetCount(const XMFLOAT3& pos);
 
 	void SetStop(bool flag) { this->stopCount_ = flag; }
@@ -63,6 +82,8 @@ private:
 
 	list<unique_ptr<Stage>> maps_;
 
+	list<unique_ptr<Bridge>> bridge;
+
 	list<unique_ptr<Object3d>> bridge_;
 
 	Stage* sta[3][3];
@@ -73,6 +94,10 @@ private:
 
 	bool stopCount_ = false;
 
+	bool nothit_ = false;
+
 	int nextval_ = 0;
+
+	int bridgeDirection = 0;
 };
 

@@ -19,7 +19,7 @@
 #include "Player.h"
 #include"GameMap.h"
 #include "Ore.h"
-
+#include"BossBase.h"
 #include"BaseEnemy.h"
 #include"Shake.h"
 class GameScene : public BaseScene
@@ -62,10 +62,6 @@ private: //メンバ関数
 	/// 次への移動
 	/// </summary>
 	void EasingNextPos();
-
-	std::array<BaseEnemy*,3> enemys_;
-	OBB* _hummmerObb;
-
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -82,6 +78,11 @@ private: //メンバ変数
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
 
+
+	std::array<BaseEnemy*, 3> enemys_;
+	OBB* _hummmerObb;
+
+	std::unique_ptr<BossBase>boss_;
 	//テキスト描画
 	TextDraw* text_;
 	//仮地面
@@ -97,4 +98,5 @@ private: //メンバ変数
 	float oldcamerapos_ = 0;
 	float time_ = 0;
 	XMFLOAT3 nextPos_{};
+	int direction = 0;
 };

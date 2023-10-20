@@ -13,7 +13,9 @@ void SoundManager::Initialize(Sound* sound)
 	//LoadBGM("Engine/Resources/Sound/BGM/maou_bgm_neorock82.wav", BGMKey::game);
 
 	//SE
-	//LoadSE("Engine/Resources/Sound/SE/gameover.wav", SEKey::gameover);
+	LoadSE("Engine/Resources/Sound/SE/SE_Attack.wav", SEKey::attack);
+	LoadSE("Engine/Resources/Sound/SE/SE_impact.wav", SEKey::impact);
+	LoadSE("Engine/Resources/Sound/SE/SE_releaseHammer.wav", SEKey::hammerRelease);
 }
 
 void SoundManager::PlayBGM(const BGMKey bgmKey, const bool isRoop, const float volume)

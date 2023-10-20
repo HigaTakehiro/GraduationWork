@@ -23,6 +23,7 @@ public:
 	float GetShakePos() { return shakePos; }
 	float GetShakeTimer() { return shakeTimer; }
 	bool GetShakeFlag() { return shakeFlag; }
+	Vector3 GetParticlePos();
 private:
 	//シェイク時の最大時間
 	float shakeMaxTimer;
@@ -37,5 +38,7 @@ private:
 	bool iwaFlag;
 	float iwaCount;
 	Vector2 iwaPos[2];
+
+	float fade;
 };
 

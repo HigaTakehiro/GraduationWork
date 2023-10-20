@@ -162,6 +162,8 @@
     <ClCompile Include="ApplicationCode\Collision\CollisionManager.cpp" />
     <ClCompile Include="ApplicationCode\Collision\SphereAndSphere.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\BaseEnemy.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\BossBase.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\Dogom.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp" />
     <ClCompile Include="ApplicationCode\Item\Ore.cpp" />
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp" />
@@ -217,6 +219,8 @@
     <ClInclude Include="ApplicationCode\Collision\CollisionManager.h" />
     <ClInclude Include="ApplicationCode\Collision\SphereAndSphere.h" />
     <ClInclude Include="ApplicationCode\Enemy\BaseEnemy.h" />
+    <ClInclude Include="ApplicationCode\Enemy\BossBase.h" />
+    <ClInclude Include="ApplicationCode\Enemy\Dogom.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h" />
     <ClInclude Include="ApplicationCode\Item\Ore.h" />
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />
