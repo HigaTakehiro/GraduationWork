@@ -28,7 +28,9 @@ public: //サブクラス
 	};
 
 	enum class SEKey {
-		gameover,
+		attack,
+		impact,
+		hammerRelease,
 	};
 
 public:  //静的メンバ関数

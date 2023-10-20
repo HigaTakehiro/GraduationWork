@@ -6,6 +6,7 @@
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
 #include "Collision.h"
+#include "SoundManager.h"
 
 void GameScene::Initialize()
 {
@@ -103,6 +104,7 @@ void GameScene::Update()
 			vec[i].normalize();
 			vec[i].y = 0.0f;
 			player_->HitHammerToEnemy(vec[i]);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
 

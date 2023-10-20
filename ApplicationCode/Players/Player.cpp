@@ -4,6 +4,7 @@
 #include "KeyInput.h"
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
+#include "SoundManager.h"
 
 void Player::Initialize()
 {
@@ -328,7 +329,7 @@ void Player::Attack() {
 			hammerPos_ = hammerPos;
 			hammer_->SetParent(nullptr);
 			hammer_->SetScale(scale_);
-
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerRelease, 0.2f);
 			//進行ベクトルを求める
 			Vector3 vec = arrow_->GetMatWorld().r[3] - hammer_->GetMatWorld().r[3];
 			vec.normalize();
