@@ -37,25 +37,28 @@ void GameScene::Initialize()
 	player_ = new Player;
 	player_->Initialize();
 
+	pEffect_ = new PlayerEffect();
+	pEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+
 	postEffectNo_ = PostEffect::NONE;
 
 	boss_.reset(new Dogom());
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
-	
+
 	for (auto i = 0; i < enemys_.size(); i++) {
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
-		
+
 		enemys_[i]->SetPlayerIns(player_);
 	}
-enemys_[0]->SetPos(Vector3(10, -30, 10));
-enemys_[2]->SetPos(Vector3(-15, -30, -5));
-enemys_[2]->SetPos(Vector3(0, -30, -5));
+	enemys_[0]->SetPos(Vector3(10, -30, 10));
+	enemys_[2]->SetPos(Vector3(-15, -30, -5));
+	enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_ = make_unique<GameMap>();
 	map_->Initalize();
 	shake_ = new Shake();
-	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
+	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 	count_ = map_->GetCount(player_->GetPos());
 	oldcount_ = count_;
 
@@ -64,7 +67,7 @@ enemys_[2]->SetPos(Vector3(0, -30, -5));
 
 	for (int32_t i = 0; i < 3; i++) {
 		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
-		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
+		newOre->Initialize({ -5 + ((float)i * 5), 2, -10 }, { 0, 0, 0 });
 		oreItems_.push_back(std::move(newOre));
 	}
 }
@@ -101,7 +104,7 @@ void GameScene::Update()
 	Vector3 enemyPos[3] = { enemys_[0]->GetPos(),enemys_[1]->GetPos() ,enemys_[2]->GetPos() };
 	Vector3 vec[3];
 	for (auto i = 0; i < enemys_.size(); i++) {
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z}, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			enemys_[i]->GetDamage();
 			vec[i] = playerPos - enemyPos[i];
@@ -154,9 +157,9 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-	
 
-	for(auto i=0;i<enemys_.size();i++)
+
+	for (auto i = 0; i < enemys_.size(); i++)
 	{
 		enemys_[i]->SetHammerObb(*_hummmerObb);
 		enemys_[i]->Upda(camera_.get());
@@ -167,6 +170,7 @@ void GameScene::Update()
 	map_->Update();
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
+	pEffect_->Update(player_->GetHammer()->GetPosition());
 	colManager_->Update();
 	//シーン切り替え
 	SceneChange();
@@ -186,8 +190,8 @@ void GameScene::Draw()
 	map_->Draw(oldcount_);
 	Object3d::PostDraw();
 
-for(auto i=0;i<enemys_.size();i++)
-	enemys_[i]->Draw();
+	for (auto i = 0; i < enemys_.size(); i++)
+		enemys_[i]->Draw();
 
 	boss_->Draw2();
 	//3Dオブジェクト描画処理
@@ -204,7 +208,9 @@ for(auto i=0;i<enemys_.size();i++)
 	}boss_->Draw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	
+	if (player_->GetIsHammerRelease() == true) {
+		pEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	}
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
@@ -299,14 +305,14 @@ void GameScene::EasingNextPos()
 	player_->SetStop(true);
 	float NextTarget = 0;
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
-	XMFLOAT3 PlayerPos= player_->GetPos();
+	XMFLOAT3 PlayerPos = player_->GetPos();
 	XMFLOAT3 NEXTPLAYERPOS{};
-	NextTarget = oldcamerapos_+NextPos_.z-2.f;
+	NextTarget = oldcamerapos_ + NextPos_.z - 2.f;
 	int NextVal = map_->GetNextVal();
 	if (time_ == 0) {
 		direction = map_->CheckHitBridge(PlayerPos);
 	}
-	if (direction == 0) {player_->SetStop(false); return;}
+	if (direction == 0) { player_->SetStop(false); return; }
 	//if (count_ == oldcount_ + 1) {
 	if (direction == 2) {
 		NEXTPLAYERPOS.x = NextPos_.x - 4;
@@ -317,7 +323,7 @@ void GameScene::EasingNextPos()
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction == 4) {//if (count_ == oldcount_+ NextVal) {
-		NEXTPLAYERPOS.z= NextPos_.z - 3;
+		NEXTPLAYERPOS.z = NextPos_.z - 3;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 	else if (direction == 3) {//if (count_ == oldcount_ - NextVal) {
@@ -335,6 +341,7 @@ void GameScene::EasingNextPos()
 	PlayerPos.z = Easing::easeIn(time_, 0.3, PlayerPos.z, NEXTPLAYERPOS.z);
 
 	player_->SetPos(PlayerPos);
-	if (time_ >= 0.7) { oldcount_ = count_; time_ = 0; map_->SetStop(false); player_->SetStop(false);
+	if (time_ >= 0.7) {
+		oldcount_ = count_; time_ = 0; map_->SetStop(false); player_->SetStop(false);
 	}
 }
