@@ -8,10 +8,10 @@ void IwaEffect::Initialize(ID3D12Device* device, Camera* camera)
 	particlePos = { 0,0 ,0 };
 }
 
-void IwaEffect::Update(Vector2 particle2dPos)
+void IwaEffect::Update(Vector2 particle2dPos, float fade)
 {
 	ConvertParticlePos(particle2dPos);
-	particleCreate();
+	particleCreate(fade);
 	particle->Update();
 }
 
@@ -51,11 +51,11 @@ void IwaEffect::ConvertParticlePos(Vector2 particle2dPos)
 	particlePos.z = posNearV.m128_f32[2] - direction.m128_f32[2] * distance;
 }
 
-void IwaEffect::particleCreate()
+void IwaEffect::particleCreate(float fade)
 {
 	for (int i = 0; i < 1; i++) {
 		// X,Y,Z‘S‚Ä[-5.0f,+5.0f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
-		const float rnd_pos = 0.1f;
+		const float rnd_pos = 0.05f;
 		Vector3 ppos = particlePos;
 		ppos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		ppos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
@@ -72,6 +72,6 @@ void IwaEffect::particleCreate()
 		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
 		// ’Ç‰Á
-		particle->Add(60, ppos, vel, acc, 0.005f, 0.0005f, { 1,1,1 }, { 1,1,1 });
+		particle->Add(60, ppos, vel, acc, 0.002f, 0.0f, { 0,0,0 }, { 0,0,0 }, fade, 0);
 	}
 }

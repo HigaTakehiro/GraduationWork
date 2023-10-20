@@ -13,6 +13,7 @@ private:
 		Normal,
 		Forest,
 		Enemy,
+		Boss,
 	};
 
 	enum Direction {
@@ -64,7 +65,11 @@ public:
 	void CheckNowNumber(const XMFLOAT3& pos);
 
 	void CheckHitTest(Player* player);
+
+	void CheckBridge();
 	
+	int CheckHitBridge(const XMFLOAT3& pos);
+
 	int GetCount(const XMFLOAT3& pos);
 
 	void SetStop(bool flag) { this->stopCount_ = flag; }
@@ -90,5 +95,7 @@ private:
 	bool stopCount_ = false;
 
 	int nextval_ = 0;
+
+	int bridgeDirection = 0;
 };
 

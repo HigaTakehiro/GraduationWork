@@ -294,6 +294,8 @@ void GameScene::EasingNextPos()
 	if (player_->GetNotNext()) { return; }
 	count_ = map_->GetCount(player_->GetPos());
 	if (count_ == oldcount_) { return; }
+
+
 	player_->SetStop(true);
 	float NextTarget = 0;
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
@@ -301,19 +303,24 @@ void GameScene::EasingNextPos()
 	XMFLOAT3 NEXTPLAYERPOS{};
 	NextTarget = oldcamerapos_+NextPos_.z-2.f;
 	int NextVal = map_->GetNextVal();
-	if (count_ == oldcount_ + 1) {
+	if (time_ == 0) {
+		direction = map_->CheckHitBridge(PlayerPos);
+	}
+	if (direction == 0) {player_->SetStop(false); return;}
+	//if (count_ == oldcount_ + 1) {
+	if (direction == 2) {
 		NEXTPLAYERPOS.x = NextPos_.x - 4;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
-	else if (count_ == oldcount_ - 1) {
+	else if (direction == 1) {//if (count_ == oldcount_ - 1) {
 		NEXTPLAYERPOS.x = NextPos_.x + 7;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
-	else if (count_ == oldcount_+ NextVal) {
+	else if (direction == 4) {//if (count_ == oldcount_+ NextVal) {
 		NEXTPLAYERPOS.z= NextPos_.z - 3;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
-	else if (count_ == oldcount_ - NextVal) {
+	else if (direction == 3) {//if (count_ == oldcount_ - NextVal) {
 		NEXTPLAYERPOS.z = NextPos_.z + 7;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
