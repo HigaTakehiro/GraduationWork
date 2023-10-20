@@ -82,7 +82,7 @@ void GameScene::Update()
 	}
 
 	if (ore_ != nullptr) {
-		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f) {
+		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
 			player_->AddOreCount();
 			ore_.release();
 		}

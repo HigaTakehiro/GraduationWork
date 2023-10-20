@@ -317,6 +317,7 @@ void Player::Attack() {
 		if (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) {
 			notnext_ = true;
 			isAttack_ = true;
+			isHammerSwing_ = true;
 			//回転攻撃
 			rotResetTimer_ = 0.0f;
 			rot_.y -= rotSpeed_;
@@ -324,6 +325,7 @@ void Player::Attack() {
 		//スペースキーまたはBボタンを離したとき
 		else if (KeyInput::GetIns()->ReleaseKey(DIK_SPACE) || PadInput::GetIns()->ReleaseButton(PadInput::Button_B)) {
 			isHammerRelease_ = true;
+			isHammerSwing_ = false;
 			Vector3 hammerPos = pos_;
 			hammerPos.y = 30.0f;
 			hammerPos_ = hammerPos;
