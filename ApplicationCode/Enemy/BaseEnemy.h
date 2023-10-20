@@ -110,6 +110,13 @@ public:
 	void SetPlayerIns(Player* player) { _player.reset(player); }
 	void SetHammerObb(OBB obb) { _playerOBB=obb; }
 
+	inline void GetDamage()
+	{
+		_status.HP--;
+		if (!_isAttack){ 
+			RecvDamage = TRUE;
+		}
+	}
 private:
 	void RotforPlayer();
 public:

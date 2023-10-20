@@ -1,5 +1,6 @@
 #pragma once
 #include"Object3d.h"
+#include"Player.h"
 #include<memory.h>
 #include<DirectXMath.h>
 using namespace std;
@@ -61,6 +62,8 @@ public:
 	void Finalize();
 
 	void CheckNowNumber(const XMFLOAT3& pos);
+
+	void CheckHitTest(Player* player);
 	
 	int GetCount(const XMFLOAT3& pos);
 

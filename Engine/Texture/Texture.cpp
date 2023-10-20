@@ -598,7 +598,6 @@ void Texture::Draw()
 		descHeap->GetGPUDescriptorHandleForHeapStart(), this->texNumber,
 		descriptorHandleIncrementSize));
 
-	//cmdList->SetGraphicsRootDescriptorTable(1, gpuDescHandleSRV);
 	// •`‰æƒRƒ}ƒ“ƒh
 	cmdList->DrawIndexedInstanced(_countof(indices), 1, 0, 0, 0);
 }
