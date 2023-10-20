@@ -70,8 +70,7 @@ void GameScene::Update()
 		if (ore != nullptr) {
 			if (ore->GetIsHit()) {
 				player_->AddHammerPower();
-				ore->~Ore();
-				ore.release();
+				ore_ = nullptr;
 			}
 		}
 		if (ore != nullptr) {
@@ -82,8 +81,7 @@ void GameScene::Update()
 	if (ore_ != nullptr) {
 		if (ore_->GetIsHit()) {
 			player_->AddHammerPower();
-			ore_->~Ore();
-			ore_.release();
+			ore_ = nullptr;
 		}
 	}
 
