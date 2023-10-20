@@ -32,9 +32,9 @@ public: //メンバ関数
 	Vector3 GetRot() { return rot_; }
 
 	/// <summary>
-	/// ハンマーのパワーを上げる
+	/// 鉱石取得処理
 	/// </summary>
-	void AddHammerPower() { hammerPower_++; }
+	void AddOreCount() { oreCount_++; }
 
 	/// <summary>
 	/// 反発設定
@@ -59,6 +59,12 @@ public: //メンバ関数
 	bool GetIsAttack() { return isAttack_; }
 
 	bool GetNotNext() { return notnext_; }
+
+	/// <summary>
+	/// 鉱石取得割合取得
+	/// </summary>
+	/// <returns>鉱石取得割合</returns>
+	float GetOreCountRate() { return (float)oreCount_ / (float)maxOreCount_; }
 
 private: //メンバ関数
 
@@ -111,8 +117,16 @@ private: //メンバ変数
 	Vector3 rot_;
 	//HP
 	int32_t hp_;
-	//ハンマーパワー
-	int32_t hammerPower_;
+	//鉱石取得数
+	int32_t oreCount_;
+	//鉱石最大取得数
+	int32_t maxOreCount_;
+	//攻撃力
+	int32_t attackPoint_;
+	//鉱石取得ごとに大きくするサイズ
+	Vector3 hammerSizeUp_;
+	//鉱石取得ごとの回転速度係数
+	float hammerRotCoeff_;
 
 	//移動速度
 	float moveSpeed_;
@@ -124,6 +138,10 @@ private: //メンバ変数
 	float rotResetTime_;
 	//初期回転角
 	Vector3 initRot_;
+	//初期回転速度
+	float initRotSpeed_;
+	//初期攻撃力
+	int32_t initAtkPoint_;
 	//最高移動速度
 	float maxMoveSpeed_;
 	//加速度

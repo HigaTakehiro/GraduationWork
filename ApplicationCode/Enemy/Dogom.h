@@ -33,7 +33,9 @@ private:
     float StanCount;
     bool WinceF;
 
+    UINT m_ImpactCout=0;
     UINT m_ActionTimer;
+    UINT ActionRandom;
 private:
     void Init()override;
     void Upda()override;
@@ -76,6 +78,7 @@ private:
     void ResetArmParam() { m_ArmMov_Y[LEFT] = 0.f; m_ArmMov_Y[RIGHT] = 0.f;}
 
     void SetAttack_Impact() { phase_ = Phase_Impact::PHASE_1; }
+    void SetAttack_Cross() { phase_cross_ = Phase_Cross::PHASE_1; }
     void ArmAct();
 
     void Follow();

@@ -15,3 +15,11 @@ Sacc 0.01
 maxS 0.08
 #反発係数
 refPower 0.25
+#攻撃力
+atk 1
+#鉱石の最大取得数
+maxOre 3
+#鉱石取得ごとの回転速度係数
+hammerRotCoeff 0.8
+#鉱石取得ごとの大きさ
+sizeUp 0.2 0.2 0.2
