@@ -70,8 +70,8 @@ void GameScene::Update()
 
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
-			if (ore->GetIsHit()) {
-				player_->AddHammerPower();
+			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f) {
+				player_->AddOreCount();
 				ore.release();
 			}
 		}
@@ -81,8 +81,8 @@ void GameScene::Update()
 	}
 
 	if (ore_ != nullptr) {
-		if (ore_->GetIsHit()) {
-			player_->AddHammerPower();
+		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f) {
+			player_->AddOreCount();
 			ore_.release();
 		}
 	}
