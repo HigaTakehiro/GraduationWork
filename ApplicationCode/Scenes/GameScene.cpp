@@ -7,6 +7,7 @@
 #include "PadInput.h"
 #include "Collision.h"
 #include "Dogom.h"
+#include "SoundManager.h"
 
 void GameScene::Initialize()
 {
@@ -86,7 +87,7 @@ void GameScene::Update()
 	}
 
 	if (ore_ != nullptr) {
-		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f) {
+		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
 			player_->AddOreCount();
 			ore_.release();
 		}
@@ -108,6 +109,7 @@ void GameScene::Update()
 			vec[i].normalize();
 			vec[i].y = 0.0f;
 			player_->HitHammerToEnemy(vec[i]);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
 

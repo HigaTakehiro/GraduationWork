@@ -58,6 +58,12 @@ public: //メンバ関数
 	/// <returns>攻撃フラグ</returns>
 	bool GetIsAttack() { return isAttack_; }
 
+	/// <summary>
+	/// ハンマー回転攻撃フラグを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsHammerSwing() { return isHammerSwing_; }
+
 	bool GetNotNext() { return notnext_; }
 
 	/// <summary>
@@ -166,6 +172,8 @@ private: //メンバ変数
 	bool isHammerRelease_;
 	//攻撃フラグ
 	bool isAttack_;
+	//ハンマー回転フラグ
+	bool isHammerSwing_;
 	//ハンマー座標
 	Vector3 hammerPos_;
 	//ハンマーサイズ
