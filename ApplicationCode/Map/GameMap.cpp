@@ -98,13 +98,14 @@ void GameMap::LoadCsv()
 		}
 		else if (NUMBER == 4) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
-			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bossmap"));
 			Map->num = COUNT;
 			Map->state_ = Map::Boss;
 			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
-			Map->stage_->SetScale({ 0.2f,0.1f,0.2f });
+			Map->stage_->SetScale({ 4.15f,0.1f,14.57f });
+			Map->stage_->SetRotation({ 0.f,0.f,0.f });
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
 			COUNT += 1;
@@ -238,6 +239,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 
 void GameMap::CheckHitTest(Player* player)
 {
+	if (nothit_ != false) { return; }
 	XMFLOAT3 PlayerPos = player->GetPos();
 	for (unique_ptr<Stage>& Map : maps_) {
 		
@@ -282,24 +284,32 @@ int GameMap::CheckHitBridge(const XMFLOAT3& pos)
 			if (Map->num != Bridge->num) { continue; }
 			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
 			if (Bridge->state_ == Direction::Beside) {
-				if (pos.x > Pos.x + 2 && Pos.x + 4 > pos.x) {
-					return 1;
-				}
-				else if (pos.x < Pos.x - 2 && Pos.x - 4 < pos.x) {
-					return 2;
+				if ((pos.z<Pos.z + 4 && pos.z>Pos.z - 1)) {
+					if (pos.x > Pos.x + 2 && Pos.x + 4 > pos.x) {
+						nothit_ = true;
+						return 1;
+					}
+					else if (pos.x < Pos.x - 2 && Pos.x - 4 < pos.x) {
+						nothit_ = true;
+						return 2;
+					}
 				}
 			}
 			else if (Bridge->state_ == Direction::Vertical) {
-				if (pos.z > Pos.z-4 && Pos.z -1 > pos.z) {
-					return 3;
-				}
-				else if (pos.z < Pos.z + 4 && Pos.z + 1 < pos.z ) {
-					return 4;
+				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 1)) {
+					if (pos.z > Pos.z - 4 && Pos.z - 1 > pos.z) {
+						nothit_ = true;
+						return 3;
+					}
+					else if (pos.z < Pos.z + 6 && Pos.z + 1 < pos.z) {
+						nothit_ = true;
+						return 4;
+					}
 				}
 			}
 		}
 	}
-
+	nothit_ = false;
 	return 0;
 }
 
@@ -320,4 +330,3 @@ XMFLOAT3 GameMap::GetNowMapPos()
 		}
 	}
 }
-

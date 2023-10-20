@@ -94,6 +94,8 @@ private:
 
 	bool stopCount_ = false;
 
+	bool nothit_ = false;
+
 	int nextval_ = 0;
 
 	int bridgeDirection = 0;
