@@ -30,7 +30,7 @@ protected:
 		//õ“G”¼Œa
 		float SearchRange;
 		//2D
-		std::shared_ptr<Texture>Tex;
+		std::shared_ptr<Texture>Tex,TexBack,TexRight,TexLeft;
 		size_t TexSize;
 		/*
 		std::shared_ptr<Object3d>Tex;

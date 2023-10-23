@@ -24,7 +24,20 @@ public: //‰æ‘œ–¼
 	enum Image2DName {
 		USA_1,
 		USA_2,
-		USA_3
+		USA_3,
+		//
+		BUSA1,
+		BUSA2,
+		BUSA3,
+		//
+		//
+		RUSA1,
+		RUSA2,
+		RUSA3,
+		//
+		LUSA1,
+		LUSA2,
+		LUSA3,
 	};
 public: //ƒƒ“ƒoŠÖ”
 	/// <summary>

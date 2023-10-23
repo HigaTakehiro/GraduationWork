@@ -75,13 +75,11 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
-
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f) {
 				player_->AddOreCount();
-				ore.release();
+				ore = nullptr;
 			}
 		}
 		if (ore != nullptr) {
@@ -92,7 +90,7 @@ void GameScene::Update()
 	if (ore_ != nullptr) {
 		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
 			player_->AddOreCount();
-			ore_.release();
+			ore_ = nullptr;
 		}
 	}
 
