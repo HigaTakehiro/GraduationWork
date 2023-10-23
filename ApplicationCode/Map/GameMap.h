@@ -65,12 +65,13 @@ public:
 	void CheckNowNumber(const XMFLOAT3& pos);
 
 	void CheckHitTest(Player* player);
-
-	void CheckBridge();
 	
-	int CheckHitBridge(const XMFLOAT3& pos);
+	void CheckHitBridge(const XMFLOAT3& pos,int& Direction);
 
-	int GetCount(const XMFLOAT3& pos);
+	int GetCount(const XMFLOAT3& pos,int& Direction);
+
+	int NextCountconst (const XMFLOAT3& pos, int& Direction);
+
 
 	void SetStop(bool flag) { this->stopCount_ = flag; }
 

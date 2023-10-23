@@ -62,6 +62,8 @@ private: //メンバ関数
 	/// 次への移動
 	/// </summary>
 	void EasingNextPos();
+
+	void NextMap();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
