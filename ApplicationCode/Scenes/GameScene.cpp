@@ -193,7 +193,6 @@ for(auto i=0;i<enemys_.size();i++)
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	//map_->Draw(oldcount_);
-	player_->Draw();
 	if (ore_ != nullptr) {
 		ore_->Draw();
 	}
@@ -202,6 +201,8 @@ for(auto i=0;i<enemys_.size();i++)
 			ore->Draw();
 		}
 	}boss_->Draw();
+	player_->Draw();
+
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	

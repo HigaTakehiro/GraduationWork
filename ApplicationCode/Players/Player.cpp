@@ -79,11 +79,11 @@ void Player::Update()
 
 void Player::Draw()
 {
-	player_->Draw();
 	hammer_->Draw();
 	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
 		arrow_->Draw();
 	}
+	player_->Draw();
 }
 
 void Player::Finalize()
