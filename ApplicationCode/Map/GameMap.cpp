@@ -240,6 +240,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 
 void GameMap::CheckHitTest(Player* player)
 {
+	NoHitCheck(player->GetPos());
 	if (nothit_ != false) { return; }
 	XMFLOAT3 PlayerPos = player->GetPos();
 	for (unique_ptr<Stage>& Map : maps_) {
@@ -328,6 +329,33 @@ int GameMap::NextCountconst(const XMFLOAT3& pos, int& Direction)
 		CheckHitBridge(pos,Direction);
 	}
 	return count_;
+}
+
+void GameMap::NoHitCheck(const XMFLOAT3& pos)
+{
+	for (unique_ptr<Bridge>& Bridge : bridge) {
+		XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
+		if (Bridge->state_ == Direction::Beside) {
+			if ((pos.z<Pos.z + 4 && pos.z>Pos.z - 1)) {
+				if (Pos.x - 4 < pos.x && Pos.x + 4 > pos.x) {
+					nothit_ = false;
+				}
+				else {
+					nothit_ = true;
+				}
+			}
+		}
+		else if (Bridge->state_ == Direction::Vertical) {
+			if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 1)) {
+				if (pos.z > Pos.z - 4 && pos.z < Pos.z + 6) {
+					nothit_ = false;
+				}
+				else {
+					nothit_ = true;
+				}
+			}
+		}
+	}
 }
 
 XMFLOAT3 GameMap::GetNowMapPos()

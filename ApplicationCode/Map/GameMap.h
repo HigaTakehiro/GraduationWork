@@ -72,6 +72,7 @@ public:
 
 	int NextCountconst (const XMFLOAT3& pos, int& Direction);
 
+	void NoHitCheck(const XMFLOAT3& pos);
 
 	void SetStop(bool flag) { this->stopCount_ = flag; }
 
