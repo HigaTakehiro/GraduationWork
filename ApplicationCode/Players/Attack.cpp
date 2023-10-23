@@ -1,23 +1,23 @@
-#include "PlayerEffect.h"
+#include "AttackEffect.h"
 
-void PlayerEffect::Initialize(ID3D12Device* device, Camera* camera)
+void AttackEffect::Initialize(ID3D12Device* device, Camera* camera)
 {
 	particle = ParticleManager::UniquePtrCreate(device, camera, true);
 }
 
-void PlayerEffect::Update(Vector3 Pos)
+void AttackEffect::Update(Vector3 Pos)
 {
 	particlePos = Pos;
 	particleCreate();
 	particle->Update();
 }
 
-void PlayerEffect::Draw(ID3D12GraphicsCommandList* cmdList)
+void AttackEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	particle->Draw(cmdList);
 }
 
-void PlayerEffect::particleCreate()
+void AttackEffect::particleCreate()
 {
 	for (int i = 0; i < 1; i++) {
 		// X,Y,Z‘S‚Ä[-5.0f,+5.0f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z

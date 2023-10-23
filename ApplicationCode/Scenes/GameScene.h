@@ -22,7 +22,7 @@
 #include"BossBase.h"
 #include"BaseEnemy.h"
 #include"Shake.h"
-#include"PlayerEffect.h"
+#include"AttackEffect.h"
 class GameScene : public BaseScene
 {
 public: //ƒƒ“ƒoŠÖ”
@@ -95,7 +95,7 @@ private: //ƒƒ“ƒo•Ï”
 	int count_ = 0;
 
 	Shake* shake_;
-	PlayerEffect* pEffect_;
+	AttackEffect* aEffect_;
 	int oldcount_ = 0;
 	float oldcamerapos_ = 0;
 	float time_ = 0;

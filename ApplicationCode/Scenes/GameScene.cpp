@@ -38,8 +38,8 @@ void GameScene::Initialize()
 	player_ = new Player;
 	player_->Initialize();
 
-	pEffect_ = new PlayerEffect();
-	pEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+	aEffect_ = new AttackEffect();
+	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -172,7 +172,7 @@ void GameScene::Update()
 	map_->Update();
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
-	pEffect_->Update(player_->GetHammer()->GetPosition());
+	aEffect_->Update(player_->GetHammer()->GetPosition());
 	colManager_->Update();
 	//シーン切り替え
 	SceneChange();
@@ -211,7 +211,7 @@ void GameScene::Draw()
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	if (player_->GetIsHammerRelease() == true) {
-		pEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	}
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());

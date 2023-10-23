@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 #include"ParticleManager.h"
 
-class PlayerEffect
+class AttackEffect
 {
 private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
