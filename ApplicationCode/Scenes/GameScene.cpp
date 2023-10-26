@@ -74,7 +74,7 @@ void GameScene::Update()
 {
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
-			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f) {
+			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
 				player_->AddOreCount();
 				ore = nullptr;
 			}
