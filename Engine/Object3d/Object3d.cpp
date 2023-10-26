@@ -147,6 +147,7 @@ bool Object3d::InitializeGraphicsPipeline()
 		//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 		// デプスステンシルステート
 		gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+		gpipeline.DepthStencilState.DepthEnable = false;    // 深度テストをしない
 		//gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 		// レンダーターゲットのブレンド設定
 		D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
