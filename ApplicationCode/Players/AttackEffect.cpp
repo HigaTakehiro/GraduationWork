@@ -38,6 +38,6 @@ void AttackEffect::particleCreate()
 		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
 		// ’Ç‰Á
-		particle->Add(60, ppos, vel, acc, 0.2f, 0.2f, { 1,1,0 }, { 1,1,0 }, 1, 0);
+		particle->Add(60, ppos, vel, acc, 0.2f, 0.2f, { 1,0.5f,0 }, { 1,0.5f,0 }, 1, 0);
 	}
 }

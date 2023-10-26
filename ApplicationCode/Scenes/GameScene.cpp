@@ -38,9 +38,6 @@ void GameScene::Initialize()
 	player_ = new Player;
 	player_->Initialize();
 
-	aEffect_ = new AttackEffect();
-	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
-
 	postEffectNo_ = PostEffect::NONE;
 
 	boss_.reset(new Dogom());
@@ -52,6 +49,10 @@ void GameScene::Initialize()
 		enemys_[i]->Init();
 
 		enemys_[i]->SetPlayerIns(player_);
+
+		aEffect_[i] = new AttackEffect();
+		aEffect_[i]->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+		eeFlag[i] = false;
 	}
 	enemys_[0]->SetPos(Vector3(10, -30, 10));
 	enemys_[2]->SetPos(Vector3(-15, -30, -5));
@@ -109,9 +110,18 @@ void GameScene::Update()
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
+			eeFlag[i] = true;
+			attackCount = 0;
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
+		if (attackCount > 10) {
+			eeFlag[i] = false;
+		}
+		if (eeFlag[i] == true) {
+			attackCount++;
+		}
+		aEffect_[i]->Update(enemys_[i]->GetPos());
 	}
 
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
@@ -157,12 +167,11 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-
-
 	for (auto i = 0; i < enemys_.size(); i++)
 	{
 		enemys_[i]->SetHammerObb(*_hummmerObb);
 		enemys_[i]->Upda(camera_.get());
+
 	}
 	boss_->Upda();
 	EasingNextPos();
@@ -170,7 +179,6 @@ void GameScene::Update()
 	map_->Update();
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
-	aEffect_->Update(player_->GetHammer()->GetPosition());
 	colManager_->Update();
 	//シーン切り替え
 	SceneChange();
@@ -190,9 +198,12 @@ void GameScene::Draw()
 	map_->Draw(oldcount_);
 	Object3d::PostDraw();
 
-	for (auto i = 0; i < enemys_.size(); i++)
+	for (auto i = 0; i < enemys_.size(); i++) {
 		enemys_[i]->Draw();
-
+		if (eeFlag[i] == true) {
+			aEffect_[i]->Draw(DirectXSetting::GetIns()->GetCmdList());
+		}
+	}
 	boss_->Draw2();
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
@@ -208,9 +219,7 @@ void GameScene::Draw()
 	}boss_->Draw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	if (player_->GetIsHammerRelease() == true) {
-		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	}
+
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
@@ -220,7 +229,7 @@ void GameScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring rot = std::to_wstring(player_->GetRot().y);
+	std::wstring rot = std::to_wstring(attackCount);
 	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\n" + rot, textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();

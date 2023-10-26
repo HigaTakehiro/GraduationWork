@@ -95,10 +95,12 @@ private: //ƒƒ“ƒo•Ï”
 	int count_ = 0;
 
 	Shake* shake_;
-	AttackEffect* aEffect_;
+	std::array < AttackEffect*,3> aEffect_;
 	int oldcount_ = 0;
 	float oldcamerapos_ = 0;
 	float time_ = 0;
 	XMFLOAT3 nextPos_{};
 	int direction = 0;
+	bool eeFlag[3] = {};
+	int attackCount =0;
 };
