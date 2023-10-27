@@ -1,8 +1,8 @@
 #include "GameMap.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
-
-int Count=0;
+#pragma warning(disable:4996)
+int Count = 0;
 
 void GameMap::LoadCsv()
 {
@@ -12,13 +12,13 @@ void GameMap::LoadCsv()
 	int NEXTHORY = 0;
 	int COUNT = 0;
 	bool NEXTCOUNT = false;
-	XMFLOAT3 Pos= { 30.f ,0.f,30.f };
+	XMFLOAT3 Pos = { 30.f ,0.f,30.f };
 
 	std::stringstream stream;
 
-	
+
 	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map.csv");
-	
+
 	while (getline(stream, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
@@ -60,10 +60,10 @@ void GameMap::LoadCsv()
 		}
 		if (NUMBER == 1) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
-			Map->stage_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Normal;
-			Pos = { 30.f*NEXTVERT ,0.f,30.f*NEXTHORY };
+			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
@@ -155,7 +155,7 @@ void GameMap::Initalize()
 
 
 	CreateBridge();
-	
+
 }
 
 void GameMap::Update()
@@ -163,7 +163,7 @@ void GameMap::Update()
 	for (unique_ptr<Stage>& Map : maps_) {
 		Map->stage_->Update();
 	}
-	
+
 	for (unique_ptr<Bridge>& Bridge : bridge) {
 		Bridge->bridge_->Update();
 	}
@@ -173,15 +173,15 @@ void GameMap::Update()
 void GameMap::Draw(int OldCount)
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		if (count_ == Map->num||OldCount==Map->num) {
+		if (count_ == Map->num || OldCount == Map->num) {
 			Map->stage_->Draw();
 		}
 	}
 
 	for (unique_ptr<Bridge>& Bridge : bridge) {
-		if (Bridge->num == count_ || 
-			(Bridge->num==count_ - nextval_&&Bridge->state_==Direction::Vertical)||
-			(Bridge->num==count_-1&&Bridge->state_==Direction::Beside)
+		if (Bridge->num == count_ ||
+			(Bridge->num == count_ - nextval_ && Bridge->state_ == Direction::Vertical) ||
+			(Bridge->num == count_ - 1 && Bridge->state_ == Direction::Beside)
 			) {
 			Bridge->bridge_->Draw();
 		}
@@ -202,7 +202,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 		for (unique_ptr<Stage>& Map2 : maps_) {
 			if (Map->num != count_) { continue; }
 			//¶
-			if (pos.x >= Map->stagePos_.x+11 && Map->num + 1 == Map2->num) {
+			if (pos.x >= Map->stagePos_.x + 11 && Map->num + 1 == Map2->num) {
 				if (Map->stagePos_.x + 30 == Map2->stagePos_.x) {
 					count_ = Map2->num;
 					stopCount_ = true;
@@ -235,7 +235,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 			}
 		}
 	}
-		
+
 }
 
 void GameMap::CheckHitTest(Player* player)
@@ -244,10 +244,10 @@ void GameMap::CheckHitTest(Player* player)
 	if (nothit_ != false) { return; }
 	XMFLOAT3 PlayerPos = player->GetPos();
 	for (unique_ptr<Stage>& Map : maps_) {
-		
-		if(count_!=Map->num){continue;}
+
+		if (count_ != Map->num) { continue; }
 		//¶
-		if (PlayerPos.x >= Map->stagePos_.x + 11 ) {
+		if (PlayerPos.x >= Map->stagePos_.x + 11) {
 			PlayerPos.x = Map->stagePos_.x + 11;
 		}
 		if (PlayerPos.x <= Map->stagePos_.x - 6) {
@@ -283,7 +283,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 					}
 					else if (pos.x < Pos.x - 2 && Pos.x - 4 < pos.x) {
 						nothit_ = true;
-						count_ = Bridge->num+1;
+						count_ = Bridge->num + 1;
 						Direction = 2;
 						stopCount_ = true;
 						return;
@@ -297,7 +297,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						count_ = Bridge->num + nextval_;
 						Direction = 3;
 						stopCount_ = true;
-						return ;
+						return;
 					}
 					else if (pos.z < Pos.z + 6 && Pos.z + 1 < pos.z) {
 						nothit_ = true;
@@ -326,7 +326,7 @@ int GameMap::GetCount(const XMFLOAT3& pos, int& Direction)
 int GameMap::NextCountconst(const XMFLOAT3& pos, int& Direction)
 {
 	if (!stopCount_) {
-		CheckHitBridge(pos,Direction);
+		CheckHitBridge(pos, Direction);
 	}
 	return count_;
 }
@@ -361,9 +361,25 @@ void GameMap::NoHitCheck(const XMFLOAT3& pos)
 XMFLOAT3 GameMap::GetNowMapPos()
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		if (count_==Map->num)
+		if (count_ == Map->num)
 		{
 			return Map->stagePos_;
 		}
 	}
+}
+
+void GameMap::MapSave(XMFLOAT3 pos)
+{
+	FILE* fp;
+	XMFLOAT3 pos_p;
+	fp = fopen("Engine/Resources/GameData/MapSave.csv", "r");
+	if (fp != NULL)
+	{
+		fscanf(fp, "%f %f %f", &pos_p.x, &pos_p.y, &pos_p.z);
+		fclose(fp);
+	}
+	fp = fopen("Engine/Resources/GameData/MapSave.csv", "w");
+	fprintf(fp, "%f %f %f", pos.x, pos.y, pos.z);
+	fclose(fp);
+
 }

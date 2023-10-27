@@ -3,6 +3,7 @@
 #include"Player.h"
 #include<memory.h>
 #include<DirectXMath.h>
+#include <fstream>
 using namespace std;
 using namespace DirectX;
 class GameMap
@@ -79,7 +80,11 @@ public:
 	int GetNextVal() { return nextval_; }
 
 	XMFLOAT3 GetNowMapPos();
-	
+
+	/// <summary>
+	/// 拠点セーブ
+	/// </summary>
+	void MapSave(XMFLOAT3 pos);
 private:
 
 	list<unique_ptr<Stage>> maps_;

@@ -178,6 +178,7 @@ void GameScene::Update()
 	NextMap();
 	map_->CheckHitTest(player_);
 	map_->Update();
+	map_->MapSave(player_->GetPos());
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
@@ -231,7 +232,7 @@ void GameScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring rot = std::to_wstring(attackCount);
+	std::wstring rot = std::to_wstring(player_->GetPos().z);
 	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\n" + rot, textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();

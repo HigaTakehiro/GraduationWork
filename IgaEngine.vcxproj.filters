@@ -269,7 +269,7 @@
     <ClCompile Include="ApplicationCode\Enemy\Dogom.cpp">
       <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Players\Attack.cpp">
+    <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players</Filter>
     </ClCompile>
   </ItemGroup>
