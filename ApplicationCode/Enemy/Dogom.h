@@ -96,7 +96,9 @@ private:
 
     void Wince();
 
-    bool CoollisionFace();
+    std::array<bool, 2>ColF;
+    std::array<int, 2>DamCool;
+    void CoollisionFace();
     bool CoollisionArm();
 
     void FaceFall();
