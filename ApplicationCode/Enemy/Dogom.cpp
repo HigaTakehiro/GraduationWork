@@ -75,6 +75,7 @@ void Dogom::Upda()
 		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 	}
+	CoollisionFace();
 	ImpactTexScling();
 	m_Body->SetPosition(m_BodyPos);
 	m_Body->Update(m_Camera);
@@ -580,10 +581,30 @@ void Dogom::ImpactTexScling()
 
 }
 
-bool Dogom::CoollisionFace()
+void Dogom::CoollisionFace()
 {
+	bool isColJudg[] = { phase_ == Phase_Impact::PHASE_2 ,phase_cross_ == Phase_Cross::PHASE_2 };
 
-	return FALSE;
+	if (!isColJudg[0] &&!isColJudg[1])return;
+
+	for (size_t i = 0; i < 2; i++) {
+		if (ColF[i])continue;
+		DamCool[i] = 0;
+		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<3.f)
+		{
+			m_player->SubHP(1);
+			ColF[i] = TRUE;
+		}
+	}
+
+	for (size_t i = 0; i < 2; i++) {
+		if (!ColF[i])continue;
+		if (++DamCool[i] > 90)
+		{
+			ColF[i] = FALSE;
+		}
+	}
+	
 }
 
 
