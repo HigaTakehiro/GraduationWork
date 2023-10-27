@@ -57,7 +57,7 @@ enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_->Initalize();
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
-	count_ = map_->GetCount(player_->GetPos(),direction);
+	count_ = map_->NextCount(player_->GetPos(),direction);
 	oldcount_ = count_;
 
 	ore_ = std::make_unique<Ore>();
@@ -302,7 +302,7 @@ void GameScene::NextMap()
 	//移動中ではない
 	if (player_->GetNotNext()) { return; }
 	//プレイヤーがマップの端に来た時
-	count_ = map_->NextCountconst(player_->GetPos(), direction);
+	count_ = map_->NextCount(player_->GetPos(), direction);
 	player_->SetStop(true);
 	float NextTarget = 0;
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();

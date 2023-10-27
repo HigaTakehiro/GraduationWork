@@ -58,11 +58,6 @@ private: //メンバ関数
 	/// </summary>
 	void CameraSetting();
 
-	/// <summary>
-	/// 次への移動
-	/// </summary>
-	void EasingNextPos();
-
 	void NextMap();
 private: //メンバ変数
 	//ポストエフェクト

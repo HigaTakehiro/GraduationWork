@@ -25,17 +25,23 @@ private:
     std::array<Vector3, 2>m_ArmRot;
     std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
-    
+
+    std::array<Vector3, 3>WaitPos = { Vector3(0,0,-20),Vector3(-18,0,0),Vector3(18,0,0) };
     Vector3 BefoPos[2];
     Vector3 PlayerPos;
     float BefoEaseT = 0.f;
     float WinceEaseT;
     float StanCount;
-    bool WinceF;
+    float MovingAngle;
+    float CrossWaitCount = 0.f;
+	bool WinceF;
+    float nextAngle = 180.f;
+    int randAct = 0;
 
     UINT m_ImpactCout=0;
-    UINT m_ActionTimer;
-    UINT ActionRandom;
+    UINT m_ActionTimer=1;
+    UINT ActionRandom=1;
+    UINT BossBodyMovingT=1;
 private:
     void Init()override;
     void Upda()override;
@@ -84,5 +90,12 @@ private:
     void Follow();
 
     void Wince();
+
+    void ShakeArm(Vector3 Defopos);
+    void MoveBody();
+    float t = 0;
+    bool movF;
+    float OldMovAngle;
+    float BodyMoveEase;
 };
 
