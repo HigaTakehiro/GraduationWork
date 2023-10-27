@@ -110,7 +110,7 @@ void GameScene::Update()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
-
+	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
@@ -126,6 +126,13 @@ void GameScene::Update()
 	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
 		cameraPos_.x -= 1.0f;
 		targetPos_.x -= 1.0f;
+	}
+	//HPデバッグ処理
+	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
+		player_->SubHP(1);
+	}
+	if (KeyInput::GetIns()->TriggerKey(DIK_R)) {
+		player_->SetHP(3);
 	}
 
 	if (shake_->GetShakeFlag() == true) {
@@ -215,8 +222,8 @@ for(auto i=0;i<enemys_.size();i++)
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring rot = std::to_wstring(player_->GetRot().y);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\n" + rot, textDrawRange);
+	std::wstring hp = std::to_wstring(player_->GetHP());
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
