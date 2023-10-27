@@ -57,7 +57,7 @@ enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_->Initalize();
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
-	count_ = map_->GetCount(player_->GetPos(),direction);
+	count_ = map_->NextCount(player_->GetPos(),direction);
 	oldcount_ = count_;
 
 	ore_ = std::make_unique<Ore>();
@@ -110,7 +110,7 @@ void GameScene::Update()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
-
+	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
@@ -126,6 +126,13 @@ void GameScene::Update()
 	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
 		cameraPos_.x -= 1.0f;
 		targetPos_.x -= 1.0f;
+	}
+	//HPデバッグ処理
+	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
+		player_->SubHP(1);
+	}
+	if (KeyInput::GetIns()->TriggerKey(DIK_R)) {
+		player_->SetHP(3);
 	}
 
 	if (shake_->GetShakeFlag() == true) {
@@ -215,8 +222,8 @@ for(auto i=0;i<enemys_.size();i++)
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring rot = std::to_wstring(player_->GetRot().y);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\n" + rot, textDrawRange);
+	std::wstring hp = std::to_wstring(player_->GetHP());
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -295,7 +302,7 @@ void GameScene::NextMap()
 	//移動中ではない
 	if (player_->GetNotNext()) { return; }
 	//プレイヤーがマップの端に来た時
-	count_ = map_->NextCountconst(player_->GetPos(), direction);
+	count_ = map_->NextCount(player_->GetPos(), direction);
 	player_->SetStop(true);
 	float NextTarget = 0;
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();

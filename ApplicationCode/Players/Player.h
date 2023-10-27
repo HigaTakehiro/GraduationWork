@@ -72,6 +72,30 @@ public: //ƒƒ“ƒoŠÖ”
 	/// <returns>zÎæ“¾Š„‡</returns>
 	float GetOreCountRate() { return (float)oreCount_ / (float)maxOreCount_; }
 
+	/// <summary>
+	/// HP‚ğæ“¾
+	/// </summary>
+	/// <returns>HP</returns>
+	int32_t GetHP() { return hp_; }
+
+	/// <summary>
+	/// HP‚ğƒZƒbƒg
+	/// </summary>
+	/// <param name="hp">HP</param>
+	void SetHP(int32_t hp) { hp_ = hp; }
+
+	/// <summary>
+	/// HP‚ğ‰ÁZ
+	/// </summary>
+	/// <param name="addHP">‰ÁZ‚·‚éHP</param>
+	void AddHP(int32_t addHP) { hp_ += addHP; }
+
+	/// <summary>
+	/// HP‚ğŒ¸Z
+	/// </summary>
+	/// <param name="subHP">Œ¸Z‚·‚éHP</param>
+	void SubHP(int32_t subHP) { hp_ -= subHP; }
+
 private: //ƒƒ“ƒoŠÖ”
 
 	/// <summary>
