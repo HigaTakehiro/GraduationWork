@@ -16,8 +16,9 @@ void GameMap::LoadCsv()
 
 	std::stringstream stream;
 
-	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");
-
+	
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map.csv");
+	
 	while (getline(stream, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
@@ -201,7 +202,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 		for (unique_ptr<Stage>& Map2 : maps_) {
 			if (Map->num != count_) { continue; }
 			//¶
-			if (pos.x >= Map->stagePos_.x+10 && Map->num + 1 == Map2->num) {
+			if (pos.x >= Map->stagePos_.x+11 && Map->num + 1 == Map2->num) {
 				if (Map->stagePos_.x + 30 == Map2->stagePos_.x) {
 					count_ = Map2->num;
 					stopCount_ = true;
@@ -209,7 +210,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 				}
 			}
 			//‰E
-			if (pos.x <= Map->stagePos_.x - 5 && Map->num - 1 == Map2->num) {
+			if (pos.x <= Map->stagePos_.x - 6 && Map->num - 1 == Map2->num) {
 				if (Map->stagePos_.x - 30 == Map2->stagePos_.x) {
 					count_ = Map2->num;
 					stopCount_ = true;
@@ -217,7 +218,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 				}
 			}
 
-			if (pos.z >= Map->stagePos_.z + 10) {
+			if (pos.z >= Map->stagePos_.z + 11) {
 				if (Map->stagePos_.z + 30 == Map2->stagePos_.z && Map->num + nextval_ == Map2->num) {
 					count_ = Map2->num;
 					stopCount_ = true;
@@ -225,7 +226,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 				}
 			}
 
-			if (pos.z <= Map->stagePos_.z - 5) {
+			if (pos.z <= Map->stagePos_.z - 6) {
 				if (Map->stagePos_.z - 30 == Map2->stagePos_.z && Map->num - nextval_ == Map2->num) {
 					count_ = Map2->num;
 					stopCount_ = true;
@@ -239,6 +240,7 @@ void GameMap::CheckNowNumber(const XMFLOAT3& pos)
 
 void GameMap::CheckHitTest(Player* player)
 {
+	NoHitCheck(player->GetPos());
 	if (nothit_ != false) { return; }
 	XMFLOAT3 PlayerPos = player->GetPos();
 	for (unique_ptr<Stage>& Map : maps_) {
@@ -263,21 +265,8 @@ void GameMap::CheckHitTest(Player* player)
 	player->SetPos(PlayerPos);
 }
 
-void GameMap::CheckBridge()
-{
 
-	for (unique_ptr<Bridge>& Bridge : bridge) {
-		if (Bridge->state_ == Direction::Beside) {
-			bridgeDirection = 0;
-		}
-		else if (Bridge->state_ == Direction::Vertical) {
-			bridgeDirection = 1;
-		}
-	}
-
-}
-
-int GameMap::CheckHitBridge(const XMFLOAT3& pos)
+void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 {
 	for (unique_ptr<Stage>& Map : maps_) {
 		for (unique_ptr<Bridge>& Bridge : bridge) {
@@ -287,11 +276,17 @@ int GameMap::CheckHitBridge(const XMFLOAT3& pos)
 				if ((pos.z<Pos.z + 4 && pos.z>Pos.z - 1)) {
 					if (pos.x > Pos.x + 2 && Pos.x + 4 > pos.x) {
 						nothit_ = true;
-						return 1;
+						count_ = Bridge->num;
+						Direction = 1;
+						stopCount_ = true;
+						return;
 					}
 					else if (pos.x < Pos.x - 2 && Pos.x - 4 < pos.x) {
 						nothit_ = true;
-						return 2;
+						count_ = Bridge->num+1;
+						Direction = 2;
+						stopCount_ = true;
+						return;
 					}
 				}
 			}
@@ -299,26 +294,68 @@ int GameMap::CheckHitBridge(const XMFLOAT3& pos)
 				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 1)) {
 					if (pos.z > Pos.z - 4 && Pos.z - 1 > pos.z) {
 						nothit_ = true;
-						return 3;
+						count_ = Bridge->num + nextval_;
+						Direction = 3;
+						stopCount_ = true;
+						return ;
 					}
 					else if (pos.z < Pos.z + 6 && Pos.z + 1 < pos.z) {
 						nothit_ = true;
-						return 4;
+						count_ = Bridge->num;
+						Direction = 4;
+						stopCount_ = true;
+						return;
 					}
 				}
 			}
 		}
 	}
 	nothit_ = false;
-	return 0;
+	Direction = 0;
+	return;
 }
 
-int GameMap::GetCount(const XMFLOAT3& pos)
+int GameMap::GetCount(const XMFLOAT3& pos, int& Direction)
 {
 	if (!stopCount_) {
 		CheckNowNumber(pos);
 	}
 	return count_;
+}
+
+int GameMap::NextCountconst(const XMFLOAT3& pos, int& Direction)
+{
+	if (!stopCount_) {
+		CheckHitBridge(pos,Direction);
+	}
+	return count_;
+}
+
+void GameMap::NoHitCheck(const XMFLOAT3& pos)
+{
+	for (unique_ptr<Bridge>& Bridge : bridge) {
+		XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
+		if (Bridge->state_ == Direction::Beside) {
+			if ((pos.z<Pos.z + 4 && pos.z>Pos.z - 1)) {
+				if (Pos.x - 4 < pos.x && Pos.x + 4 > pos.x) {
+					nothit_ = false;
+				}
+				else {
+					nothit_ = true;
+				}
+			}
+		}
+		else if (Bridge->state_ == Direction::Vertical) {
+			if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 1)) {
+				if (pos.z > Pos.z - 4 && pos.z < Pos.z + 6) {
+					nothit_ = false;
+				}
+				else {
+					nothit_ = true;
+				}
+			}
+		}
+	}
 }
 
 XMFLOAT3 GameMap::GetNowMapPos()

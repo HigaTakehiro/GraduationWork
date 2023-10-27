@@ -57,7 +57,7 @@ enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_->Initalize();
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
-	count_ = map_->GetCount(player_->GetPos());
+	count_ = map_->GetCount(player_->GetPos(),direction);
 	oldcount_ = count_;
 
 	ore_ = std::make_unique<Ore>();
@@ -72,13 +72,11 @@ enemys_[2]->SetPos(Vector3(0, -30, -5));
 
 void GameScene::Update()
 {
-	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
-
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
-			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f) {
+			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
 				player_->AddOreCount();
-				ore.release();
+				ore = nullptr;
 			}
 		}
 		if (ore != nullptr) {
@@ -89,7 +87,7 @@ void GameScene::Update()
 	if (ore_ != nullptr) {
 		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
 			player_->AddOreCount();
-			ore_.release();
+			ore_ = nullptr;
 		}
 	}
 
@@ -164,8 +162,8 @@ void GameScene::Update()
 		enemys_[i]->Upda(camera_.get());
 	}
 	boss_->Upda();
-	EasingNextPos();
-	//map_->CheckHitTest(player_);
+	NextMap();
+	map_->CheckHitTest(player_);
 	map_->Update();
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
@@ -195,7 +193,6 @@ for(auto i=0;i<enemys_.size();i++)
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	//map_->Draw(oldcount_);
-	player_->Draw();
 	if (ore_ != nullptr) {
 		ore_->Draw();
 	}
@@ -204,6 +201,8 @@ for(auto i=0;i<enemys_.size();i++)
 			ore->Draw();
 		}
 	}boss_->Draw();
+	player_->Draw();
+
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	
@@ -291,39 +290,35 @@ void GameScene::CameraSetting()
 	}
 }
 
-void GameScene::EasingNextPos()
+void GameScene::NextMap()
 {
+	//移動中ではない
 	if (player_->GetNotNext()) { return; }
-	count_ = map_->GetCount(player_->GetPos());
-	if (count_ == oldcount_) { return; }
-
-
+	//プレイヤーがマップの端に来た時
+	count_ = map_->NextCountconst(player_->GetPos(), direction);
 	player_->SetStop(true);
 	float NextTarget = 0;
 	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
-	XMFLOAT3 PlayerPos= player_->GetPos();
+	XMFLOAT3 PlayerPos = player_->GetPos();
 	XMFLOAT3 NEXTPLAYERPOS{};
-	NextTarget = oldcamerapos_+NextPos_.z-2.f;
-	int NextVal = map_->GetNextVal();
-	if (time_ == 0) {
-		direction = map_->CheckHitBridge(PlayerPos);
-	}
-	if (direction == 0) {player_->SetStop(false); return;}
-	//if (count_ == oldcount_ + 1) {
+	NextTarget = oldcamerapos_ + NextPos_.z - 2.f;
+
+
+	if (direction == 0) { player_->SetStop(false); return; }
 	if (direction == 2) {
-		NEXTPLAYERPOS.x = NextPos_.x - 4;
+		NEXTPLAYERPOS.x = NextPos_.x;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
-	else if (direction == 1) {//if (count_ == oldcount_ - 1) {
-		NEXTPLAYERPOS.x = NextPos_.x + 7;
+	else if (direction == 1) {
+		NEXTPLAYERPOS.x = NextPos_.x;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
-	else if (direction == 4) {//if (count_ == oldcount_+ NextVal) {
-		NEXTPLAYERPOS.z= NextPos_.z - 3;
+	else if (direction == 4) {
+		NEXTPLAYERPOS.z = NextPos_.z;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
-	else if (direction == 3) {//if (count_ == oldcount_ - NextVal) {
-		NEXTPLAYERPOS.z = NextPos_.z + 7;
+	else if (direction == 3) {
+		NEXTPLAYERPOS.z = NextPos_.z;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 
@@ -337,6 +332,7 @@ void GameScene::EasingNextPos()
 	PlayerPos.z = Easing::easeIn(time_, 0.3, PlayerPos.z, NEXTPLAYERPOS.z);
 
 	player_->SetPos(PlayerPos);
-	if (time_ >= 0.7) { oldcount_ = count_; time_ = 0; map_->SetStop(false); player_->SetStop(false);
+	if (time_ >= 0.7) {
+		oldcount_ = count_; time_ = 0; map_->SetStop(false); player_->SetStop(false);
 	}
 }
