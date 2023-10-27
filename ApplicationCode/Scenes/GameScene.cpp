@@ -313,19 +313,19 @@ void GameScene::NextMap()
 
 	if (direction == 0) { player_->SetStop(false); return; }
 	if (direction == 2) {
-		NEXTPLAYERPOS.x = NextPos_.x;
+		NEXTPLAYERPOS.x = NextPos_.x-5;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction == 1) {
-		NEXTPLAYERPOS.x = NextPos_.x;
+		NEXTPLAYERPOS.x = NextPos_.x+7;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction == 4) {
-		NEXTPLAYERPOS.z = NextPos_.z;
+		NEXTPLAYERPOS.z = NextPos_.z+4;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 	else if (direction == 3) {
-		NEXTPLAYERPOS.z = NextPos_.z;
+		NEXTPLAYERPOS.z = NextPos_.z-4;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 

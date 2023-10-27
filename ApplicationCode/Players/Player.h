@@ -46,6 +46,8 @@ public: //メンバ関数
 
 	void SetStop(bool stop) { this->stop_ = stop; }
 
+	bool GetStop() { return stop_; }
+
 	/// <summary>
 	/// ハンマー投げフラグを取得
 	/// </summary>
