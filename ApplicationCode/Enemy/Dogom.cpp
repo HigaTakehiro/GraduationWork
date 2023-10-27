@@ -1,5 +1,6 @@
 #include "Dogom.h"
 
+#include <algorithm>
 #include <dinput.h>
 
 #include "Collision.h"
@@ -28,7 +29,7 @@ void Dogom::Init()
 	//m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
 	//m_Body->SetHitRadius(0.5f);
 	m_Body->SetAnchorPoint({ 0.5f,1.f });
-	m_BodyPos = { 0,2,10 };
+	m_BodyPos = { 0,1,10 };
 	m_BodyRot.x = 180;
 	/*腕モデル設定*/
 	for (size_t i = 0; i < 2; i++) {
@@ -42,28 +43,35 @@ void Dogom::Init()
 		//m_Arm[i]->SetHitRadius(0.5f);
 
 	}
-
-	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 2.f, m_BodyPos.y - 0.5f, m_BodyPos.z);
-	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 2.f, m_BodyPos.y - 0.5f, m_BodyPos.z);
+	MovingAngle = 180.f;
+	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-10.f);
+	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-10.f);
 }
 
 void Dogom::Upda()
 {
+	constexpr float pi_ = 3.14f;
 
 	Follow();
 	Wince();
 	if (!WinceF)WinceEaseT = 0;
 	RecvDamage(m_BodyPos);
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
-	m_Body->SetScale({ 1.f,1.f,1.f });
+	m_Body->SetScale({ 3.5f,3.5f,3.f });
 	m_Body->SetBillboard(FALSE);
+	//m_BodyPos = { 20,0,0 };
+	//MovingAngle++;
+	MoveBody();
+	m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+	m_BodyPos.z = cosf(MovingAngle * (pi_/ 180.0f)) * 16.0f;
+
 	m_Body->SetPosition(m_BodyPos);
 	m_Body->Update(m_Camera);
 
 	ArmAct();
 	for (size_t i = 0; i < 2; i++)
 	{
-		m_Arm[i]->SetScale({ 1.f,1.0f,1.0f });
+		m_Arm[i]->SetScale({ 2.0f,2.0f,2.0f });
 		m_Arm[i]->SetPosition(m_ArmPos[i]);
 		m_Arm[i]->SetBillboard(TRUE);
 		m_Arm[i]->Update(m_Camera);
@@ -100,6 +108,17 @@ void Dogom::Finalize()
 	m_Arm[LEFT].reset(nullptr);
 }
 
+void Dogom::ShakeArm(Vector3 Defopos)
+{
+	int randX = rand() % 10 - 5;
+	int randY = rand() % 10 - 5;
+	
+	t += 90.f;
+	for (size_t i = 0; i < 2; i++) {
+		m_ArmPos[i].x += sin(t * 3.14f / 180.f)/6.f;
+	}
+}
+
 #define PI 3.14
 void Dogom::ArmAct()
 {
@@ -110,11 +129,13 @@ void Dogom::ArmAct()
 	move = XMVector3TransformNormal(move, matRot_R);
 	move2 = XMVector3TransformNormal(move2, matRot_L);
 
-	float Left_X = m_BodyPos.x + move.m128_f32[0] * 20.f, Left_Z = m_BodyPos.z + move.m128_f32[2] * 20.f;
+	float Left_X = m_BodyPos.x + move.m128_f32[0] * 50.f, Left_Z = m_BodyPos.z + move.m128_f32[2] * 50.f;
 
-	float Right_X = m_BodyPos.x + move2.m128_f32[0] * 20.f, Right_Z = m_BodyPos.z + move2.m128_f32[2] * 20.f;
+	float Right_X = m_BodyPos.x + move2.m128_f32[0] * 50.f, Right_Z = m_BodyPos.z + move2.m128_f32[2] * 50.f;
 
 	Vector3 OldRushPaunch[2];
+
+	Vector3 oldarmpos[2];
 	//通常
 	if (arm_move_ == DEFAULT) {
 		constexpr float GroundY = 1.5f;
@@ -140,6 +161,7 @@ void Dogom::ArmAct()
 		OldRushPaunch[LEFT] = m_ArmPos[LEFT];
 
 		OldRushPaunch[RIGHT] = m_ArmPos[RIGHT];
+		
 		if (KeyInput::GetIns()->TriggerKey(DIK_SPACE))
 		{
 			{
@@ -163,19 +185,31 @@ void Dogom::ArmAct()
 				arm_move_ = ATTACK_CROSS;
 			}
 		}
-		m_ActionTimer++;
+		if (!movF) {
+			BossBodyMovingT++;
+			m_ActionTimer++;
+		}
+		
+		MovingAngle = std::clamp(MovingAngle, 90.f, 270.f);
 	}
 
 	//叩きつけ
 	else if (arm_move_ == ATTACK_IMPACT)
 	{
 		//追加時間(腕戻す)
-		float MaxTime_1 = 50.f;
+		float MaxTime_1 = 20.f;
 		constexpr float MaxTime_2 = 10.f;
-		constexpr float MaxTime_3 = 30.f;
+		constexpr float MaxTime_3 = 10.f;
 
 		bool next_2 = FALSE, next_3 = FALSE;
 
+		XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f }, move2 = { 0.0f, 0.0f, 0.1f, 0.0f };
+		XMMATRIX matRot_R = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y - 90.f));
+		XMMATRIX matRot_L = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y + 90.f));
+
+		move = XMVector3TransformNormal(move, matRot_R);
+		move2 = XMVector3TransformNormal(move2, matRot_L);
+		
 		switch (phase_)
 		{
 		case Phase_Impact::PHASE_1:
@@ -189,20 +223,43 @@ void Dogom::ArmAct()
 
 			if (m_ImpactCout > 0) {
 				MaxTime_1 = 30;
-				m_ArmPos[LEFT].z = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].z, BefoPos[LEFT].z + 2.5f);
-				m_ArmPos[RIGHT].z = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].z, BefoPos[RIGHT].z + 2.5f);
-
+				if(abs(270 - MovingAngle) <= 10.f)
+				{
+					m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].x, BefoPos[LEFT].x+ 8.5f);
+					m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].x, BefoPos[RIGHT].x + 8.5f);
+				}
+				else if (abs(180 - MovingAngle) <= 10.f)
+				{
+					m_ArmPos[LEFT].z = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].z, BefoPos[LEFT].z + 8.5f);
+					m_ArmPos[RIGHT].z = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].z, BefoPos[RIGHT].z + 8.5f);
+				}
+				else if (abs(90 - MovingAngle) <= 10.f)
+				{
+					m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].x, BefoPos[LEFT].x - 8.5f);
+					m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].x, BefoPos[RIGHT].x -8.5f);
+				}
 				
 			}
-			else MaxTime_1 = 90.f;
-
+			else {
+				MaxTime_1 = 90.f;
+			}
 			if (m_ArmAttckEaseT[LEFT] >= MaxTime_1) {
+
+				if(m_ImpactCout==0)
+				{
+					//m_ArmPos[LEFT] = OldRushPaunch[LEFT];
+				//	m_ArmPos[RIGHT] = OldRushPaunch[RIGHT];
+					
+				}
 				for (size_t i = 0; i < 2; i++) {
 					BefoPos[i] = m_ArmPos[i];
 				}
 				m_ArmAttckEaseT[LEFT] = m_ArmAttckEaseT[RIGHT] = 0;
 				next_2 = TRUE;
 			} else {
+				if(m_ImpactCout==0)
+					ShakeArm(m_ArmPos[LEFT]);
+
 				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].y, m_BodyPos.y + 3.f);
 				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].y, m_BodyPos.y + 3.f);
 			}
@@ -243,13 +300,16 @@ void Dogom::ArmAct()
 			BefoPos[0].y = BefoPos[1].y = 1.f;
 
 			//ボスの横に
-			m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].y, m_BodyPos.y - 0.5f);
-			m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].y, m_BodyPos.y - 0.5f);
+			m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].y, m_BodyPos.y );
+			m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].y, m_BodyPos.y );
 
 			if(m_ImpactCout==4)
 			{
-				m_ArmPos[LEFT].z = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].z, OldRushPaunch[LEFT].z);
-				m_ArmPos[RIGHT].z = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].z, OldRushPaunch[RIGHT].z);
+				m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].x,Left_X);
+				m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].x, Right_X);
+
+				m_ArmPos[LEFT].z = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].z, Left_Z);
+				m_ArmPos[RIGHT].z = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].z,Right_Z);
 			}
 			if (m_ArmAttckEaseT[LEFT] >= MaxTime_3)
 				if (m_ImpactCout == 4) {
@@ -284,35 +344,41 @@ void Dogom::ArmAct()
 
 		move = XMVector3TransformNormal(move, matRot);*/
 		bool next_1 = FALSE, next_2 = FALSE;
-		float EndX[2] = { PlayerPos.x + 5.f ,PlayerPos.x - 5.f };
+		float EndX[2] = { PlayerPos.x + 10.f ,PlayerPos.x - 10.f };
 		float EndZ[2] = { PlayerPos.z ,PlayerPos.z };
 		switch (phase_cross_)
 		{
 		case Phase_Cross::PHASE_1:
 			m_ActionTimer = 0; ActionRandom = 0;
 			ResetArmParam();
-			m_ArmAttckEaseT[LEFT]++;
-			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
+		
 
 			//腕座標をプレイヤー位置に
-			for (size_t i = 0; i < 2; i++) {
-				m_ArmPos[i].x = Easing::easeIn(m_ArmAttckEaseT[i], 60.f, BefoPos[i].x, EndX[i]);
-				m_ArmPos[i].y = Easing::easeIn(m_ArmAttckEaseT[i], 60.f, BefoPos[i].y, m_BodyPos.y);
-				m_ArmPos[i].z = Easing::easeIn(m_ArmAttckEaseT[i], 60.f, BefoPos[i].z, EndZ[i]);
-			}
-
-			if (m_ArmAttckEaseT[LEFT] >= 60.f)
+			
+m_ArmAttckEaseT[LEFT]++;
+			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
+			if (m_ArmAttckEaseT[LEFT] >= 30.f)
 			{
-				m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT] = 0.f;
-				BefoPos[LEFT] = m_ArmPos[LEFT], BefoPos[RIGHT] = m_ArmPos[RIGHT];
-				next_1 = TRUE;
+				if (++CrossWaitCount > 90.f) {
+					m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT] = 0.f;
+					BefoPos[LEFT] = m_ArmPos[LEFT], BefoPos[RIGHT] = m_ArmPos[RIGHT];
+					next_1 = TRUE;
+				}
+			}
+			else
+			{
+					for (size_t i = 0; i < 2; i++) {
+				m_ArmPos[i].x = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].x, EndX[i]);
+				m_ArmPos[i].y = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].y, m_BodyPos.y);
+				m_ArmPos[i].z = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].z, EndZ[i]);
+			}
 			}
 
 			if (next_1)phase_cross_ = Phase_Cross::PHASE_2;
 			break;
 
 		case Phase_Cross::PHASE_2:
-
+			CrossWaitCount = 0.f;
 			m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 
@@ -423,3 +489,35 @@ void Dogom::Wince()
 
 }
 
+void Dogom::MoveBody()
+{
+	//if (arm_move_ != DEFAULT)return;
+	if (movF && arm_move_ == DEFAULT) {
+		BodyMoveEase++;
+		MovingAngle = Easing::easeIn(BodyMoveEase, 90.f, OldMovAngle, nextAngle);
+		if (BodyMoveEase >= 90) {
+			BossBodyMovingT = 0;
+			BodyMoveEase = 0.f;
+			movF = false;
+		}
+	}
+	else{
+		BossBodyMovingT++;
+		OldMovAngle = MovingAngle;
+
+		if (BossBodyMovingT % 360 == 0&& arm_move_ == DEFAULT) {
+		if (abs(270-OldMovAngle) <= 10.f)
+			nextAngle = 180.f;
+		else if (abs(90-OldMovAngle) <= 10.f)
+			nextAngle = 180.f;
+		else if (abs(180 - OldMovAngle) <= 10.f)
+		{
+			randAct = rand() % 10;
+			if (randAct <5 )nextAngle = 90.f;
+			else nextAngle = 270.f;
+		}
+			movF = true;
+		}
+	}
+	
+}
