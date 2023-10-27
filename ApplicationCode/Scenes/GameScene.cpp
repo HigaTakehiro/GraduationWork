@@ -321,7 +321,7 @@ void GameScene::NextMap()
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction == 4) {
-		NEXTPLAYERPOS.z = NextPos_.z+4;
+		NEXTPLAYERPOS.z = NextPos_.z+9;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 	else if (direction == 3) {
