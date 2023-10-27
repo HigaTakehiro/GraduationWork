@@ -254,9 +254,6 @@
     <ClCompile Include="ApplicationCode\Item\Ore.cpp">
       <Filter>ソース ファイル\ApplicationCode\Item</Filter>
     </ClCompile>
-    <ClCompile Include="ObbAndObb.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClCompile>
@@ -271,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Object2d\ObbAndObb.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -445,7 +445,6 @@
     <ClInclude Include="ApplicationCode\Item\Ore.h">
       <Filter>ソース ファイル\ApplicationCode\Item</Filter>
     </ClInclude>
-    <ClInclude Include="ObbAndObb.h" />
     <ClInclude Include="ApplicationCode\Map\GameMap.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
@@ -457,9 +456,6 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Enemy\Dogom.h">
       <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationCode\Players\AttackEffect.h">
-      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

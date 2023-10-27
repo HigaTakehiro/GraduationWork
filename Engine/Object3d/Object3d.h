@@ -48,7 +48,6 @@ public: // サブクラス
 	//当たり判定タイプ
 	enum class CollisionType {
 		Sphere,
-		Box,
 		Obb,
 		None
 	};
@@ -318,6 +317,10 @@ public: // メンバ関数
 	XMMATRIX GetMatRot()const { return matRot; }
 	XMMATRIX GetMatTrans()const { return matTrans; }
 	XMMATRIX GetMatWorld()const { return matWorld; }
+
+	void SetObbScl(Vector3 scl) { ObbScl = scl; }
+	const Vector3 GetObbScl() { return ObbScl; }
+
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	// 色
@@ -356,5 +359,7 @@ private: // メンバ変数
 	bool isHit_;
 	//各行列
 	XMMATRIX matScale, matRot, matTrans;
+
+	Vector3 ObbScl;
 };
 

@@ -13,7 +13,8 @@ void Ore::Initialize(Vector3 pos, Vector3 vec)
 	oreModel_ = Shapes::CreateSquare({ 0, 0 }, { 16, 16 }, "Ore.png", { 16, 16 });
 	ore_ = Object3d::UniquePtrCreate(oreModel_);
 	ore_->SetScale({ 0.02f, 0.02f, 0.02f });
-	ore_->SetColType(Object3d::CollisionType::Sphere);
+	ore_->SetObbScl({ 1.f,1.f,1.f });
+	ore_->SetColType(Object3d::CollisionType::Obb);
 	ore_->SetObjType((int32_t)Object3d::OBJType::Item);
 	ore_->SetIsBillboardY(true);
 	ore_->SetHitRadius(0.5f);

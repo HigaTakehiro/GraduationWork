@@ -18,7 +18,7 @@ refPower 0.25
 #攻撃力
 atk 1
 #鉱石の最大取得数
-maxOre 3
+maxOre 4
 #鉱石取得ごとの回転速度係数
 hammerRotCoeff 0.8
 #鉱石取得ごとの大きさ

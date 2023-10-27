@@ -15,8 +15,9 @@ void Player::Initialize()
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
-	player_->SetColType(Object3d::CollisionType::Sphere);
+	player_->SetColType(Object3d::CollisionType::Obb);
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
+	player_->SetObbScl({ 2.f,4.f,2.f });
 	player_->SetHitRadius(0.5f);
 
 	PlayerStatusSetting();
@@ -32,7 +33,8 @@ void Player::Initialize()
 	hammer_->SetPosition(initHammerPos_);
 	hammer_->SetScale(initHammerScale_);
 	hammer_->SetRotation(initHammerRot_);
-	hammer_->SetColType(Object3d::CollisionType::Sphere);
+	hammer_->SetColType(Object3d::CollisionType::Obb);
+	hammer_->SetObbScl({ 1.0f,1.f,5.f });
 	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
 	hammer_->SetHitRadius(1.0f);
 	oreCount_ = 0;
