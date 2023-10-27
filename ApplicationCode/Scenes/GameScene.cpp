@@ -184,7 +184,13 @@ void GameScene::Update()
 	NextMap();
 	map_->CheckHitTest(player_);
 	map_->Update();
-	map_->MapSave(player_->GetPos());
+	//if(中間拠点についたらセーブ){
+	if (KeyInput::GetIns()->HoldKey(DIK_C)) {
+		map_->MapSave(player_->GetPos());
+	}//}
+	//if (KeyInput::GetIns()->HoldKey(DIK_X) {
+
+	//}
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();

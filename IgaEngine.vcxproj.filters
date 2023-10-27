@@ -457,6 +457,10 @@
     <ClInclude Include="ApplicationCode\Enemy\Dogom.h">
       <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Object2d\ObbAndObb.h" />
+    <ClInclude Include="ApplicationCode\Players\AttackEffect.h">
+      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
