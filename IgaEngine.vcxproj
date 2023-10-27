@@ -197,6 +197,7 @@
     <ClCompile Include="Engine\Object2d\Collision2d.cpp" />
     <ClCompile Include="Engine\Object2d\DebugText.cpp" />
     <ClCompile Include="Engine\Object2d\ImageManager.cpp" />
+    <ClCompile Include="Engine\Object2d\ObbAndObb.cpp" />
     <ClCompile Include="Engine\Object2d\ParticleManager2d.cpp" />
     <ClCompile Include="Engine\Object2d\PostEffect.cpp" />
     <ClCompile Include="Engine\Object2d\Sprite.cpp" />
@@ -212,7 +213,6 @@
     <ClCompile Include="Engine\Object3d\Shapes.cpp" />
     <ClCompile Include="Engine\Texture\Texture.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ObbAndObb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApplicationCode\Collision\BaseCollision.h" />
@@ -262,6 +262,7 @@
     <ClInclude Include="Engine\Object2d\Collision2d.h" />
     <ClInclude Include="Engine\Object2d\DebugText.h" />
     <ClInclude Include="Engine\Object2d\ImageManager.h" />
+    <ClInclude Include="Engine\Object2d\ObbAndObb.h" />
     <ClInclude Include="Engine\Object2d\ParticleManager2d.h" />
     <ClInclude Include="Engine\Object2d\PostEffect.h" />
     <ClInclude Include="Engine\Object2d\Sprite.h" />
@@ -276,7 +277,6 @@
     <ClInclude Include="Engine\Object3d\ParticleManager.h" />
     <ClInclude Include="Engine\Object3d\Shapes.h" />
     <ClInclude Include="Engine\Texture\Texture.h" />
-    <ClInclude Include="ObbAndObb.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc" />

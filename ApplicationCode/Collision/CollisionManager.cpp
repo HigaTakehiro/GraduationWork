@@ -1,10 +1,14 @@
 #include "CollisionManager.h"
 #include "SphereAndSphere.h"
+#include "ObbAndObb.h"
 #include "SafeDelete.h"
 
 CollisionManager::CollisionManager()
 {
 	collision_[(long long)Object3d::CollisionType::Sphere][(long long)Object3d::CollisionType::Sphere] = new SphereAndSphere();
+
+	//OBB
+	collision_[(long long)Object3d::CollisionType::Obb][(long long)Object3d::CollisionType::Obb] = new ObbAndObb();
 }
 
 CollisionManager::~CollisionManager()
@@ -68,6 +72,14 @@ void CollisionManager::HitTest(Object3d* obj1, Object3d* obj2)
 {
 	if (obj1->GetColType() == Object3d::CollisionType::Sphere && obj2->GetColType() == Object3d::CollisionType::Sphere) {
 		if (collision_[(long long)Object3d::CollisionType::Sphere][(long long)Object3d::CollisionType::Sphere]->HitTest(obj1, obj2)) {
+			obj1->OnCollision();
+			obj2->OnCollision();
+		}
+	}
+
+	//OBB
+	if (obj1->GetColType() == Object3d::CollisionType::Obb && obj2->GetColType() == Object3d::CollisionType::Obb) {
+		if (collision_[(long long)Object3d::CollisionType::Obb][(long long)Object3d::CollisionType::Obb]->HitTest(obj1, obj2)) {
 			obj1->OnCollision();
 			obj2->OnCollision();
 		}

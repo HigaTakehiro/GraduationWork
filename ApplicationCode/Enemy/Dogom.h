@@ -14,6 +14,7 @@ private:
 
     std::unique_ptr<Texture> m_Body;
     std::array<std::unique_ptr<Texture>,2> m_Arm;
+    std::array<std::unique_ptr<Texture>, 2> m_ImpactTex;
 
     //プレイヤーモデル
     Model* BodyModel_;
@@ -23,9 +24,13 @@ private:
     Vector3 m_BodyRot;
 	std::array<Vector3, 2>m_ArmPos;
     std::array<Vector3, 2>m_ArmRot;
-    std::array<float, 2>m_ArmMov_Y;
+    std::array<Vector3, 2>m_ImpactTexPos;
+    std::array<Vector3, 2>m_ImpactTexScl;
+    std::array<float, 2>m_ImpactTexAlpha;
+	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
 
+    std::array<bool, 2>m_ImpactF;
     std::array<Vector3, 3>WaitPos = { Vector3(0,0,-20),Vector3(-18,0,0),Vector3(18,0,0) };
     Vector3 BefoPos[2];
     Vector3 PlayerPos;
@@ -91,9 +96,16 @@ private:
 
     void Wince();
 
+    bool CoollisionFace();
+    bool CoollisionArm();
+
+    void FaceFall();
+    bool m_FallF = false;
     void ShakeArm(Vector3 Defopos);
     void MoveBody();
-    float t = 0;
+
+    void ImpactTexScling();
+    float t = 0,t2=0;
     bool movF;
     float OldMovAngle;
     float BodyMoveEase;
