@@ -10,7 +10,7 @@ void Ore::Initialize(Vector3 pos, Vector3 vec)
 {
 	pos_ = pos;
 	vec_ = vec.normalize();
-	oreModel_ = Shapes::CreateSquare({ 0, 0 }, { 16, 16 }, "Ore.png", { 16, 16 });
+	oreModel_ = Shapes::CreateSquare({ 0, 0 }, { 16, 16 }, "Ore.png", { 16, 16 }, {0.0f, 0.0f});
 	ore_ = Object3d::UniquePtrCreate(oreModel_);
 	ore_->SetScale({ 0.02f, 0.02f, 0.02f });
 	ore_->SetObbScl({ 1.f,1.f,1.f });

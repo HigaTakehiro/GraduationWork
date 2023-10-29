@@ -10,7 +10,7 @@ void Player::Initialize()
 {
 	//ƒvƒŒƒCƒ„[‰Šú‰»
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 72.0f * ((float)i + 1), 64.0f }, "tuyu_idle.png", { 320, 64 });
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 128.0f, 128.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f}, {128.0f, 128.0f});
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -19,6 +19,7 @@ void Player::Initialize()
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
 	player_->SetObbScl({ 2.f,4.f,2.f });
 	player_->SetHitRadius(0.5f);
+	player_->SetScale({ 3.0f, 15.0f, 3.0f });
 
 	PlayerStatusSetting();
 
@@ -51,6 +52,9 @@ void Player::Initialize()
 void Player::Update()
 {
 	static int32_t animeCount = 0;
+	playerModel_[0]->SetAnchorpoint({ 0.5f, 0.5f });
+	playerModel_[0]->SetSize({ 64.0f, 64.0f });
+	playerModel_[0]->SetTexRect({ 0.f, 0.f }, { 128.f, 128.f });
 
 	Repulsion();
 	HammerPowerUp();

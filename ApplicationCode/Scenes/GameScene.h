@@ -74,6 +74,8 @@ private: //メンバ変数
 	std::unique_ptr<Ore> ore_;
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
+	//テスト用スプライト
+	Sprite* test_;
 
 
 	std::array<BaseEnemy*, 3> enemys_;

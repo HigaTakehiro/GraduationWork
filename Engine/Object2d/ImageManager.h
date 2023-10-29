@@ -38,6 +38,8 @@ public: //‰æ‘œ–¼
 		LUSA1,
 		LUSA2,
 		LUSA3,
+		//
+		STONE
 	};
 public: //ƒƒ“ƒoŠÖ”
 	/// <summary>

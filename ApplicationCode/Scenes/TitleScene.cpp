@@ -61,7 +61,6 @@ void TitleScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
 	Sprite::PostDraw();
 
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -76,6 +75,7 @@ void TitleScene::Draw()
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
 	//ポストエフェクトを描けないスプライト描画
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+
 	Sprite::PostDraw();
 
 	DirectXSetting::GetIns()->PostDraw();
