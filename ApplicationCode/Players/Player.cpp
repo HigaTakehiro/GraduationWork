@@ -310,6 +310,16 @@ void Player::Move() {
 		}
 	}
 
+	if (nextflor_) {
+		if (KeyInput::GetIns()->PushKey(DIK_Z)) {
+			next_ = true;
+		}
+		else {
+			next_ = false;
+		}
+	}
+
+
 }
 
 void Player::Attack() {
