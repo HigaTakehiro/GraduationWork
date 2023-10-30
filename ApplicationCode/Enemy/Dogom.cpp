@@ -306,8 +306,8 @@ void Dogom::ArmAct()
 				m_ArmAttckEaseT[LEFT] = m_ArmAttckEaseT[RIGHT] = 0;
 				next_3 = TRUE;
 			} else {
-				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_2, BefoPos[LEFT].y, -0.5f);
-				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_2, BefoPos[RIGHT].y, -0.5f);
+				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_2, BefoPos[LEFT].y, -3.5f);
+				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_2, BefoPos[RIGHT].y, -3.5f);
 			}
 			BefoPos[LEFT].z = m_ArmPos[LEFT].z;
 			BefoPos[RIGHT].z = m_ArmPos[RIGHT].z;
@@ -322,7 +322,7 @@ void Dogom::ArmAct()
 			m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 			//腕の位置地面
-			BefoPos[0].y = BefoPos[1].y = -0.5f;
+			BefoPos[0].y = BefoPos[1].y = -3.5f;
 
 			//ボスの横に
 			m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].y, m_BodyPos.y );
@@ -369,7 +369,7 @@ void Dogom::ArmAct()
 
 		move = XMVector3TransformNormal(move, matRot);*/
 		bool next_1 = FALSE, next_2 = FALSE;
-		float EndX[2] = { PlayerPos.x + 4.f ,PlayerPos.x - 4.f };
+		float EndX[2] = { PlayerPos.x + 8.f ,PlayerPos.x - 8.f };
 		float EndZ[2] = { PlayerPos.z ,PlayerPos.z };
 		switch (phase_cross_)
 		{
