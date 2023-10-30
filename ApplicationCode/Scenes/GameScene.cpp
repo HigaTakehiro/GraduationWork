@@ -207,7 +207,8 @@ for(auto i=0;i<enemys_.size();i++)
 		if (ore != nullptr) {
 			ore->Draw();
 		}
-	}boss_->Draw();
+	}
+	boss_->Draw();
 	player_->Draw();
 
 	Object3d::PostDraw();

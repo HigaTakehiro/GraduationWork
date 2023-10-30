@@ -92,7 +92,7 @@ private: //メンバ変数
 	//板ポリフラグ
 	bool isBoardPolygon_;
 	//アンカーポイント
-	DirectX::XMFLOAT2 anchorpoint_;
+	DirectX::XMFLOAT2 anchorpoint_={0.5f,0.5f};
 	//サイズ
 	DirectX::XMFLOAT2 size_;
 	//テクスチャ左上座標

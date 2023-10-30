@@ -12,13 +12,13 @@ private:
         LEFT
     };
 
-    std::unique_ptr<Texture> m_Body;
-    std::array<std::unique_ptr<Texture>,2> m_Arm;
+    std::unique_ptr<Object3d> m_Body;
+    std::array<std::unique_ptr<Object3d>,2> m_Arm;
     std::array<std::unique_ptr<Texture>, 2> m_ImpactTex;
 
     //プレイヤーモデル
-    Model* BodyModel_;
-    Model* ArmModel_[2];
+    Model* BodyModel_[8];
+    Model* ArmModel_[8];
 
     Vector3 m_BodyPos;
     Vector3 m_BodyRot;

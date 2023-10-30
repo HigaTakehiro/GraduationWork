@@ -13,38 +13,36 @@
 void Dogom::Init()
 {
 	m_Name = DOGOM;
-
-
-	//BodyModel_.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-	//BodyModel_->CreateTexture();
-
-	for (int32_t i = 0; i < 2; i++) {
-		ArmModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 64.f, 64.0f }, "Hammer.png");
+	
+	for (int32_t i = 0; i < 8; i++) {
+		ArmModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
+	for (int32_t i = 0; i < 8; i++) {
+		BodyModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_face.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+	}
+
+	m_Body = Object3d::UniquePtrCreate(BodyModel_[0]);
+	//m_Body->SetIsBillboardY(true);
+	m_Body->SetColType(Object3d::CollisionType::Obb);
+	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
+	m_Body->SetObbScl({ 2.f,4.f,2.f });
+	m_Body->SetHitRadius(0.5f);
+	m_Body->SetScale({ 0.0f, 0.0f, 0.0f });
 
 	arm_move_ = DEFAULT;
 	/*本体モデル設定*/
-	m_Body.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-	m_Body->CreateTexture();
-
-	//m_Body->SetColType(Object3d::CollisionType::Obb);
-	//m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
-	//m_Body->SetHitRadius(0.5f);
-
-	m_Body->SetAnchorPoint({ 0.5f,1.f });
-
-	m_BodyPos = { 0,1,10 };
-	m_BodyRot.x = 180;
+	//m_BodyPos = { 0,-3,30 };
+	//m_BodyRot.x = 180;
 	/*腕モデル設定*/
 	for (size_t i = 0; i < 2; i++) {
-		m_Arm[i].reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-		m_Arm[i]->CreateTexture();
-		m_Arm[i]->SetAnchorPoint({ 0.5f,0.5f });
-		m_Arm[i]->SetRotation({ 180,0,0 });
-		//m_Arm[i]->SetIsBillboardY(true);
-		//m_Arm[i]->SetColType(Object3d::CollisionType::Sphere);
-		//m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		//m_Arm[i]->SetHitRadius(0.5f);
+		m_Arm[i] = Object3d::UniquePtrCreate(ArmModel_[0]);
+		//m_Body->SetIsBillboardY(true);
+		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
+		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
+		m_Arm[i]->SetObbScl({ 2.f,4.f,2.f });
+		m_Arm[i]->SetHitRadius(0.5f);
+		m_Arm[i]->SetScale({ 0.20f, 0.20f, 0.0f });
+
 		m_ImpactTex[i].reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
 		m_ImpactTex[i]->CreateTexture();
 		m_ImpactTex[i]->SetAnchorPoint({ 0.5f,0.5f });
@@ -65,9 +63,8 @@ void Dogom::Upda()
 	if (!WinceF)WinceEaseT = 0;
 	RecvDamage(m_BodyPos);
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
-	m_Body->SetScale({ 3.5f,3.5f,3.f });
-	m_Body->SetBillboard(FALSE);
-
+	m_Body->SetScale({ 0.2f,0.2f,0.5f });
+	
 	if (!WinceF) {
 		MoveBody();
 		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
@@ -77,16 +74,35 @@ void Dogom::Upda()
 	CoollisionArm();
 	CoollisionFace();
 	ImpactTexScling();
+
+	constexpr int AnimationInter = 10;
+	constexpr size_t TexNum = 8;
+	static int animeCount = 0;
+
+	if (++animeCount >= AnimationInter*TexNum) {
+		animeCount = 0;
+	}
+
+	if (animeCount %AnimationInter==0) {
+		m_Body->SetModel(BodyModel_[animeCount/AnimationInter]);
+		m_Body->Initialize();
+		for(size_t i=0;i<m_Arm.size();i++)
+		{
+			m_Arm[i]->SetModel(ArmModel_[animeCount / AnimationInter]);
+			m_Arm[i]->Initialize();
+		}
+	}
+
+	m_Arm[RIGHT]->SetRotation(Vector3(0, 0, 180));
 	m_Body->SetPosition(m_BodyPos);
-	m_Body->Update(m_Camera);
+	m_Body->Update();
 
 	ArmAct();
 	for (size_t i = 0; i < 2; i++)
 	{
-		m_Arm[i]->SetScale({ 2.0f,2.0f,2.0f });
+		m_Arm[i]->SetScale({ 0.120f,0.120f,2.0f });
 		m_Arm[i]->SetPosition(m_ArmPos[i]);
-		m_Arm[i]->SetBillboard(TRUE);
-		m_Arm[i]->Update(m_Camera);
+		m_Arm[i]->Update();
 
 		m_ImpactTex[i]->SetScale(m_ImpactTexScl[i]);
 		m_ImpactTex[i]->SetPosition(m_ImpactTexPos[i]);
@@ -99,21 +115,20 @@ void Dogom::Upda()
 
 void Dogom::Draw()
 {
+	m_Body->Draw();
+	for (size_t i = 0; i < 2; i++) {
+		//m_ImpactTex[i]->Draw();
+		if (m_ArmHp[i] > 0)
+			m_Arm[i]->Draw();
 
-
-
+	}
 }
 void Dogom::Draw2()
 {
 	if (m_HP <= 0)return;
+	
 	Texture::PreDraw();
-	m_Body->Draw();
-	for (size_t i = 0; i < 2; i++) {
-		m_ImpactTex[i]->Draw();
-		if(m_ArmHp[i]>0)
-		m_Arm[i]->Draw();
-		
-	}
+	
 	Texture::PostDraw();
 }
 
@@ -291,8 +306,8 @@ void Dogom::ArmAct()
 				m_ArmAttckEaseT[LEFT] = m_ArmAttckEaseT[RIGHT] = 0;
 				next_3 = TRUE;
 			} else {
-				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_2, BefoPos[LEFT].y, 1.f);
-				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_2, BefoPos[RIGHT].y, 1.f);
+				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_2, BefoPos[LEFT].y, -0.5f);
+				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_2, BefoPos[RIGHT].y, -0.5f);
 			}
 			BefoPos[LEFT].z = m_ArmPos[LEFT].z;
 			BefoPos[RIGHT].z = m_ArmPos[RIGHT].z;
@@ -307,7 +322,7 @@ void Dogom::ArmAct()
 			m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 			//腕の位置地面
-			BefoPos[0].y = BefoPos[1].y = 1.f;
+			BefoPos[0].y = BefoPos[1].y = -0.5f;
 
 			//ボスの横に
 			m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].y, m_BodyPos.y );
@@ -354,7 +369,7 @@ void Dogom::ArmAct()
 
 		move = XMVector3TransformNormal(move, matRot);*/
 		bool next_1 = FALSE, next_2 = FALSE;
-		float EndX[2] = { PlayerPos.x + 10.f ,PlayerPos.x - 10.f };
+		float EndX[2] = { PlayerPos.x + 4.f ,PlayerPos.x - 4.f };
 		float EndZ[2] = { PlayerPos.z ,PlayerPos.z };
 		switch (phase_cross_)
 		{
