@@ -167,6 +167,7 @@
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp" />
     <ClCompile Include="ApplicationCode\Item\Ore.cpp" />
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp" />
+    <ClCompile Include="ApplicationCode\Map\Stairs.cpp" />
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp" />
     <ClCompile Include="ApplicationCode\Players\Player.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\GameScene.cpp" />
@@ -213,7 +214,6 @@
     <ClCompile Include="Engine\Object3d\Shapes.cpp" />
     <ClCompile Include="Engine\Texture\Texture.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Stairs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApplicationCode\Collision\BaseCollision.h" />
@@ -225,6 +225,7 @@
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h" />
     <ClInclude Include="ApplicationCode\Item\Ore.h" />
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />
+    <ClInclude Include="ApplicationCode\Map\Stairs.h" />
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h" />
     <ClInclude Include="ApplicationCode\Players\Player.h" />
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h" />
@@ -278,7 +279,6 @@
     <ClInclude Include="Engine\Object3d\ParticleManager.h" />
     <ClInclude Include="Engine\Object3d\Shapes.h" />
     <ClInclude Include="Engine\Texture\Texture.h" />
-    <ClInclude Include="Stairs.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc" />

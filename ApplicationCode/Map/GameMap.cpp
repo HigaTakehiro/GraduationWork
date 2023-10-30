@@ -111,6 +111,21 @@ void GameMap::LoadCsv()
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
+		else if (NUMBER == 5) {
+			unique_ptr<Stage> Map = make_unique<Stage>();
+			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+			Map->num = COUNT;
+			Map->state_ = Map::Kaidan;
+			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Map->stagePos_ = Pos;
+			Map->stage_->SetPosition(Pos);
+			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
+			stairs_ = make_unique<Stairs>();
+			stairs_->Initialize(Pos);
+			maps_.push_back(move(Map));
+			NEXTVERT += 1;
+			COUNT += 1;
+		}
 	}
 }
 
@@ -158,10 +173,6 @@ void GameMap::Initalize()
 
 void GameMap::Update()
 {
-	if (nothit_ == true) {
-		
-	}
-
 	for (unique_ptr<Stage>& Map : maps_) {
 		Map->stage_->Update();
 	}
@@ -170,6 +181,7 @@ void GameMap::Update()
 		Bridge->bridge_->Update();
 	}
 
+	stairs_->Update();
 }
 
 void GameMap::Draw(int OldCount)
@@ -189,6 +201,7 @@ void GameMap::Draw(int OldCount)
 		}
 	}
 
+	stairs_->Draw();
 }
 
 void GameMap::Finalize()
