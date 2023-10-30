@@ -8,6 +8,9 @@ using namespace DirectX;
 class Stairs
 {
 public:
+
+	void LoadCsv();
+
 	void Initialize(const XMFLOAT3& Pos);
 
 	void Update();
