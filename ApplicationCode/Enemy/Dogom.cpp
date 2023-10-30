@@ -86,10 +86,18 @@ void Dogom::Upda()
 	if (animeCount %AnimationInter==0) {
 		m_Body->SetModel(BodyModel_[animeCount/AnimationInter]);
 		m_Body->Initialize();
-		for(size_t i=0;i<m_Arm.size();i++)
+		
+		for (size_t i = 0; i < m_Arm.size(); i++)
 		{
-			m_Arm[i]->SetModel(ArmModel_[animeCount / AnimationInter]);
-			m_Arm[i]->Initialize();
+			if (ColF[i]&&DamCool[i]<10) {
+				m_Arm[i]->SetModel(ArmModel_[animeCount / AnimationInter]);
+				m_Arm[i]->Initialize();
+			}
+			else
+			{
+				m_Arm[i]->SetModel(ArmModel_[0]);
+				m_Arm[i]->Initialize();
+			}
 		}
 	}
 
@@ -485,10 +493,10 @@ void Dogom::Wince()
 			WinceEaseT = 0.f;
 			wince_phase_ = WincePhase::PHASE_2;
 		} else
-			m_BodyRot.x = Easing::easeIn(WinceEaseT, MaxEase, 180.f, 160.f);
+			m_BodyRot.x = Easing::easeIn(WinceEaseT, MaxEase, 0.f, -20.f);
 	} else if (wince_phase_ == WincePhase::PHASE_2)
 	{
-		m_BodyRot.x = Easing::easeIn(WinceEaseT, 30.f, 160.f, 270.f);
+		m_BodyRot.x = Easing::easeIn(WinceEaseT, 30.f, -20.f, 90.f);
 		m_BodyPos.y = Easing::easeIn(WinceEaseT, 30.f, 2.f, -2.f);
 		if (++WinceEaseT >= 30)
 		{
@@ -512,7 +520,7 @@ void Dogom::Wince()
 			} else
 			{
 				m_BodyPos.y = Easing::easeIn(WinceEaseT, 50.f, 0.f, 2.f);
-				m_BodyRot.x = Easing::easeIn(WinceEaseT, 50.f, 270.f, 180.f);
+				m_BodyRot.x = Easing::easeIn(WinceEaseT, 50.f, 90.f, 00.f);
 			}
 		}
 		else
@@ -635,7 +643,7 @@ void Dogom::CoollisionArm()
 		}
 	}
 	//óºòrÇÃëÃóÕÇ™è¡Ç¶ÇΩÇÁ
-	if ((m_ArmHp[LEFT] == m_ArmHp[RIGHT]) <= 0)
+	if (m_ArmHp[LEFT] <= m_ArmHp[RIGHT] <= 0)
 	{
 		if (!WinceF) {
 			StanCount = 0;
