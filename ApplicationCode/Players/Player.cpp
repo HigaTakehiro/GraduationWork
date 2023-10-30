@@ -219,14 +219,14 @@ void Player::Move() {
 
 	float leftStick = PadInput::GetIns()->leftStickY();
 
-	if (KeyInput::GetIns()->PushKey(DIK_UP) || leftStick > 0) {
+	if (KeyInput::GetIns()->PushKey(DIK_DOWN) || leftStick > 0) {
 		if (++animeCount_ >= 4) {
 			animeCount_ = 0;
 		}
 		player_->SetModel(frontMoveModel_[animeCount_]);
 		player_->Initialize();
 	}
-	else if (KeyInput::GetIns()->PushKey(DIK_DOWN) || leftStick < 0) {
+	else if (KeyInput::GetIns()->PushKey(DIK_UP) || leftStick < 0) {
 		if (++animeCount_ >= 4) {
 			animeCount_ = 0;
 		}

@@ -233,8 +233,8 @@ void Model::TransferVertex()
 	float bottom = (1.0f - anchorpoint_.y) * size_.y;
 
 	if (isFlip_) {
-		left = -left;
-		right = -right;
+		left = -left + size_.x * 0.5f;
+		right = -right + size_.x * 0.5f;
 	}
 
 	//頂点データ
