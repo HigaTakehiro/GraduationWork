@@ -228,6 +228,7 @@ void Model::TransferVertex()
 	//左右反転
 	float left = (0.0f - anchorpoint_.x);
 	float right = (1.0f - anchorpoint_.x);
+	right *= size_.x;
 	float top = (0.0f - anchorpoint_.y) * size_.y;
 	float bottom = (1.0f - anchorpoint_.y) * size_.y;
 
@@ -264,10 +265,15 @@ void Model::TransferVertex()
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	vertMap;
 	if (SUCCEEDED(result)) {
-		//std::copy(vertices.begin(), vertices.end(), vertMap);
-		memcpy(vertMap, vertex, sizeof(vertex));
+		std::copy(vertices.begin(), vertices.end(), vertMap);
 		vertBuff->Unmap(0, nullptr);
 	}
+
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
+	// 頂点バッファビューの作成
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	vbView.SizeInBytes = sizeVB;
+	vbView.StrideInBytes = sizeof(vertices[0]);
 }
 
 void Model::InitializeDescriptorHeap() {
