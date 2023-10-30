@@ -108,6 +108,9 @@ void Model::InitializeShapesModel(const std::vector<VertexPosNormalUv>& vertices
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
+
+	//板ポリ判定フラグを立てる
+	isBoardPolygon_ = true;
 }
 
 void Model::AddSmoothData(unsigned short indexPosition, unsigned short indexVertex)
@@ -154,6 +157,10 @@ void Model::Update(Material materials) {
 	constMap->specular = material.specular;
 	constMap->alpha = material.alpha;
 	constBuffB1->Unmap(0, nullptr);
+
+	if (isBoardPolygon_) {
+		TransferVertex();
+	}
 }
 
 void Model::Draw(ID3D12GraphicsCommandList* cmdList) {
@@ -174,6 +181,25 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList) {
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
 
+void Model::SetAnchorpoint(const DirectX::XMFLOAT2& anchorpoint)
+{
+	anchorpoint_ = anchorpoint;
+}
+
+void Model::SetSize(const DirectX::XMFLOAT2& size)
+{
+	size_ = size;
+	if (texSize_.x == 0.0f && texSize_.y == 0.0f) {
+		texSize_ = size;
+	}
+}
+
+void Model::SetTexRect(const DirectX::XMFLOAT2& texBase, const DirectX::XMFLOAT2& texSize)
+{
+	texBase_ = texBase;
+	texSize_ = texSize;
+}
+
 std::wstring Model::SeparatedExtension(const std::wstring& filePath)
 {
 	size_t pos1;
@@ -190,6 +216,64 @@ std::wstring Model::SeparatedExtension(const std::wstring& filePath)
 	}
 
 	return fileExt;
+}
+
+void Model::TransferVertex()
+{
+	HRESULT result = S_FALSE;
+
+	//   左下、左上、右下、右上
+	enum { LB, LT, RB, RT };
+
+	//左右反転
+	float left = (0.0f - anchorpoint_.x);
+	float right = (1.0f - anchorpoint_.x);
+	right *= size_.x;
+	float top = (0.0f - anchorpoint_.y) * size_.y;
+	float bottom = (1.0f - anchorpoint_.y) * size_.y;
+
+	//頂点データ
+	VertexPosNormalUv vertex[4];
+
+	vertex[LB].pos = { -left, -bottom, 0.0f }; //左下
+	vertex[LT].pos = { -left, -top, 0.0f }; //左上
+	vertex[RB].pos = { -right, -bottom, 0.0f }; //右下
+	vertex[RT].pos = { -right, -top, 0.0f }; //右上
+
+	//テクスチャ情報取得
+	if (texbuff) {
+		D3D12_RESOURCE_DESC resDesc = texbuff->GetDesc();
+
+		float tex_left = texBase_.x / resDesc.Width;
+		float tex_right = (texBase_.x + texSize_.x) / resDesc.Width;
+		float tex_top = texBase_.y / resDesc.Height;
+		float tex_bottom = (texBase_.y + texSize_.y) / resDesc.Height;
+
+		vertex[LB].uv = { tex_left, tex_bottom };
+		vertex[LT].uv = { tex_left, tex_top };
+		vertex[RB].uv = { tex_right, tex_bottom };
+		vertex[RT].uv = { tex_right, tex_top };
+	}
+
+	for (int32_t i = 0; i < 4; i++) {
+		vertex[i].normal = { 0, 0, 1 };
+		vertices[i] = vertex[i];
+	}
+
+	//頂点バッファへのデータ転送
+	VertexPosNormalUv* vertMap = nullptr;
+	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	vertMap;
+	if (SUCCEEDED(result)) {
+		std::copy(vertices.begin(), vertices.end(), vertMap);
+		vertBuff->Unmap(0, nullptr);
+	}
+
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
+	// 頂点バッファビューの作成
+	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
+	vbView.SizeInBytes = sizeVB;
+	vbView.StrideInBytes = sizeof(vertices[0]);
 }
 
 void Model::InitializeDescriptorHeap() {

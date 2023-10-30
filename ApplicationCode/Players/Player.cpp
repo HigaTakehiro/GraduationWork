@@ -10,7 +10,7 @@ void Player::Initialize()
 {
 	//プレイヤー初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 72.0f * ((float)i + 1), 64.0f }, "tuyu_idle.png", { 320, 64 });
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f}, {128.0f, 128.0f});
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -19,15 +19,16 @@ void Player::Initialize()
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
 	player_->SetObbScl({ 2.f,4.f,2.f });
 	player_->SetHitRadius(0.5f);
+	player_->SetScale({ 0.0f, 0.0f, 0.0f });
 
 	PlayerStatusSetting();
 
-	initHammerPos_ = { -60, -30, 60 };
+	initHammerPos_ = { -60, 0, 30 };
 	initHammerScale_ = { 1, 1, 1 };
 	initHammerRot_ = { -90, 0, 180 };
 
 	//ハンマー初期化
-	hammerModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Hammer.png");
+	hammerModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Hammer.png", { 128, 64 }, { 0.5f, 0.5f }, { 0, 0 }, {128, 128});
 	hammer_ = Object3d::UniquePtrCreate(hammerModel_);
 	hammer_->SetParent(player_.get());
 	hammer_->SetPosition(initHammerPos_);

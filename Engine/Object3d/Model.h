@@ -88,6 +88,18 @@ private: //メンバ変数
 	// デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeap;
 
+	//板ポリ変数
+	//板ポリフラグ
+	bool isBoardPolygon_;
+	//アンカーポイント
+	DirectX::XMFLOAT2 anchorpoint_;
+	//サイズ
+	DirectX::XMFLOAT2 size_;
+	//テクスチャ左上座標
+	DirectX::XMFLOAT2 texBase_;
+	//テクスチャ右下座標
+	DirectX::XMFLOAT2 texSize_;
+
 public: //静的メンバ関数
 	/// <summary>
 	/// 静的初期化
@@ -177,6 +189,25 @@ public: //メンバ関数
 	/// </summary>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
+	/// <summary>
+	/// アンカーポイント(画像の中心)をセット
+	/// </summary>
+	/// <param name="anchorpoint">アンカーポイント</param>
+	void SetAnchorpoint(const DirectX::XMFLOAT2& anchorpoint);
+
+	/// <summary>
+	/// サイズをセット
+	/// </summary>
+	/// <param name="size">サイズ</param>
+	void SetSize(const DirectX::XMFLOAT2& size);
+
+	/// <summary>
+	/// テクスチャ画像の切り抜き範囲をセット
+	/// </summary>
+	/// <param name="texBase">左上座標</param>
+	/// <param name="texSize">右下座標</param>
+	void SetTexRect(const DirectX::XMFLOAT2& texBase, const DirectX::XMFLOAT2& texSize);
+
 private: //メンバ関数
 	/// <summary>
 	/// 拡張子を分離する
@@ -184,5 +215,10 @@ private: //メンバ関数
 	/// <param name="filePath">拡張子を分離したいファイルパス</param>
 	/// <returns>拡張子</returns>
 	std::wstring SeparatedExtension(const std::wstring& filePath);
+
+	/// <summary>
+	/// 頂点データを更新する
+	/// </summary>
+	void TransferVertex();
 
 };

@@ -27,7 +27,7 @@ public: //静的メンバ関数
 	/// <param name="upperLeft">左上座標</param>
 	/// <param name="lowerBottom">右下座標</param>
 	/// <returns>平面の四角形</returns>
-	static Model* CreateSquare(DirectX::XMFLOAT2 upperLeft, DirectX::XMFLOAT2 lowerBottom, const std::string& textureName = "white1x1.png", const DirectX::XMFLOAT2 imageSize = {0.0f, 0.0f});
+	static Model* CreateSquare(DirectX::XMFLOAT2 upperLeft, DirectX::XMFLOAT2 lowerBottom, const std::string& textureName = "white1x1.png", const DirectX::XMFLOAT2& imageSize = { 0.0f, 0.0f }, const DirectX::XMFLOAT2& anchorpoint = { 0.5f, 0.5f }, const DirectX::XMFLOAT2& texBase = { 0.0f, 0.0f }, const DirectX::XMFLOAT2& texSize = {0.0f, 0.0f});
 
 private: //メンバ変数
 
