@@ -67,14 +67,14 @@ void Dogom::Upda()
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
 	m_Body->SetScale({ 3.5f,3.5f,3.f });
 	m_Body->SetBillboard(FALSE);
-	//m_BodyPos = { 20,0,0 };
-	//MovingAngle++;
 
 	if (!WinceF) {
 		MoveBody();
 		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 	}
+
+	CoollisionArm();
 	CoollisionFace();
 	ImpactTexScling();
 	m_Body->SetPosition(m_BodyPos);
@@ -110,6 +110,7 @@ void Dogom::Draw2()
 	m_Body->Draw();
 	for (size_t i = 0; i < 2; i++) {
 		m_ImpactTex[i]->Draw();
+		if(m_ArmHp[i]>0)
 		m_Arm[i]->Draw();
 		
 	}
@@ -183,18 +184,6 @@ void Dogom::ArmAct()
 
 		OldRushPaunch[RIGHT] = m_ArmPos[RIGHT];
 		
-		if (KeyInput::GetIns()->TriggerKey(DIK_SPACE))
-		{
-			{
-				if (!WinceF) {
-					StanCount = 0;
-					WinceF = TRUE;
-					wince_phase_ = WincePhase::PHASE_1;
-				}
-			}
-
-		}
-
 		if (!WinceF&&m_ActionTimer != 0 && m_ActionTimer % 160 == 0) {
 			ActionRandom = rand() % 100;
 			if (ActionRandom > 50) {
@@ -501,6 +490,7 @@ void Dogom::Wince()
 		if (StanCount >= 120) {
 			if (++WinceEaseT >= 50)
 			{
+				m_ArmHp[LEFT] = m_ArmHp[RIGHT] = ArmHP();
 				WinceF = FALSE;
 				WinceEaseT = 0.f;
 				
@@ -560,7 +550,7 @@ void Dogom::ImpactTexScling()
 	if (phase_ == Phase_Impact::PHASE_2) {
 		for (size_t i = 0; i < 2; i++) {
 			if (m_ImpactF[i])continue;
-			if (m_ArmPos[i].y > 1.4f)continue;
+			if (m_ArmPos[i].y > 1.f)continue;
 			m_ImpactTexPos[i] = Vector3(m_ArmPos[i].x, GroundY, m_ArmPos[i].z);
 			m_ImpactTexScl[i] = Vector3(0, 0, 0);
 			m_ImpactTexAlpha[i] = 1.f;
@@ -590,7 +580,7 @@ void Dogom::CoollisionFace()
 	for (size_t i = 0; i < 2; i++) {
 		if (ColF[i])continue;
 		DamCool[i] = 0;
-		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<3.f)
+		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<5.f)
 		{
 			m_player->SubHP(1);
 			ColF[i] = TRUE;
@@ -604,13 +594,45 @@ void Dogom::CoollisionFace()
 			ColF[i] = FALSE;
 		}
 	}
-	
+
 }
 
 
-bool Dogom::CoollisionArm()
+void Dogom::CoollisionArm()
 {
 
 
-	return FALSE;
+	for (size_t i = 0; i < 2; i++) {
+		if (!m_ArmDamF[i]) {
+			if (Collision::GetLength(m_ArmPos[i], m_player->GetHammer()->GetPosition()) < 5.f)
+			{
+				m_ArmHp[i]--;
+				m_ArmDamF[i] = TRUE;
+				continue;
+			}
+		}
+	}
+	for (size_t i = 0; i < 2; i++) {
+		if (m_ArmDamF[i]) {
+		if (Collision::GetLength(m_ArmPos[i], m_player->GetHammer()->GetPosition()) >= 5.f)
+			m_ArmDamF[i] = FALSE;
+		continue;
+		}
+	}
+	//óºòrÇÃëÃóÕÇ™è¡Ç¶ÇΩÇÁ
+	if ((m_ArmHp[LEFT] == m_ArmHp[RIGHT]) <= 0)
+	{
+		if (!WinceF) {
+			StanCount = 0;
+			WinceF = TRUE;
+			wince_phase_ = WincePhase::PHASE_1;
+		}
+	}
+
+}
+
+uint16_t Dogom::ArmHP()
+{
+	//å„Ç≈ïœÇ¶ÇÈ
+	return 2;
 }

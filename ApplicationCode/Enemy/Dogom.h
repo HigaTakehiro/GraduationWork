@@ -29,6 +29,8 @@ private:
     std::array<float, 2>m_ImpactTexAlpha;
 	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
+    std::array<int, 2>m_ArmHp={1,1};
+    std::array<bool, 2>m_ArmDamF;
 
     std::array<bool, 2>m_ImpactF;
     std::array<Vector3, 3>WaitPos = { Vector3(0,0,-20),Vector3(-18,0,0),Vector3(18,0,0) };
@@ -99,7 +101,8 @@ private:
     std::array<bool, 2>ColF;
     std::array<int, 2>DamCool;
     void CoollisionFace();
-    bool CoollisionArm();
+    void CoollisionArm();
+    uint16_t ArmHP();
 
     void FaceFall();
     bool m_FallF = false;
