@@ -63,11 +63,6 @@ enemys_[2]->SetPos(Vector3(0, -30, -5));
 	ore_ = std::make_unique<Ore>();
 	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
 
-	test_ = Sprite::Create(ImageManager::STONE, { 320, 320 });
-	test_->SetAnchorPoint({ 0.5f, 0.5f });
-	test_->SetSize({ 64.0f, 64.0f });
-	test_->SetTextureRect({ 0.0f, 0.0f }, { 128.0f, 128.0f });
-
 	for (int32_t i = 0; i < 3; i++) {
 		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
 		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
@@ -238,7 +233,6 @@ for(auto i=0;i<enemys_.size();i++)
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	test_->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -250,7 +244,6 @@ void GameScene::Finalize()
 	player_->Finalize();
 	boss_->Finalize();
 	safe_delete(player_);
-	safe_delete(test_);
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();

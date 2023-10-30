@@ -23,7 +23,7 @@ void Player::Initialize()
 
 	PlayerStatusSetting();
 
-	initHammerPos_ = { -60, -20, 0 };
+	initHammerPos_ = { -60, 0, 30 };
 	initHammerScale_ = { 1, 1, 1 };
 	initHammerRot_ = { -90, 0, 180 };
 
