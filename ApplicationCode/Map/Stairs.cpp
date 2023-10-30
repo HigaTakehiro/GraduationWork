@@ -1,4 +1,5 @@
 #include "Stairs.h"
+#include"Player.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
 
@@ -42,22 +43,37 @@ void Stairs::LoadCsv()
 	pos_ = Pos;
 }
 
-void Stairs::Initialize(const XMFLOAT3& Pos)
+void Stairs::Initialize(const XMFLOAT3& Pos, Player* player)
 {
 	LoadCsv();
-
-	pos_ = Pos+pos_;
+	player_ = player;
+	pos_ = Pos + pos_;
 	stairs_ = make_unique<Object3d>();
-	stairs_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("Kaidan"));
+	stairs_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("Kaidan"));
 	stairs_->SetPosition(pos_);
 }
 
 void Stairs::Update()
 {
+	CheckHit();
+
 	stairs_->Update();
 }
 
 void Stairs::Draw()
 {
 	stairs_->Draw();
+}
+
+void Stairs::CheckHit()
+{
+	XMFLOAT3 Pos = player_->GetPos();
+
+	if ((Pos.x >= pos_.x - 1.5 && Pos.x <= pos_.x + 1.5) &&
+		(Pos.z >= pos_.z - 1.5 && Pos.z <= pos_.z + 1.5)) {
+		player_->SetNextFlor(true);
+	}
+	else {
+		player_->SetNextFlor(false);
+	}
 }

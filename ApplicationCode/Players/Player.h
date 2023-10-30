@@ -98,6 +98,11 @@ public: //メンバ関数
 	/// <param name="subHP">減算するHP</param>
 	void SubHP(int32_t subHP) { hp_ -= subHP; }
 
+	void SetNextFlor(bool flag) { nextflor_ = flag; }
+
+	bool GetNext() { return next_; }
+
+
 private: //メンバ関数
 
 	/// <summary>
@@ -231,6 +236,11 @@ private: //メンバ変数
 	bool stop_ = false;
 	//攻撃中にステージ移動しない様に
 	bool notnext_ = false;
+	//階段のチェック
+	bool nextflor_ = false;
+
+	bool next_ = false;
+
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
 	DirectX::XMFLOAT3 GetPos(){ return player_->GetPosition(); }
