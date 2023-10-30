@@ -1,10 +1,14 @@
 #pragma once
 #include"Object3d.h"
 #include"Player.h"
+#include"Stairs.h"
+
 #include<memory.h>
 #include<DirectXMath.h>
 using namespace std;
 using namespace DirectX;
+
+class Player;
 class GameMap
 {
 private:
@@ -13,11 +17,12 @@ private:
 		Normal,
 		Forest,
 		Enemy,
+		Kaidan,
 		Boss,
 	};
 
 	enum Direction {
-		Vertical=0,
+		Vertical = 0,
 		Beside,
 	};
 
@@ -37,15 +42,15 @@ private:
 	};
 
 public:
-	
-	void LoadCsv();
-	
+
+	void LoadCsv(Player* player);
+
 	void CreateBridge();
 
 	/// <summary>
 	/// èâä˙âª
 	/// </summary>
-	void Initalize();
+	void Initalize(Player* player);
 
 	/// <summary>
 	/// çXêVèàóù
@@ -63,10 +68,10 @@ public:
 	void Finalize();
 
 	void CheckHitTest(Player* player);
-	
-	void CheckHitBridge(const XMFLOAT3& pos,int& Direction);
 
-	int NextCount (const XMFLOAT3& pos, int& Direction);
+	void CheckHitBridge(const XMFLOAT3& pos, int& Direction);
+
+	int NextCount(const XMFLOAT3& pos, int& Direction);
 
 	void NoHitCheck(const XMFLOAT3& pos);
 
@@ -75,7 +80,7 @@ public:
 	int GetNextVal() { return nextval_; }
 
 	XMFLOAT3 GetNowMapPos();
-	
+
 private:
 
 	list<unique_ptr<Stage>> maps_;
@@ -83,6 +88,8 @@ private:
 	list<unique_ptr<Bridge>> bridge;
 
 	list<unique_ptr<Object3d>> bridge_;
+
+	unique_ptr<Stairs> stairs_;
 
 	Stage* sta[3][3];
 
@@ -98,4 +105,5 @@ private:
 
 	int bridgeDirection = 0;
 };
+
 

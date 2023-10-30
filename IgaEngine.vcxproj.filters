@@ -269,8 +269,8 @@
     <ClCompile Include="Engine\Object2d\ObbAndObb.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Stairs.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="ApplicationCode\Map\Stairs.cpp">
+      <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,7 +458,9 @@
       <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Object2d\ObbAndObb.h" />
-    <ClInclude Include="Stairs.h" />
+    <ClInclude Include="ApplicationCode\Map\Stairs.h">
+      <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
