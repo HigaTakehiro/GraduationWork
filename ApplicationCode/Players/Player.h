@@ -98,6 +98,11 @@ public: //メンバ関数
 	/// <param name="subHP">減算するHP</param>
 	void SubHP(int32_t subHP) { hp_ -= subHP; }
 
+	void SetNextFlor(bool flag) { nextflor_ = flag; }
+
+	bool GetNext() { return next_; }
+
+
 private: //メンバ関数
 
 	/// <summary>
@@ -188,7 +193,17 @@ private: //メンバ変数
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル
+	//通常時
 	Model* playerModel_[4];
+	//移動モデル
+	//前
+	Model* frontMoveModel_[4];
+	//後
+	Model* backMoveModel_[4];
+	//右
+	Model* rightMoveModel_[4];
+	//左
+	Model* leftMoveModel_[4];
 
 	//ハンマーオブジェクト
 	std::unique_ptr<Object3d> hammer_;
@@ -212,6 +227,8 @@ private: //メンバ変数
 	Vector3 initHammerPos_;
 	Vector3 initHammerScale_;
 	Vector3 initHammerRot_;
+	//アニメーションカウント
+	int32_t animeCount_;
 
 	//矢印オブジェクト
 	std::unique_ptr<Object3d> arrow_;
@@ -231,6 +248,11 @@ private: //メンバ変数
 	bool stop_ = false;
 	//攻撃中にステージ移動しない様に
 	bool notnext_ = false;
+	//階段のチェック
+	bool nextflor_ = false;
+
+	bool next_ = false;
+
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
 	DirectX::XMFLOAT3 GetPos(){ return player_->GetPosition(); }

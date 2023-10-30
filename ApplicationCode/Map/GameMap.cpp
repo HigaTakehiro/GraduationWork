@@ -2,9 +2,9 @@
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
 
-int Count=0;
+int Count = 0;
 
-void GameMap::LoadCsv()
+void GameMap::LoadCsv(Player* player)
 {
 	std::string line;
 	int NUMBER = 0;
@@ -12,13 +12,13 @@ void GameMap::LoadCsv()
 	int NEXTHORY = 0;
 	int COUNT = 0;
 	bool NEXTCOUNT = false;
-	XMFLOAT3 Pos= { 30.f ,0.f,30.f };
+	XMFLOAT3 Pos = { 30.f ,0.f,30.f };
 
 	std::stringstream stream;
 
-	
+
 	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map.csv");
-	
+
 	while (getline(stream, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
@@ -60,10 +60,10 @@ void GameMap::LoadCsv()
 		}
 		if (NUMBER == 1) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
-			Map->stage_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Normal;
-			Pos = { 30.f*NEXTVERT ,0.f,30.f*NEXTHORY };
+			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
@@ -121,7 +121,7 @@ void GameMap::LoadCsv()
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			stairs_ = make_unique<Stairs>();
-			stairs_->Initialize(Pos);
+			stairs_->Initialize(Pos, player);
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
 			COUNT += 1;
@@ -164,9 +164,9 @@ void GameMap::CreateBridge()
 	}
 }
 
-void GameMap::Initalize()
+void GameMap::Initalize(Player* player)
 {
-	LoadCsv();
+	LoadCsv(player);
 
 	CreateBridge();
 }
@@ -176,7 +176,7 @@ void GameMap::Update()
 	for (unique_ptr<Stage>& Map : maps_) {
 		Map->stage_->Update();
 	}
-	
+
 	for (unique_ptr<Bridge>& Bridge : bridge) {
 		Bridge->bridge_->Update();
 	}
@@ -187,15 +187,15 @@ void GameMap::Update()
 void GameMap::Draw(int OldCount)
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		if (count_ == Map->num||OldCount==Map->num) {
+		if (count_ == Map->num || OldCount == Map->num) {
 			Map->stage_->Draw();
 		}
 	}
 
 	for (unique_ptr<Bridge>& Bridge : bridge) {
-		if (Bridge->num == count_ || 
-			(Bridge->num==count_ - nextval_&&Bridge->state_==Direction::Vertical)||
-			(Bridge->num==count_-1&&Bridge->state_==Direction::Beside)
+		if (Bridge->num == count_ ||
+			(Bridge->num == count_ - nextval_ && Bridge->state_ == Direction::Vertical) ||
+			(Bridge->num == count_ - 1 && Bridge->state_ == Direction::Beside)
 			) {
 			Bridge->bridge_->Draw();
 		}
@@ -220,10 +220,10 @@ void GameMap::CheckHitTest(Player* player)
 	}
 	if (nothit_ != false) { return; }
 	for (unique_ptr<Stage>& Map : maps_) {
-		
-		if(count_!=Map->num){continue;}
+
+		if (count_ != Map->num) { continue; }
 		//¶
-		if (PlayerPos.x >= Map->stagePos_.x + 11 ) {
+		if (PlayerPos.x >= Map->stagePos_.x + 11) {
 			PlayerPos.x = Map->stagePos_.x + 11;
 		}
 		if (PlayerPos.x <= Map->stagePos_.x - 6) {
@@ -258,7 +258,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 					}
 					else if (pos.x < Pos.x - 2 && Pos.x - 6 < pos.x) {
 						nothit_ = true;
-						count_ = Bridge->num+1;
+						count_ = Bridge->num + 1;
 						Direction = 2;
 						stopCount_ = true;
 						return;
@@ -272,7 +272,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						count_ = Bridge->num + nextval_;
 						Direction = 3;
 						stopCount_ = true;
-						return ;
+						return;
 					}
 					else if (pos.z < Pos.z + 9 && Pos.z + 2 < pos.z) {
 						nothit_ = true;
@@ -292,7 +292,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 int GameMap::NextCount(const XMFLOAT3& pos, int& Direction)
 {
 	if (!stopCount_) {
-		CheckHitBridge(pos,Direction);
+		CheckHitBridge(pos, Direction);
 	}
 	return count_;
 }
@@ -327,7 +327,7 @@ void GameMap::NoHitCheck(const XMFLOAT3& pos)
 XMFLOAT3 GameMap::GetNowMapPos()
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		if (count_==Map->num)
+		if (count_ == Map->num)
 		{
 			return Map->stagePos_;
 		}

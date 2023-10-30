@@ -7,6 +7,8 @@
 #include<DirectXMath.h>
 using namespace std;
 using namespace DirectX;
+
+class Player;
 class GameMap
 {
 private:
@@ -20,7 +22,7 @@ private:
 	};
 
 	enum Direction {
-		Vertical=0,
+		Vertical = 0,
 		Beside,
 	};
 
@@ -40,15 +42,15 @@ private:
 	};
 
 public:
-	
-	void LoadCsv();
-	
+
+	void LoadCsv(Player* player);
+
 	void CreateBridge();
 
 	/// <summary>
 	/// èâä˙âª
 	/// </summary>
-	void Initalize();
+	void Initalize(Player* player);
 
 	/// <summary>
 	/// çXêVèàóù
@@ -66,10 +68,10 @@ public:
 	void Finalize();
 
 	void CheckHitTest(Player* player);
-	
-	void CheckHitBridge(const XMFLOAT3& pos,int& Direction);
 
-	int NextCount (const XMFLOAT3& pos, int& Direction);
+	void CheckHitBridge(const XMFLOAT3& pos, int& Direction);
+
+	int NextCount(const XMFLOAT3& pos, int& Direction);
 
 	void NoHitCheck(const XMFLOAT3& pos);
 
@@ -78,7 +80,7 @@ public:
 	int GetNextVal() { return nextval_; }
 
 	XMFLOAT3 GetNowMapPos();
-	
+
 private:
 
 	list<unique_ptr<Stage>> maps_;
@@ -103,4 +105,5 @@ private:
 
 	int bridgeDirection = 0;
 };
+
 

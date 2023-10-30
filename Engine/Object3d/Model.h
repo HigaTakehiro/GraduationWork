@@ -99,6 +99,8 @@ private: //メンバ変数
 	DirectX::XMFLOAT2 texBase_;
 	//テクスチャ右下座標
 	DirectX::XMFLOAT2 texSize_;
+	//左右反転
+	bool isFlip_;
 
 public: //静的メンバ関数
 	/// <summary>
@@ -207,6 +209,12 @@ public: //メンバ関数
 	/// <param name="texBase">左上座標</param>
 	/// <param name="texSize">右下座標</param>
 	void SetTexRect(const DirectX::XMFLOAT2& texBase, const DirectX::XMFLOAT2& texSize);
+
+	/// <summary>
+	/// 反転フラグをセット
+	/// </summary>
+	/// <param name="isFlip">反転フラグ</param>
+	void SetIsFlip(bool isFlip = true) { isFlip_ = isFlip; }
 
 private: //メンバ関数
 	/// <summary>
