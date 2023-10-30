@@ -232,6 +232,11 @@ void Model::TransferVertex()
 	float top = (0.0f - anchorpoint_.y) * size_.y;
 	float bottom = (1.0f - anchorpoint_.y) * size_.y;
 
+	if (isFlip_) {
+		left = -left;
+		right = -right;
+	}
+
 	//頂点データ
 	VertexPosNormalUv vertex[4];
 

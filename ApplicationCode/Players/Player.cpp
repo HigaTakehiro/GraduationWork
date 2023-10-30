@@ -10,7 +10,11 @@ void Player::Initialize()
 {
 	//ƒvƒŒƒCƒ„[‰Šú‰»
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f}, {128.0f, 128.0f});
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		frontMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
+		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f}, {128.0f, 128.0f});
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -51,7 +55,6 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	static int32_t animeCount = 0;
 
 	Repulsion();
 	HammerPowerUp();
@@ -63,14 +66,6 @@ void Player::Update()
 	if (!stop_) {
 		Move();
 		Attack();
-	}
-
-	if (KeyInput::GetIns()->TriggerKey(DIK_N)) {
-		if (++animeCount >= 4) {
-			animeCount = 0;
-		}
-		player_->SetModel(playerModel_[animeCount]);
-		player_->Initialize();
 	}
 
 	player_->SetPosition(pos_);
@@ -93,6 +88,10 @@ void Player::Finalize()
 {
 	for (int32_t i = 0; i < 4; i++) {
 		safe_delete(playerModel_[i]);
+		safe_delete(frontMoveModel_[i]);
+		safe_delete(backMoveModel_[i]);
+		safe_delete(leftMoveModel_[i]);
+		safe_delete(rightMoveModel_[i]);
 	}
 	safe_delete(hammerModel_);
 }
@@ -218,7 +217,39 @@ void Player::Move() {
 	const Vector3 upDownMoveVec = { 0.0f, 0.0f, 1.0f };
 	const Vector3 leftRightMoveVec = { 1.0f, 0.0f, 0.0f };
 
-	float leftStick = PadInput::GetIns()->leftStickX();
+	float leftStick = PadInput::GetIns()->leftStickY();
+
+	if (KeyInput::GetIns()->PushKey(DIK_UP) || leftStick > 0) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		player_->SetModel(frontMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else if (KeyInput::GetIns()->PushKey(DIK_DOWN) || leftStick < 0) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		player_->SetModel(backMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+
+	leftStick = PadInput::GetIns()->leftStickX();
+
+	if (KeyInput::GetIns()->PushKey(DIK_LEFT) || leftStick < 0) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		player_->SetModel(leftMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else if (KeyInput::GetIns()->PushKey(DIK_RIGHT) || leftStick > 0) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		player_->SetModel(rightMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
 
 	//Œ¸‘¬ˆ—
 	if (acc_.x < 0) {

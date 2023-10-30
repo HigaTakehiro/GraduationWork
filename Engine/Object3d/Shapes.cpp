@@ -27,7 +27,7 @@ Model* Shapes::CreateTriangle(const XMFLOAT2& vertices_1, const XMFLOAT2& vertic
     return triangleModel;
 }
 
-Model* Shapes::CreateSquare(XMFLOAT2 upperLeft, XMFLOAT2 lowerBottom, const std::string& textureName, const XMFLOAT2& imageSize, const DirectX::XMFLOAT2& anchorpoint, const DirectX::XMFLOAT2& texBase, const DirectX::XMFLOAT2& texSize)
+Model* Shapes::CreateSquare(XMFLOAT2 upperLeft, XMFLOAT2 lowerBottom, const std::string& textureName, const XMFLOAT2& imageSize, const DirectX::XMFLOAT2& anchorpoint, const DirectX::XMFLOAT2& texBase, const DirectX::XMFLOAT2& texSize, bool isFlip)
 {
 
     //UVÝ’è
@@ -68,6 +68,10 @@ Model* Shapes::CreateSquare(XMFLOAT2 upperLeft, XMFLOAT2 lowerBottom, const std:
     squareModel->SetAnchorpoint(anchorpoint);
     if (texSize.x != 0.0f && texSize.y != 0.0f) {
         squareModel->SetTexRect(texBase, texSize);
+    }
+
+    if (isFlip) {
+        squareModel->SetIsFlip();
     }
 
     return squareModel;
