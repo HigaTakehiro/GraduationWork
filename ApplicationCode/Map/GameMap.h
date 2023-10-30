@@ -1,6 +1,8 @@
 #pragma once
 #include"Object3d.h"
 #include"Player.h"
+#include"Stairs.h"
+
 #include<memory.h>
 #include<DirectXMath.h>
 using namespace std;
@@ -13,6 +15,7 @@ private:
 		Normal,
 		Forest,
 		Enemy,
+		Kaidan,
 		Boss,
 	};
 
@@ -83,6 +86,8 @@ private:
 	list<unique_ptr<Bridge>> bridge;
 
 	list<unique_ptr<Object3d>> bridge_;
+
+	unique_ptr<Stairs> stairs_;
 
 	Stage* sta[3][3];
 
