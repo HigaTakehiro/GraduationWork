@@ -42,6 +42,7 @@ private:
     float MovingAngle;
     float CrossWaitCount = 0.f;
 	bool WinceF;
+    bool isLeaveBoss;
     float nextAngle = 180.f;
     int randAct = 0;
 

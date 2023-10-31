@@ -7,6 +7,7 @@
 #include "KeyInput.h"
 #include "Shapes.h"
 
+#define BOSSMAP_C 0.f
 #define BOSSMAP_H 9.f
 #define BOSSMAP_W 15.f
 
@@ -124,10 +125,17 @@ void Dogom::Upda()
 		m_ImpactTex[i]->Update(m_Camera);
 	}
 
+	if (m_player->GetPos().z > BOSSMAP_H || m_player->GetPos().z < -BOSSMAP_H ||
+		m_player->GetPos().x > BOSSMAP_W || m_player->GetPos().x < -BOSSMAP_W)
+		isLeaveBoss = TRUE;
+	else
+		isLeaveBoss = FALSE;
 }
 
 void Dogom::Draw()
 {
+	if (isLeaveBoss)return;
+
 	m_Body->Draw();
 	for (size_t i = 0; i < 2; i++) {
 		//m_ImpactTex[i]->Draw();
@@ -211,8 +219,10 @@ void Dogom::ArmAct()
 		OldRushPaunch[LEFT] = m_ArmPos[LEFT];
 
 		OldRushPaunch[RIGHT] = m_ArmPos[RIGHT];
-		
-		if (!WinceF&&m_ActionTimer != 0 && m_ActionTimer % 160 == 0) {
+
+		bool isNextActTim = m_ActionTimer != 0 && m_ActionTimer % 160 == 0;
+
+		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
 			if (ActionRandom > 50) {
 				SetAttack_Impact();
@@ -233,7 +243,7 @@ void Dogom::ArmAct()
 
 	//’@‚«‚Â‚¯
 	else if (arm_move_ == ATTACK_IMPACT)
-	{
+	{;
 		//’Ç‰ÁŽžŠÔ(˜r–ß‚·)
 		float MaxTime_1 = 20.f;
 		constexpr float MaxTime_2 = 10.f;
