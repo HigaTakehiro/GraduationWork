@@ -1,14 +1,14 @@
 #include "Dogom.h"
-
 #include <algorithm>
 #include <dinput.h>
-
 #include "Collision.h"
 #include"Easing.h"
 #include "ImageManager.h"
 #include "KeyInput.h"
-
 #include "Shapes.h"
+
+#define BOSSMAP_H 9.f
+#define BOSSMAP_W 15.f
 
 void Dogom::Init()
 {
@@ -83,17 +83,16 @@ void Dogom::Upda()
 		animeCount = 0;
 	}
 
-	if (animeCount %AnimationInter==0) {
-		m_Body->SetModel(BodyModel_[animeCount/AnimationInter]);
+	if (animeCount % AnimationInter == 0) {
+		m_Body->SetModel(BodyModel_[animeCount / AnimationInter]);
 		m_Body->Initialize();
-		
+
 		for (size_t i = 0; i < m_Arm.size(); i++)
 		{
-			if (ColF[i]&&DamCool[i]<10) {
+			if (ColF[i] && DamCool[i] < 10) {
 				m_Arm[i]->SetModel(ArmModel_[animeCount / AnimationInter]);
 				m_Arm[i]->Initialize();
-			}
-			else
+			} else
 			{
 				m_Arm[i]->SetModel(ArmModel_[0]);
 				m_Arm[i]->Initialize();
@@ -101,11 +100,17 @@ void Dogom::Upda()
 		}
 	}
 
+	ArmAct();
+	for (size_t i = 0; i < 2; i++) {
+		m_ArmPos[i].x = std::clamp(m_ArmPos[i].x,-BOSSMAP_W, BOSSMAP_W);
+		m_ArmPos[i].z = std::clamp(m_ArmPos[i].z, -BOSSMAP_H, BOSSMAP_H);
+	}
+	//m_BodyPos = std::clamp(m_BodyPos, Vector3(-BOSSMAP_W, -5, -BOSSMAP_H), Vector3(BOSSMAP_W, -5, BOSSMAP_H));
+
 	m_Arm[RIGHT]->SetRotation(Vector3(0, 0, 180));
 	m_Body->SetPosition(m_BodyPos);
 	m_Body->Update();
 
-	ArmAct();
 	for (size_t i = 0; i < 2; i++)
 	{
 		m_Arm[i]->SetScale({ 0.120f,0.120f,2.0f });
@@ -336,7 +341,7 @@ void Dogom::ArmAct()
 			m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].y, m_BodyPos.y );
 			m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].y, m_BodyPos.y );
 
-			if(m_ImpactCout==4)
+			if(m_ImpactCout==3)
 			{
 				m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].x,Left_X);
 				m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].x, Right_X);
@@ -345,7 +350,7 @@ void Dogom::ArmAct()
 				m_ArmPos[RIGHT].z = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].z,Right_Z);
 			}
 			if (m_ArmAttckEaseT[LEFT] >= MaxTime_3)
-				if (m_ImpactCout == 4) {
+				if (m_ImpactCout == 3) {
 					phase_ = Phase_Impact::END;
 				} else
 				{
@@ -643,7 +648,7 @@ void Dogom::CoollisionArm()
 		}
 	}
 	//óºòrÇÃëÃóÕÇ™è¡Ç¶ÇΩÇÁ
-	if (m_ArmHp[LEFT] <= m_ArmHp[RIGHT] <= 0)
+	if ((m_ArmHp[LEFT] <=0&& m_ArmHp[RIGHT]<= 0))
 	{
 		if (!WinceF) {
 			StanCount = 0;
