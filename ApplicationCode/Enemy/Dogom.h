@@ -14,7 +14,7 @@ private:
 
     std::unique_ptr<Object3d> m_Body;
     std::array<std::unique_ptr<Object3d>,2> m_Arm;
-    std::array<std::unique_ptr<Texture>, 2> m_ImpactTex;
+    std::array<std::unique_ptr<Object3d>, 2> m_ImpactTex;
 
     //プレイヤーモデル
     Model* BodyModel_[8];

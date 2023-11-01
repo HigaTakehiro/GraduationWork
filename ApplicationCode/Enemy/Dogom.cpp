@@ -44,9 +44,7 @@ void Dogom::Init()
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.20f, 0.20f, 0.0f });
 
-		m_ImpactTex[i].reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-		m_ImpactTex[i]->CreateTexture();
-		m_ImpactTex[i]->SetAnchorPoint({ 0.5f,0.5f });
+		m_ImpactTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.0f, 0.0f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }));
 		m_ImpactTex[i]->SetRotation({ 90,0,0 });
 	}
 
@@ -120,9 +118,8 @@ void Dogom::Upda()
 
 		m_ImpactTex[i]->SetScale(m_ImpactTexScl[i]);
 		m_ImpactTex[i]->SetPosition(m_ImpactTexPos[i]);
-		m_ImpactTex[i]->SetBillboard(FALSE);
 		m_ImpactTex[i]->SetColor({ 1, 1, 1, m_ImpactTexAlpha[i] });
-		m_ImpactTex[i]->Update(m_Camera);
+		m_ImpactTex[i]->Update();
 	}
 
 	if (m_player->GetPos().z > BOSSMAP_H || m_player->GetPos().z < -BOSSMAP_H ||
@@ -138,7 +135,8 @@ void Dogom::Draw()
 
 	m_Body->Draw();
 	for (size_t i = 0; i < 2; i++) {
-		//m_ImpactTex[i]->Draw();
+		m_ImpactTex[i]->Draw();
+
 		if (m_ArmHp[i] > 0)
 			m_Arm[i]->Draw();
 
@@ -588,7 +586,7 @@ void Dogom::ImpactTexScling()
 	if (phase_ == Phase_Impact::PHASE_2) {
 		for (size_t i = 0; i < 2; i++) {
 			if (m_ImpactF[i])continue;
-			if (m_ArmPos[i].y > 1.f)continue;
+			//if (m_ArmPos[i].y > 1.f)continue;
 			m_ImpactTexPos[i] = Vector3(m_ArmPos[i].x, GroundY, m_ArmPos[i].z);
 			m_ImpactTexScl[i] = Vector3(0, 0, 0);
 			m_ImpactTexAlpha[i] = 1.f;
@@ -598,8 +596,8 @@ void Dogom::ImpactTexScling()
 	for(size_t i=0;i<2;i++)
 	{
 		if (!m_ImpactF[i])continue;
-		m_ImpactTexScl[i].x += 0.08f;
-		m_ImpactTexScl[i].y += 0.08f;
+		m_ImpactTexScl[i].x += 0.01f;
+		m_ImpactTexScl[i].y += 0.01f;
 
 		m_ImpactTexAlpha[i] -= 0.02f;
 
