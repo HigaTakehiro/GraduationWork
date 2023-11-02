@@ -38,11 +38,12 @@ void Dogom::Init()
 	//m_BodyRot.x = 180;
 	/*òrÉÇÉfÉãê›íË*/
 	for (size_t i = 0; i < 2; i++) {
+		m_ArmAlpha[i] = 1.f;
 		m_Arm[i] = Object3d::UniquePtrCreate(ArmModel_[0]);
 		//m_Body->SetIsBillboardY(true);
 		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		m_Arm[i]->SetObbScl({ 2.f,4.f,2.f });
+		m_Arm[i]->SetObbScl({ 2.f,2.f,2.f });
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
@@ -112,10 +113,18 @@ void Dogom::Upda()
 	m_Body->SetPosition(m_BodyPos);
 	m_Body->Update();
 
+	constexpr float alphaval = 0.05f;
+
 	for (size_t i = 0; i < 2; i++)
 	{
+		if (m_ArmHp[i] <= 0)m_ArmAlpha[i] -= alphaval;
+		else m_ArmAlpha[i] += alphaval;
+
+
 		m_Arm[i]->SetScale({ 0.120f,0.120f,2.0f });
 		m_Arm[i]->SetPosition(m_ArmPos[i]);
+		m_Arm[i]->SetColor({ 1,1,1,m_ArmAlpha[i] });
+		m_ArmAlpha[i]=std::clamp(m_ArmAlpha[i], 0.f, 1.f);
 		m_Arm[i]->Update();
 
 		m_ImpactTex[i]->SetScale(m_ImpactTexScl[i]);
@@ -138,8 +147,7 @@ void Dogom::Draw()
 	m_Body->Draw();
 	for (size_t i = 0; i < 2; i++) {
 		m_ImpactTex[i]->Draw();
-
-		if (m_ArmHp[i] > 0)
+		
 			m_Arm[i]->Draw();
 
 	}
@@ -642,7 +650,7 @@ void Dogom::CoollisionArm()
 
 	for (size_t i = 0; i < 2; i++) {
 		if (!m_ArmDamF[i]) {
-			if (Collision::GetLength(m_ArmPos[i], m_player->GetHammer()->GetPosition()) < 5.f)
+			if (m_Arm[i]->GetIsHit())
 			{
 				m_ArmHp[i]--;
 				m_ArmDamF[i] = TRUE;
@@ -652,7 +660,7 @@ void Dogom::CoollisionArm()
 	}
 	for (size_t i = 0; i < 2; i++) {
 		if (m_ArmDamF[i]) {
-		if (Collision::GetLength(m_ArmPos[i], m_player->GetHammer()->GetPosition()) >= 5.f)
+		if (m_Arm[i]->GetIsHit())
 			m_ArmDamF[i] = FALSE;
 		continue;
 		}
@@ -712,7 +720,7 @@ void Dogom::RotationFace(const uint16_t& interval)
 		m_FaceRotEaseT = 0.f;
 
 		std::mt19937 mt{ std::random_device{}() };
-		std::uniform_int_distribution<uint16_t> randval(0, 100);
+		std::uniform_int_distribution<uint16_t> randval(0, 10);
 		
 		oldFaceRot = m_BodyRot.z;
 		MorP_Sign = ReturnSign::GetSignVal(randval(mt));

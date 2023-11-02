@@ -27,9 +27,10 @@ private:
     std::array<Vector3, 2>m_ImpactTexPos;
     std::array<Vector3, 2>m_ImpactTexScl;
     std::array<float, 2>m_ImpactTexAlpha;
+    std::array<float, 2>m_ArmAlpha;;
 	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
-	std::array<int, 2>m_ArmHp={4,4};
+	std::array<int, 2>m_ArmHp={1,1};
     std::array<bool, 2>m_ArmDamF;
 
     std::array<bool, 2>m_ImpactF;

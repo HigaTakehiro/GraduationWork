@@ -256,5 +256,6 @@ private: //ƒƒ“ƒo•Ï”
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
 	DirectX::XMFLOAT3 GetPos(){ return player_->GetPosition(); }
+	bool GetisHit() { return player_->GetIsHit(); }
 };
 
