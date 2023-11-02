@@ -110,6 +110,12 @@ private:
     void ShakeArm(Vector3 Defopos);
     void MoveBody();
 
+    float m_FaceRotEaseT;
+    bool m_FaceRotaF;
+    uint16_t isRotateTim = 1;
+	float MorP_Sign = 1.f;
+    void RotationFace(const uint16_t& interval);
+
     void ImpactTexScling();
     float t = 0,t2=0;
     bool movF;

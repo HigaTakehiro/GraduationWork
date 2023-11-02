@@ -229,6 +229,7 @@ void Model::TransferVertex()
 	float left = (0.0f - anchorpoint_.x);
 	float right = (1.0f - anchorpoint_.x);
 	right *= size_.x;
+	left *= size_.x;
 	float top = (0.0f - anchorpoint_.y) * size_.y;
 	float bottom = (1.0f - anchorpoint_.y) * size_.y;
 

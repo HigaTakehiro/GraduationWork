@@ -1,6 +1,8 @@
 #include "Dogom.h"
 #include <algorithm>
 #include <dinput.h>
+#include <random>
+
 #include "Collision.h"
 #include"Easing.h"
 #include "ImageManager.h"
@@ -42,9 +44,9 @@ void Dogom::Init()
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
 		m_Arm[i]->SetObbScl({ 2.f,4.f,2.f });
 		m_Arm[i]->SetHitRadius(0.5f);
-		m_Arm[i]->SetScale({ 0.20f, 0.20f, 0.0f });
+		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
-		m_ImpactTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.0f, 0.0f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }));
+		m_ImpactTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }));
 		m_ImpactTex[i]->SetRotation({ 90,0,0 });
 	}
 
@@ -62,7 +64,7 @@ void Dogom::Upda()
 	if (!WinceF)WinceEaseT = 0;
 	RecvDamage(m_BodyPos);
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
-	m_Body->SetScale({ 0.2f,0.2f,0.5f });
+	m_Body->SetScale({ 0.1f,0.2f,0.2f });
 	
 	if (!WinceF) {
 		MoveBody();
@@ -73,7 +75,7 @@ void Dogom::Upda()
 	CoollisionArm();
 	CoollisionFace();
 	ImpactTexScling();
-
+	RotationFace(120);
 	constexpr int AnimationInter = 10;
 	constexpr size_t TexNum = 8;
 	static int animeCount = 0;
@@ -671,4 +673,48 @@ uint16_t Dogom::ArmHP()
 {
 	//Œã‚Å•Ï‚¦‚é
 	return 2;
+}
+
+void Dogom::RotationFace(const uint16_t& interval)
+{
+	float oldFaceRot=0.f;
+
+	//³•‰‚ð•Ô‚·
+	struct ReturnSign {
+		static float GetSignVal(uint16_t randVal)
+		{
+			if (randVal % 2 == 0)
+				return 1.f;
+			else
+				return -1.f;
+		}
+	};
+
+	if((++isRotateTim) % interval == 0)
+		m_FaceRotaF = TRUE;
+
+	if(m_FaceRotaF)
+	{
+		constexpr float maxEaseT = 60.f;
+
+		//Šç‚ð¶‰E‚Ç‚¿‚ç‚©‚É‰ñ“]
+
+		m_BodyRot.z = Easing::easeIn(m_FaceRotEaseT, maxEaseT, oldFaceRot, oldFaceRot + (MorP_Sign * 360.f));
+		if (++m_FaceRotEaseT >= maxEaseT)
+		{
+			isRotateTim = 1;
+			m_FaceRotaF = FALSE;
+		}
+	}
+	else
+	{
+		
+		m_FaceRotEaseT = 0.f;
+
+		std::mt19937 mt{ std::random_device{}() };
+		std::uniform_int_distribution<uint16_t> randval(0, 100);
+		
+		oldFaceRot = m_BodyRot.z;
+		MorP_Sign = ReturnSign::GetSignVal(randval(mt));
+	}
 }
