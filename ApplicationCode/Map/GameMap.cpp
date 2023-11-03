@@ -214,7 +214,8 @@ void GameMap::Draw()
 void GameMap::Finalize()
 {
 	maps_.clear();
-	bridge_.clear();
+	bridge.clear();
+	stairs_.release();
 }
 
 void GameMap::CheckHitTest(Player* player)
