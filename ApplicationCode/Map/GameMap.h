@@ -85,13 +85,7 @@ private:
 
 	list<unique_ptr<Bridge>> bridge;
 
-	list<unique_ptr<Object3d>> bridge_;
-
 	unique_ptr<Stairs> stairs_;
-
-	Stage* sta[3][3];
-
-	XMFLOAT3 pos_[3][3];
 
 	int count_ = 0;
 
