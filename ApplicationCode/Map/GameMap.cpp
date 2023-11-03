@@ -1,6 +1,7 @@
 #include "GameMap.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
+#include "Easing.h"
 
 int Count = 0;
 
@@ -169,11 +170,15 @@ void GameMap::Initalize(Player* player)
 	LoadCsv(player);
 
 	CreateBridge();
+
+	oldcount_ = count_;
 }
 
-void GameMap::Update(Player* player)
+void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos)
 {
 	CheckHitTest(player);
+
+	NextMap(player, CameraPos, TargetPos, OldCameraPos);
 
 	for (unique_ptr<Stage>& Map : maps_) {
 		Map->stage_->Update();
@@ -186,10 +191,10 @@ void GameMap::Update(Player* player)
 	stairs_->Update();
 }
 
-void GameMap::Draw(int OldCount)
+void GameMap::Draw()
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		if (count_ == Map->num || OldCount == Map->num) {
+		if (count_ == Map->num || oldcount_ == Map->num) {
 			Map->stage_->Draw();
 		}
 	}
@@ -215,7 +220,6 @@ void GameMap::Finalize()
 void GameMap::CheckHitTest(Player* player)
 {
 	XMFLOAT3 PlayerPos = player->GetPos();
-	//NoHitCheck(PlayerPos);
 	bool Flag = player->GetStop();
 	if (Flag) {
 		nothit_ = true;
@@ -254,14 +258,14 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 					if (pos.x > Pos.x + 2 && Pos.x + 8 > pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num;
-						Direction = 1;
+						direction_ = 1;
 						stopCount_ = true;
 						return;
 					}
 					else if (pos.x < Pos.x - 2 && Pos.x - 6 < pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num + 1;
-						Direction = 2;
+						direction_ = 2;
 						stopCount_ = true;
 						return;
 					}
@@ -272,14 +276,14 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 					if (pos.z > Pos.z - 6 && Pos.z - 2 > pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num + nextval_;
-						Direction = 3;
+						direction_ = 3;
 						stopCount_ = true;
 						return;
 					}
 					else if (pos.z < Pos.z + 9 && Pos.z + 2 < pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num;
-						Direction = 4;
+						direction_ = 4;
 						stopCount_ = true;
 						return;
 					}
@@ -288,7 +292,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 		}
 	}
 	nothit_ = false;
-	Direction = 0;
+	direction_ = 0;
 }
 
 int GameMap::NextCount(const XMFLOAT3& pos, int& Direction)
@@ -299,33 +303,6 @@ int GameMap::NextCount(const XMFLOAT3& pos, int& Direction)
 	return count_;
 }
 
-void GameMap::NoHitCheck(const XMFLOAT3& pos)
-{
-	for (unique_ptr<Bridge>& Bridge : bridge) {
-		XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
-		if (Bridge->state_ == Direction::Beside) {
-			if ((pos.z<Pos.z + 4 && pos.z>Pos.z - 1)) {
-				if (Pos.x - 4 < pos.x && Pos.x + 4 > pos.x) {
-					nothit_ = false;
-				}
-				else {
-					nothit_ = true;
-				}
-			}
-		}
-		else if (Bridge->state_ == Direction::Vertical) {
-			if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 1)) {
-				if (pos.z > Pos.z - 4 && pos.z < Pos.z + 6) {
-					nothit_ = false;
-				}
-				else {
-					nothit_ = true;
-				}
-			}
-		}
-	}
-}
-
 XMFLOAT3 GameMap::GetNowMapPos()
 {
 	for (unique_ptr<Stage>& Map : maps_) {
@@ -333,6 +310,54 @@ XMFLOAT3 GameMap::GetNowMapPos()
 		{
 			return Map->stagePos_;
 		}
+	}
+}
+
+void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos,float OldCameraPos)
+{
+
+	//移動中ではない
+	if (player->GetNotNext()) { return; }
+	count_ = NextCount(player->GetPos(), direction_);
+	//プレイヤーがマップの端に来た時
+	player->SetStop(true);
+	float NextTarget = 0;
+	XMFLOAT3 NextPos_ = GetNowMapPos();
+	XMFLOAT3 PlayerPos = player->GetPos();
+	XMFLOAT3 NEXTPLAYERPOS{};
+	NextTarget = OldCameraPos + NextPos_.z - 2.f;
+
+
+	if (direction_ == 0) { player->SetStop(false); return; }
+	if (direction_ == 2) {
+		NEXTPLAYERPOS.x = NextPos_.x - 5;
+		NEXTPLAYERPOS.z = PlayerPos.z;
+	}
+	else if (direction_ == 1) {
+		NEXTPLAYERPOS.x = NextPos_.x + 7;
+		NEXTPLAYERPOS.z = PlayerPos.z;
+	}
+	else if (direction_ == 4) {
+		NEXTPLAYERPOS.z = NextPos_.z + 9;
+		NEXTPLAYERPOS.x = PlayerPos.x;
+	}
+	else if (direction_ == 3) {
+		NEXTPLAYERPOS.z = NextPos_.z - 4;
+		NEXTPLAYERPOS.x = PlayerPos.x;
+	}
+
+
+	time_ += 0.01f;
+	CameraPos.x = Easing::easeIn(time_, 0.7, CameraPos.x, NextPos_.x);
+	TargetPos.x = Easing::easeIn(time_, 0.7, TargetPos.x, NextPos_.x);
+	CameraPos.z = Easing::easeIn(time_, 0.7, CameraPos.z, NextTarget);
+	TargetPos.z = Easing::easeIn(time_, 0.7, TargetPos.z, NextPos_.z);
+	PlayerPos.x = Easing::easeIn(time_, 0.3, PlayerPos.x, NEXTPLAYERPOS.x);
+	PlayerPos.z = Easing::easeIn(time_, 0.3, PlayerPos.z, NEXTPLAYERPOS.z);
+
+	player->SetPos(PlayerPos);
+	if (time_ >= 0.7) {
+		oldcount_ = count_; time_ = 0; SetStop(false); player->SetStop(false);
 	}
 }
 

@@ -55,12 +55,12 @@ public:
 	/// <summary>
 	/// çXêVèàóù
 	/// </summary>
-	void Update(Player* player);
+	void Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos);
 
 	/// <summary>
 	/// ï`âÊ
 	/// </summary>
-	void Draw(int OldCount);
+	void Draw();
 
 	/// <summary>
 	/// èIóπèàóù
@@ -73,15 +73,11 @@ public:
 
 	int NextCount(const XMFLOAT3& pos, int& Direction);
 
-	void NoHitCheck(const XMFLOAT3& pos);
-
 	void SetStop(bool flag) { this->stopCount_ = flag; }
-
-	int GetNextVal() { return nextval_; }
 
 	XMFLOAT3 GetNowMapPos();
 
-	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,const XMFLOAT3& OldCameraPos);
+	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,float OldCameraPos);
 
 private:
 
@@ -99,6 +95,8 @@ private:
 
 	int count_ = 0;
 
+	int oldcount_ = 0;
+
 	bool stopCount_ = false;
 
 	bool nothit_ = false;
@@ -106,6 +104,10 @@ private:
 	int nextval_ = 0;
 
 	int bridgeDirection = 0;
+
+	float time_ = 0;
+
+	int direction_ = 0;
 };
 
 
