@@ -272,6 +272,9 @@
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -460,6 +463,9 @@
     <ClInclude Include="Engine\Object2d\ObbAndObb.h" />
     <ClInclude Include="ApplicationCode\Map\Stairs.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
