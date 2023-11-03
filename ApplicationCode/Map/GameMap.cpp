@@ -171,8 +171,10 @@ void GameMap::Initalize(Player* player)
 	CreateBridge();
 }
 
-void GameMap::Update()
+void GameMap::Update(Player* player)
 {
+	CheckHitTest(player);
+
 	for (unique_ptr<Stage>& Map : maps_) {
 		Map->stage_->Update();
 	}
@@ -333,3 +335,5 @@ XMFLOAT3 GameMap::GetNowMapPos()
 		}
 	}
 }
+
+

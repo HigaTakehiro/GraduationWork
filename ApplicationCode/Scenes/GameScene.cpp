@@ -170,8 +170,8 @@ void GameScene::Update()
 	}
 	boss_->Upda();
 	NextMap();
-	map_->CheckHitTest(player_);
-	map_->Update();
+
+	map_->Update(player_);
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
