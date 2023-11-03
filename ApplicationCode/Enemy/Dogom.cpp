@@ -121,7 +121,7 @@ void Dogom::Upda()
 		else m_ArmAlpha[i] += alphaval;
 
 
-		m_Arm[i]->SetScale({ 0.120f,0.120f,2.0f });
+		m_Arm[i]->SetScale({ 0.050f,0.050f,2.0f });
 		m_Arm[i]->SetPosition(m_ArmPos[i]);
 		m_Arm[i]->SetColor({ 1,1,1,m_ArmAlpha[i] });
 		m_ArmAlpha[i]=std::clamp(m_ArmAlpha[i], 0.f, 1.f);
@@ -145,20 +145,16 @@ void Dogom::Draw()
 	if (isLeaveBoss)return;
 
 	m_Body->Draw();
-	for (size_t i = 0; i < 2; i++) {
-		m_ImpactTex[i]->Draw();
-		
-			m_Arm[i]->Draw();
-
-	}
+	
 }
 void Dogom::Draw2()
 {
-	if (m_HP <= 0)return;
-	
-	Texture::PreDraw();
-	
-	Texture::PostDraw();
+	if (isLeaveBoss)return;
+	//if (m_HP <= 0)return;
+	for (size_t i = 0; i < 2; i++) {
+		m_ImpactTex[i]->Draw();
+		m_Arm[i]->Draw();
+	}
 }
 
 
@@ -491,7 +487,7 @@ void Dogom::Follow()
 	toPlayer = atan2f(SubVec.m128_f32[0], SubVec.m128_f32[2]);
 
 	if (!WinceF)
-		m_BodyRot.y = toPlayer * 70.f + 180.f;
+		m_BodyRot.y = toPlayer * 60.f + 180.f;
 
 	XMVECTOR move = { 0.f,0.1f, 0.f, 0.0f };
 	XMMATRIX matRot = XMMatrixRotationX(XMConvertToRadians(m_BodyRot.x + 270.f));
@@ -509,9 +505,12 @@ void Dogom::Follow()
 
 void Dogom::Wince()
 {
+	
+
 	if (!WinceF)return;
 	constexpr float MaxEase = 30.f;
 	if (wince_phase_ == WincePhase::PHASE_1) {
+		oldBodyPos = m_BodyPos;
 		if (++WinceEaseT >= MaxEase) {
 			WinceEaseT = 0.f;
 			wince_phase_ = WincePhase::PHASE_2;
@@ -520,6 +519,8 @@ void Dogom::Wince()
 	} else if (wince_phase_ == WincePhase::PHASE_2)
 	{
 		m_BodyRot.x = Easing::easeIn(WinceEaseT, 30.f, -20.f, 90.f);
+		m_BodyPos.x= Easing::easeIn(WinceEaseT, 30.f, oldBodyPos.x, 0.f);
+		m_BodyPos.z = Easing::easeIn(WinceEaseT, 30.f, oldBodyPos.z, 0.f);
 		m_BodyPos.y = Easing::easeIn(WinceEaseT, 30.f, 2.f, -2.f);
 		if (++WinceEaseT >= 30)
 		{
@@ -542,6 +543,8 @@ void Dogom::Wince()
 				
 			} else
 			{
+				m_BodyPos.x = Easing::easeIn(WinceEaseT, 50.f,0.f, oldBodyPos.x);
+				m_BodyPos.z = Easing::easeIn(WinceEaseT, 50.f, 0.f,oldBodyPos.z);
 				m_BodyPos.y = Easing::easeIn(WinceEaseT, 50.f, 0.f, 2.f);
 				m_BodyRot.x = Easing::easeIn(WinceEaseT, 50.f, 90.f, 00.f);
 			}
@@ -591,7 +594,7 @@ void Dogom::MoveBody()
 
 void Dogom::ImpactTexScling()
 {
-	constexpr float GroundY = 1.f;
+	constexpr float GroundY = 0.2f;
 
 	if (phase_ == Phase_Impact::PHASE_2) {
 		for (size_t i = 0; i < 2; i++) {
@@ -606,10 +609,10 @@ void Dogom::ImpactTexScling()
 	for(size_t i=0;i<2;i++)
 	{
 		if (!m_ImpactF[i])continue;
-		m_ImpactTexScl[i].x += 0.01f;
-		m_ImpactTexScl[i].y += 0.01f;
+		m_ImpactTexScl[i].x += 0.005f;
+		m_ImpactTexScl[i].y += 0.005f;
 
-		m_ImpactTexAlpha[i] -= 0.02f;
+		m_ImpactTexAlpha[i] -= 0.03f;
 
 		if (m_ImpactTexAlpha[i] <= 0.f)
 			m_ImpactF[i] = FALSE;
@@ -647,14 +650,15 @@ void Dogom::CoollisionFace()
 void Dogom::CoollisionArm()
 {
 
-
-	for (size_t i = 0; i < 2; i++) {
-		if (!m_ArmDamF[i]) {
-			if (m_Arm[i]->GetIsHit())
-			{
-				m_ArmHp[i]--;
-				m_ArmDamF[i] = TRUE;
-				continue;
+	if (m_player->getisHammerActive()) {
+		for (size_t i = 0; i < 2; i++) {
+			if (!m_ArmDamF[i]) {
+				if (m_Arm[i]->GetIsHit())
+				{
+					m_ArmHp[i]--;
+					m_ArmDamF[i] = TRUE;
+					continue;
+				}
 			}
 		}
 	}

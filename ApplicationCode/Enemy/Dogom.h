@@ -21,6 +21,7 @@ private:
     Model* ArmModel_[8];
 
     Vector3 m_BodyPos;
+    Vector3 oldBodyPos = Vector3(0, 0, 0);
     Vector3 m_BodyRot;
 	std::array<Vector3, 2>m_ArmPos;
     std::array<Vector3, 2>m_ArmRot;

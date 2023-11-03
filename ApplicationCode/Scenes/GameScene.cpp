@@ -196,7 +196,7 @@ void GameScene::Draw()
 for(auto i=0;i<enemys_.size();i++)
 	enemys_[i]->Draw();
 
-	boss_->Draw2();
+	
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	//map_->Draw(oldcount_);
@@ -210,7 +210,7 @@ for(auto i=0;i<enemys_.size();i++)
 	}
 	boss_->Draw();
 	player_->Draw();
-
+	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	
