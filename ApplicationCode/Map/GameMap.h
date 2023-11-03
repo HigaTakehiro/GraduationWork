@@ -55,7 +55,7 @@ public:
 	/// <summary>
 	/// XVˆ—
 	/// </summary>
-	void Update();
+	void Update(Player* player);
 
 	/// <summary>
 	/// •`‰æ
@@ -80,6 +80,8 @@ public:
 	int GetNextVal() { return nextval_; }
 
 	XMFLOAT3 GetNowMapPos();
+
+	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,const XMFLOAT3& OldCameraPos);
 
 private:
 
