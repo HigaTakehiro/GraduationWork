@@ -18,7 +18,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos)
 	std::stringstream stream;
 
 
-	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map.csv");
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");
 
 	while (getline(stream, line)) {
 		std::istringstream line_stream(line);
@@ -122,7 +122,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos)
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			stairs_ = make_unique<Stairs>();
-			stairs_->Initialize(Pos, player);
+			stairs_->Initialize(Pos, player,Count);
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
 			COUNT += 1;
@@ -221,6 +221,9 @@ void GameMap::Draw()
 		if (count_ == Map->num || oldcount_ == Map->num) {
 			Map->stage_->Draw();
 		}
+		if (count_ == stairs_->GetCont()) {
+			stairs_->Draw();
+		}
 	}
 
 	for (unique_ptr<Bridge>& Bridge : bridge) {
@@ -232,7 +235,7 @@ void GameMap::Draw()
 		}
 	}
 
-	stairs_->Draw();
+	
 }
 
 void GameMap::Finalize()

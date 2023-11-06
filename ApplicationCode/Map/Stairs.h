@@ -12,11 +12,13 @@ public:
 
 	void LoadCsv();
 
-	void Initialize(const XMFLOAT3& Pos, Player* player);
+	void Initialize(const XMFLOAT3& Pos, Player* player,int Count);
 
 	void Update();
 
 	void Draw();
+
+	int GetCont() { return count_; }
 
 private:
 
@@ -31,6 +33,7 @@ private:
 
 	Player* player_;
 
+	int count_ = 0;
 };
 
 
