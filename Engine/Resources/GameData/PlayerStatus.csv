@@ -23,5 +23,5 @@ maxOre 4
 hammerRotCoeff 0.8
 #鉱石取得ごとの大きさ
 sizeUp 0.2 0.2 0.2
-#アニメーションスピード
-animeSpeed 4
+#アニメーション待機時間
+animeSpeed 8

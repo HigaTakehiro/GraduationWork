@@ -67,7 +67,6 @@ void Player::Update()
 
 	Repulsion();
 	HammerPowerUp();
-	Animation();
 
 	if (isHammerRelease_) {
 		HammerThrow();
@@ -75,6 +74,7 @@ void Player::Update()
 	}
 	if (!stop_) {
 		Move();
+		Animation();
 		Attack();
 	}
 
@@ -475,6 +475,9 @@ void Player::Repulsion()
 
 void Player::Animation()
 {
+	bool isNotMoveUpDown = false;
+	bool isNotMoveLeftRight = false;
+
 	//タイマーカウント
 	if (++animeTimer_ >= animeSpeed_) {
 		if (++animeCount_ >= 4) {
@@ -496,6 +499,9 @@ void Player::Animation()
 		player_->SetModel(backMoveModel_[animeCount_]);
 		player_->Initialize();
 	}
+	else {
+		isNotMoveUpDown = true;
+	}
 
 	leftStick = PadInput::GetIns()->leftStickX();
 
@@ -505,6 +511,14 @@ void Player::Animation()
 	}
 	else if (KeyInput::GetIns()->PushKey(DIK_LEFT) || leftStick < 0) {
 		player_->SetModel(leftMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else {
+		isNotMoveLeftRight = true;
+	}
+
+	if (isNotMoveUpDown && isNotMoveLeftRight) {
+		player_->SetModel(playerModel_[animeCount_]);
 		player_->Initialize();
 	}
 
