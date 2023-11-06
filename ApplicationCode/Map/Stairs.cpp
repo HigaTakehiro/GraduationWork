@@ -44,11 +44,12 @@ void Stairs::LoadCsv()
 	pos_ = Pos;
 }
 
-void Stairs::Initialize(const XMFLOAT3& Pos, Player* player)
+void Stairs::Initialize(const XMFLOAT3& Pos, Player* player, int Count)
 {
 	LoadCsv();
 	player_ = player;
 	pos_ = Pos + pos_;
+	count_ = Count;
 
 	stairsModel_=Shapes::CreateSquare({0,0}, { 64, 64 }, "steps.png", { 3, 3 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
 	stairs_ = make_unique<Object3d>();
