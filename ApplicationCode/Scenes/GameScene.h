@@ -82,6 +82,8 @@ private: //メンバ変数
 	TextDraw* text_;
 	//仮地面
 	std::unique_ptr<GameMap> map_;
+	//背景画像
+	std::unique_ptr<Sprite> background_;
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点

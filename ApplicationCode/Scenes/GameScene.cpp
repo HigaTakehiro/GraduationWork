@@ -69,6 +69,8 @@ enemys_[2]->SetPos(Vector3(0, -30, -5));
 		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
 		oreItems_.push_back(std::move(newOre));
 	}
+
+	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 }
 
 void GameScene::Update()
@@ -188,6 +190,7 @@ void GameScene::Draw()
 
 	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(”wŒi)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->Draw();
