@@ -18,7 +18,7 @@ private:
 	};
 
 	enum Direction {
-		Vertical=0,
+		Vertical = 0,
 		Beside,
 	};
 
@@ -38,9 +38,9 @@ private:
 	};
 
 public:
-	
+
 	void LoadCsv();
-	
+
 	void CreateBridge();
 
 	/// <summary>
@@ -64,10 +64,10 @@ public:
 	void Finalize();
 
 	void CheckHitTest(Player* player);
-	
-	void CheckHitBridge(const XMFLOAT3& pos,int& Direction);
 
-	int NextCount (const XMFLOAT3& pos, int& Direction);
+	void CheckHitBridge(const XMFLOAT3& pos, int& Direction);
+
+	int NextCount(const XMFLOAT3& pos, int& Direction);
 
 	void NoHitCheck(const XMFLOAT3& pos);
 
@@ -80,7 +80,7 @@ public:
 	/// <summary>
 	/// 拠点セーブ
 	/// </summary>
-	void MapSave(XMFLOAT3 pos);
+	void MapSave(int floor);
 private:
 
 	list<unique_ptr<Stage>> maps_;
@@ -92,6 +92,8 @@ private:
 	Stage* sta[3][3];
 
 	XMFLOAT3 pos_[3][3];
+
+	XMFLOAT3 BasePos_ = { 0,0,0 };
 
 	int count_ = 0;
 

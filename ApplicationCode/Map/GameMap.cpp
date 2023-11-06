@@ -321,18 +321,18 @@ XMFLOAT3 GameMap::GetNowMapPos()
 	}
 }
 
-void GameMap::MapSave(XMFLOAT3 pos)
+void GameMap::MapSave(int floor)
 {
 	FILE* fp;
 	XMFLOAT3 pos_p;
 	fp = fopen("Engine/Resources/GameData/MapSave.csv", "r");
 	if (fp != NULL)
 	{
-		fscanf(fp, "%f %f %f", &pos_p.x, &pos_p.y, &pos_p.z);
+		fscanf(fp, "%d", &floor);
 		fclose(fp);
 	}
 	fp = fopen("Engine/Resources/GameData/MapSave.csv", "w");
-	fprintf(fp, "%f %f %f", pos.x, pos.y, pos.z);
+	fprintf(fp, "%d",floor);
 	fclose(fp);
 
 }

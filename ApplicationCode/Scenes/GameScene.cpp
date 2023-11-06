@@ -59,9 +59,12 @@ void GameScene::Initialize()
 	enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_ = make_unique<GameMap>();
 	map_->Initalize();
+	mapBase_ = make_unique < IntermediateBase>();
+	mapBase_->Initialize();
+
 	shake_ = new Shake();
-	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
-	count_ = map_->NextCount(player_->GetPos(),direction);
+	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+	count_ = map_->NextCount(player_->GetPos(), direction);
 	oldcount_ = count_;
 
 	ore_ = std::make_unique<Ore>();
@@ -185,11 +188,13 @@ void GameScene::Update()
 	map_->CheckHitTest(player_);
 	map_->Update();
 	//if(中間拠点についたらセーブ){
-	if (KeyInput::GetIns()->HoldKey(DIK_C)) {
-		map_->MapSave(player_->GetPos());
-	}//}
-	//if (KeyInput::GetIns()->HoldKey(DIK_X) {
-
+	map_->MapSave(1);
+	//}
+	mapBase_->Update();
+	//if (player_->GetHP() <= 0) {
+		if (KeyInput::GetIns()->HoldKey(DIK_X)) {
+			player_->SetPos({ 0,0,0 });
+		}
 	//}
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
@@ -210,6 +215,7 @@ void GameScene::Draw()
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->Draw(oldcount_);
+	//mapBase_->Draw();
 	Object3d::PostDraw();
 
 	for (auto i = 0; i < enemys_.size(); i++) {
@@ -336,19 +342,19 @@ void GameScene::NextMap()
 
 	if (direction == 0) { player_->SetStop(false); return; }
 	if (direction == 2) {
-		NEXTPLAYERPOS.x = NextPos_.x-5;
+		NEXTPLAYERPOS.x = NextPos_.x - 5;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction == 1) {
-		NEXTPLAYERPOS.x = NextPos_.x+7;
+		NEXTPLAYERPOS.x = NextPos_.x + 7;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction == 4) {
-		NEXTPLAYERPOS.z = NextPos_.z+9;
+		NEXTPLAYERPOS.z = NextPos_.z + 9;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 	else if (direction == 3) {
-		NEXTPLAYERPOS.z = NextPos_.z-4;
+		NEXTPLAYERPOS.z = NextPos_.z - 4;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 

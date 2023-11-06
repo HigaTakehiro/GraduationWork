@@ -23,6 +23,7 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include"AttackEffect.h"
+#include "IntermediateBase.h"
 class GameScene : public BaseScene
 {
 public: //メンバ関数
@@ -85,6 +86,8 @@ private: //メンバ変数
 	TextDraw* text_;
 	//仮地面
 	std::unique_ptr<GameMap> map_;
+	//仮地面
+	std::unique_ptr<IntermediateBase> mapBase_;
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点
