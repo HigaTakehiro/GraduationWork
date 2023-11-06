@@ -25,6 +25,8 @@ private:
 private:
 	unique_ptr<Object3d> stairs_;
 
+	Model* stairsModel_;
+
 	XMFLOAT3 pos_;
 
 	Player* player_;

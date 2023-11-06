@@ -1,4 +1,5 @@
 #include "Stairs.h"
+#include "Shapes.h"
 #include"Player.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
@@ -48,8 +49,11 @@ void Stairs::Initialize(const XMFLOAT3& Pos, Player* player)
 	LoadCsv();
 	player_ = player;
 	pos_ = Pos + pos_;
+
+	stairsModel_=Shapes::CreateSquare({0,0}, { 64, 64 }, "steps.png", { 3, 3 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
 	stairs_ = make_unique<Object3d>();
-	stairs_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("Kaidan"));
+	stairs_ = Object3d::UniquePtrCreate(stairsModel_);
+	stairs_->SetIsBillboardY(true);
 	stairs_->SetPosition(pos_);
 }
 
