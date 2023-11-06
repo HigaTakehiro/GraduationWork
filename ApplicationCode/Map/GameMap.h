@@ -19,6 +19,7 @@ private:
 		Enemy,
 		Kaidan,
 		Boss,
+		Start,
 	};
 
 	enum Direction {
@@ -75,6 +76,8 @@ public:
 
 	void SetStop(bool flag) { this->stopCount_ = flag; }
 
+	XMFLOAT3 GetStartPos() { return startpos_; }
+
 	XMFLOAT3 GetNowMapPos();
 
 	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,float OldCameraPos);
@@ -86,22 +89,23 @@ private:
 	list<unique_ptr<Bridge>> bridge;
 
 	unique_ptr<Stairs> stairs_;
-
+	//マップの番号
 	int count_ = 0;
-
+	//古い状態のマプ番号
 	int oldcount_ = 0;
-
+	//
 	bool stopCount_ = false;
 
 	bool nothit_ = false;
 
 	int nextval_ = 0;
-
-	int bridgeDirection = 0;
-
+	//イージング用の時間
 	float time_ = 0;
-
+	//橋の角度から次の座標の位置を決める
 	int direction_ = 0;
+	//プレイヤーの開始位置
+	XMFLOAT3 startpos_{};
+
 };
 
 

@@ -55,6 +55,8 @@ enemys_[2]->SetPos(Vector3(-15, -30, -5));
 enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_);
+	Vector3 Pos = map_->GetStartPos();
+	player_->SetPos(Pos);
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
 

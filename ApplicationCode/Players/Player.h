@@ -102,7 +102,7 @@ public: //ƒƒ“ƒoŠÖ”
 
 	bool GetNext() { return next_; }
 
-
+	void SetNext(bool flag) { next_ = flag; }
 private: //ƒƒ“ƒoŠÖ”
 
 	/// <summary>
