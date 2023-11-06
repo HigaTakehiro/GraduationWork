@@ -10,6 +10,7 @@ public:
 	void Initialize();
 	void Update();
 	void Draw();
+	void FloorSave(int floor);
 private:
 	unique_ptr<Object3d> stage_;
 };

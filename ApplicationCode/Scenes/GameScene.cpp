@@ -179,6 +179,7 @@ void GameScene::Update()
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK)) {
 		player_->SetNextFlor(false);
 	}
+	ib_->FloorSave(2);
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
