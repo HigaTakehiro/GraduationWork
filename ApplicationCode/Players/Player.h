@@ -104,7 +104,7 @@ public: //メンバ関数
 
 	bool GetNext() { return next_; }
 
-
+	void SetNext(bool flag) { next_ = flag; }
 private: //メンバ関数
 
 	/// <summary>
@@ -146,6 +146,11 @@ private: //メンバ関数
 	/// 反発処理
 	/// </summary>
 	void Repulsion();
+
+	/// <summary>
+	/// アニメーション処理
+	/// </summary>
+	void Animation();
 
 private: //メンバ変数
 	//座標
@@ -206,6 +211,10 @@ private: //メンバ変数
 	Model* rightMoveModel_[4];
 	//左
 	Model* leftMoveModel_[4];
+	//影オブジェクト
+	std::unique_ptr<Object3d> shadow_;
+	//影
+	Model* shadowModel_;
 
 	//ハンマーオブジェクト
 	std::unique_ptr<Object3d> hammer_;
@@ -231,6 +240,12 @@ private: //メンバ変数
 	Vector3 initHammerRot_;
 	//アニメーションカウント
 	int32_t animeCount_;
+	//アニメーションスピード
+	int32_t animeSpeed_;
+	//アニメーションタイマー
+	int32_t animeTimer_;
+	//前フレームアニメーションカウント
+	int32_t preAnimeCount_;
 
 	//矢印オブジェクト
 	std::unique_ptr<Object3d> arrow_;

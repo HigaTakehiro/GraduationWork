@@ -18,7 +18,7 @@ public: //Ã“Iƒƒ“ƒoŠÖ”
 
 public: //‰æ‘œ–¼
 	enum class ImageName {
-		Image = 1,
+		background = 1,
 	};
 
 	enum Image2DName {
