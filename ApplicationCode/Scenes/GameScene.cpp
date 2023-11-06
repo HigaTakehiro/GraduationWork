@@ -250,18 +250,16 @@ void GameScene::Finalize()
 
 void GameScene::SceneChange()
 {
+	bool Change = player_->GetNext();
+	if (Change) {
+		SceneManager::SceneChange(SceneManager::SceneName::Title);
+	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
-
-	bool Change = player_->GetNext();
-	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
-	}
-
 }
 
 void GameScene::CameraSetting()
