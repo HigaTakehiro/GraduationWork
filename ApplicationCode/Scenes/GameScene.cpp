@@ -43,36 +43,28 @@ void GameScene::Initialize()
 	boss_.reset(new Dogom());
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
-
+	
 	for (auto i = 0; i < enemys_.size(); i++) {
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
-
+		
 		enemys_[i]->SetPlayerIns(player_);
-
-		aEffect_[i] = new AttackEffect();
-		aEffect_[i]->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
-		eeFlag[i] = false;
 	}
-	enemys_[0]->SetPos(Vector3(10, -30, 10));
-	enemys_[2]->SetPos(Vector3(-15, -30, -5));
-	enemys_[2]->SetPos(Vector3(0, -30, -5));
+enemys_[0]->SetPos(Vector3(10, -30, 10));
+enemys_[2]->SetPos(Vector3(-15, -30, -5));
+enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_ = make_unique<GameMap>();
-	map_->Initalize();
-	mapBase_ = make_unique < IntermediateBase>();
-	mapBase_->Initialize();
-
+	map_->Initalize(player_);
 	shake_ = new Shake();
-	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
-	count_ = map_->NextCount(player_->GetPos(), direction);
-	oldcount_ = count_;
+	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
 
+	
 	ore_ = std::make_unique<Ore>();
 	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
 
 	for (int32_t i = 0; i < 3; i++) {
 		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
-		newOre->Initialize({ -5 + ((float)i * 5), 2, -10 }, { 0, 0, 0 });
+		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
 		oreItems_.push_back(std::move(newOre));
 	}
 }
@@ -107,24 +99,15 @@ void GameScene::Update()
 	Vector3 enemyPos[3] = { enemys_[0]->GetPos(),enemys_[1]->GetPos() ,enemys_[2]->GetPos() };
 	Vector3 vec[3];
 	for (auto i = 0; i < enemys_.size(); i++) {
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z}, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			enemys_[i]->GetDamage();
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
-			eeFlag[i] = true;
-			attackCount = 0;
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
-		if (attackCount > 10) {
-			eeFlag[i] = false;
-		}
-		if (eeFlag[i] == true) {
-			attackCount++;
-		}
-		aEffect_[i]->Update(enemys_[i]->GetPos());
 	}
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
@@ -177,25 +160,16 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-	for (auto i = 0; i < enemys_.size(); i++)
+	
+
+	for(auto i=0;i<enemys_.size();i++)
 	{
 		enemys_[i]->SetHammerObb(*_hummmerObb);
 		enemys_[i]->Upda(camera_.get());
-
 	}
 	boss_->Upda();
-	NextMap();
-	map_->CheckHitTest(player_);
-	map_->Update();
-	//if(中間拠点についたらセーブ){
-	map_->MapSave(1);
-	//}
-	mapBase_->Update();
-	//if (player_->GetHP() <= 0) {
-		if (KeyInput::GetIns()->HoldKey(DIK_X)) {
-			player_->SetPos({ 0,0,0 });
-		}
-	//}
+
+	map_->Update(player_,cameraPos_,targetPos_,oldcamerapos_);
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
@@ -214,20 +188,15 @@ void GameScene::Draw()
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	map_->Draw(oldcount_);
-	//mapBase_->Draw();
+	map_->Draw();
 	Object3d::PostDraw();
 
-	for (auto i = 0; i < enemys_.size(); i++) {
-		enemys_[i]->Draw();
-		if (eeFlag[i] == true) {
-			aEffect_[i]->Draw(DirectXSetting::GetIns()->GetCmdList());
-		}
-	}
-	boss_->Draw2();
+for(auto i=0;i<enemys_.size();i++)
+	enemys_[i]->Draw();
+
+	
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	//map_->Draw(oldcount_);
 	if (ore_ != nullptr) {
 		ore_->Draw();
 	}
@@ -235,12 +204,13 @@ void GameScene::Draw()
 		if (ore != nullptr) {
 			ore->Draw();
 		}
-	}boss_->Draw();
+	}
+	boss_->Draw();
 	player_->Draw();
-
+	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-
+	
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
@@ -250,7 +220,6 @@ void GameScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-
 	std::wstring hp = std::to_wstring(player_->GetHP());
 	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
 
@@ -281,6 +250,10 @@ void GameScene::Finalize()
 
 void GameScene::SceneChange()
 {
+	bool Change = player_->GetNext();
+	if (Change) {
+		SceneManager::SceneChange(SceneManager::SceneName::Title);
+	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
@@ -326,49 +299,3 @@ void GameScene::CameraSetting()
 	}
 }
 
-void GameScene::NextMap()
-{
-	//移動中ではない
-	if (player_->GetNotNext()) { return; }
-	//プレイヤーがマップの端に来た時
-	count_ = map_->NextCount(player_->GetPos(), direction);
-	player_->SetStop(true);
-	float NextTarget = 0;
-	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
-	XMFLOAT3 PlayerPos = player_->GetPos();
-	XMFLOAT3 NEXTPLAYERPOS{};
-	NextTarget = oldcamerapos_ + NextPos_.z - 2.f;
-
-
-	if (direction == 0) { player_->SetStop(false); return; }
-	if (direction == 2) {
-		NEXTPLAYERPOS.x = NextPos_.x - 5;
-		NEXTPLAYERPOS.z = PlayerPos.z;
-	}
-	else if (direction == 1) {
-		NEXTPLAYERPOS.x = NextPos_.x + 7;
-		NEXTPLAYERPOS.z = PlayerPos.z;
-	}
-	else if (direction == 4) {
-		NEXTPLAYERPOS.z = NextPos_.z + 9;
-		NEXTPLAYERPOS.x = PlayerPos.x;
-	}
-	else if (direction == 3) {
-		NEXTPLAYERPOS.z = NextPos_.z - 4;
-		NEXTPLAYERPOS.x = PlayerPos.x;
-	}
-
-
-	time_ += 0.01f;
-	cameraPos_.x = Easing::easeIn(time_, 0.7, cameraPos_.x, NextPos_.x);
-	targetPos_.x = Easing::easeIn(time_, 0.7, targetPos_.x, NextPos_.x);
-	cameraPos_.z = Easing::easeIn(time_, 0.7, cameraPos_.z, NextTarget);
-	targetPos_.z = Easing::easeIn(time_, 0.7, targetPos_.z, NextPos_.z);
-	PlayerPos.x = Easing::easeIn(time_, 0.3, PlayerPos.x, NEXTPLAYERPOS.x);
-	PlayerPos.z = Easing::easeIn(time_, 0.3, PlayerPos.z, NEXTPLAYERPOS.z);
-
-	player_->SetPos(PlayerPos);
-	if (time_ >= 0.7) {
-		oldcount_ = count_; time_ = 0; map_->SetStop(false); player_->SetStop(false);
-	}
-}

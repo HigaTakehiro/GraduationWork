@@ -266,14 +266,14 @@
     <ClCompile Include="ApplicationCode\Enemy\Dogom.cpp">
       <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Object2d\ObbAndObb.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Stairs.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="ApplicationCode\Map\Stairs.cpp">
+      <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
@@ -464,9 +464,11 @@
       <Filter>ソース ファイル\ApplicationCode\Bosses</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Object2d\ObbAndObb.h" />
-    <ClInclude Include="Stairs.h" />
-    <ClInclude Include="ApplicationCode\Players\AttackEffect.h">
-      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
+    <ClInclude Include="ApplicationCode\Map\Stairs.h">
+      <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>

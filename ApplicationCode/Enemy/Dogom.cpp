@@ -1,53 +1,53 @@
 #include "Dogom.h"
-
 #include <algorithm>
 #include <dinput.h>
+#include <random>
 
 #include "Collision.h"
 #include"Easing.h"
 #include "ImageManager.h"
 #include "KeyInput.h"
-
 #include "Shapes.h"
+
+#define BOSSMAP_C 0.f
+#define BOSSMAP_H 9.f
+#define BOSSMAP_W 15.f
 
 void Dogom::Init()
 {
 	m_Name = DOGOM;
-
-
-	//BodyModel_.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-	//BodyModel_->CreateTexture();
-
-	for (int32_t i = 0; i < 2; i++) {
-		ArmModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 64.f, 64.0f }, "Hammer.png");
+	
+	for (int32_t i = 0; i < 8; i++) {
+		ArmModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
+	for (int32_t i = 0; i < 8; i++) {
+		BodyModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_face.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+	}
+
+	m_Body = Object3d::UniquePtrCreate(BodyModel_[0]);
+	//m_Body->SetIsBillboardY(true);
+	m_Body->SetColType(Object3d::CollisionType::Obb);
+	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
+	m_Body->SetObbScl({ 2.f,4.f,2.f });
+	m_Body->SetHitRadius(0.5f);
+	m_Body->SetScale({ 0.0f, 0.0f, 0.0f });
 
 	arm_move_ = DEFAULT;
 	/*ñ{ëÃÉÇÉfÉãê›íË*/
-	m_Body.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-	m_Body->CreateTexture();
-
-	//m_Body->SetColType(Object3d::CollisionType::Obb);
-	//m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
-	//m_Body->SetHitRadius(0.5f);
-
-	m_Body->SetAnchorPoint({ 0.5f,1.f });
-
-	m_BodyPos = { 0,1,10 };
-	m_BodyRot.x = 180;
+	//m_BodyPos = { 0,-3,30 };
+	//m_BodyRot.x = 180;
 	/*òrÉÇÉfÉãê›íË*/
 	for (size_t i = 0; i < 2; i++) {
-		m_Arm[i].reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-		m_Arm[i]->CreateTexture();
-		m_Arm[i]->SetAnchorPoint({ 0.5f,0.5f });
-		m_Arm[i]->SetRotation({ 180,0,0 });
-		//m_Arm[i]->SetIsBillboardY(true);
-		//m_Arm[i]->SetColType(Object3d::CollisionType::Sphere);
-		//m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		//m_Arm[i]->SetHitRadius(0.5f);
-		m_ImpactTex[i].reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
-		m_ImpactTex[i]->CreateTexture();
-		m_ImpactTex[i]->SetAnchorPoint({ 0.5f,0.5f });
+		m_ArmAlpha[i] = 1.f;
+		m_Arm[i] = Object3d::UniquePtrCreate(ArmModel_[0]);
+		//m_Body->SetIsBillboardY(true);
+		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
+		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
+		m_Arm[i]->SetObbScl({ 2.f,2.f,2.f });
+		m_Arm[i]->SetHitRadius(0.5f);
+		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
+
+		m_ImpactTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }));
 		m_ImpactTex[i]->SetRotation({ 90,0,0 });
 	}
 
@@ -65,55 +65,96 @@ void Dogom::Upda()
 	if (!WinceF)WinceEaseT = 0;
 	RecvDamage(m_BodyPos);
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
-	m_Body->SetScale({ 3.5f,3.5f,3.f });
-	m_Body->SetBillboard(FALSE);
-	//m_BodyPos = { 20,0,0 };
-	//MovingAngle++;
-
+	m_Body->SetScale({ 0.1f,0.2f,0.2f });
+	
 	if (!WinceF) {
 		MoveBody();
 		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 	}
+
+	CoollisionArm();
 	CoollisionFace();
 	ImpactTexScling();
-	m_Body->SetPosition(m_BodyPos);
-	m_Body->Update(m_Camera);
+	RotationFace(120);
+	constexpr int AnimationInter = 10;
+	constexpr size_t TexNum = 8;
+	static int animeCount = 0;
+
+	if (++animeCount >= AnimationInter*TexNum) {
+		animeCount = 0;
+	}
+
+	if (animeCount % AnimationInter == 0) {
+		m_Body->SetModel(BodyModel_[animeCount / AnimationInter]);
+		m_Body->Initialize();
+
+		for (size_t i = 0; i < m_Arm.size(); i++)
+		{
+			if (ColF[i] && DamCool[i] < 10) {
+				m_Arm[i]->SetModel(ArmModel_[animeCount / AnimationInter]);
+				m_Arm[i]->Initialize();
+			} else
+			{
+				m_Arm[i]->SetModel(ArmModel_[0]);
+				m_Arm[i]->Initialize();
+			}
+		}
+	}
 
 	ArmAct();
+	for (size_t i = 0; i < 2; i++) {
+		m_ArmPos[i].x = std::clamp(m_ArmPos[i].x,-BOSSMAP_W, BOSSMAP_W);
+		m_ArmPos[i].z = std::clamp(m_ArmPos[i].z, -BOSSMAP_H, BOSSMAP_H);
+	}
+	//m_BodyPos = std::clamp(m_BodyPos, Vector3(-BOSSMAP_W, -5, -BOSSMAP_H), Vector3(BOSSMAP_W, -5, BOSSMAP_H));
+
+	m_Arm[RIGHT]->SetRotation(Vector3(0, 0, 180));
+	m_Body->SetPosition(m_BodyPos);
+	m_Body->Update();
+
+	constexpr float alphaval = 0.05f;
+
 	for (size_t i = 0; i < 2; i++)
 	{
-		m_Arm[i]->SetScale({ 2.0f,2.0f,2.0f });
+		if (m_ArmHp[i] <= 0)m_ArmAlpha[i] -= alphaval;
+		else m_ArmAlpha[i] += alphaval;
+
+
+		m_Arm[i]->SetScale({ 0.050f,0.050f,2.0f });
 		m_Arm[i]->SetPosition(m_ArmPos[i]);
-		m_Arm[i]->SetBillboard(TRUE);
-		m_Arm[i]->Update(m_Camera);
+		m_Arm[i]->SetColor({ 1,1,1,m_ArmAlpha[i] });
+		m_ArmAlpha[i]=std::clamp(m_ArmAlpha[i], 0.f, 1.f);
+		m_Arm[i]->Update();
 
 		m_ImpactTex[i]->SetScale(m_ImpactTexScl[i]);
 		m_ImpactTex[i]->SetPosition(m_ImpactTexPos[i]);
-		m_ImpactTex[i]->SetBillboard(FALSE);
 		m_ImpactTex[i]->SetColor({ 1, 1, 1, m_ImpactTexAlpha[i] });
-		m_ImpactTex[i]->Update(m_Camera);
+		m_ImpactTex[i]->Update();
 	}
 
+	if (m_player->GetPos().z > BOSSMAP_H || m_player->GetPos().z < -BOSSMAP_H ||
+		m_player->GetPos().x > BOSSMAP_W || m_player->GetPos().x < -BOSSMAP_W)
+		isLeaveBoss = TRUE;
+	else
+		isLeaveBoss = FALSE;
 }
 
 void Dogom::Draw()
 {
+	if (isLeaveBoss)return;
 
-
-
+	m_Body->Draw();
+	
 }
 void Dogom::Draw2()
 {
-	if (m_HP <= 0)return;
-	Texture::PreDraw();
-	m_Body->Draw();
+	if (isLeaveBoss)return;
+	//if (m_HP <= 0)return;
 	for (size_t i = 0; i < 2; i++) {
 		m_ImpactTex[i]->Draw();
 		m_Arm[i]->Draw();
-		
 	}
-	Texture::PostDraw();
 }
 
 
@@ -182,20 +223,10 @@ void Dogom::ArmAct()
 		OldRushPaunch[LEFT] = m_ArmPos[LEFT];
 
 		OldRushPaunch[RIGHT] = m_ArmPos[RIGHT];
-		
-		if (KeyInput::GetIns()->TriggerKey(DIK_SPACE))
-		{
-			{
-				if (!WinceF) {
-					StanCount = 0;
-					WinceF = TRUE;
-					wince_phase_ = WincePhase::PHASE_1;
-				}
-			}
 
-		}
+		bool isNextActTim = m_ActionTimer != 0 && m_ActionTimer % 160 == 0;
 
-		if (!WinceF&&m_ActionTimer != 0 && m_ActionTimer % 160 == 0) {
+		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
 			if (ActionRandom > 50) {
 				SetAttack_Impact();
@@ -216,7 +247,7 @@ void Dogom::ArmAct()
 
 	//í@Ç´Ç¬ÇØ
 	else if (arm_move_ == ATTACK_IMPACT)
-	{
+	{;
 		//í«â¡éûä‘(òrñﬂÇ∑)
 		float MaxTime_1 = 20.f;
 		constexpr float MaxTime_2 = 10.f;
@@ -302,8 +333,8 @@ void Dogom::ArmAct()
 				m_ArmAttckEaseT[LEFT] = m_ArmAttckEaseT[RIGHT] = 0;
 				next_3 = TRUE;
 			} else {
-				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_2, BefoPos[LEFT].y, 1.f);
-				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_2, BefoPos[RIGHT].y, 1.f);
+				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_2, BefoPos[LEFT].y, -3.5f);
+				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_2, BefoPos[RIGHT].y, -3.5f);
 			}
 			BefoPos[LEFT].z = m_ArmPos[LEFT].z;
 			BefoPos[RIGHT].z = m_ArmPos[RIGHT].z;
@@ -318,13 +349,13 @@ void Dogom::ArmAct()
 			m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 			//òrÇÃà íuínñ 
-			BefoPos[0].y = BefoPos[1].y = 1.f;
+			BefoPos[0].y = BefoPos[1].y = -3.5f;
 
 			//É{ÉXÇÃâ°Ç…
 			m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].y, m_BodyPos.y );
 			m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].y, m_BodyPos.y );
 
-			if(m_ImpactCout==4)
+			if(m_ImpactCout==3)
 			{
 				m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_3, BefoPos[LEFT].x,Left_X);
 				m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].x, Right_X);
@@ -333,7 +364,7 @@ void Dogom::ArmAct()
 				m_ArmPos[RIGHT].z = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_3, BefoPos[RIGHT].z,Right_Z);
 			}
 			if (m_ArmAttckEaseT[LEFT] >= MaxTime_3)
-				if (m_ImpactCout == 4) {
+				if (m_ImpactCout == 3) {
 					phase_ = Phase_Impact::END;
 				} else
 				{
@@ -365,7 +396,7 @@ void Dogom::ArmAct()
 
 		move = XMVector3TransformNormal(move, matRot);*/
 		bool next_1 = FALSE, next_2 = FALSE;
-		float EndX[2] = { PlayerPos.x + 10.f ,PlayerPos.x - 10.f };
+		float EndX[2] = { PlayerPos.x + 8.f ,PlayerPos.x - 8.f };
 		float EndZ[2] = { PlayerPos.z ,PlayerPos.z };
 		switch (phase_cross_)
 		{
@@ -456,7 +487,7 @@ void Dogom::Follow()
 	toPlayer = atan2f(SubVec.m128_f32[0], SubVec.m128_f32[2]);
 
 	if (!WinceF)
-		m_BodyRot.y = toPlayer * 70.f + 180.f;
+		m_BodyRot.y = toPlayer * 60.f + 180.f;
 
 	XMVECTOR move = { 0.f,0.1f, 0.f, 0.0f };
 	XMMATRIX matRot = XMMatrixRotationX(XMConvertToRadians(m_BodyRot.x + 270.f));
@@ -474,17 +505,22 @@ void Dogom::Follow()
 
 void Dogom::Wince()
 {
+	
+
 	if (!WinceF)return;
 	constexpr float MaxEase = 30.f;
 	if (wince_phase_ == WincePhase::PHASE_1) {
+		oldBodyPos = m_BodyPos;
 		if (++WinceEaseT >= MaxEase) {
 			WinceEaseT = 0.f;
 			wince_phase_ = WincePhase::PHASE_2;
 		} else
-			m_BodyRot.x = Easing::easeIn(WinceEaseT, MaxEase, 180.f, 160.f);
+			m_BodyRot.x = Easing::easeIn(WinceEaseT, MaxEase, 0.f, -20.f);
 	} else if (wince_phase_ == WincePhase::PHASE_2)
 	{
-		m_BodyRot.x = Easing::easeIn(WinceEaseT, 30.f, 160.f, 270.f);
+		m_BodyRot.x = Easing::easeIn(WinceEaseT, 30.f, -20.f, 90.f);
+		m_BodyPos.x= Easing::easeIn(WinceEaseT, 30.f, oldBodyPos.x, 0.f);
+		m_BodyPos.z = Easing::easeIn(WinceEaseT, 30.f, oldBodyPos.z, 0.f);
 		m_BodyPos.y = Easing::easeIn(WinceEaseT, 30.f, 2.f, -2.f);
 		if (++WinceEaseT >= 30)
 		{
@@ -501,13 +537,16 @@ void Dogom::Wince()
 		if (StanCount >= 120) {
 			if (++WinceEaseT >= 50)
 			{
+				m_ArmHp[LEFT] = m_ArmHp[RIGHT] = ArmHP();
 				WinceF = FALSE;
 				WinceEaseT = 0.f;
 				
 			} else
 			{
+				m_BodyPos.x = Easing::easeIn(WinceEaseT, 50.f,0.f, oldBodyPos.x);
+				m_BodyPos.z = Easing::easeIn(WinceEaseT, 50.f, 0.f,oldBodyPos.z);
 				m_BodyPos.y = Easing::easeIn(WinceEaseT, 50.f, 0.f, 2.f);
-				m_BodyRot.x = Easing::easeIn(WinceEaseT, 50.f, 270.f, 180.f);
+				m_BodyRot.x = Easing::easeIn(WinceEaseT, 50.f, 90.f, 00.f);
 			}
 		}
 		else
@@ -555,12 +594,12 @@ void Dogom::MoveBody()
 
 void Dogom::ImpactTexScling()
 {
-	constexpr float GroundY = 1.f;
+	constexpr float GroundY = 0.2f;
 
 	if (phase_ == Phase_Impact::PHASE_2) {
 		for (size_t i = 0; i < 2; i++) {
 			if (m_ImpactF[i])continue;
-			if (m_ArmPos[i].y > 1.4f)continue;
+			//if (m_ArmPos[i].y > 1.f)continue;
 			m_ImpactTexPos[i] = Vector3(m_ArmPos[i].x, GroundY, m_ArmPos[i].z);
 			m_ImpactTexScl[i] = Vector3(0, 0, 0);
 			m_ImpactTexAlpha[i] = 1.f;
@@ -570,10 +609,10 @@ void Dogom::ImpactTexScling()
 	for(size_t i=0;i<2;i++)
 	{
 		if (!m_ImpactF[i])continue;
-		m_ImpactTexScl[i].x += 0.08f;
-		m_ImpactTexScl[i].y += 0.08f;
+		m_ImpactTexScl[i].x += 0.005f;
+		m_ImpactTexScl[i].y += 0.005f;
 
-		m_ImpactTexAlpha[i] -= 0.02f;
+		m_ImpactTexAlpha[i] -= 0.03f;
 
 		if (m_ImpactTexAlpha[i] <= 0.f)
 			m_ImpactF[i] = FALSE;
@@ -590,7 +629,7 @@ void Dogom::CoollisionFace()
 	for (size_t i = 0; i < 2; i++) {
 		if (ColF[i])continue;
 		DamCool[i] = 0;
-		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<3.f)
+		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<5.f)
 		{
 			m_player->SubHP(1);
 			ColF[i] = TRUE;
@@ -604,13 +643,90 @@ void Dogom::CoollisionFace()
 			ColF[i] = FALSE;
 		}
 	}
-	
+
 }
 
 
-bool Dogom::CoollisionArm()
+void Dogom::CoollisionArm()
 {
 
+	if (m_player->getisHammerActive()) {
+		for (size_t i = 0; i < 2; i++) {
+			if (!m_ArmDamF[i]) {
+				if (m_Arm[i]->GetIsHit())
+				{
+					m_ArmHp[i]--;
+					m_ArmDamF[i] = TRUE;
+					continue;
+				}
+			}
+		}
+	}
+	for (size_t i = 0; i < 2; i++) {
+		if (m_ArmDamF[i]) {
+		if (m_Arm[i]->GetIsHit())
+			m_ArmDamF[i] = FALSE;
+		continue;
+		}
+	}
+	//óºòrÇÃëÃóÕÇ™è¡Ç¶ÇΩÇÁ
+	if ((m_ArmHp[LEFT] <=0&& m_ArmHp[RIGHT]<= 0))
+	{
+		if (!WinceF) {
+			StanCount = 0;
+			WinceF = TRUE;
+			wince_phase_ = WincePhase::PHASE_1;
+		}
+	}
 
-	return FALSE;
+}
+
+uint16_t Dogom::ArmHP()
+{
+	//å„Ç≈ïœÇ¶ÇÈ
+	return 2;
+}
+
+void Dogom::RotationFace(const uint16_t& interval)
+{
+	float oldFaceRot=0.f;
+
+	//ê≥ïâÇï‘Ç∑
+	struct ReturnSign {
+		static float GetSignVal(uint16_t randVal)
+		{
+			if (randVal % 2 == 0)
+				return 1.f;
+			else
+				return -1.f;
+		}
+	};
+
+	if((++isRotateTim) % interval == 0)
+		m_FaceRotaF = TRUE;
+
+	if(m_FaceRotaF)
+	{
+		constexpr float maxEaseT = 60.f;
+
+		//äÁÇç∂âEÇ«ÇøÇÁÇ©Ç…âÒì]
+
+		m_BodyRot.z = Easing::easeIn(m_FaceRotEaseT, maxEaseT, oldFaceRot, oldFaceRot + (MorP_Sign * 360.f));
+		if (++m_FaceRotEaseT >= maxEaseT)
+		{
+			isRotateTim = 1;
+			m_FaceRotaF = FALSE;
+		}
+	}
+	else
+	{
+		
+		m_FaceRotEaseT = 0.f;
+
+		std::mt19937 mt{ std::random_device{}() };
+		std::uniform_int_distribution<uint16_t> randval(0, 10);
+		
+		oldFaceRot = m_BodyRot.z;
+		MorP_Sign = ReturnSign::GetSignVal(randval(mt));
+	}
 }

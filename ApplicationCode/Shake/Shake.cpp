@@ -21,7 +21,7 @@ void Shake::Initialize(ID3D12Device* device, Camera* camera)
 
 void Shake::Update()
 {
-	//今はエンターキーを押したらシェイクとパーティクルするようになっている
+	//今はエンターキーを押したらシェイクするようになってい
 	//壁ができたら壁に当たったらシェイクする処理に変更する
 	if (KeyInput::GetIns()->TriggerKey(DIK_RETURN)) {
 		iwaCount = 0;
@@ -41,7 +41,7 @@ void Shake::Update()
 			shakePos = 0;
 		}
 	}
-	//岩粒
+
 	if (iwaFlag == true) {
 		iwaCount++;
 		if (iwaCount < 100) {

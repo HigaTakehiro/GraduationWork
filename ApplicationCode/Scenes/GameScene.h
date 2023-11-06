@@ -22,8 +22,6 @@
 #include"BossBase.h"
 #include"BaseEnemy.h"
 #include"Shake.h"
-#include"AttackEffect.h"
-#include "IntermediateBase.h"
 class GameScene : public BaseScene
 {
 public: //メンバ関数
@@ -60,7 +58,6 @@ private: //メンバ関数
 	/// </summary>
 	void CameraSetting();
 
-	void NextMap();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -77,7 +74,6 @@ private: //メンバ変数
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
 
-
 	std::array<BaseEnemy*, 3> enemys_;
 	OBB* _hummmerObb;
 
@@ -86,21 +82,12 @@ private: //メンバ変数
 	TextDraw* text_;
 	//仮地面
 	std::unique_ptr<GameMap> map_;
-	//仮地面
-	std::unique_ptr<IntermediateBase> mapBase_;
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点
 	Vector3 targetPos_;
-	int count_ = 0;
 
 	Shake* shake_;
-	std::array < AttackEffect*,3> aEffect_;
-	int oldcount_ = 0;
 	float oldcamerapos_ = 0;
-	float time_ = 0;
 	XMFLOAT3 nextPos_{};
-	int direction = 0;
-	bool eeFlag[3] = {};
-	int attackCount =0;
 };

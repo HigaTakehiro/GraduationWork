@@ -4,7 +4,7 @@ using namespace DirectX;
 
 void IwaEffect::Initialize(ID3D12Device* device, Camera* camera)
 {
-	particle = ParticleManager::UniquePtrCreate(device, camera, true);
+	particle = ParticleManager::UniquePtrCreate(device, camera, false);
 	particlePos = { 0,0 ,0 };
 }
 

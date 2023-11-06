@@ -350,22 +350,22 @@ void ParticleManager::InitializeGraphicsPipeline(bool isSubBlend)
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;	// RBGA全てのチャンネルを描画
 	blenddesc.BlendEnable = true;
-	if (!isSubBlend) {
-		// 加算ブレンディング
-		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlend = D3D12_BLEND_ONE;
-		blenddesc.DestBlend = D3D12_BLEND_ONE;
-	}
-	else {     
-		//半透明
-		blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
-		blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-		//// 減算ブレンディング
-		//blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
-		//blenddesc.SrcBlend = D3D12_BLEND_ONE;
-		//blenddesc.DestBlend = D3D12_BLEND_ONE;
-	}
+	//if (!isSubBlend) {
+	//	// 加算ブレンディング
+	//	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+	//	blenddesc.SrcBlend = D3D12_BLEND_ONE;
+	//	blenddesc.DestBlend = D3D12_BLEND_ONE;
+	//}
+	//else {
+	//	// 減算ブレンディング
+	//	blenddesc.BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+	//	blenddesc.SrcBlend = D3D12_BLEND_ONE;
+	//	blenddesc.DestBlend = D3D12_BLEND_ONE;
+	//}
+	//半透明
+	blenddesc.BlendOp = D3D12_BLEND_OP_ADD;
+	blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 
 	blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;

@@ -168,12 +168,13 @@
     <ClCompile Include="ApplicationCode\Item\Ore.cpp" />
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp" />
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp" />
+    <ClCompile Include="ApplicationCode\Map\Stairs.cpp" />
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp" />
     <ClCompile Include="ApplicationCode\Players\Player.cpp" />
-    <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\GameScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\ResultScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\SceneManager.cpp" />
+    <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\TitleScene.cpp" />
     <ClCompile Include="ApplicationCode\Shake\IwaEffect.cpp" />
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp" />
@@ -215,7 +216,6 @@
     <ClCompile Include="Engine\Object3d\Shapes.cpp" />
     <ClCompile Include="Engine\Texture\Texture.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Stairs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApplicationCode\Collision\BaseCollision.h" />
@@ -228,13 +228,14 @@
     <ClInclude Include="ApplicationCode\Item\Ore.h" />
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h" />
+    <ClInclude Include="ApplicationCode\Map\Stairs.h" />
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h" />
     <ClInclude Include="ApplicationCode\Players\Player.h" />
-    <ClInclude Include="ApplicationCode\Players\AttackEffect.h" />
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\GameScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\ResultScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\SceneManager.h" />
+    <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h" />
     <ClInclude Include="ApplicationCode\Scenes\TitleScene.h" />
     <ClInclude Include="ApplicationCode\Shake\IwaEffect.h" />
     <ClInclude Include="ApplicationCode\Shake\Shake.h" />
@@ -282,7 +283,6 @@
     <ClInclude Include="Engine\Object3d\ParticleManager.h" />
     <ClInclude Include="Engine\Object3d\Shapes.h" />
     <ClInclude Include="Engine\Texture\Texture.h" />
-    <ClInclude Include="Stairs.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc" />

@@ -10,7 +10,11 @@ void Player::Initialize()
 {
 	//プレイヤー初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 72.0f * ((float)i + 1), 64.0f }, "tuyu_idle.png", { 320, 64 });
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		frontMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_move.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
+		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f}, {128.0f, 128.0f});
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -19,15 +23,16 @@ void Player::Initialize()
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
 	player_->SetObbScl({ 2.f,4.f,2.f });
 	player_->SetHitRadius(0.5f);
+	player_->SetScale({ 0.0f, 0.0f, 0.0f });
 
 	PlayerStatusSetting();
 
-	initHammerPos_ = { -60, -30, 60 };
+	initHammerPos_ = { 0, 0, 30 };
 	initHammerScale_ = { 1, 1, 1 };
 	initHammerRot_ = { -90, 0, 180 };
 
 	//ハンマー初期化
-	hammerModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Hammer.png");
+	hammerModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Hammer.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, {128, 128});
 	hammer_ = Object3d::UniquePtrCreate(hammerModel_);
 	hammer_->SetParent(player_.get());
 	hammer_->SetPosition(initHammerPos_);
@@ -50,7 +55,6 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	static int32_t animeCount = 0;
 
 	Repulsion();
 	HammerPowerUp();
@@ -62,14 +66,6 @@ void Player::Update()
 	if (!stop_) {
 		Move();
 		Attack();
-	}
-
-	if (KeyInput::GetIns()->TriggerKey(DIK_N)) {
-		if (++animeCount >= 4) {
-			animeCount = 0;
-		}
-		player_->SetModel(playerModel_[animeCount]);
-		player_->Initialize();
 	}
 
 	player_->SetPosition(pos_);
@@ -92,6 +88,10 @@ void Player::Finalize()
 {
 	for (int32_t i = 0; i < 4; i++) {
 		safe_delete(playerModel_[i]);
+		safe_delete(frontMoveModel_[i]);
+		safe_delete(backMoveModel_[i]);
+		safe_delete(leftMoveModel_[i]);
+		safe_delete(rightMoveModel_[i]);
 	}
 	safe_delete(hammerModel_);
 }
@@ -217,7 +217,39 @@ void Player::Move() {
 	const Vector3 upDownMoveVec = { 0.0f, 0.0f, 1.0f };
 	const Vector3 leftRightMoveVec = { 1.0f, 0.0f, 0.0f };
 
-	float leftStick = PadInput::GetIns()->leftStickX();
+	float leftStick = PadInput::GetIns()->leftStickY();
+
+	if (KeyInput::GetIns()->PushKey(DIK_DOWN) || leftStick > 0) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		player_->SetModel(frontMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else if (KeyInput::GetIns()->PushKey(DIK_UP) || leftStick < 0) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		player_->SetModel(backMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+
+	leftStick = PadInput::GetIns()->leftStickX();
+
+	if (KeyInput::GetIns()->PushKey(DIK_LEFT) || leftStick < 0) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		player_->SetModel(leftMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else if (KeyInput::GetIns()->PushKey(DIK_RIGHT) || leftStick > 0) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		player_->SetModel(rightMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
 
 	//減速処理
 	if (acc_.x < 0) {
@@ -308,6 +340,16 @@ void Player::Move() {
 			pos_ += upDownMoveVec * moveSpeed_;
 		}
 	}
+
+	if (nextflor_) {
+		if (KeyInput::GetIns()->PushKey(DIK_Z)) {
+			next_ = true;
+		}
+		else {
+			next_ = false;
+		}
+	}
+
 
 }
 

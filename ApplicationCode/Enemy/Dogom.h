@@ -12,23 +12,27 @@ private:
         LEFT
     };
 
-    std::unique_ptr<Texture> m_Body;
-    std::array<std::unique_ptr<Texture>,2> m_Arm;
-    std::array<std::unique_ptr<Texture>, 2> m_ImpactTex;
+    std::unique_ptr<Object3d> m_Body;
+    std::array<std::unique_ptr<Object3d>,2> m_Arm;
+    std::array<std::unique_ptr<Object3d>, 2> m_ImpactTex;
 
     //プレイヤーモデル
-    Model* BodyModel_;
-    Model* ArmModel_[2];
+    Model* BodyModel_[8];
+    Model* ArmModel_[8];
 
     Vector3 m_BodyPos;
+    Vector3 oldBodyPos = Vector3(0, 0, 0);
     Vector3 m_BodyRot;
 	std::array<Vector3, 2>m_ArmPos;
     std::array<Vector3, 2>m_ArmRot;
     std::array<Vector3, 2>m_ImpactTexPos;
     std::array<Vector3, 2>m_ImpactTexScl;
     std::array<float, 2>m_ImpactTexAlpha;
+    std::array<float, 2>m_ArmAlpha;;
 	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
+	std::array<int, 2>m_ArmHp={1,1};
+    std::array<bool, 2>m_ArmDamF;
 
     std::array<bool, 2>m_ImpactF;
     std::array<Vector3, 3>WaitPos = { Vector3(0,0,-20),Vector3(-18,0,0),Vector3(18,0,0) };
@@ -40,6 +44,7 @@ private:
     float MovingAngle;
     float CrossWaitCount = 0.f;
 	bool WinceF;
+    bool isLeaveBoss;
     float nextAngle = 180.f;
     int randAct = 0;
 
@@ -99,12 +104,19 @@ private:
     std::array<bool, 2>ColF;
     std::array<int, 2>DamCool;
     void CoollisionFace();
-    bool CoollisionArm();
+    void CoollisionArm();
+    uint16_t ArmHP();
 
     void FaceFall();
     bool m_FallF = false;
     void ShakeArm(Vector3 Defopos);
     void MoveBody();
+
+    float m_FaceRotEaseT;
+    bool m_FaceRotaF;
+    uint16_t isRotateTim = 1;
+	float MorP_Sign = 1.f;
+    void RotationFace(const uint16_t& interval);
 
     void ImpactTexScling();
     float t = 0,t2=0;
