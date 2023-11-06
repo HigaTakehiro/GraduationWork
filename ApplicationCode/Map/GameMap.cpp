@@ -5,7 +5,7 @@
 
 int Count = 0;
 
-void GameMap::LoadCsv(Player* player)
+void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos)
 {
 	std::string line;
 	int NUMBER = 0;
@@ -128,6 +128,7 @@ void GameMap::LoadCsv(Player* player)
 			COUNT += 1;
 		}
 		else if (NUMBER == 6) {
+			count_ = COUNT;
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
@@ -137,6 +138,15 @@ void GameMap::LoadCsv(Player* player)
 			startpos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
+			Vector3 PlayerPos = player->GetPos();
+			PlayerPos = PlayerPos + Pos;
+			player->SetPos(PlayerPos);
+			float NextTarget = 0;
+			XMFLOAT3 NextPos_ = GetNowMapPos();
+			CameraPos.x = startpos_.x;
+			TargetPos.x = startpos_.x;
+			TargetPos.z = startpos_.z;
+			CameraPos.z=CameraPos.z + startpos_.z - 2.f;
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
 			COUNT += 1;
@@ -179,9 +189,9 @@ void GameMap::CreateBridge()
 	}
 }
 
-void GameMap::Initalize(Player* player)
+void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos)
 {
-	LoadCsv(player);
+	LoadCsv(player,CameraPos,TargetPos);
 
 	CreateBridge();
 
