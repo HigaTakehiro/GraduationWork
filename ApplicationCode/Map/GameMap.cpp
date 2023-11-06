@@ -346,7 +346,7 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos,f
 	count_ = NextCount(player->GetPos(), direction_);
 	//プレイヤーがマップの端に来た時
 	player->SetStop(true);
-	float NextTarget = 0;
+	float NextTarget = 0.f;
 	XMFLOAT3 NextPos_ = GetNowMapPos();
 	XMFLOAT3 PlayerPos = player->GetPos();
 	XMFLOAT3 NEXTPLAYERPOS{};
@@ -354,30 +354,30 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos,f
 
 	if (direction_ == 0) { player->SetStop(false); return; }
 	if (direction_ == 2) {
-		NEXTPLAYERPOS.x = NextPos_.x - 5;
+		NEXTPLAYERPOS.x = NextPos_.x - 5.f;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction_ == 1) {
-		NEXTPLAYERPOS.x = NextPos_.x + 7;
+		NEXTPLAYERPOS.x = NextPos_.x + 7.f;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction_ == 4) {
-		NEXTPLAYERPOS.z = NextPos_.z + 9;
+		NEXTPLAYERPOS.z = NextPos_.z + 9.f;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 	else if (direction_ == 3) {
-		NEXTPLAYERPOS.z = NextPos_.z - 4;
+		NEXTPLAYERPOS.z = NextPos_.z - 4.f;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 
 
 	time_ += 0.01f;
-	CameraPos.x = Easing::easeIn(time_, 0.7, CameraPos.x, NextPos_.x);
-	TargetPos.x = Easing::easeIn(time_, 0.7, TargetPos.x, NextPos_.x);
-	CameraPos.z = Easing::easeIn(time_, 0.7, CameraPos.z, NextTarget);
-	TargetPos.z = Easing::easeIn(time_, 0.7, TargetPos.z, NextPos_.z);
-	PlayerPos.x = Easing::easeIn(time_, 0.3, PlayerPos.x, NEXTPLAYERPOS.x);
-	PlayerPos.z = Easing::easeIn(time_, 0.3, PlayerPos.z, NEXTPLAYERPOS.z);
+	CameraPos.x = Easing::easeIn(time_, 0.7f, CameraPos.x, NextPos_.x);
+	TargetPos.x = Easing::easeIn(time_, 0.7f, TargetPos.x, NextPos_.x);
+	CameraPos.z = Easing::easeIn(time_, 0.7f, CameraPos.z, NextTarget);
+	TargetPos.z = Easing::easeIn(time_, 0.7f, TargetPos.z, NextPos_.z);
+	PlayerPos.x = Easing::easeIn(time_, 0.3f, PlayerPos.x, NEXTPLAYERPOS.x);
+	PlayerPos.z = Easing::easeIn(time_, 0.3f, PlayerPos.z, NEXTPLAYERPOS.z);
 
 	player->SetPos(PlayerPos);
 	if (time_ >= 0.7) {
