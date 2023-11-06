@@ -26,18 +26,18 @@ void Stairs::LoadCsv()
 		}
 	}
 	//ƒŠƒ~ƒbƒg
-	if (Pos.x >= 10) {
-		Pos.x = 10;
+	if (Pos.x >= 10.f) {
+		Pos.x = 10.f;
 	}
-	else if (Pos.x <= -8.6) {
-		Pos.x = -8.6;
+	else if (Pos.x <= -8.6f) {
+		Pos.x = -8.6f;
 	}
 
-	if (Pos.z >= 8.2) {
-		Pos.z = 8.2;
+	if (Pos.z >= 8.2f) {
+		Pos.z = 8.2f;
 	}
-	else if (Pos.z <= -11) {
-		Pos.z = -11;
+	else if (Pos.z <= -11.f) {
+		Pos.z = -11.f;
 	}
 
 	pos_ = Pos;
@@ -69,8 +69,8 @@ void Stairs::CheckHit()
 {
 	XMFLOAT3 Pos = player_->GetPos();
 
-	if ((Pos.x >= pos_.x - 1.5 && Pos.x <= pos_.x + 1.5) &&
-		(Pos.z >= pos_.z - 1.5 && Pos.z <= pos_.z + 1.5)) {
+	if ((Pos.x >= pos_.x - 1.5f && Pos.x <= pos_.x + 1.5f) &&
+		(Pos.z >= pos_.z - 1.5f && Pos.z <= pos_.z + 1.5f)) {
 		player_->SetNextFlor(true);
 	}
 	else {
