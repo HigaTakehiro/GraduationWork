@@ -257,19 +257,19 @@ void GameMap::CheckHitTest(Player* player)
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (PlayerPos.x >= Map->stagePos_.x + 11) {
-			PlayerPos.x = Map->stagePos_.x + 11;
+		if (PlayerPos.x >= Map->stagePos_.x + 9.f) {
+			PlayerPos.x = Map->stagePos_.x + 9.f;
 		}
-		if (PlayerPos.x <= Map->stagePos_.x - 6) {
-			PlayerPos.x = Map->stagePos_.x - 6;
-		}
-
-		if (PlayerPos.z >= Map->stagePos_.z + 10) {
-			PlayerPos.z = Map->stagePos_.z + 10;
+		if (PlayerPos.x <= Map->stagePos_.x - 7.f) {
+			PlayerPos.x = Map->stagePos_.x - 7.f;
 		}
 
-		if (PlayerPos.z <= Map->stagePos_.z - 6) {
-			PlayerPos.z = Map->stagePos_.z - 6;
+		if (PlayerPos.z >= Map->stagePos_.z + 10.f) {
+			PlayerPos.z = Map->stagePos_.z + 10.f;
+		}
+
+		if (PlayerPos.z <= Map->stagePos_.z - 6.f) {
+			PlayerPos.z = Map->stagePos_.z - 6.f;
 		}
 	}
 	player->SetPos(PlayerPos);
