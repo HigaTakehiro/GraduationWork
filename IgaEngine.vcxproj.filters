@@ -470,12 +470,9 @@
     <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
-=======
->>>>>>> main
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">

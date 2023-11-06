@@ -167,10 +167,7 @@
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp" />
     <ClCompile Include="ApplicationCode\Item\Ore.cpp" />
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp" />
-=======
->>>>>>> main
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp" />
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp" />
     <ClCompile Include="ApplicationCode\Players\Player.cpp" />

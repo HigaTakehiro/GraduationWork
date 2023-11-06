@@ -22,6 +22,7 @@
 #include"BossBase.h"
 #include"BaseEnemy.h"
 #include"Shake.h"
+#include"IntermediateBase.h"
 class GameScene : public BaseScene
 {
 public: //ƒƒ“ƒoŠÖ”
@@ -90,4 +91,6 @@ private: //ƒƒ“ƒo•Ï”
 	Shake* shake_;
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
+
+	IntermediateBase* ib_;
 };

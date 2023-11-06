@@ -43,28 +43,30 @@ void GameScene::Initialize()
 	boss_.reset(new Dogom());
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
-	
+
 	for (auto i = 0; i < enemys_.size(); i++) {
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
-		
+
 		enemys_[i]->SetPlayerIns(player_);
 	}
-enemys_[0]->SetPos(Vector3(10, -30, 10));
-enemys_[2]->SetPos(Vector3(-15, -30, -5));
-enemys_[2]->SetPos(Vector3(0, -30, -5));
+	enemys_[0]->SetPos(Vector3(10, -30, 10));
+	enemys_[2]->SetPos(Vector3(-15, -30, -5));
+	enemys_[2]->SetPos(Vector3(0, -30, -5));
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_);
 	shake_ = new Shake();
-	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
+	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
-	
+	ib_ = new IntermediateBase();
+	ib_->Initialize();
+
 	ore_ = std::make_unique<Ore>();
 	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
 
 	for (int32_t i = 0; i < 3; i++) {
 		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
-		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
+		newOre->Initialize({ -5 + ((float)i * 5), 2, -10 }, { 0, 0, 0 });
 		oreItems_.push_back(std::move(newOre));
 	}
 }
@@ -99,7 +101,7 @@ void GameScene::Update()
 	Vector3 enemyPos[3] = { enemys_[0]->GetPos(),enemys_[1]->GetPos() ,enemys_[2]->GetPos() };
 	Vector3 vec[3];
 	for (auto i = 0; i < enemys_.size(); i++) {
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z}, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			enemys_[i]->GetDamage();
 			vec[i] = playerPos - enemyPos[i];
@@ -160,16 +162,23 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-	
 
-	for(auto i=0;i<enemys_.size();i++)
+
+	for (auto i = 0; i < enemys_.size(); i++)
 	{
 		enemys_[i]->SetHammerObb(*_hummmerObb);
 		enemys_[i]->Upda(camera_.get());
 	}
 	boss_->Upda();
-
-	map_->Update(player_,cameraPos_,targetPos_,oldcamerapos_);
+	if (player_->GetNextFlor() == true) {
+		ib_->Update();
+	}
+	else {
+		map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
+	}
+	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK)) {
+		player_->SetNextFlor(false);
+	}
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
@@ -188,13 +197,19 @@ void GameScene::Draw()
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	map_->Draw();
+
+	if (player_->GetNextFlor() == true) {
+		ib_->Draw();
+	}
+	else {
+		map_->Draw();
+	}
 	Object3d::PostDraw();
 
-for(auto i=0;i<enemys_.size();i++)
-	enemys_[i]->Draw();
+	for (auto i = 0; i < enemys_.size(); i++)
+		enemys_[i]->Draw();
 
-	
+
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	if (ore_ != nullptr) {
@@ -210,7 +225,7 @@ for(auto i=0;i<enemys_.size();i++)
 	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	
+
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
