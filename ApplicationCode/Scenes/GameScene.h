@@ -58,7 +58,6 @@ private: //メンバ関数
 	/// </summary>
 	void CameraSetting();
 
-	void NextMap();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -84,16 +83,14 @@ private: //メンバ変数
 	TextDraw* text_;
 	//仮地面
 	std::unique_ptr<GameMap> map_;
+	//背景画像
+	std::unique_ptr<Sprite> background_;
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点
 	Vector3 targetPos_;
-	int count_ = 0;
 
 	Shake* shake_;
-	int oldcount_ = 0;
 	float oldcamerapos_ = 0;
-	float time_ = 0;
 	XMFLOAT3 nextPos_{};
-	int direction = 0;
 };

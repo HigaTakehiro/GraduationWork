@@ -60,12 +60,12 @@ void GameScene::Initialize()
 	enemys_[2]->SetPos(Vector3(0, -30, -5));
 
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_);
+	map_->Initalize(player_,cameraPos_,targetPos_);
+
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
-	count_ = map_->NextCount(player_->GetPos(),direction);
-	oldcount_ = count_;
 
+	
 	ore_ = std::make_unique<Ore>();
 	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
 
@@ -74,6 +74,8 @@ void GameScene::Initialize()
 		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
 		oreItems_.push_back(std::move(newOre));
 	}
+
+	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 }
 
 void GameScene::Update()
@@ -188,9 +190,8 @@ void GameScene::Update()
 		}
 	}
 	boss_->Upda();
-	NextMap();
 
-	map_->Update(player_);
+	map_->Update(player_,cameraPos_,targetPos_,oldcamerapos_);
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
@@ -207,9 +208,10 @@ void GameScene::Draw()
 
 	//スプライト描画処理(背景)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	map_->Draw(oldcount_);
+	map_->Draw();
 	Object3d::PostDraw();
 
 	for (auto i = 0; i < enemys_.size(); i++) {
@@ -220,7 +222,6 @@ void GameScene::Draw()
 	
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	//map_->Draw(oldcount_);
 	if (ore_ != nullptr) {
 		ore_->Draw();
 	}
@@ -274,18 +275,16 @@ void GameScene::Finalize()
 
 void GameScene::SceneChange()
 {
+	bool Change = player_->GetNext();
+	if (Change) {
+		SceneManager::SceneChange(SceneManager::SceneName::Title);
+	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
-
-	bool Change = player_->GetNext();
-	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
-	}
-
 }
 
 void GameScene::CameraSetting()
@@ -325,49 +324,3 @@ void GameScene::CameraSetting()
 	}
 }
 
-void GameScene::NextMap()
-{
-	//移動中ではない
-	if (player_->GetNotNext()) { return; }
-	//プレイヤーがマップの端に来た時
-	count_ = map_->NextCount(player_->GetPos(), direction);
-	player_->SetStop(true);
-	float NextTarget = 0;
-	XMFLOAT3 NextPos_ = map_->GetNowMapPos();
-	XMFLOAT3 PlayerPos = player_->GetPos();
-	XMFLOAT3 NEXTPLAYERPOS{};
-	NextTarget = oldcamerapos_ + NextPos_.z - 2.f;
-
-
-	if (direction == 0) { player_->SetStop(false); return; }
-	if (direction == 2) {
-		NEXTPLAYERPOS.x = NextPos_.x-5;
-		NEXTPLAYERPOS.z = PlayerPos.z;
-	}
-	else if (direction == 1) {
-		NEXTPLAYERPOS.x = NextPos_.x+7;
-		NEXTPLAYERPOS.z = PlayerPos.z;
-	}
-	else if (direction == 4) {
-		NEXTPLAYERPOS.z = NextPos_.z+9;
-		NEXTPLAYERPOS.x = PlayerPos.x;
-	}
-	else if (direction == 3) {
-		NEXTPLAYERPOS.z = NextPos_.z-4;
-		NEXTPLAYERPOS.x = PlayerPos.x;
-	}
-
-
-	time_ += 0.01f;
-	cameraPos_.x = Easing::easeIn(time_, 0.7, cameraPos_.x, NextPos_.x);
-	targetPos_.x = Easing::easeIn(time_, 0.7, targetPos_.x, NextPos_.x);
-	cameraPos_.z = Easing::easeIn(time_, 0.7, cameraPos_.z, NextTarget);
-	targetPos_.z = Easing::easeIn(time_, 0.7, targetPos_.z, NextPos_.z);
-	PlayerPos.x = Easing::easeIn(time_, 0.3, PlayerPos.x, NEXTPLAYERPOS.x);
-	PlayerPos.z = Easing::easeIn(time_, 0.3, PlayerPos.z, NEXTPLAYERPOS.z);
-
-	player_->SetPos(PlayerPos);
-	if (time_ >= 0.7) {
-		oldcount_ = count_; time_ = 0; map_->SetStop(false); player_->SetStop(false);
-	}
-}

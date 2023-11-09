@@ -10,11 +10,11 @@ void Player::Initialize()
 {
 	//プレイヤー初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		frontMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
-		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f}, {128.0f, 128.0f});
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		frontMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_move.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
+		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -25,14 +25,20 @@ void Player::Initialize()
 	player_->SetHitRadius(0.5f);
 	player_->SetScale({ 0.0f, 0.0f, 0.0f });
 
+	shadowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Shadow.png", { 48, 48 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
+	shadow_ = Object3d::UniquePtrCreate(shadowModel_);
+	shadow_->SetParent(player_.get());
+	shadow_->SetRotation({ -90, 0, 0 });
+	shadow_->SetPosition({ 0, -30, 0 });
+
 	PlayerStatusSetting();
 
-	initHammerPos_ = { -60, 0, 30 };
+	initHammerPos_ = { 0, 0, 30 };
 	initHammerScale_ = { 1, 1, 1 };
 	initHammerRot_ = { -90, 0, 180 };
 
 	//ハンマー初期化
-	hammerModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Hammer.png", { 128, 64 }, { 0.5f, 0.5f }, { 0, 0 }, {128, 128});
+	hammerModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Hammer.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 });
 	hammer_ = Object3d::UniquePtrCreate(hammerModel_);
 	hammer_->SetParent(player_.get());
 	hammer_->SetPosition(initHammerPos_);
@@ -51,6 +57,9 @@ void Player::Initialize()
 	arrow_->SetParent(player_.get());
 	arrow_->SetPosition({ -60, -30, 200 });
 	arrow_->SetRotation(initHammerRot_);
+
+	animeTimer_ = 0;
+	preAnimeCount_ = 999;
 }
 
 void Player::Update()
@@ -65,18 +74,21 @@ void Player::Update()
 	}
 	if (!stop_) {
 		Move();
+		Animation();
 		Attack();
 	}
 
 	player_->SetPosition(pos_);
 	player_->SetRotation(rot_);
 	player_->Update();
+	shadow_->Update();
 	hammer_->Update();
 	arrow_->Update();
 }
 
 void Player::Draw()
 {
+	shadow_->Draw();
 	hammer_->Draw();
 	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
 		arrow_->Draw();
@@ -94,6 +106,7 @@ void Player::Finalize()
 		safe_delete(rightMoveModel_[i]);
 	}
 	safe_delete(hammerModel_);
+	safe_delete(shadowModel_);
 }
 
 void Player::HitHammerToEnemy(Vector3 vec)
@@ -117,6 +130,7 @@ void Player::PlayerStatusSetting() {
 	int32_t hp;
 	int32_t atk;
 	int32_t maxOreCount;
+	int32_t animeSpeed;
 	float hammerRotCoeff;
 	Vector3 sizeUp;
 	std::stringstream stream;
@@ -184,6 +198,9 @@ void Player::PlayerStatusSetting() {
 			line_stream >> sizeUp.y;
 			line_stream >> sizeUp.z;
 		}
+		if (word.find("animeSpeed") == 0) {
+			line_stream >> animeSpeed;
+		}
 	}
 
 	//初期化
@@ -206,6 +223,7 @@ void Player::PlayerStatusSetting() {
 	if (repulsionPower_ <= 0.0f) {
 		repulsionPower_ = 1.0f;
 	}
+	animeSpeed_ = animeSpeed;
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -217,39 +235,7 @@ void Player::Move() {
 	const Vector3 upDownMoveVec = { 0.0f, 0.0f, 1.0f };
 	const Vector3 leftRightMoveVec = { 1.0f, 0.0f, 0.0f };
 
-	float leftStick = PadInput::GetIns()->leftStickY();
-
-	if (KeyInput::GetIns()->PushKey(DIK_DOWN) || leftStick > 0) {
-		if (++animeCount_ >= 4) {
-			animeCount_ = 0;
-		}
-		player_->SetModel(frontMoveModel_[animeCount_]);
-		player_->Initialize();
-	}
-	else if (KeyInput::GetIns()->PushKey(DIK_UP) || leftStick < 0) {
-		if (++animeCount_ >= 4) {
-			animeCount_ = 0;
-		}
-		player_->SetModel(backMoveModel_[animeCount_]);
-		player_->Initialize();
-	}
-
-	leftStick = PadInput::GetIns()->leftStickX();
-
-	if (KeyInput::GetIns()->PushKey(DIK_LEFT) || leftStick < 0) {
-		if (++animeCount_ >= 4) {
-			animeCount_ = 0;
-		}
-		player_->SetModel(leftMoveModel_[animeCount_]);
-		player_->Initialize();
-	}
-	else if (KeyInput::GetIns()->PushKey(DIK_RIGHT) || leftStick > 0) {
-		if (++animeCount_ >= 4) {
-			animeCount_ = 0;
-		}
-		player_->SetModel(rightMoveModel_[animeCount_]);
-		player_->Initialize();
-	}
+	float leftStick = PadInput::GetIns()->leftStickX();
 
 	//減速処理
 	if (acc_.x < 0) {
@@ -485,4 +471,57 @@ void Player::Repulsion()
 	else {
 		repulsionSpeed_ = 0.0f;
 	}
+}
+
+void Player::Animation()
+{
+	bool isNotMoveUpDown = false;
+	bool isNotMoveLeftRight = false;
+
+	//タイマーカウント
+	if (++animeTimer_ >= animeSpeed_) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		animeTimer_ = 0;
+	}
+
+	if (preAnimeCount_ == animeCount_) return;
+
+	//左スティック
+	float leftStick = PadInput::GetIns()->leftStickY();
+
+	if (KeyInput::GetIns()->PushKey(DIK_DOWN) || leftStick > 0) {
+		player_->SetModel(frontMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else if (KeyInput::GetIns()->PushKey(DIK_UP) || leftStick < 0) {
+		player_->SetModel(backMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else {
+		isNotMoveUpDown = true;
+	}
+
+	leftStick = PadInput::GetIns()->leftStickX();
+
+	if (KeyInput::GetIns()->PushKey(DIK_RIGHT) || leftStick > 0) {
+		player_->SetModel(rightMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else if (KeyInput::GetIns()->PushKey(DIK_LEFT) || leftStick < 0) {
+		player_->SetModel(leftMoveModel_[animeCount_]);
+		player_->Initialize();
+	}
+	else {
+		isNotMoveLeftRight = true;
+	}
+
+	if (isNotMoveUpDown && isNotMoveLeftRight) {
+		player_->SetModel(playerModel_[animeCount_]);
+		player_->Initialize();
+	}
+
+	preAnimeCount_ = animeCount_;
+
 }

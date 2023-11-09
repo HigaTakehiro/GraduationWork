@@ -1,4 +1,5 @@
 #include "Stairs.h"
+#include "Shapes.h"
 #include"Player.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
@@ -26,30 +27,34 @@ void Stairs::LoadCsv()
 		}
 	}
 	//ƒŠƒ~ƒbƒg
-	if (Pos.x >= 10) {
-		Pos.x = 10;
+	if (Pos.x >= 10.f) {
+		Pos.x = 10.f;
 	}
-	else if (Pos.x <= -8.6) {
-		Pos.x = -8.6;
+	else if (Pos.x <= -8.6f) {
+		Pos.x = -8.6f;
 	}
 
-	if (Pos.z >= 8.2) {
-		Pos.z = 8.2;
+	if (Pos.z >= 8.2f) {
+		Pos.z = 8.2f;
 	}
-	else if (Pos.z <= -11) {
-		Pos.z = -11;
+	else if (Pos.z <= -11.f) {
+		Pos.z = -11.f;
 	}
 
 	pos_ = Pos;
 }
 
-void Stairs::Initialize(const XMFLOAT3& Pos, Player* player)
+void Stairs::Initialize(const XMFLOAT3& Pos, Player* player, int Count)
 {
 	LoadCsv();
 	player_ = player;
 	pos_ = Pos + pos_;
+	count_ = Count;
+
+	stairsModel_=Shapes::CreateSquare({0,0}, { 64, 64 }, "steps.png", { 3, 3 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
 	stairs_ = make_unique<Object3d>();
-	stairs_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("Kaidan"));
+	stairs_ = Object3d::UniquePtrCreate(stairsModel_);
+	stairs_->SetIsBillboardY(true);
 	stairs_->SetPosition(pos_);
 }
 
@@ -69,8 +74,8 @@ void Stairs::CheckHit()
 {
 	XMFLOAT3 Pos = player_->GetPos();
 
-	if ((Pos.x >= pos_.x - 1.5 && Pos.x <= pos_.x + 1.5) &&
-		(Pos.z >= pos_.z - 1.5 && Pos.z <= pos_.z + 1.5)) {
+	if ((Pos.x >= pos_.x - 1.5f && Pos.x <= pos_.x + 1.5f) &&
+		(Pos.z >= pos_.z - 1.5f && Pos.z <= pos_.z + 1.5f)) {
 		player_->SetNextFlor(true);
 	}
 	else {

@@ -19,6 +19,7 @@ private:
 		Enemy,
 		Kaidan,
 		Boss,
+		Start,
 	};
 
 	enum Direction {
@@ -43,24 +44,24 @@ private:
 
 public:
 
-	void LoadCsv(Player* player);
+	void LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos);
 
 	void CreateBridge();
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initalize(Player* player);
+	void Initalize(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos);
 
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update(Player* player);
+	void Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(int OldCount);
+	void Draw();
 
 	/// <summary>
 	/// 終了処理
@@ -73,15 +74,15 @@ public:
 
 	int NextCount(const XMFLOAT3& pos, int& Direction);
 
-	void NoHitCheck(const XMFLOAT3& pos);
-
 	void SetStop(bool flag) { this->stopCount_ = flag; }
 
-	int GetNextVal() { return nextval_; }
+	XMFLOAT3 GetStartPos() { return startpos_; }
 
 	XMFLOAT3 GetNowMapPos();
 
-	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,const XMFLOAT3& OldCameraPos);
+	int GetCount() { return count_; }
+
+	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,float OldCameraPos);
 
 private:
 
@@ -89,23 +90,24 @@ private:
 
 	list<unique_ptr<Bridge>> bridge;
 
-	list<unique_ptr<Object3d>> bridge_;
-
 	unique_ptr<Stairs> stairs_;
-
-	Stage* sta[3][3];
-
-	XMFLOAT3 pos_[3][3];
-
+	//マップの番号
 	int count_ = 0;
-
+	//古い状態のマプ番号
+	int oldcount_ = 0;
+	//
 	bool stopCount_ = false;
 
 	bool nothit_ = false;
 
 	int nextval_ = 0;
+	//イージング用の時間
+	float time_ = 0;
+	//橋の角度から次の座標の位置を決める
+	int direction_ = 0;
+	//プレイヤーの開始位置
+	XMFLOAT3 startpos_{};
 
-	int bridgeDirection = 0;
 };
 
 
