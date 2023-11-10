@@ -51,7 +51,7 @@ void Stairs::Initialize(const XMFLOAT3& Pos, Player* player, int Count)
 	pos_ = Pos + pos_;
 	count_ = Count;
 
-	stairsModel_=Shapes::CreateSquare({0,0}, { 64, 64 }, "steps.png", { 3, 3 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
+	stairsModel_=Shapes::CreateSquare({0,0}, { 64, 64 }, "steps.png", { 2, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
 	stairs_ = make_unique<Object3d>();
 	stairs_ = Object3d::UniquePtrCreate(stairsModel_);
 	stairs_->SetIsBillboardY(true);

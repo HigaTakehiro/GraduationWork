@@ -100,6 +100,8 @@ public: //ƒƒ“ƒoŠÖ”
 
 	void SetNextFlor(bool flag) { nextflor_ = flag; }
 
+	bool GetNextFlor() { return nextflor_; }
+
 	bool GetNext() { return next_; }
 
 	void SetNext(bool flag) { next_ = flag; }
@@ -270,9 +272,10 @@ private: //ƒƒ“ƒo•Ï”
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
-	DirectX::XMFLOAT3 GetPos(){ return player_->GetPosition(); }
+	DirectX::XMFLOAT3 GetPos() { return player_->GetPosition(); }
 	bool GetisHit() { return player_->GetIsHit(); }
 	bool getisHammerActive() {
-		if (isHammerRelease_ || isHammerSwing_)return true; return false;}
+		if (isHammerRelease_ || isHammerSwing_)return true; return false;
+	}
 };
 

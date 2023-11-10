@@ -22,44 +22,31 @@
 #include"BossBase.h"
 #include"BaseEnemy.h"
 #include"Shake.h"
-#include"IntermediateBase.h"
-class GameScene : public BaseScene
+
+class BossScene :
+    public BaseScene
 {
-public: //メンバ関数
-	/// <summary>
-	/// 初期化関数
-	/// </summary>
-	void Initialize();
+public:
+    void Initialize();
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	void Update();
+    void Update();
 
-	/// <summary>
-	/// 描画処理
-	/// </summary>
-	void Draw();
+    void Draw();
 
-	/// <summary>
-	/// 終了処理
-	/// </summary>
-	void Finalize();
+    void Finalize();
 
-protected: //静的メンバ関数
-
-private: //メンバ関数
+private:
 	/// <summary>
 	/// シーン切り替え処理
 	/// </summary>
 	void SceneChange();
 
-	/// <summary>
-	/// カメラ初期化設定
-	/// </summary>
-	void CameraSetting();
+    /// <summary>
+    /// カメラ初期化設定
+    /// </summary>
+    void CameraSetting();
 
-private: //メンバ変数
+private:
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
 	//ポストエフェクト番号
@@ -95,5 +82,5 @@ private: //メンバ変数
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
 
-	IntermediateBase* ib_;
 };
+
