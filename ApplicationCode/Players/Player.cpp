@@ -15,6 +15,7 @@ void Player::Initialize()
 		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
 		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		rotAttackModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rot.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0 }, { 128, 128 });
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -24,6 +25,10 @@ void Player::Initialize()
 	player_->SetObbScl({ 2.f,4.f,2.f });
 	player_->SetHitRadius(0.5f);
 	player_->SetScale({ 0.0f, 0.0f, 0.0f });
+
+	rotAttackPlayer_ = Object3d::UniquePtrCreate(rotAttackModel_[0]);
+	rotAttackPlayer_->SetScale({ 0, 0, 0 });
+	rotAttackPlayer_->SetIsBillboardY(true);
 
 	shadowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Shadow.png", { 48, 48 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
 	shadow_ = Object3d::UniquePtrCreate(shadowModel_);
@@ -81,6 +86,8 @@ void Player::Update()
 	player_->SetPosition(pos_);
 	player_->SetRotation(rot_);
 	player_->Update();
+	rotAttackPlayer_->SetPosition(pos_);
+	rotAttackPlayer_->Update();
 	shadow_->Update();
 	hammer_->Update();
 	arrow_->Update();
@@ -95,7 +102,12 @@ void Player::Draw()
 	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
 		arrow_->Draw();
 	}
-	player_->Draw();
+	if (!isHammerSwing_) {
+		player_->Draw();
+	}
+	else {
+		rotAttackPlayer_->Draw();
+	}
 }
 
 void Player::Finalize()
@@ -106,6 +118,7 @@ void Player::Finalize()
 		safe_delete(backMoveModel_[i]);
 		safe_delete(leftMoveModel_[i]);
 		safe_delete(rightMoveModel_[i]);
+		safe_delete(rotAttackModel_[i]);
 	}
 	safe_delete(hammerModel_);
 	safe_delete(shadowModel_);
@@ -230,6 +243,8 @@ void Player::PlayerStatusSetting() {
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
 	player_->SetRotation(rot_);
+
+	rotAttackPlayer_->SetScale(scale_);
 
 }
 
@@ -487,6 +502,31 @@ void Player::Animation()
 		}
 		animeTimer_ = 0;
 	}
+
+	//回転アニメーション
+	const float up = 360.0f;
+	const float down = 180.0f;
+	const float left = 90.0f;
+	const float right = 270.0f;
+	const float rotAnimeRange = 45.0f;
+
+	if (rot_.y <= left + rotAnimeRange && rot_.y >= left - rotAnimeRange) {
+		rotAttackPlayer_->SetModel(rotAttackModel_[3]);
+		rotAttackPlayer_->Initialize();
+	}
+	else if (rot_.y <= down + rotAnimeRange && rot_.y >= down - rotAnimeRange){
+		rotAttackPlayer_->SetModel(rotAttackModel_[0]);
+		rotAttackPlayer_->Initialize();
+	}
+	else if (rot_.y <= right + rotAnimeRange && rot_.y >= right - rotAnimeRange) {
+		rotAttackPlayer_->SetModel(rotAttackModel_[1]);
+		rotAttackPlayer_->Initialize();
+	}
+	else if (rot_.y - up <= up + rotAnimeRange && rot_.y + up >= up - rotAnimeRange) {
+		rotAttackPlayer_->SetModel(rotAttackModel_[2]);
+		rotAttackPlayer_->Initialize();
+	}
+	
 
 	if (preAnimeCount_ == animeCount_) return;
 
