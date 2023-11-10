@@ -170,6 +170,7 @@
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp" />
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp" />
     <ClCompile Include="ApplicationCode\Players\Player.cpp" />
+    <ClCompile Include="ApplicationCode\Scenes\BossScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\GameScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\ResultScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\SceneManager.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h" />
     <ClInclude Include="ApplicationCode\Players\Player.h" />
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h" />
+    <ClInclude Include="ApplicationCode\Scenes\BossScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\GameScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\ResultScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\SceneManager.h" />
