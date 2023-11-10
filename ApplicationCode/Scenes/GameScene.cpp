@@ -43,20 +43,25 @@ void GameScene::Initialize()
 	boss_.reset(new Dogom());
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
-	
-	for (auto i = 0; i < enemys_.size(); i++) {
+
+	//後でcsvから
+	unsigned int EnemySize = 3;
+
+	enemys_.resize(EnemySize);
+	vec.resize(EnemySize);
+
+	for (size_t i = 0; i < enemys_.size(); i++) {
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
-		
 		enemys_[i]->SetPlayerIns(player_);
 	}
-enemys_[0]->SetPos(Vector3(10, -30, 10));
-enemys_[2]->SetPos(Vector3(-15, -30, -5));
-enemys_[2]->SetPos(Vector3(0, -30, -5));
+	enemys_[0]->SetPos(Vector3(10, -30, 10));
+	enemys_[2]->SetPos(Vector3(-15, -30, -5));
+	enemys_[2]->SetPos(Vector3(0, -30, -5));
+
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_);
-//	Vector3 Pos = map_->GetStartPos();
-//	player_->SetPos(Pos);
+	map_->Initalize(player_,cameraPos_,targetPos_);
+
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
 
@@ -100,9 +105,19 @@ void GameScene::Update()
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos[3] = { enemys_[0]->GetPos(),enemys_[1]->GetPos() ,enemys_[2]->GetPos() };
-	Vector3 vec[3];
+	Vector3 enemyPos[3] = {};
+	
+	for(size_t i=0;i<enemys_.size();i++)
+	{
+		if(enemys_[i]->GetHP()<=0)
+		{
+			enemys_.erase(enemys_.begin() + i);
+			continue;
+		}
+	}
 	for (auto i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i]->GetHP()<=0)continue;
+		enemyPos[i] =  enemys_[i]->GetPos();
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z}, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			enemys_[i]->GetDamage();
@@ -166,10 +181,13 @@ void GameScene::Update()
 
 	
 
-	for(auto i=0;i<enemys_.size();i++)
+	for (auto i = 0; i < enemys_.size(); i++)
 	{
-		enemys_[i]->SetHammerObb(*_hummmerObb);
-		enemys_[i]->Upda(camera_.get());
+		if (enemys_[i]->GetHP() <= 0) {continue; }
+		if (enemys_[i]!=nullptr) {
+			enemys_[i]->SetHammerObb(*_hummmerObb);
+			enemys_[i]->Upda(camera_.get());
+		}
 	}
 	boss_->Upda();
 
@@ -196,9 +214,11 @@ void GameScene::Draw()
 	map_->Draw();
 	Object3d::PostDraw();
 
-for(auto i=0;i<enemys_.size();i++)
-	enemys_[i]->Draw();
-
+	for (auto i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i]!=nullptr) {
+		enemys_[i]->Draw();
+	}
+		}
 	
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
