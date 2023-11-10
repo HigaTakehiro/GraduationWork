@@ -197,6 +197,8 @@ private: //メンバ変数
 
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
+	//回転攻撃時プレイヤーオブジェクト
+	std::unique_ptr<Object3d> rotAttackPlayer_;
 	//プレイヤーモデル
 	//通常時
 	Model* playerModel_[4];
@@ -209,6 +211,8 @@ private: //メンバ変数
 	Model* rightMoveModel_[4];
 	//左
 	Model* leftMoveModel_[4];
+	//回転攻撃モデル
+	Model* rotAttackModel_[4];
 	//影オブジェクト
 	std::unique_ptr<Object3d> shadow_;
 	//影
