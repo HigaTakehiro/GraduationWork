@@ -13,8 +13,10 @@ private:
 public:
 	//距離がdistanceより小さいか
 	static void isDraw(const Vector3& pos1,const Vector3& pos2,Object3d*obj,float dis = 0.f,bool Flag=false);
-
+	//ノックバックとか
 	static void ColKnock(const Vector3& vec1, const Vector3& vec2, Player* obj, bool flag=false);
+	//
+	static float SmoothStep_Deb(float edge0, float edge1, float x);
 };
 
 //毎シーン書くのだるいので
@@ -36,7 +38,6 @@ inline void Helper::ColKnock(const Vector3& vec1, const Vector3& vec2, Player*ob
 	vec = vec1 - vec2;
 	vec.normalize();
 	vec.y = 0.0f;
-	
 	if(flag)
 	{
 		obj->HitHammerToEnemy(vec,0.5f);
@@ -44,3 +45,9 @@ inline void Helper::ColKnock(const Vector3& vec1, const Vector3& vec2, Player*ob
 
 }
 
+inline float Helper::SmoothStep_Deb(float edge0, float edge1, float x)
+{
+	//edge0からedge1への線形補間
+	float t = std::clamp((x - edge0) / (edge1 - edge0), 0.f, 1.f);
+	return t * t * (3.f - 2.f * t);
+}
