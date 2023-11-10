@@ -65,6 +65,13 @@ void Player::Initialize()
 
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
+
+	//UI‰Šú‰»
+	hpBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 100, 100 }, { 0.2f, 0.6f, 0.2f, 1.0f }, { 0.5f, 0.5f });
+	hpBar_->SetSize({ 200, 20 });
+
+	epBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 100, 120 }, { 0.5f, 0.5f, 0.2f, 1.0f }, { 0.5f, 0.5f });
+	epBar_->SetSize({ 200, 20 });
 }
 
 void Player::Update()
@@ -128,6 +135,12 @@ void Player::HitHammerToEnemy(Vector3 vec)
 {
 	repulsionVec_ = vec;
 	repulsionSpeed_ = repulsionPower_;
+}
+
+void Player::SpriteDraw()
+{
+	hpBar_->Draw();
+	epBar_->Draw();
 }
 
 void Player::PlayerStatusSetting() {
@@ -566,4 +579,8 @@ void Player::Animation()
 
 	preAnimeCount_ = animeCount_;
 
+}
+
+void Player::UIUpdate()
+{
 }
