@@ -57,8 +57,7 @@ private:
 	std::unique_ptr<Camera> camera_;
 	//プレイヤー
 	Player* player_;
-	//アイテム
-	std::unique_ptr<Ore> ore_;
+
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
 

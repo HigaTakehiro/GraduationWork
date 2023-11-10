@@ -1,5 +1,6 @@
 #pragma once
 #include "Object3d.h"
+#include "Sprite.h"
 #include "Vector3.h"
 
 class Player
@@ -93,6 +94,11 @@ public: //メンバ関数
 	void AddHP(int32_t addHP) { hp_ += addHP; }
 
 	/// <summary>
+	/// スプライト描画
+	/// </summary>
+	void SpriteDraw();
+
+	/// <summary>
 	/// HPを減算
 	/// </summary>
 	/// <param name="subHP">減算するHP</param>
@@ -104,7 +110,6 @@ public: //メンバ関数
 
 	bool GetNext() { return next_; }
 
-	void SetNext(bool flag) { next_ = flag; }
 private: //メンバ関数
 
 	/// <summary>
@@ -151,6 +156,11 @@ private: //メンバ関数
 	/// アニメーション処理
 	/// </summary>
 	void Animation();
+
+	/// <summary>
+	/// UI処理
+	/// </summary>
+	void UIUpdate();
 
 private: //メンバ変数
 	//座標
@@ -273,6 +283,12 @@ private: //メンバ変数
 	bool nextflor_ = false;
 
 	bool next_ = false;
+
+	//UI
+	//HPバー
+	std::unique_ptr<Sprite> hpBar_;
+	//経験値バー
+	std::unique_ptr<Sprite> epBar_;
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
