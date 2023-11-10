@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include"BossScene.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -12,8 +13,8 @@
 void GameScene::Initialize()
 {
 	ShowCursor(true);
-	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
-	//ç”»é¢å¤§ãã•è¨­å®š
+	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‰Šú‰»
+	//‰æ–Ê‘å‚«‚³İ’è
 	const Vector3 LB = { -1.0f, -1.0f, 0.0f };
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
@@ -21,10 +22,10 @@ void GameScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
-	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
+	//ƒJƒƒ‰‰Šú‰»
 	CameraSetting();
 	oldcamerapos_ = cameraPos_.z;
-	//ãƒ©ã‚¤ãƒˆåˆæœŸåŒ–
+	//ƒ‰ƒCƒg‰Šú‰»
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -34,7 +35,7 @@ void GameScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
-	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+	//3dƒIƒuƒWƒFƒNƒg‰Šú‰»
 	player_ = new Player;
 	player_->Initialize();
 
@@ -44,7 +45,7 @@ void GameScene::Initialize()
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
 
-	//å¾Œã§csvã‹ã‚‰
+	//Œã‚Åcsv‚©‚ç
 	unsigned int EnemySize = 3;
 
 	enemys_.resize(EnemySize);
@@ -61,7 +62,7 @@ void GameScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 
-	map_->Initalize(player_,cameraPos_,targetPos_,100);
+	map_->Initalize(player_,cameraPos_,targetPos_,0);
 
 
 	shake_ = new Shake();
@@ -132,7 +133,7 @@ void GameScene::Update()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
-	//ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©ç§»å‹•å‡¦ç†
+	//ƒfƒoƒbƒOƒJƒƒ‰ˆÚ“®ˆ—
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
@@ -149,7 +150,7 @@ void GameScene::Update()
 		cameraPos_.x -= 1.0f;
 		targetPos_.x -= 1.0f;
 	}
-	//HPãƒ‡ãƒãƒƒã‚°å‡¦ç†
+	//HPƒfƒoƒbƒOˆ—
 	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
 		player_->SubHP(1);
 	}
@@ -171,7 +172,7 @@ void GameScene::Update()
 	camera_->SetTarget(targetPos_);
 	light_->Update();
 
-	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®OBBè¨­å®š
+	//ƒvƒŒƒCƒ„[‚ÌOBBİ’è
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
@@ -207,18 +208,18 @@ void GameScene::Update()
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
-	//ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
+	//ƒV[ƒ“Ø‚è‘Ö‚¦
 	SceneChange();
 }
 
 void GameScene::Draw()
 {
-	//èƒŒæ™¯è‰²
+	//”wŒiF
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
 
 	postEffect_->PreDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
-	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(èƒŒæ™¯)
+	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(”wŒi)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	background_->Draw();
 	Sprite::PostDraw();
@@ -237,7 +238,7 @@ void GameScene::Draw()
 			}
 		}
 	}
-	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»å‡¦ç†
+	//3DƒIƒuƒWƒFƒNƒg•`‰æˆ—
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	if (player_->GetNextFlor() == false) {
 		if (ore_ != nullptr) {
@@ -255,29 +256,29 @@ void GameScene::Draw()
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
-	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
+	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
-	//ãƒ†ã‚­ã‚¹ãƒˆæç”»ç¯„å›²
+	//ƒeƒLƒXƒg•`‰æ”ÍˆÍ
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = std::to_wstring(player_->GetHP());
 	if (player_->GetNextFlor() == false) {
-		text_->Draw("meiryo", "white", L"ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³\nå·¦ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Lãƒœã‚¿ãƒ³ã§ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³\nå³ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Rãƒœã‚¿ãƒ³ã§ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³\nã‚·ã‚§ã‚¤ã‚¯ã¯Enter\nHP : " + hp, textDrawRange);
+		text_->Draw("meiryo", "white", L"ƒQ[ƒ€ƒV[ƒ“\n¶ƒNƒŠƒbƒN‚Ü‚½‚ÍLƒ{ƒ^ƒ“‚Åƒ^ƒCƒgƒ‹ƒV[ƒ“\n‰EƒNƒŠƒbƒN‚Ü‚½‚ÍRƒ{ƒ^ƒ“‚ÅƒŠƒUƒ‹ƒgƒV[ƒ“\nƒVƒFƒCƒN‚ÍEnter\nHP : " + hp, textDrawRange);
 	}
 	else {
-		text_->Draw("meiryo", "white", L"ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³\nå·¦ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Lãƒœã‚¿ãƒ³ã§æ¬¡ã®éšå±¤ã¸\nHP : " + hp, textDrawRange);
+		text_->Draw("meiryo", "white", L"ƒQ[ƒ€ƒV[ƒ“\n¶ƒNƒŠƒbƒN‚Ü‚½‚ÍLƒ{ƒ^ƒ“‚ÅŸ‚ÌŠK‘w‚Ö\nHP : " + hp, textDrawRange);
 	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
-	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
+	//ƒ|ƒXƒgƒGƒtƒFƒNƒg•`‰æ
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
 
-	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ãªã„ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
+	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚È‚¢ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
@@ -300,7 +301,7 @@ void GameScene::SceneChange()
 {
 	bool Change = player_->GetNext();
 	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
+		SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
