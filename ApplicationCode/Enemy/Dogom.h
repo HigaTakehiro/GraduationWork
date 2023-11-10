@@ -119,6 +119,9 @@ private:
     void RotationFace(const uint16_t& interval);
 
     void ImpactTexScling();
+    void ImpactKnock();
+    Vector3 vec[2] = {};
+
     float t = 0,t2=0;
     bool movF;
     float OldMovAngle;
