@@ -43,20 +43,6 @@ void BossScene::Initialize()
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
 
-	//後でcsvから
-	//unsigned int //enemySize = 3;
-
-	//enemys_.resize(//enemySize);
-	//vec.resize(//enemySize);
-
-	//for (size_t i = 0; i < //enemys_.size(); i++) {
-		//enemys_[i] = new Normal//enemyA();
-		//enemys_[i]->Init();
-		//enemys_[i]->SetPlayerIns(player_);
-	//}
-	//enemys_[0]->SetPos(Vector3(10, -30, 10));
-	//enemys_[2]->SetPos(Vector3(-15, -30, -5));
-	//enemys_[2]->SetPos(Vector3(0, -30, -5));
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_,100);
@@ -64,44 +50,13 @@ void BossScene::Initialize()
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
-
-	ore_ = std::make_unique<Ore>();
-	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
-
-	for (int32_t i = 0; i < 3; i++) {
-		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
-		newOre->Initialize({ -5 + ((float)i * 5), 2, -10 }, { 0, 0, 0 });
-		oreItems_.push_back(std::move(newOre));
-	}
-
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 
 }
 
 void BossScene::Update()
 {
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-				player_->AddOreCount();
-				ore = nullptr;
-			}
-		}
-		if (ore != nullptr) {
-			ore->Update();
-		}
-	}
-
-	if (ore_ != nullptr) {
-		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-			player_->AddOreCount();
-			ore_ = nullptr;
-		}
-	}
-
-	if (ore_ != nullptr) {
-		ore_->Update();
-	}
+	
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
@@ -188,14 +143,7 @@ void BossScene::Draw()
 
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	if (ore_ != nullptr) {
-		ore_->Draw();
-	}
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			ore->Draw();
-		}
-	}
+
 	boss_->Draw();
 	player_->Draw();
 	boss_->Draw2();
