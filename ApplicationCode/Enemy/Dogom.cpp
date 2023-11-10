@@ -101,7 +101,7 @@ void Dogom::Upda()
 			}
 		}
 	}
-
+	ImpactKnock();
 	ArmAct();
 	for (size_t i = 0; i < 2; i++) {
 		m_ArmPos[i].x = std::clamp(m_ArmPos[i].x,-BOSSMAP_W, BOSSMAP_W);
@@ -229,7 +229,7 @@ void Dogom::ArmAct()
 
 		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
-			if (ActionRandom > 50) {
+			if (ActionRandom > 0) {
 				SetAttack_Impact();
 				arm_move_ = ATTACK_IMPACT;
 			} else
@@ -730,5 +730,25 @@ void Dogom::RotationFace(const uint16_t& interval)
 		
 		oldFaceRot = m_BodyRot.z;
 		MorP_Sign = ReturnSign::GetSignVal(randval(mt));
+	}
+}
+
+
+void Dogom::ImpactKnock()
+{
+
+	if (phase_ != Phase_Impact::PHASE_2)return;
+	constexpr float HandsUnderGround = -3.f;
+	for (size_t i = 0; i < 2; i++) {
+		if (m_ArmPos[i].y < HandsUnderGround)continue;
+		if (!Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
+			{ m_ArmPos[i].x, m_ArmPos[i].z }, 3.0f))continue;
+
+		vec[i] = PlayerPos - m_ArmPos[i];
+		vec[i].normalize();
+		vec[i].y = 0.0f;
+
+		m_player->HitHammerToEnemy(vec[i]);
+
 	}
 }

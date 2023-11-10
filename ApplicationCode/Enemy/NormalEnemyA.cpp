@@ -10,7 +10,7 @@
 #include"ImageManager.h"
 #include"ImageManager.h"
 #include "KeyInput.h"
-
+#include"Helper.h"
 
 #define PI 3.14
 void NormalEnemyA::Init()
@@ -74,7 +74,7 @@ void NormalEnemyA::Upda(Camera* camera)
 void NormalEnemyA::Draw()
 {
 	constexpr float MinDis = 15.f;
-	//if(!Helper::isDraw(_player->GetPos(), _status.Pos,MinDis))return;
+	if(!Helper::GetLengthisSmallerDist(_player->GetPos(), _status.Pos,MinDis))return;
 
 	if (_status.HP <= 0)return;
 	if (_status.Tex == nullptr)return;
@@ -86,7 +86,8 @@ void NormalEnemyA::Draw()
 void NormalEnemyA::TextureAnimation()
 {
 	AnimationCount++;
-	if (abs(0 - _status.Rot.y) < 45) {
+	float NowRota = abs(0 - _status.Rot.y);
+	if ( NowRota < 45) {
 		if (AnimationCount == AnimationInterval) {
 
 			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
@@ -102,7 +103,7 @@ void NormalEnemyA::TextureAnimation()
 			_status.Tex->SetAnchorPoint({ 0.5f,1.f });
 			AnimationCount = 0;
 		}
-	} else if (abs(0 - _status.Rot.y) < 135) {
+	} else if (NowRota < 135) {
 		if (AnimationCount == AnimationInterval) {
 
 			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->RUSA1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
@@ -120,7 +121,7 @@ void NormalEnemyA::TextureAnimation()
 		}
 	}
 
-	else if (abs(0 - _status.Rot.y) < 225) {
+	else if (NowRota < 225) {
 		if (AnimationCount == AnimationInterval) {
 
 			_status.Tex.reset(Texture::Create(ImageManager::GetIns()->BUSA1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
@@ -138,7 +139,7 @@ void NormalEnemyA::TextureAnimation()
 		}
 	}
 
-	else if (abs(0 - _status.Rot.y) < 315) {
+	else if (NowRota < 315) {
 
 		if (AnimationCount == AnimationInterval) {
 
@@ -202,6 +203,17 @@ void NormalEnemyA::AttackAction()
 	constexpr float SecMotInter = 20.f;
 	constexpr float ThiMotInter = 20.f;
 	constexpr float XScling = 0.05f, YScling = 0.13f;
+
+	if(!PlayerRecv && Helper::GetLengthisSmallerDist(_player->GetPos(),_status.Pos,2.f))
+	{
+		_player->SubHP(1);
+		PlayerRecv = TRUE;
+	}
+
+	if(PlayerRecv&& _action != ATTACK)
+	{
+		PlayerRecv = FALSE;
+	}
 
 	if (back_t <= BackRVal) {
 		_status.Rot.x = Easing::easeIn(back_t, BackRVal, 180.f, 200.f);

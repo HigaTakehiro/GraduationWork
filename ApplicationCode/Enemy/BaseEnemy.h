@@ -78,6 +78,7 @@ protected:
 
 	bool _isFlash;
 	bool _isAttack;
+	bool PlayerRecv;
 	float t = 0.0f;
 	int FlashCount;
 	float back_t;
