@@ -522,7 +522,7 @@ void Player::Animation()
 		rotAttackPlayer_->SetModel(rotAttackModel_[1]);
 		rotAttackPlayer_->Initialize();
 	}
-	else if (rot_.y - 360 <= up + rotAnimeRange && rot_.y >= up - rotAnimeRange) {
+	else if (rot_.y - up <= up + rotAnimeRange && rot_.y + up >= up - rotAnimeRange) {
 		rotAttackPlayer_->SetModel(rotAttackModel_[2]);
 		rotAttackPlayer_->Initialize();
 	}
