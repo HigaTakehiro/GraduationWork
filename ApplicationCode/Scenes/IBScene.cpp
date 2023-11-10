@@ -1,4 +1,4 @@
-#include "GameScene.h"
+#include "IBScene.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -9,7 +9,7 @@
 #include "Dogom.h"
 #include "SoundManager.h"
 
-void GameScene::Initialize()
+void IBScene::Initialize()
 {
 	ShowCursor(true);
 	//ポストエフェクト初期化
@@ -40,95 +40,28 @@ void GameScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
-	boss_.reset(new Dogom());
-	boss_->Init();
-	boss_->SetPlayerIns(player_);
-
-	//後でcsvから
-	unsigned int EnemySize = 3;
-
-	enemys_.resize(EnemySize);
-	vec.resize(EnemySize);
-
-	for (size_t i = 0; i < enemys_.size(); i++) {
-		enemys_[i] = new NormalEnemyA();
-		enemys_[i]->Init();
-		enemys_[i]->SetPlayerIns(player_);
-	}
-	enemys_[0]->SetPos(Vector3(10, -30, 10));
-	enemys_[2]->SetPos(Vector3(-15, -30, -5));
-	enemys_[2]->SetPos(Vector3(0, -30, -5));
-
 	map_ = make_unique<GameMap>();
 
-	map_->Initalize(player_, cameraPos_, targetPos_, 100);
+	map_->Initalize(player_, cameraPos_, targetPos_, 0);
 
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
-	ore_ = std::make_unique<Ore>();
-	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
+	ib_ = new IntermediateBase();
+	ib_->Initialize();
 
-	for (int32_t i = 0; i < 3; i++) {
-		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
-		newOre->Initialize({ -5 + ((float)i * 5), 2, -10 }, { 0, 0, 0 });
-		oreItems_.push_back(std::move(newOre));
-	}
+
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 }
 
-void GameScene::Update()
+void IBScene::Update()
 {
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-				player_->AddOreCount();
-				ore = nullptr;
-			}
-		}
-		if (ore != nullptr) {
-			ore->Update();
-		}
-	}
-
-	if (ore_ != nullptr) {
-		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-			player_->AddOreCount();
-			ore_ = nullptr;
-		}
-	}
-
-	if (ore_ != nullptr) {
-		ore_->Update();
-	}
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
-
-	for (size_t i = 0; i < enemys_.size(); i++)
-	{
-		if (enemys_[i]->GetHP() <= 0)
-		{
-			enemys_.erase(enemys_.begin() + i);
-			continue;
-		}
-	}
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetHP() <= 0)continue;
-		enemyPos[i] = enemys_[i]->GetPos();
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
-			Vector3 playerPos = player_->GetPos();
-			enemys_[i]->GetDamage();
-			vec[i] = playerPos - enemyPos[i];
-			vec[i].normalize();
-			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i]);
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
-		}
-	}
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
@@ -182,24 +115,15 @@ void GameScene::Update()
 
 
 
-	for (auto i = 0; i < enemys_.size(); i++)
-	{
-		if (enemys_[i]->GetHP() <= 0) { continue; }
-		if (enemys_[i] != nullptr) {
-			enemys_[i]->SetHammerObb(*_hummmerObb);
-			enemys_[i]->Upda(camera_.get());
-		}
-	}
-	boss_->Upda();
-	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
-	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
+	ib_->Update();
+	ib_->FloorSave(1);
 	shake_->Update();
-	colManager_->Update();
+	//colManager_->Update();
 	//シーン切り替え
 	SceneChange();
 }
 
-void GameScene::Draw()
+void IBScene::Draw()
 {
 	//背景色
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
@@ -211,26 +135,10 @@ void GameScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
-	map_->Draw();
+	ib_->Draw();
 	Object3d::PostDraw();
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i] != nullptr) {
-			enemys_[i]->Draw();
-		}
-	}
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	if (ore_ != nullptr) {
-		ore_->Draw();
-	}
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			ore->Draw();
-		}
-	}
-	boss_->Draw();
-	boss_->Draw2();
 	player_->Draw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
@@ -245,12 +153,7 @@ void GameScene::Draw()
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = std::to_wstring(player_->GetHP());
-	if (player_->GetNextFlor() == false) {
-		text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
-	}
-	else {
-		text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンで次の階層へ\nHP : " + hp, textDrawRange);
-	}
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンで次の階層へ\nHP : " + hp, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -264,7 +167,7 @@ void GameScene::Draw()
 }
 
 
-void GameScene::Finalize()
+void IBScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
@@ -272,11 +175,11 @@ void GameScene::Finalize()
 	safe_delete(player_);
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
-	colManager_->Finalize();
+	//colManager_->Finalize();
 	map_->Finalize();
 }
 
-void GameScene::SceneChange()
+void IBScene::SceneChange()
 {
 	bool Change = player_->GetNext();
 	if (Change) {
@@ -288,12 +191,9 @@ void GameScene::SceneChange()
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
-	if (player_->GetNextFlor() == true) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
-	}
 }
 
-void GameScene::CameraSetting()
+void IBScene::CameraSetting()
 {
 	std::string line;
 	Vector3 pos{};
