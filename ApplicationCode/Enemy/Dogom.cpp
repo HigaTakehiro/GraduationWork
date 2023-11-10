@@ -51,6 +51,10 @@ void Dogom::Init()
 		m_ImpactTex[i]->SetRotation({ 90,0,0 });
 	}
 
+	CrossAreaTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "CrossArea.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 }));
+	CrossAreaTex->SetRotation(Vector3(90, 0, 0));
+	CrossAreaTex->SetScale(Vector3(0.17f, 0.05f, 2.f));
+
 	MovingAngle = 180.f;
 	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-10.f);
 	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-10.f);
@@ -72,7 +76,7 @@ void Dogom::Upda()
 		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 	}
-
+	
 	CoollisionArm();
 	CoollisionFace();
 	ImpactTexScling();
@@ -121,7 +125,7 @@ void Dogom::Upda()
 		else m_ArmAlpha[i] += alphaval;
 
 
-		m_Arm[i]->SetScale({ 0.050f,0.050f,2.0f });
+		m_Arm[i]->SetScale({ 0.050f,0.070f,2.0f });
 		m_Arm[i]->SetPosition(m_ArmPos[i]);
 		m_Arm[i]->SetColor({ 1,1,1,m_ArmAlpha[i] });
 		m_ArmAlpha[i]=std::clamp(m_ArmAlpha[i], 0.f, 1.f);
@@ -133,6 +137,9 @@ void Dogom::Upda()
 		m_ImpactTex[i]->Update();
 	}
 
+	CrossAreaTex->SetColor({ 1,1,1,m_CrossAreaAlpha });
+	CrossAreaTex->Update();
+
 	if (m_player->GetPos().z > BOSSMAP_H || m_player->GetPos().z < -BOSSMAP_H ||
 		m_player->GetPos().x > BOSSMAP_W || m_player->GetPos().x < -BOSSMAP_W)
 		isLeaveBoss = TRUE;
@@ -143,7 +150,7 @@ void Dogom::Upda()
 void Dogom::Draw()
 {
 	if (isLeaveBoss)return;
-
+	CrossAreaTex->Draw();
 	m_Body->Draw();
 	
 }
@@ -234,7 +241,7 @@ void Dogom::ArmAct()
 
 		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
-			if (ActionRandom > 0) {
+			if (ActionRandom > 100) {
 				SetAttack_Impact();
 				arm_move_ = ATTACK_IMPACT;
 			} else
@@ -409,7 +416,7 @@ void Dogom::ArmAct()
 		case Phase_Cross::PHASE_1:
 			m_ActionTimer = 0; ActionRandom = 0;
 			ResetArmParam();
-		
+			
 
 			//腕座標をプレイヤー位置に
 			
@@ -417,6 +424,7 @@ m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 			if (m_ArmAttckEaseT[LEFT] >= 30.f)
 			{
+				m_CrossAreaAlpha += 0.02f;
 				if (++CrossWaitCount > 90.f) {
 					m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT] = 0.f;
 					BefoPos[LEFT] = m_ArmPos[LEFT], BefoPos[RIGHT] = m_ArmPos[RIGHT];
@@ -425,6 +433,8 @@ m_ArmAttckEaseT[LEFT]++;
 			}
 			else
 			{
+				CrossAreaTex->SetPosition({ m_player->GetPos().x,-3.5f,m_ArmPos[0].z });
+
 					for (size_t i = 0; i < 2; i++) {
 				m_ArmPos[i].x = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].x, EndX[i]);
 				m_ArmPos[i].y = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].y, m_BodyPos.y);
@@ -439,7 +449,7 @@ m_ArmAttckEaseT[LEFT]++;
 			CrossWaitCount = 0.f;
 			m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
-
+			
 			for (size_t i = 0; i < 2; i++)
 				m_ArmPos[i].x = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].x, PlayerPos.x);
 
@@ -452,6 +462,7 @@ m_ArmAttckEaseT[LEFT]++;
 			break;
 
 		case Phase_Cross::PHASE_3:
+			m_CrossAreaAlpha -= 0.02f;
 			m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 
@@ -475,7 +486,7 @@ m_ArmAttckEaseT[LEFT]++;
 			break;
 		}
 	}
-
+	m_CrossAreaAlpha = std::clamp(m_CrossAreaAlpha, 0.f, 0.6f);
 }
 
 void Dogom::Follow()
