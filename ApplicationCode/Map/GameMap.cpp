@@ -5,7 +5,7 @@
 
 int Count = 0;
 
-void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos)
+void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
 	std::string line;
 	int NUMBER = 0;
@@ -17,9 +17,12 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos)
 
 	std::stringstream stream;
 
-
-	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");
-
+	if (StageNum == 100) {
+		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");
+	}
+	else {
+		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");
+	}
 	while (getline(stream, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
@@ -189,9 +192,9 @@ void GameMap::CreateBridge()
 	}
 }
 
-void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos)
+void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
-	LoadCsv(player,CameraPos,TargetPos);
+	LoadCsv(player,CameraPos,TargetPos,StageNum);
 
 	CreateBridge();
 
@@ -211,7 +214,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	for (unique_ptr<Bridge>& Bridge : bridge) {
 		Bridge->bridge_->Update();
 	}
-
+	if (!stairs_.get()) { return; }
 	stairs_->Update();
 }
 
@@ -221,7 +224,8 @@ void GameMap::Draw()
 		if (count_ == Map->num || oldcount_ == Map->num) {
 			Map->stage_->Draw();
 		}
-		if (count_ == stairs_->GetCont()) {
+		if (!stairs_.get()) { continue; }
+		if ( count_ == stairs_->GetCont()) {
 			stairs_->Draw();
 		}
 	}

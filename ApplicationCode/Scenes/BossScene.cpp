@@ -59,7 +59,7 @@ void BossScene::Initialize()
 	enemys_[2]->SetPos(Vector3(0, -30, -5));
 
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_, cameraPos_, targetPos_);
+	map_->Initalize(player_, cameraPos_, targetPos_,100);
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -270,18 +270,18 @@ void BossScene::Finalize()
 	map_->Finalize();
 }
 
-void GameScene::SceneChange()
+void BossScene::SceneChange()
 {
-	bool Change = player_->GetNext();
-	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
-	}
-	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
-	}
-	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
-	}
+	//bool Change = player_->GetNext();
+	//if (Change) {
+	//	SceneManager::SceneChange(SceneManager::SceneName::Title);
+	//}
+	//if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+	//	SceneManager::SceneChange(SceneManager::SceneName::Title);
+	//}
+	//else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+	//	SceneManager::SceneChange(SceneManager::SceneName::Result);
+	//}
 }
 
 
