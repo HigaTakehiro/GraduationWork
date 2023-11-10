@@ -257,8 +257,8 @@ void GameMap::CheckHitTest(Player* player)
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (PlayerPos.x >= Map->stagePos_.x + 9.f) {
-			PlayerPos.x = Map->stagePos_.x + 9.f;
+		if (PlayerPos.x >= Map->stagePos_.x + 9.3f) {
+			PlayerPos.x = Map->stagePos_.x + 9.3f;
 		}
 		if (PlayerPos.x <= Map->stagePos_.x - 7.f) {
 			PlayerPos.x = Map->stagePos_.x - 7.f;
@@ -290,7 +290,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						stopCount_ = true;
 						return;
 					}
-					else if (pos.x < Pos.x - 2 && Pos.x - 6 < pos.x) {
+					else if (pos.x < Pos.x - 2 && Pos.x - 7 < pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num + 1;
 						direction_ = 2;
