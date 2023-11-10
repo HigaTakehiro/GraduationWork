@@ -44,14 +44,14 @@ private:
 
 public:
 
-	void LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos);
+	void LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum);
 
 	void CreateBridge();
 
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>
-	void Initalize(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos);
+	void Initalize(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,int StageNum);
 
 	/// <summary>
 	/// XVˆ—
