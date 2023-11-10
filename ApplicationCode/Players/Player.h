@@ -40,7 +40,7 @@ public: //ƒƒ“ƒoŠÖ”
 	/// ”½”­İ’è
 	/// </summary>
 	/// <param name="vec"></param>
-	void HitHammerToEnemy(Vector3 vec);
+	void HitHammerToEnemy(Vector3 vec, float dis = 1.f);
 
 	void SetPos(Vector3 pos) { this->pos_ = pos; }
 

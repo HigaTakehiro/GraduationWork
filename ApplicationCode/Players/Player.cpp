@@ -124,10 +124,10 @@ void Player::Finalize()
 	safe_delete(shadowModel_);
 }
 
-void Player::HitHammerToEnemy(Vector3 vec)
+void Player::HitHammerToEnemy(Vector3 vec,float dis)
 {
 	repulsionVec_ = vec;
-	repulsionSpeed_ = repulsionPower_;
+	repulsionSpeed_ = repulsionPower_/dis;
 }
 
 void Player::PlayerStatusSetting() {

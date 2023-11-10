@@ -204,10 +204,29 @@ void NormalEnemyA::AttackAction()
 	constexpr float ThiMotInter = 20.f;
 	constexpr float XScling = 0.05f, YScling = 0.13f;
 
-	if(!PlayerRecv && Collision::GetLength(_status.Pos,_player->GetPos())<2.f)
+	bool isRecv = !PlayerRecv && Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f;
+
+	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), _status.Scl.y>1.3f&& Collision::GetLength(_status.Pos, _player->GetPos()) < 3.f);
+
+	if(isRecv)
 	{
+		if(m_knockF)
+		m_knockF = TRUE;
 		_player->SubHP(1);
 		PlayerRecv = TRUE;
+	}
+
+	constexpr uint16_t maxcooltime = 90;
+	if(m_knockF)
+	{
+		if(++m_KnockCoolT>maxcooltime)
+		{
+			m_knockF = FALSE;
+		}
+	}
+	else
+	{
+		m_KnockCoolT = 0;
 	}
 
 	if(PlayerRecv&& _action != ATTACK)

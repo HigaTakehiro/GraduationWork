@@ -65,7 +65,7 @@ void Dogom::Upda()
 	if (!WinceF)WinceEaseT = 0;
 	RecvDamage(m_BodyPos);
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
-	m_Body->SetScale({ 0.1f,0.2f,0.2f });
+	m_Body->SetScale({ BodyScl });
 	
 	if (!WinceF) {
 		MoveBody();
@@ -570,7 +570,17 @@ void Dogom::MoveBody()
 	//if (arm_move_ != DEFAULT)return;
 	if (movF && arm_move_ == DEFAULT) {
 		BodyMoveEase++;
-		MovingAngle = Easing::easeIn(BodyMoveEase, 90.f, OldMovAngle, nextAngle);
+		if (OldMovAngle == 180) {
+			BodyScl.x = Easing::easeIn(BodyMoveEase, 90.f, 0.1f,0.06f);
+			BodyScl.y = Easing::easeIn(BodyMoveEase, 90.f,0.2f, 0.12f);
+			
+		}
+		else
+		{
+			BodyScl.x = Easing::easeIn(BodyMoveEase, 90.f, 0.06f, 0.1f);
+			BodyScl.y= Easing::easeIn(BodyMoveEase, 90.f, 0.12f, 0.2f);
+		}
+			MovingAngle = Easing::easeIn(BodyMoveEase, 90.f, OldMovAngle, nextAngle);
 		if (BodyMoveEase >= 90) {
 			BossBodyMovingT = 0;
 			BodyMoveEase = 0.f;
@@ -595,7 +605,9 @@ void Dogom::MoveBody()
 			movF = true;
 		}
 	}
-	
+	BodyScl.y = std::clamp(BodyScl.y, 0.15f, 0.2f);
+
+	BodyScl.x = std::clamp(BodyScl.x, 0.05f, 0.1f);
 }
 
 void Dogom::ImpactTexScling()
@@ -747,7 +759,7 @@ void Dogom::ImpactKnock()
 	for (size_t i = 0; i < 2; i++) {
 		if (m_ArmPos[i].y < HandsUnderGround)continue;
 		if (!Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
-			{ m_ArmPos[i].x, m_ArmPos[i].z }, 3.0f))continue;
+			{ m_ArmPos[i].x, m_ArmPos[i].z }, 5.0f))continue;
 
 		vec[i] = PlayerPos - m_ArmPos[i];
 		vec[i].normalize();
@@ -756,4 +768,9 @@ void Dogom::ImpactKnock()
 		m_player->HitHammerToEnemy(vec[i]);
 
 	}
+}
+
+void Dogom::FaceCol()
+{
+	
 }

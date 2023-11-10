@@ -22,5 +22,7 @@ private:
     void Jump();
     /*‚±‚¤‚°‚«*/
     void Attack();
+    uint16_t m_KnockCoolT = 0;
+    bool m_knockF = FALSE;
 };
 

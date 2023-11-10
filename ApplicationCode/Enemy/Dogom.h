@@ -19,7 +19,7 @@ private:
     //プレイヤーモデル
     Model* BodyModel_[8];
     Model* ArmModel_[8];
-
+    Vector3 BodyScl={0.1f,0.2f,0.2f};
     Vector3 m_BodyPos;
     Vector3 oldBodyPos = Vector3(0, 0, 0);
     Vector3 m_BodyRot;
@@ -120,6 +120,7 @@ private:
 
     void ImpactTexScling();
     void ImpactKnock();
+    void FaceCol();
     Vector3 vec[2] = {};
 
     float t = 0,t2=0;
