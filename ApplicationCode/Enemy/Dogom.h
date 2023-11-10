@@ -13,6 +13,8 @@ private:
     };
 
     std::unique_ptr<Object3d> m_Body;
+    std::unique_ptr<Object3d>CrossAreaTex;
+    float m_CrossAreaAlpha = 0.f;
     std::array<std::unique_ptr<Object3d>,2> m_Arm;
     std::array<std::unique_ptr<Object3d>, 2> m_ImpactTex;
 

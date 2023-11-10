@@ -33,6 +33,7 @@ private:
 		XMFLOAT3 stagePos_;
 		int num;
 		Map state_;
+		bool stop = false;
 	};
 
 	struct Bridge
@@ -107,6 +108,8 @@ private:
 	int direction_ = 0;
 	//プレイヤーの開始位置
 	XMFLOAT3 startpos_{};
+
+	int nowstate_ = 0;
 
 };
 
