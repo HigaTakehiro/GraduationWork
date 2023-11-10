@@ -113,10 +113,10 @@ void IBScene::Update()
 
 	_hummmerObb = &l_obb;
 
-
-
 	ib_->Update();
 	ib_->FloorSave(1);
+
+	//ib_->LoadFloor();
 	shake_->Update();
 	//colManager_->Update();
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
@@ -171,7 +171,6 @@ void IBScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
-	boss_->Finalize();
 	safe_delete(player_);
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
@@ -185,8 +184,8 @@ void IBScene::SceneChange()
 	if (Change) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
-	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
+	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);

@@ -248,12 +248,8 @@ void GameScene::Draw()
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = std::to_wstring(player_->GetHP());
-	if (player_->GetNextFlor() == false) {
-		text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
-	}
-	else {
-		text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンで次の階層へ\nHP : " + hp, textDrawRange);
-	}
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
+
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -291,7 +287,7 @@ void GameScene::SceneChange()
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
-	if (player_->GetNextFlor() == true) {
+	if (player_->GetNextFlor() == true||player_->GetHP()<=0) {
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 }
