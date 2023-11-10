@@ -173,6 +173,7 @@
     <ClCompile Include="ApplicationCode\Players\Player.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\BossScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\GameScene.cpp" />
+    <ClCompile Include="ApplicationCode\Scenes\IBScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\ResultScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\SceneManager.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\BossScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\GameScene.h" />
+    <ClInclude Include="ApplicationCode\Scenes\IBScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\ResultScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\SceneManager.h" />
     <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h" />
