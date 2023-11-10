@@ -205,8 +205,9 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 {
 	CheckHitTest(player);
 
-	NextMap(player, CameraPos, TargetPos, OldCameraPos);
-
+	if (time_ < 1) {
+		NextMap(player, CameraPos, TargetPos, OldCameraPos);
+	}
 	for (unique_ptr<Stage>& Map : maps_) {
 		Map->stage_->Update();
 	}
@@ -228,9 +229,11 @@ void GameMap::Draw()
 		if ( count_ == stairs_->GetCont()) {
 			stairs_->Draw();
 		}
+		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
 
 	for (unique_ptr<Bridge>& Bridge : bridge) {
+		if (nowstate_ == Map::Boss && time_ >= 1) { return; }
 		if (Bridge->num == count_ ||
 			(Bridge->num == count_ - nextval_ && Bridge->state_ == Direction::Vertical) ||
 			(Bridge->num == count_ - 1 && Bridge->state_ == Direction::Beside)
@@ -292,6 +295,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						count_ = Bridge->num;
 						direction_ = 1;
 						stopCount_ = true;
+						nowstate_ = Map->state_;
 						return;
 					}
 					else if (pos.x < Pos.x - 2 && Pos.x - 7 < pos.x) {
@@ -299,6 +303,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						count_ = Bridge->num + 1;
 						direction_ = 2;
 						stopCount_ = true;
+						nowstate_ = Map->state_;
 						return;
 					}
 				}
@@ -310,6 +315,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						count_ = Bridge->num + nextval_;
 						direction_ = 3;
 						stopCount_ = true;
+						nowstate_ = Map->state_;
 						return;
 					}
 					else if (pos.z < Pos.z + 9 && Pos.z + 2 < pos.z) {
@@ -317,6 +323,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						count_ = Bridge->num;
 						direction_ = 4;
 						stopCount_ = true;
+						nowstate_ = Map->state_;
 						return;
 					}
 				}
@@ -388,7 +395,14 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos,f
 
 	player->SetPos(PlayerPos);
 	if (time_ >= 0.7) {
-		oldcount_ = count_; time_ = 0; SetStop(false); player->SetStop(false);
+		oldcount_ = count_; SetStop(false); player->SetStop(false);
+		if (nowstate_ != Map::Boss) {
+			time_ = 0;
+		}
+		else {
+			time_ = 1;
+			nothit_ = false;
+		}
 	}
 }
 
