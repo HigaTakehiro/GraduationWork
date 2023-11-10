@@ -97,5 +97,7 @@ private: //ƒƒ“ƒo•Ï”
 	XMFLOAT3 nextPos_{};
 
 	IntermediateBase* ib_;
+
+	int baseNo;
 };
 

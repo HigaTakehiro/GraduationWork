@@ -50,7 +50,7 @@ void IBScene::Initialize()
 
 	ib_ = new IntermediateBase();
 	ib_->Initialize();
-
+	baseNo = 1;
 
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
@@ -113,10 +113,13 @@ void IBScene::Update()
 
 	_hummmerObb = &l_obb;
 
+	/*if (Ž€‚ñ‚Å‚é‚Æ‚«) { 
+	ib_->LoadFloor();
+	baseNo=ib_->GetBaseNo();
+	}*/
 	ib_->Update();
-	ib_->FloorSave(1);
+	ib_->FloorSave(baseNo);
 
-	//ib_->LoadFloor();
 	shake_->Update();
 	//colManager_->Update();
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
@@ -185,6 +188,7 @@ void IBScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		baseNo++;
 		SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
