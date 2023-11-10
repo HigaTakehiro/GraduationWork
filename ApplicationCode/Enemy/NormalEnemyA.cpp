@@ -74,8 +74,8 @@ void NormalEnemyA::Upda(Camera* camera)
 void NormalEnemyA::Draw()
 {
 	constexpr float MinDis = 15.f;
-	if(!Helper::GetLengthisSmallerDist(_player->GetPos(), _status.Pos,MinDis))return;
 
+	if (Collision::GetLength(_status.Pos, _player->GetPos()) > 15.f)return;
 	if (_status.HP <= 0)return;
 	if (_status.Tex == nullptr)return;
 	Texture::PreDraw();
@@ -204,7 +204,7 @@ void NormalEnemyA::AttackAction()
 	constexpr float ThiMotInter = 20.f;
 	constexpr float XScling = 0.05f, YScling = 0.13f;
 
-	if(!PlayerRecv && Helper::GetLengthisSmallerDist(_player->GetPos(),_status.Pos,2.f))
+	if(!PlayerRecv && Collision::GetLength(_status.Pos,_player->GetPos())<2.f)
 	{
 		_player->SubHP(1);
 		PlayerRecv = TRUE;
