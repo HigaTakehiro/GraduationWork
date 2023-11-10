@@ -1,5 +1,5 @@
 #include "GameScene.h"
-#include"BossScene.h"
+//#include"//bossScene.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -41,9 +41,9 @@ void GameScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
-	boss_.reset(new Dogom());
-	boss_->Init();
-	boss_->SetPlayerIns(player_);
+	//boss_.reset(new Dogom());
+	//boss_->Init();
+	//boss_->SetPlayerIns(player_);
 
 	//Œã‚Åcsv‚©‚ç
 	unsigned int EnemySize = 3;
@@ -193,9 +193,10 @@ void GameScene::Update()
 			enemys_[i]->Upda(camera_.get());
 		}
 	}
-	boss_->Upda();
+	//boss_->Upda();
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
-	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
+	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
+
 	shake_->Update();
 	colManager_->Update();
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
@@ -232,8 +233,8 @@ void GameScene::Draw()
 			ore->Draw();
 		}
 	}
-	boss_->Draw();
-	boss_->Draw2();
+	//boss_->Draw();
+	//boss_->Draw2();
 	player_->Draw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
@@ -267,7 +268,7 @@ void GameScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
-	boss_->Finalize();
+	//boss_->Finalize();
 	safe_delete(player_);
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
@@ -287,7 +288,7 @@ void GameScene::SceneChange()
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
-	if (player_->GetNextFlor() == true||player_->GetHP()<=0) {
+	if (player_->GetNextFlor() == true || player_->GetHP() <= 0) {
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 }
