@@ -280,16 +280,13 @@ void GameScene::SceneChange()
 {
 	bool Change = player_->GetNext();
 	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
-	}
-	if (player_->GetNextFlor() == true || player_->GetHP() <= 0) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 }
 
