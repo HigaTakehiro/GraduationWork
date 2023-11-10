@@ -67,13 +67,15 @@ void NormalEnemyA::Upda(Camera* camera)
 		_status.Tex->SetBillboard(FALSE);
 		_status.Tex->Update(camera);
 	}
-	
 
 	if (!_isAttack) {back_t = 0.f; }
 }
-
+#include"Helper.h"
 void NormalEnemyA::Draw()
 {
+	constexpr float MinDis = 15.f;
+	//if(!Helper::isDraw(_player->GetPos(), _status.Pos,MinDis))return;
+
 	if (_status.HP <= 0)return;
 	if (_status.Tex == nullptr)return;
 	Texture::PreDraw();

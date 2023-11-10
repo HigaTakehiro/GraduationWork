@@ -75,7 +75,8 @@ private: //メンバ変数
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
 
-	std::array<BaseEnemy*, 3> enemys_;
+	std::vector<BaseEnemy*> enemys_;
+	std::vector<Vector3> vec;
 	OBB* _hummmerObb;
 
 	std::unique_ptr<BossBase>boss_;

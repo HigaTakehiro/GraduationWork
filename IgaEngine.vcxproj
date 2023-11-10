@@ -246,6 +246,7 @@
     <ClInclude Include="Engine\Base\DirectXSetting.h" />
     <ClInclude Include="Engine\Base\Easing.h" />
     <ClInclude Include="Engine\Base\ExternalFileLoader.h" />
+    <ClInclude Include="Engine\Base\Helper.h" />
     <ClInclude Include="Engine\Base\JsonLoader.h" />
     <ClInclude Include="Engine\Base\Quaternion.h" />
     <ClInclude Include="Engine\Base\RandCreate.h" />

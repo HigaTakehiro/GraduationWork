@@ -152,6 +152,7 @@ void Dogom::Draw2()
 	if (isLeaveBoss)return;
 	//if (m_HP <= 0)return;
 	for (size_t i = 0; i < 2; i++) {
+		if (m_ArmHp[i] <= 0)continue;
 		m_ImpactTex[i]->Draw();
 		m_Arm[i]->Draw();
 	}
@@ -628,6 +629,7 @@ void Dogom::CoollisionFace()
 
 	for (size_t i = 0; i < 2; i++) {
 		if (ColF[i])continue;
+		if (m_ArmHp[i] <= 0)continue;
 		DamCool[i] = 0;
 		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<5.f)
 		{

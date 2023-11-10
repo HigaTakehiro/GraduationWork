@@ -52,7 +52,7 @@ void Player::Initialize()
 	hammerSize_ = initHammerScale_;
 
 	//–îˆó‰Šú‰»
-	arrowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Arrow.png");
+	arrowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Arrow.png", { 64, 64 }, {0.5f, 0.5f});
 	arrow_ = Object3d::UniquePtrCreate(arrowModel_);
 	arrow_->SetParent(player_.get());
 	arrow_->SetPosition({ -60, -30, 200 });
@@ -89,7 +89,9 @@ void Player::Update()
 void Player::Draw()
 {
 	shadow_->Draw();
-	hammer_->Draw();
+	if (isAttack_) {
+		hammer_->Draw();
+	}
 	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
 		arrow_->Draw();
 	}

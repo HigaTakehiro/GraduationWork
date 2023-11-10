@@ -44,14 +44,14 @@ private:
 
 public:
 
-	void LoadCsv(Player* player);
+	void LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos);
 
 	void CreateBridge();
 
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>
-	void Initalize(Player* player);
+	void Initalize(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos);
 
 	/// <summary>
 	/// XVˆ—
@@ -79,6 +79,8 @@ public:
 	XMFLOAT3 GetStartPos() { return startpos_; }
 
 	XMFLOAT3 GetNowMapPos();
+
+	int GetCount() { return count_; }
 
 	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,float OldCameraPos);
 

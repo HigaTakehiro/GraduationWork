@@ -44,19 +44,24 @@ void GameScene::Initialize()
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
 
-	for (auto i = 0; i < enemys_.size(); i++) {
+	//後でcsvから
+	unsigned int EnemySize = 3;
+
+	enemys_.resize(EnemySize);
+	vec.resize(EnemySize);
+
+	for (size_t i = 0; i < enemys_.size(); i++) {
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
-
 		enemys_[i]->SetPlayerIns(player_);
 	}
 	enemys_[0]->SetPos(Vector3(10, -30, 10));
 	enemys_[2]->SetPos(Vector3(-15, -30, -5));
 	enemys_[2]->SetPos(Vector3(0, -30, -5));
+
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_);
-//	Vector3 Pos = map_->GetStartPos();
-//	player_->SetPos(Pos);
+	map_->Initalize(player_, cameraPos_, targetPos_);
+
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
@@ -102,9 +107,19 @@ void GameScene::Update()
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos[3] = { enemys_[0]->GetPos(),enemys_[1]->GetPos() ,enemys_[2]->GetPos() };
-	Vector3 vec[3];
+	Vector3 enemyPos[3] = {};
+
+	for (size_t i = 0; i < enemys_.size(); i++)
+	{
+		if (enemys_[i]->GetHP() <= 0)
+		{
+			enemys_.erase(enemys_.begin() + i);
+			continue;
+		}
+	}
 	for (auto i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i]->GetHP() <= 0)continue;
+		enemyPos[i] = enemys_[i]->GetPos();
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			enemys_[i]->GetDamage();
@@ -170,12 +185,16 @@ void GameScene::Update()
 
 	for (auto i = 0; i < enemys_.size(); i++)
 	{
-		enemys_[i]->SetHammerObb(*_hummmerObb);
-		enemys_[i]->Upda(camera_.get());
+		if (enemys_[i]->GetHP() <= 0) { continue; }
+		if (enemys_[i] != nullptr) {
+			enemys_[i]->SetHammerObb(*_hummmerObb);
+			enemys_[i]->Upda(camera_.get());
+		}
 	}
 	boss_->Upda();
 	if (player_->GetNextFlor() == true) {
 		ib_->Update();
+		ib_->FloorSave(1);
 	}
 	else {
 		map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
@@ -183,7 +202,6 @@ void GameScene::Update()
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK)) {
 		player_->SetNextFlor(false);
 	}
-	ib_->FloorSave(2);
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
@@ -203,7 +221,6 @@ void GameScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
 	if (player_->GetNextFlor() == true) {
 		ib_->Draw();
 	}
@@ -211,24 +228,28 @@ void GameScene::Draw()
 		map_->Draw();
 	}
 	Object3d::PostDraw();
-
-	for (auto i = 0; i < enemys_.size(); i++)
-		enemys_[i]->Draw();
-
-
-	//3Dオブジェクト描画処理
-	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	if (ore_ != nullptr) {
-		ore_->Draw();
-	}
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			ore->Draw();
+	if (player_->GetNextFlor() == false) {
+		for (auto i = 0; i < enemys_.size(); i++) {
+			if (enemys_[i] != nullptr) {
+				enemys_[i]->Draw();
+			}
 		}
 	}
-	boss_->Draw();
+	//3Dオブジェクト描画処理
+	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	if (player_->GetNextFlor() == false) {
+		if (ore_ != nullptr) {
+			ore_->Draw();
+		}
+		for (std::unique_ptr<Ore>& ore : oreItems_) {
+			if (ore != nullptr) {
+				ore->Draw();
+			}
+		}
+		boss_->Draw();
+		boss_->Draw2();
+	}
 	player_->Draw();
-	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
@@ -242,8 +263,12 @@ void GameScene::Draw()
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = std::to_wstring(player_->GetHP());
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
-
+	if (player_->GetNextFlor() == false) {
+		text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
+	}
+	else {
+		text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンで次の階層へ\nHP : " + hp, textDrawRange);
+	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
