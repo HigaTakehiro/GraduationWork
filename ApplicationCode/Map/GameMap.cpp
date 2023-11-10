@@ -103,13 +103,13 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 		}
 		else if (NUMBER == 4) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
-			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bossmap"));
+			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Boss;
 			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
-			Map->stage_->SetScale({ 4.15f,0.1f,14.57f });
+			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			Map->stage_->SetRotation({ 0.f,0.f,0.f });
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
