@@ -147,14 +147,19 @@ void Dogom::Draw()
 	m_Body->Draw();
 	
 }
+#include"Helper.h"
 void Dogom::Draw2()
 {
-	if (isLeaveBoss)return;
+	//if (isLeaveBoss)return;
 	//if (m_HP <= 0)return;
+	constexpr float BossDraw_maxlen = 25.f;
 	for (size_t i = 0; i < 2; i++) {
-		if (m_ArmHp[i] <= 0)continue;
-		m_ImpactTex[i]->Draw();
-		m_Arm[i]->Draw();
+
+		Helper::isDraw(m_player->GetPos(), m_ArmPos[i],
+			m_Arm[i].get(),BossDraw_maxlen, (m_HP <= 0||m_ArmHp[i]<=0));
+
+		Helper::isDraw(m_player->GetPos(),m_ImpactTexPos[i], m_ImpactTex[i].get(),
+		BossDraw_maxlen, (m_HP<=0 || m_ArmHp[i] <= 0));
 	}
 }
 

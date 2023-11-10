@@ -4,6 +4,7 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 #include"IBScene.h"
+#include "BossScene.h"
 #include "ResultScene.h"
 #include "DirectXSetting.h"
 #include "Sound.h"
@@ -12,7 +13,7 @@
 #include "TextDraw.h"
 #include "CollisionManager.h"
 
-class SceneManager
+	class SceneManager
 {
 public:
 	SceneManager() = default;
@@ -23,6 +24,7 @@ public: //ƒV[ƒ“ŠÇ—”Ô†
 		Title,
 		Game,
 		IB,
+		Boss,
 		Result,
 		None
 	};

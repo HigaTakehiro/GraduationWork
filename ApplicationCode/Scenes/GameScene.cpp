@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include"BossScene.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -61,7 +62,9 @@ void GameScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 
-	map_->Initalize(player_, cameraPos_, targetPos_, 100);
+
+	map_->Initalize(player_, cameraPos_, targetPos_, 0);
+
 
 
 	shake_ = new Shake();
@@ -280,7 +283,7 @@ void GameScene::SceneChange()
 {
 	bool Change = player_->GetNext();
 	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
+		SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
