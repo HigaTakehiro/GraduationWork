@@ -12,8 +12,8 @@
 void GameScene::Initialize()
 {
 	ShowCursor(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‰Šú‰»
-	//‰æ–Ê‘å‚«‚³İ’è
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+	//ç”»é¢å¤§ãã•è¨­å®š
 	const Vector3 LB = { -1.0f, -1.0f, 0.0f };
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
@@ -21,10 +21,10 @@ void GameScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
-	//ƒJƒƒ‰‰Šú‰»
+	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	CameraSetting();
 	oldcamerapos_ = cameraPos_.z;
-	//ƒ‰ƒCƒg‰Šú‰»
+	//ãƒ©ã‚¤ãƒˆåˆæœŸåŒ–
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -34,7 +34,7 @@ void GameScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
-	//3dƒIƒuƒWƒFƒNƒg‰Šú‰»
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
 	player_ = new Player;
 	player_->Initialize();
 
@@ -44,7 +44,7 @@ void GameScene::Initialize()
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
 
-	//Œã‚Åcsv‚©‚ç
+	//å¾Œã§csvã‹ã‚‰
 	unsigned int EnemySize = 3;
 
 	enemys_.resize(EnemySize);
@@ -60,18 +60,22 @@ void GameScene::Initialize()
 	enemys_[2]->SetPos(Vector3(0, -30, -5));
 
 	map_ = make_unique<GameMap>();
+
 	map_->Initalize(player_,cameraPos_,targetPos_,100);
 
-	shake_ = new Shake();
-	shake_->Initialize(DirectXSetting::GetIns()->GetDev(),camera_.get());
 
-	
+	shake_ = new Shake();
+	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+
+	ib_ = new IntermediateBase();
+	ib_->Initialize();
+
 	ore_ = std::make_unique<Ore>();
 	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
 
 	for (int32_t i = 0; i < 3; i++) {
 		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
-		newOre->Initialize({ -5 + ((float)i * 5), 2, -10}, {0, 0, 0});
+		newOre->Initialize({ -5 + ((float)i * 5), 2, -10 }, { 0, 0, 0 });
 		oreItems_.push_back(std::move(newOre));
 	}
 
@@ -106,19 +110,19 @@ void GameScene::Update()
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
-	
-	for(size_t i=0;i<enemys_.size();i++)
+
+	for (size_t i = 0; i < enemys_.size(); i++)
 	{
-		if(enemys_[i]->GetHP()<=0)
+		if (enemys_[i]->GetHP() <= 0)
 		{
 			enemys_.erase(enemys_.begin() + i);
 			continue;
 		}
 	}
 	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetHP()<=0)continue;
-		enemyPos[i] =  enemys_[i]->GetPos();
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z}, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		if (enemys_[i]->GetHP() <= 0)continue;
+		enemyPos[i] = enemys_[i]->GetPos();
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			enemys_[i]->GetDamage();
 			vec[i] = playerPos - enemyPos[i];
@@ -128,7 +132,7 @@ void GameScene::Update()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
-	//ƒfƒoƒbƒOƒJƒƒ‰ˆÚ“®ˆ—
+	//ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©ç§»å‹•å‡¦ç†
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
@@ -145,7 +149,7 @@ void GameScene::Update()
 		cameraPos_.x -= 1.0f;
 		targetPos_.x -= 1.0f;
 	}
-	//HPƒfƒoƒbƒOˆ—
+	//HPãƒ‡ãƒãƒƒã‚°å‡¦ç†
 	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
 		player_->SubHP(1);
 	}
@@ -167,7 +171,7 @@ void GameScene::Update()
 	camera_->SetTarget(targetPos_);
 	light_->Update();
 
-	//ƒvƒŒƒCƒ„[‚ÌOBBİ’è
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®OBBè¨­å®š
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
@@ -179,82 +183,101 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-	
+
 
 	for (auto i = 0; i < enemys_.size(); i++)
 	{
-		if (enemys_[i]->GetHP() <= 0) {continue; }
-		if (enemys_[i]!=nullptr) {
+		if (enemys_[i]->GetHP() <= 0) { continue; }
+		if (enemys_[i] != nullptr) {
 			enemys_[i]->SetHammerObb(*_hummmerObb);
 			enemys_[i]->Upda(camera_.get());
 		}
 	}
 	boss_->Upda();
-
-	map_->Update(player_,cameraPos_,targetPos_,oldcamerapos_);
+	if (player_->GetNextFlor() == true) {
+		ib_->Update();
+		ib_->FloorSave(1);
+	}
+	else {
+		map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
+	}
+	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK)) {
+		player_->SetNextFlor(false);
+	}
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
-	//ƒV[ƒ“Ø‚è‘Ö‚¦
+	//ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 	SceneChange();
 }
 
 void GameScene::Draw()
 {
-	//”wŒiF
+	//èƒŒæ™¯è‰²
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
 
 	postEffect_->PreDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(”wŒi)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(èƒŒæ™¯)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	map_->Draw();
+	if (player_->GetNextFlor() == true) {
+		ib_->Draw();
+	}
+	else {
+		map_->Draw();
+	}
 	Object3d::PostDraw();
-
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]!=nullptr) {
-		enemys_[i]->Draw();
-	}
+	if (player_->GetNextFlor() == false) {
+		for (auto i = 0; i < enemys_.size(); i++) {
+			if (enemys_[i] != nullptr) {
+				enemys_[i]->Draw();
+			}
 		}
-	
-	//3DƒIƒuƒWƒFƒNƒg•`‰æˆ—
+	}
+	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»å‡¦ç†
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	if (ore_ != nullptr) {
-		ore_->Draw();
-	}
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			ore->Draw();
+	if (player_->GetNextFlor() == false) {
+		if (ore_ != nullptr) {
+			ore_->Draw();
 		}
+		for (std::unique_ptr<Ore>& ore : oreItems_) {
+			if (ore != nullptr) {
+				ore->Draw();
+			}
+		}
+		boss_->Draw();
+		boss_->Draw2();
 	}
-	boss_->Draw();
 	player_->Draw();
-	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
-	//ƒeƒLƒXƒg•`‰æ”ÍˆÍ
+	//ãƒ†ã‚­ã‚¹ãƒˆæç”»ç¯„å›²
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = std::to_wstring(player_->GetHP());
-	text_->Draw("meiryo", "white", L"ƒQ[ƒ€ƒV[ƒ“\n¶ƒNƒŠƒbƒN‚Ü‚½‚ÍLƒ{ƒ^ƒ“‚Åƒ^ƒCƒgƒ‹ƒV[ƒ“\n‰EƒNƒŠƒbƒN‚Ü‚½‚ÍRƒ{ƒ^ƒ“‚ÅƒŠƒUƒ‹ƒgƒV[ƒ“\nƒVƒFƒCƒN‚ÍEnter\nHP : " + hp, textDrawRange);
-
+	if (player_->GetNextFlor() == false) {
+		text_->Draw("meiryo", "white", L"ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³\nå·¦ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Lãƒœã‚¿ãƒ³ã§ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³\nå³ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Rãƒœã‚¿ãƒ³ã§ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³\nã‚·ã‚§ã‚¤ã‚¯ã¯Enter\nHP : " + hp, textDrawRange);
+	}
+	else {
+		text_->Draw("meiryo", "white", L"ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³\nå·¦ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Lãƒœã‚¿ãƒ³ã§æ¬¡ã®éšå±¤ã¸\nHP : " + hp, textDrawRange);
+	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg•`‰æ
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
 
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚È‚¢ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ãªã„ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
