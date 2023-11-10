@@ -257,9 +257,10 @@ void GameMap::CheckHitTest(Player* player)
 	XMFLOAT3 PlayerPos = player->GetPos();
 	bool Flag = player->GetStop();
 	if (Flag) {
-		nothit_ = true;
+ 		nothit_ = true;
 	}
-	if (nothit_ != false) { return; }
+	if (nothit_ != false&&time_!=0.f) { return; }
+
 	for (unique_ptr<Stage>& Map : maps_) {
 
 		if (count_ != Map->num) { continue; }
