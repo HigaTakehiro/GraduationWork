@@ -275,6 +275,9 @@
     <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\BossScene.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -465,6 +468,10 @@
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Base\Helper.h" />
+    <ClInclude Include="ApplicationCode\Scenes\BossScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
