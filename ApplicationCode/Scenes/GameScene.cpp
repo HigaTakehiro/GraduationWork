@@ -70,42 +70,22 @@ void GameScene::Initialize()
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
-	ore_ = std::make_unique<Ore>();
-	ore_->Initialize({ -5, 2, -5 }, { 1, 0, 0 });
-
-	for (int32_t i = 0; i < 3; i++) {
-		std::unique_ptr<Ore> newOre = std::make_unique<Ore>();
-		newOre->Initialize({ -5 + ((float)i * 5), 2, -10 }, { 0, 0, 0 });
-		oreItems_.push_back(std::move(newOre));
-	}
-
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 }
 
 void GameScene::Update()
 {
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-				player_->AddOreCount();
-				ore = nullptr;
-			}
-		}
-		if (ore != nullptr) {
-			ore->Update();
-		}
-	}
-
-	if (ore_ != nullptr) {
-		if (ore_->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-			player_->AddOreCount();
-			ore_ = nullptr;
-		}
-	}
-
-	if (ore_ != nullptr) {
-		ore_->Update();
-	}
+	//for (std::unique_ptr<Ore>& ore : oreItems_) {
+	//	if (ore != nullptr) {
+	//		if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
+	//			player_->AddOreCount();
+	//			ore = nullptr;
+	//		}
+	//	}
+	//	if (ore != nullptr) {
+	//		ore->Update();
+	//	}
+	//}
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
@@ -225,14 +205,11 @@ void GameScene::Draw()
 	}
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	if (ore_ != nullptr) {
-		ore_->Draw();
-	}
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
+	/*for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			ore->Draw();
 		}
-	}
+	}*/
 	//boss_->Draw();
 	//boss_->Draw2();
 	player_->Draw();
@@ -259,6 +236,7 @@ void GameScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	player_->SpriteDraw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }

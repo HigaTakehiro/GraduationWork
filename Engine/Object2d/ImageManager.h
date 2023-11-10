@@ -19,6 +19,7 @@ public: //Ã“Iƒƒ“ƒoŠÖ”
 public: //‰æ‘œ–¼
 	enum class ImageName {
 		background = 1,
+		bar,
 	};
 
 	enum Image2DName {
