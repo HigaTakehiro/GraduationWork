@@ -59,8 +59,8 @@ void Dogom::Init()
 	CrossAreaTex->SetScale(Vector3(0.2f, 0.05f, 2.f));
 
 	MovingAngle = 180.f;
-	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-10.f);
-	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-10.f);
+	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
+	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
 }
 
 void Dogom::Upda()
@@ -76,10 +76,21 @@ void Dogom::Upda()
 	
 	if (!WinceF) {
 		MoveBody();
-		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
-		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 36.0f;
+		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 36.0f;
 	}
-	
+	if (Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
+		{ m_BodyPos.x, m_BodyPos.z }, 8.0f))
+	{
+		Vector3 vec;
+		vec = PlayerPos - m_BodyPos;
+		vec.normalize();
+		vec.y = 0.0f;
+
+		m_player->HitHammerToEnemy(vec);
+
+	}
+
 	CoollisionArm();
 	CoollisionFace();
 	ImpactTexScling();
@@ -228,15 +239,18 @@ void Dogom::ShakeArm(Vector3 Defopos)
 void Dogom::ArmAct()
 {
 	XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f }, move2 = { 0.0f, 0.0f, 0.1f, 0.0f };
-	XMMATRIX matRot_R = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y - 90.f));
-	XMMATRIX matRot_L = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y + 90.f));
+	XMMATRIX matRot_R = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y - 25.f));
+	XMMATRIX matRot_L = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y + 25.f));
 
 	move = XMVector3TransformNormal(move, matRot_R);
 	move2 = XMVector3TransformNormal(move2, matRot_L);
 
-	float Left_X = m_BodyPos.x + move.m128_f32[0] * 50.f, Left_Z = m_BodyPos.z + move.m128_f32[2] * 50.f;
+	const float dis = 130.f;
+	float Left_X = m_BodyPos.x + move.m128_f32[0] * dis,
+	Left_Z = m_BodyPos.z + move.m128_f32[2] * dis;
 
-	float Right_X = m_BodyPos.x + move2.m128_f32[0] * 50.f, Right_Z = m_BodyPos.z + move2.m128_f32[2] * 50.f;
+	float Right_X = m_BodyPos.x + move2.m128_f32[0] * dis,
+	Right_Z = m_BodyPos.z + move2.m128_f32[2] * dis;
 
 	Vector3 OldRushPaunch[2];
 
