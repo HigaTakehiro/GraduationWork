@@ -23,6 +23,11 @@ void ModelManager::Initialize() {
 	LoadModel("bossmap", "bossmap");
 	LoadModel("Kaidan", "Kaidan");
 	LoadModel("tunnel", "tunnel");
+	LoadModel("rock", "rock");
+	LoadModel("rock2", "rock2");
+	LoadModel("rock3", "rock3");
+	LoadModel("rock4", "rock4");
+	LoadModel("rock5", "rock5");
 }
 
 void ModelManager::LoadModel(const std::string modelName, const std::string modelKey, bool isSmoothing) {

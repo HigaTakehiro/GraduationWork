@@ -196,7 +196,7 @@ void GameScene::Draw()
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 
-	map_->Draw();
+	map_->MapDraw();
 	Object3d::PostDraw();
 	for (auto i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] != nullptr) {
@@ -213,6 +213,7 @@ void GameScene::Draw()
 	//boss_->Draw();
 	//boss_->Draw2();
 	player_->Draw();
+	map_->BridgeDraw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
