@@ -35,33 +35,39 @@ void IBScene::Initialize()
 	Object3d::SetLight(light_.get());
 
 	//3dオブジェクト初期化
-	player_ = new Player;
-	player_->Initialize();
+	for (int32_t i = 0; i < 4; i++) {
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+	}
+
+	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
+	player_->SetIsBillboardY(true);
+	player_->SetColType(Object3d::CollisionType::Obb);
+	player_->SetObjType((int32_t)Object3d::OBJType::Player);
+	player_->SetObbScl({ 2.f,4.f,2.f });
+	player_->SetHitRadius(0.5f);
+	player_->SetScale({ 0.028f, 0.028f, 0.028f });
+
 
 	postEffectNo_ = PostEffect::NONE;
-
-	map_ = make_unique<GameMap>();
-
-	map_->Initalize(player_, cameraPos_, targetPos_, 0);
-
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
 	ib_ = new IntermediateBase();
 	ib_->Initialize();
-
-
-
+	baseNo = 1;
+	animeTimer_ = 0;
+	preAnimeCount_ = 999;
+	animeSpeed_ = 8;
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 }
 
 void IBScene::Update()
 {
-
+	Animation();
+	player_->SetPosition({ 10.0f,2.5f, 0.0f });
 	player_->Update();
-	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos[3] = {};
+
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
@@ -80,12 +86,6 @@ void IBScene::Update()
 		targetPos_.x -= 1.0f;
 	}
 	//HPデバッグ処理
-	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
-		player_->SubHP(1);
-	}
-	if (KeyInput::GetIns()->TriggerKey(DIK_R)) {
-		player_->SetHP(3);
-	}
 
 	if (shake_->GetShakeFlag() == true) {
 		cameraPos_.y += shake_->GetShakePos();
@@ -101,22 +101,15 @@ void IBScene::Update()
 	camera_->SetTarget(targetPos_);
 	light_->Update();
 
-	//プレイヤーのOBB設定
-	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
-		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
-		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
-	};
-	OBB l_obb;
-	l_obb.SetParam_Pos(trans);
-	l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
-	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
-	_hummmerObb = &l_obb;
 
+	/*if (死んでるとき) {
+	ib_->LoadFloor();
+	baseNo=ib_->GetBaseNo();
+	}*/
 	ib_->Update();
-	ib_->FloorSave(1);
+	ib_->FloorSave(baseNo);
 
-	//ib_->LoadFloor();
 	shake_->Update();
 	//colManager_->Update();
 	//シーン切り替え
@@ -152,8 +145,7 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hp = std::to_wstring(player_->GetHP());
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンで次の階層へ\nHP : " + hp, textDrawRange);
+	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\nHP : ", textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -170,21 +162,16 @@ void IBScene::Draw()
 void IBScene::Finalize()
 {
 	safe_delete(text_);
-	player_->Finalize();
-	safe_delete(player_);
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
 	//colManager_->Finalize();
-	map_->Finalize();
 }
 
 void IBScene::SceneChange()
 {
-	bool Change = player_->GetNext();
-	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
-	}
+
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		baseNo++;
 		SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
@@ -227,5 +214,22 @@ void IBScene::CameraSetting()
 		camera_->SetEye(cameraPos_);
 		camera_->SetTarget(targetPos_);
 	}
+}
+
+void IBScene::Animation()
+{
+	//タイマーカウント
+	if (++animeTimer_ >= animeSpeed_) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		animeTimer_ = 0;
+	}
+
+	if (preAnimeCount_ == animeCount_) return;
+	player_->SetModel(playerModel_[animeCount_]);
+	player_->Initialize();
+
+	preAnimeCount_ = animeCount_;
 }
 

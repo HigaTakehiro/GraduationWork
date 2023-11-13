@@ -6,6 +6,8 @@ void IntermediateBase::Initialize()
 {
 	stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 	baseNo = 0;
+	stage_->SetPosition({ -15,0,-50 });
+	//stage_->SetScale({ 3,3,3 });
 }
 
 void IntermediateBase::Update()

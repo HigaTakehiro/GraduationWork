@@ -91,7 +91,7 @@ void TitleScene::Finalize()
 void TitleScene::SceneChange()
 {
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Game);

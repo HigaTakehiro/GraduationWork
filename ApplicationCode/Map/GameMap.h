@@ -85,6 +85,8 @@ public:
 
 	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,float OldCameraPos);
 
+	void DrawingMap(int StageNum,std::stringstream& stream);
+
 private:
 
 	list<unique_ptr<Stage>> maps_;
