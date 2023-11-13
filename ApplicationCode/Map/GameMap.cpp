@@ -166,7 +166,7 @@ void GameMap::CreateBridge()
 				XMFLOAT3 Pos = Map->stagePos_;
 				Pos.x = Pos.x + 17;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 0.65f,0.5f,0.5f });
+				Bridges->bridge_->SetScale({ 0.55f,0.5f,0.5f });
 				Bridges->bridge_->SetRotation({ 0.f,0.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Beside;
@@ -230,9 +230,6 @@ void GameMap::MapDraw()
 		}
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
-
-	
-	
 }
 
 void GameMap::BridgeDraw()
@@ -294,7 +291,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 			if (Map->num != Bridge->num) { continue; }
 			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
 			if (Bridge->state_ == Direction::Beside) {
-				if ((pos.z<Pos.z + 4 && pos.z>Pos.z - 1)) {
+				if ((pos.z<Pos.z + 5 && pos.z>Pos.z+2)) {
 					if (pos.x > Pos.x + 2 && Pos.x + 6.f > pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num;
