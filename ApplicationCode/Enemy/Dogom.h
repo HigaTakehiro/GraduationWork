@@ -112,7 +112,7 @@ private:
 
     void FaceFall();
     bool m_FallF = false;
-    void ShakeArm(Vector3 Defopos);
+    void ShakeArm(Vector3 Defopos, float& time);
     void MoveBody();
 
     float m_FaceRotEaseT;
@@ -126,7 +126,7 @@ private:
     void FaceCol();
     Vector3 vec[2] = {};
 
-    float t = 0,t2=0;
+    float t = 0,t2=0,t3=0;
     bool movF;
     float OldMovAngle;
     float BodyMoveEase;

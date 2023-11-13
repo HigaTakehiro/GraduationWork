@@ -10,7 +10,7 @@
 #include "Shapes.h"
 
 #define BOSSMAP_C 0.f
-#define BOSSMAP_H 9.f
+#define BOSSMAP_H 12.f
 #define BOSSMAP_W 15.f
 
 void Dogom::Init()
@@ -76,8 +76,12 @@ void Dogom::Upda()
 	
 	if (!WinceF) {
 		MoveBody();
-		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 36.0f;
-		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 36.0f;
+		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+		m_BodyPos.z =-4.f+cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+
+		//m_BodyPos.x = std::clamp(m_BodyPos.x, -15.f, 15.f);
+
+		//m_BodyPos.z = std::clamp(m_BodyPos.z, -15.f, 15.f);
 	}
 	if (Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
 		{ m_BodyPos.x, m_BodyPos.z }, 8.0f))
@@ -146,6 +150,8 @@ void Dogom::Upda()
 		m_Arm[i]->SetScale({ 0.050f,0.070f,2.0f });
 		m_Arm[i]->SetPosition(m_ArmPos[i]);
 		m_Arm[i]->SetColor({ 1,1,1,m_ArmAlpha[i] });
+		m_ArmPos[i].x = std::clamp(m_ArmPos[i].x, -9.f, 9.f);
+		m_ArmPos[i].z = std::clamp(m_ArmPos[i].z, -9.f, 6.f);
 		m_ArmAlpha[i]=std::clamp(m_ArmAlpha[i], 0.f, 1.f);
 		m_Arm[i]->Update();
 
@@ -158,8 +164,7 @@ void Dogom::Upda()
 	CrossAreaTex->SetColor({ 1,1,1,m_CrossAreaAlpha });
 	CrossAreaTex->Update();
 
-	if (m_player->GetPos().z > BOSSMAP_H || m_player->GetPos().z < -BOSSMAP_H ||
-		m_player->GetPos().x > BOSSMAP_W || m_player->GetPos().x < -BOSSMAP_W)
+	if (m_player->GetPos().z > BOSSMAP_H )
 		isLeaveBoss = TRUE;
 	else
 		isLeaveBoss = FALSE;
@@ -175,9 +180,9 @@ void Dogom::Draw()
 #include"Helper.h"
 void Dogom::Draw2()
 {
-	//if (isLeaveBoss)return;
+	if (isLeaveBoss)return;
 	//if (m_HP <= 0)return;
-	constexpr float BossDraw_maxlen = 25.f;
+	constexpr float BossDraw_maxlen = 125.f;
 	for (size_t i = 0; i < 2; i++) {
 		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ShadowTex[i].get(),
 			BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
@@ -224,14 +229,14 @@ void Dogom::Finalize()
 	m_Arm[LEFT].reset(nullptr);
 }
 
-void Dogom::ShakeArm(Vector3 Defopos)
+void Dogom::ShakeArm(Vector3 Defopos,float &time)
 {
 	int randX = rand() % 10 - 5;
 	int randY = rand() % 10 - 5;
 	
-	t += 90.f;
+	time += 90.f;
 	for (size_t i = 0; i < 2; i++) {
-		m_ArmPos[i].x += sin(t * 3.14f / 180.f)/6.f;
+		m_ArmPos[i].x += sin(time * 3.14f / 180.f)/6.f;
 	}
 }
 
@@ -239,29 +244,30 @@ void Dogom::ShakeArm(Vector3 Defopos)
 void Dogom::ArmAct()
 {
 	XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f }, move2 = { 0.0f, 0.0f, 0.1f, 0.0f };
-	XMMATRIX matRot_R = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y - 25.f));
-	XMMATRIX matRot_L = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y + 25.f));
+	XMMATRIX matRot_R = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y - 65.f));
+	XMMATRIX matRot_L = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y + 65.f));
 
 	move = XMVector3TransformNormal(move, matRot_R);
 	move2 = XMVector3TransformNormal(move2, matRot_L);
 
-	const float dis = 130.f;
-	float Left_X = m_BodyPos.x + move.m128_f32[0] * dis,
-	Left_Z = m_BodyPos.z + move.m128_f32[2] * dis;
+	const float dis = 80.f;
+	constexpr float CenterX = 0.f, CenterZ = -4.f;
+	float Left_X =CenterX+ move.m128_f32[0] * dis,
+	Left_Z =CenterZ+ move.m128_f32[2] * dis;
 
-	float Right_X = m_BodyPos.x + move2.m128_f32[0] * dis,
-	Right_Z = m_BodyPos.z + move2.m128_f32[2] * dis;
+	float Right_X = CenterX+ move2.m128_f32[0] * dis,
+	Right_Z =  CenterZ+move2.m128_f32[2] * dis;
 
 	Vector3 OldRushPaunch[2];
 
 	Vector3 oldarmpos[2];
 	//’Êí
 	if (arm_move_ == DEFAULT) {
-		constexpr float GroundY = 1.5f;
+		constexpr float GroundY = -1.5f;
 		//ã‰ºŽüŠú
 		constexpr float MovingInter = 240.f;
 		//U‚ê•
-		constexpr float MovingVel = 0.80f;
+		constexpr float MovingVel = 0.40f;
 
 		m_ArmMov_Y[LEFT]++;
 		m_ArmMov_Y[RIGHT] = m_ArmMov_Y[LEFT] / 1.2f;
@@ -285,7 +291,7 @@ void Dogom::ArmAct()
 
 		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
-			if (ActionRandom > 100) {
+			if (ActionRandom > 0) {
 				SetAttack_Impact();
 				arm_move_ = ATTACK_IMPACT;
 			} else
@@ -334,18 +340,18 @@ void Dogom::ArmAct()
 				MaxTime_1 = 30;
 				if(abs(270 - MovingAngle) <= 10.f)
 				{
-					m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].x, BefoPos[LEFT].x+ 8.5f);
-					m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].x, BefoPos[RIGHT].x + 8.5f);
+					m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].x, BefoPos[LEFT].x+ 2.5f);
+					m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].x, BefoPos[RIGHT].x + 2.5f);
 				}
 				else if (abs(180 - MovingAngle) <= 10.f)
 				{
-					m_ArmPos[LEFT].z = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].z, BefoPos[LEFT].z + 8.5f);
-					m_ArmPos[RIGHT].z = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].z, BefoPos[RIGHT].z + 8.5f);
+					m_ArmPos[LEFT].z = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].z, BefoPos[LEFT].z + 2.5f);
+					m_ArmPos[RIGHT].z = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].z, BefoPos[RIGHT].z + 2.5f);
 				}
 				else if (abs(90 - MovingAngle) <= 10.f)
 				{
-					m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].x, BefoPos[LEFT].x - 8.5f);
-					m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].x, BefoPos[RIGHT].x -8.5f);
+					m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].x, BefoPos[LEFT].x - 2.5f);
+					m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].x, BefoPos[RIGHT].x -2.5f);
 				}
 				
 			}
@@ -367,7 +373,7 @@ void Dogom::ArmAct()
 				next_2 = TRUE;
 			} else {
 				if(m_ImpactCout==0)
-					ShakeArm(m_ArmPos[LEFT]);
+					ShakeArm(m_ArmPos[LEFT],t);
 
 				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].y, m_BodyPos.y + 3.f);
 				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].y, m_BodyPos.y + 3.f);
@@ -468,17 +474,23 @@ m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 			if (m_ArmAttckEaseT[LEFT] >= 30.f)
 			{
-				m_CrossAreaAlpha += 0.02f;
+				m_CrossAreaAlpha += 0.5f;
+				if (m_CrossAreaAlpha<=0.5f) {
+					CrossAreaTex->SetPosition({ m_ArmPos[RIGHT].x + ((m_ArmPos[LEFT].x - m_ArmPos[RIGHT].x) / 2),
+						-3.5f,m_ArmPos[0].z });
+				}
+					for (size_t i = 0; i < 2; i++)
+						ShakeArm(m_ArmPos[i], t3);
+
 				if (++CrossWaitCount > 90.f) {
 					m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT] = 0.f;
 					BefoPos[LEFT] = m_ArmPos[LEFT], BefoPos[RIGHT] = m_ArmPos[RIGHT];
+					
 					next_1 = TRUE;
 				}
 			}
 			else
 			{
-				CrossAreaTex->SetPosition({ m_player->GetPos().x,-3.5f,m_ArmPos[0].z });
-
 					for (size_t i = 0; i < 2; i++) {
 				m_ArmPos[i].x = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].x, EndX[i]);
 				m_ArmPos[i].y = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].y, m_BodyPos.y);
@@ -494,8 +506,9 @@ m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 			
-			for (size_t i = 0; i < 2; i++)
-				m_ArmPos[i].x = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].x, PlayerPos.x);
+			//for (size_t i = 0; i < 2; i++)
+				m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], 30.f, BefoPos[RIGHT].x, PlayerPos.x+2.f);
+				m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], 30.f, BefoPos[LEFT].x, PlayerPos.x - 2.f);
 
 			if (m_ArmAttckEaseT[LEFT] >= 30.f) {
 				m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT] = 0.f;
