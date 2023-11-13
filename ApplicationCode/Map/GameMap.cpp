@@ -197,6 +197,8 @@ void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos
 
 	CreateBridge();
 
+	CreateRock();
+
 	oldcount_ = count_;
 }
 
@@ -216,6 +218,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	}
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
+	rock_->Update();
 }
 
 void GameMap::MapDraw()
@@ -230,6 +233,7 @@ void GameMap::MapDraw()
 		}
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
+	rock_->Draw();
 }
 
 void GameMap::BridgeDraw()
@@ -416,6 +420,14 @@ void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 	else {
 		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");
 	}
+}
+
+void GameMap::CreateRock()
+{
+	rock_ = make_unique<Object3d>();
+	rock_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock3"));
+	rock_->SetScale({ 5.f,5.f,5.f });
+	rock_->SetPosition({ 10.f,0.f,0.f });
 }
 
 

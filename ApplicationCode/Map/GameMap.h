@@ -98,6 +98,8 @@ private:
 	list<unique_ptr<Bridge>> bridge;
 
 	unique_ptr<Stairs> stairs_;
+
+	unique_ptr<Object3d> rock_;
 	//マップの番号
 	int count_ = 0;
 	//古い状態のマプ番号
