@@ -171,6 +171,7 @@ private: //メンバ変数
 	Vector3 rot_;
 	//HP
 	int32_t hp_;
+	int32_t maxHp_;
 	//鉱石取得数
 	int32_t oreCount_;
 	//鉱石最大取得数
@@ -287,8 +288,12 @@ private: //メンバ変数
 	//UI
 	//HPバー
 	std::unique_ptr<Sprite> hpBar_;
+	std::unique_ptr<Sprite> hpBarBack_;
+	float hpBarSize_;
 	//経験値バー
 	std::unique_ptr<Sprite> epBar_;
+	std::unique_ptr<Sprite> epBarBack_;
+	float epBarSize_;
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }

@@ -67,10 +67,14 @@ void Player::Initialize()
 	preAnimeCount_ = 999;
 
 	//UI‰Šú‰»
-	hpBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 100, 100 }, { 0.2f, 0.6f, 0.2f, 1.0f }, { 0.5f, 0.5f });
-	hpBar_->SetSize({ 200, 20 });
+	hpBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 50 }, { 0.2f, 0.6f, 0.2f, 1.0f }, { 0.0f, 0.0f });
+	hpBarBack_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 50 }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f });
+	hpBarSize_ = 200.0f;
+	hpBar_->SetSize({ hpBarSize_, 20 });
+	hpBar_->SetLeftSizeCorrection(true);
+	hpBarBack_->SetSize({ hpBarSize_, 20 });
 
-	epBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 100, 120 }, { 0.5f, 0.5f, 0.2f, 1.0f }, { 0.5f, 0.5f });
+	epBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 130, 120 }, { 0.5f, 0.5f, 0.2f, 1.0f }, { 0.5f, 0.5f });
 	epBar_->SetSize({ 200, 20 });
 }
 
@@ -85,6 +89,7 @@ void Player::Update()
 		HammerGet();
 	}
 	if (!stop_) {
+		UIUpdate();
 		Move();
 		Animation();
 		Attack();
@@ -139,6 +144,7 @@ void Player::HitHammerToEnemy(Vector3 vec,float dis)
 
 void Player::SpriteDraw()
 {
+	hpBarBack_->Draw();
 	hpBar_->Draw();
 	epBar_->Draw();
 }
@@ -236,6 +242,7 @@ void Player::PlayerStatusSetting() {
 	initRot_ = rot_ = rot;
 	scale_ = scale;
 	hp_ = hp;
+	maxHp_ = hp;
 
 	moveSpeed_ = moveSpeed;
 	rotSpeed_ = initRotSpeed_ = rotSpeed;
@@ -583,4 +590,8 @@ void Player::Animation()
 
 void Player::UIUpdate()
 {
+	const float HPBarSize = 200;
+	hpBarSize_ = ((float)hp_ / (float)maxHp_) * HPBarSize;
+
+	hpBar_->SetSize({hpBarSize_, 20});
 }

@@ -224,9 +224,8 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 
-	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hp = std::to_wstring(player_->GetHP());
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
+	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
