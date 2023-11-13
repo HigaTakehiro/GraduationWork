@@ -229,14 +229,14 @@ void Dogom::Finalize()
 	m_Arm[LEFT].reset(nullptr);
 }
 
-void Dogom::ShakeArm(Vector3 Defopos,float &time)
+void Dogom::ShakeArm(Vector3& Defopos,float &time)
 {
 	int randX = rand() % 10 - 5;
 	int randY = rand() % 10 - 5;
 	
 	time += 90.f;
 	for (size_t i = 0; i < 2; i++) {
-		m_ArmPos[i].x += sin(time * 3.14f / 180.f)/6.f;
+		Defopos.x += sin(time * 3.14f / 180.f)/6.f;
 	}
 }
 
@@ -372,9 +372,10 @@ void Dogom::ArmAct()
 				m_ArmAttckEaseT[LEFT] = m_ArmAttckEaseT[RIGHT] = 0;
 				next_2 = TRUE;
 			} else {
-				if(m_ImpactCout==0)
-					ShakeArm(m_ArmPos[LEFT],t);
-
+				if (m_ImpactCout == 0) {
+					ShakeArm(m_ArmPos[RIGHT], t);
+					ShakeArm(m_ArmPos[LEFT], t);
+				}
 				m_ArmPos[LEFT].y = Easing::easeIn(m_ArmAttckEaseT[LEFT], MaxTime_1, BefoPos[LEFT].y, m_BodyPos.y + 3.f);
 				m_ArmPos[RIGHT].y = Easing::easeIn(m_ArmAttckEaseT[RIGHT], MaxTime_1, BefoPos[RIGHT].y, m_BodyPos.y + 3.f);
 			}
@@ -579,7 +580,7 @@ void Dogom::Follow()
 
 void Dogom::Wince()
 {
-	
+	WinceIdle();
 
 	if (!WinceF)return;
 	constexpr float MaxEase = 30.f;
@@ -762,7 +763,7 @@ void Dogom::CoollisionArm()
 		if (!WinceF) {
 			StanCount = 0;
 			WinceF = TRUE;
-			wince_phase_ = WincePhase::PHASE_1;
+			wince_phase_ = WincePhase::IDLE;
 		}
 	}
 
@@ -841,4 +842,22 @@ void Dogom::ImpactKnock()
 void Dogom::FaceCol()
 {
 	
+}
+
+void Dogom::WinceIdle()
+{
+	if (!WinceF)return;
+	//if (wince_phase_ != WincePhase::IDLE)return;
+
+	constexpr uint16_t maxET = 120;
+
+	if (wince_phase_ == WincePhase::IDLE || wince_phase_ == WincePhase::PHASE_1) {
+		ShakeArm(m_BodyPos, t4);
+	}
+
+	if (++l_t>maxET&& wince_phase_ == WincePhase::IDLE)
+	{
+		m_BodyRot = Vector3(0, 0, 0);
+		wince_phase_ = WincePhase::PHASE_1;//m_BodyRot.z = Easing::easeIn(l_t, maxET, 0.f, 720.f);
+	}
 }

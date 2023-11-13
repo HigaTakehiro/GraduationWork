@@ -89,6 +89,7 @@ private:
 
     enum class WincePhase
     {
+        IDLE,
 	    PHASE_1,
         PHASE_2,
         END
@@ -112,7 +113,7 @@ private:
 
     void FaceFall();
     bool m_FallF = false;
-    void ShakeArm(Vector3 Defopos, float& time);
+    void ShakeArm(Vector3& Defopos, float& time);
     void MoveBody();
 
     float m_FaceRotEaseT;
@@ -124,9 +125,11 @@ private:
     void ImpactTexScling();
     void ImpactKnock();
     void FaceCol();
+    uint16_t l_t = 0, winceIdleT=0;
+    void WinceIdle();
     Vector3 vec[2] = {};
 
-    float t = 0,t2=0,t3=0;
+    float t = 0,t2=0,t3=0,t4=0;
     bool movF;
     float OldMovAngle;
     float BodyMoveEase;
