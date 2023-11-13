@@ -62,7 +62,9 @@ public:
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
-	void Draw();
+	void MapDraw();
+
+	void BridgeDraw();
 
 	/// <summary>
 	/// I—¹ˆ—
@@ -86,6 +88,8 @@ public:
 	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,float OldCameraPos);
 
 	void DrawingMap(int StageNum,std::stringstream& stream);
+
+	void CreateRock();
 
 private:
 

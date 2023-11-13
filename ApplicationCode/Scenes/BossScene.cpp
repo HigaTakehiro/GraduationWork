@@ -137,7 +137,7 @@ void BossScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	map_->Draw();
+	map_->MapDraw();
 	Object3d::PostDraw();
 
 
@@ -146,6 +146,7 @@ void BossScene::Draw()
 
 	boss_->Draw();
 	player_->Draw();
+	map_->BridgeDraw();
 	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());

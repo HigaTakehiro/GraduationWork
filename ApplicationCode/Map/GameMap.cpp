@@ -218,7 +218,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	stairs_->Update();
 }
 
-void GameMap::Draw()
+void GameMap::MapDraw()
 {
 	for (unique_ptr<Stage>& Map : maps_) {
 		if (count_ == Map->num || oldcount_ == Map->num) {
@@ -231,6 +231,12 @@ void GameMap::Draw()
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
 
+	
+	
+}
+
+void GameMap::BridgeDraw()
+{
 	for (unique_ptr<Bridge>& Bridge : bridge) {
 		if (nowstate_ == Map::Boss && time_ >= 1) { return; }
 		if (Bridge->num == count_ ||
@@ -241,7 +247,6 @@ void GameMap::Draw()
 		}
 	}
 
-	
 }
 
 void GameMap::Finalize()
