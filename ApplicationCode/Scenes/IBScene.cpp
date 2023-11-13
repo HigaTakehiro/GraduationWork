@@ -65,7 +65,7 @@ void IBScene::Initialize()
 void IBScene::Update()
 {
 	Animation();
-	player_->SetPosition({ 0.0f,2.5f, 0.0f });
+	player_->SetPosition({ 10.0f,2.5f, 0.0f });
 	player_->Update();
 
 	//デバッグカメラ移動処理
@@ -145,7 +145,7 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンで次の階層へ\nHP : ", textDrawRange);
+	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\nHP : ", textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
