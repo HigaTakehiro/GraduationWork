@@ -47,17 +47,20 @@ void Dogom::Init()
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
+		m_ShadowTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Shadow.png", { 48, 48 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 }));
+		m_ShadowTex[i]->SetRotation({ 90.f,0.f,0.f });
+
 		m_ImpactTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }));
 		m_ImpactTex[i]->SetRotation({ 90,0,0 });
 	}
 
 	CrossAreaTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "CrossArea.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 }));
 	CrossAreaTex->SetRotation(Vector3(90, 0, 0));
-	CrossAreaTex->SetScale(Vector3(0.17f, 0.05f, 2.f));
+	CrossAreaTex->SetScale(Vector3(0.2f, 0.05f, 2.f));
 
 	MovingAngle = 180.f;
-	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-10.f);
-	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-10.f);
+	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
+	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
 }
 
 void Dogom::Upda()
@@ -73,10 +76,21 @@ void Dogom::Upda()
 	
 	if (!WinceF) {
 		MoveBody();
-		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
-		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 36.0f;
+		m_BodyPos.z = cosf(MovingAngle * (pi_ / 180.0f)) * 36.0f;
 	}
-	
+	if (Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
+		{ m_BodyPos.x, m_BodyPos.z }, 8.0f))
+	{
+		Vector3 vec;
+		vec = PlayerPos - m_BodyPos;
+		vec.normalize();
+		vec.y = 0.0f;
+
+		m_player->HitHammerToEnemy(vec);
+
+	}
+
 	CoollisionArm();
 	CoollisionFace();
 	ImpactTexScling();
@@ -123,7 +137,11 @@ void Dogom::Upda()
 	{
 		if (m_ArmHp[i] <= 0)m_ArmAlpha[i] -= alphaval;
 		else m_ArmAlpha[i] += alphaval;
-
+		m_ShadowTex[i]->SetPosition({ m_ArmPos[i].x,-3.5f,m_ArmPos[i].z });
+		m_ShadowTex[i]->SetScale(ShadowScl(m_ArmPos[i].y));
+		m_ShadowTex[i]->SetRotation(m_ArmRot[i]);
+		m_ShadowTex[i]->SetColor({ 1,1,1,0.6f });
+		m_ShadowTex[i]->Update();
 
 		m_Arm[i]->SetScale({ 0.050f,0.070f,2.0f });
 		m_Arm[i]->SetPosition(m_ArmPos[i]);
@@ -161,6 +179,8 @@ void Dogom::Draw2()
 	//if (m_HP <= 0)return;
 	constexpr float BossDraw_maxlen = 25.f;
 	for (size_t i = 0; i < 2; i++) {
+		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ShadowTex[i].get(),
+			BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
 
 		Helper::isDraw(m_player->GetPos(), m_ArmPos[i],
 			m_Arm[i].get(),BossDraw_maxlen, (m_HP <= 0||m_ArmHp[i]<=0));
@@ -174,6 +194,27 @@ void Dogom::Draw2()
 void Dogom::Attack()
 {
 
+}
+
+Vector3 Dogom::ShadowScl(float YPos)
+{
+	Vector3 scale;
+	constexpr float Ground = -3.5f;
+	float armYpos_Ground[2] = { abs(m_ArmPos[RIGHT].y - Ground),abs(m_ArmPos[LEFT].y - Ground) };
+	
+
+	constexpr float maxX = 0.2f,maxY=0.07f;
+	constexpr float minX = 0.04f,minY=0.03f;
+
+	//üŒ`•âŠÔ‚Å‰e‚Ì‘å‚«‚³•Ï‚¦‚é
+	scale.x = Helper::SmoothStep_Deb(-Ground, Ground, YPos)*maxX;
+	scale.y = Helper::SmoothStep_Deb(-Ground, Ground, YPos) * maxY;
+	scale.z = 1.f;
+
+	scale.x = std::clamp(scale.x, minX, maxX);
+	scale.y = std::clamp(scale.y, minY, maxY);
+
+	return scale;
 }
 
 void Dogom::Finalize()
@@ -198,15 +239,18 @@ void Dogom::ShakeArm(Vector3 Defopos)
 void Dogom::ArmAct()
 {
 	XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f }, move2 = { 0.0f, 0.0f, 0.1f, 0.0f };
-	XMMATRIX matRot_R = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y - 90.f));
-	XMMATRIX matRot_L = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y + 90.f));
+	XMMATRIX matRot_R = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y - 25.f));
+	XMMATRIX matRot_L = XMMatrixRotationY(XMConvertToRadians(m_BodyRot.y + 25.f));
 
 	move = XMVector3TransformNormal(move, matRot_R);
 	move2 = XMVector3TransformNormal(move2, matRot_L);
 
-	float Left_X = m_BodyPos.x + move.m128_f32[0] * 50.f, Left_Z = m_BodyPos.z + move.m128_f32[2] * 50.f;
+	const float dis = 130.f;
+	float Left_X = m_BodyPos.x + move.m128_f32[0] * dis,
+	Left_Z = m_BodyPos.z + move.m128_f32[2] * dis;
 
-	float Right_X = m_BodyPos.x + move2.m128_f32[0] * 50.f, Right_Z = m_BodyPos.z + move2.m128_f32[2] * 50.f;
+	float Right_X = m_BodyPos.x + move2.m128_f32[0] * dis,
+	Right_Z = m_BodyPos.z + move2.m128_f32[2] * dis;
 
 	Vector3 OldRushPaunch[2];
 
