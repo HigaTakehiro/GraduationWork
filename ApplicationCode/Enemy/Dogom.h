@@ -57,6 +57,9 @@ private:
     UINT m_ActionTimer=1;
     UINT ActionRandom=1;
     UINT BossBodyMovingT=1;
+    UINT m_KnockInterTime=0;
+
+    BOOL m_Knock;
 private:
     void Init()override;
     void Upda()override;

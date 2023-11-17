@@ -56,9 +56,9 @@ void GameScene::Initialize()
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 	}
-	enemys_[0]->SetPos(Vector3(10, -30, 10));
-	enemys_[2]->SetPos(Vector3(-15, -30, -5));
-	enemys_[2]->SetPos(Vector3(0, -30, -5));
+	enemys_[0]->SetPos(Vector3(30, -30, -4));
+	enemys_[2]->SetPos(Vector3(25, -30, 2));
+	enemys_[2]->SetPos(Vector3(35, -30, 5));
 
 	map_ = make_unique<GameMap>();
 
@@ -226,7 +226,10 @@ void GameScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
+	std::wstring hp = std::to_wstring(player_->GetPos().x);
+
+	std::wstring hx = std::to_wstring(player_->GetPos().z);
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hp+hx, textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
