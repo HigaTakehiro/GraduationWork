@@ -171,6 +171,7 @@ void BossScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	player_->SpriteDraw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
