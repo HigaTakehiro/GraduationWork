@@ -45,7 +45,7 @@ void Dogom::Init()
 		//m_Body->SetIsBillboardY(true);
 		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		m_Arm[i]->SetObbScl({ 1.f,2.f,1.f });
+		m_Arm[i]->SetObbScl({ 1.5f,2.f,1.5f });
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
@@ -187,6 +187,8 @@ void Dogom::Upda()
 		isLeaveBoss = TRUE;
 	else
 		isLeaveBoss = FALSE;
+
+	str = std::to_wstring(m_KnockInterTime);
 }
 
 void Dogom::Draw()
@@ -844,21 +846,33 @@ void Dogom::RotationFace(const uint16_t& interval)
 void Dogom::ImpactKnock()
 {
 
-	if (phase_ != Phase_Impact::PHASE_2)return;
+	//if (phase_ != Phase_Impact::PHASE_2)return;
 	constexpr float HandsUnderGround = -3.f;
-	for (size_t i = 0; i < 2; i++) {
-		if (m_ArmPos[i].y < HandsUnderGround)continue;
-		if (!Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
-			{ m_ArmPos[i].x, m_ArmPos[i].z }, 3.0f))continue;
+	constexpr float KnockValMagni = 0.3f;/*ノック倍率*/
 
-		vec[i] = PlayerPos - m_ArmPos[i];
-		vec[i].normalize();
-		vec[i].y = 0.0f;
-		
-		m_player->HitHammerToEnemy(vec[i],0.5f);
-		m_Knock = TRUE;
+	bool KnockJudg = m_Knock == FALSE && phase_ == Phase_Impact::PHASE_2;
+	if (KnockJudg) {
+		for (size_t i = 0; i < 2; i++) {
+			if (m_ArmPos[i].y < HandsUnderGround)continue;
+			if (!Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
+				{ m_ArmPos[i].x, m_ArmPos[i].z }, 3.0f))continue;
+
+			vec[i] = PlayerPos - m_ArmPos[i];
+			vec[i].normalize();
+			vec[i].y = 0.0f;
+
+			m_player->HitHammerToEnemy(vec[i],KnockValMagni);
+			m_Knock = TRUE;
+		}
 	}
 
+	//フラグ値チェック
+	m_KnockInterTime = m_Knock ? ++m_KnockInterTime : 0;
+
+	constexpr UINT maxInter = 90;
+
+	if (m_KnockInterTime > maxInter)
+		m_Knock = FALSE;
 
 }
 
