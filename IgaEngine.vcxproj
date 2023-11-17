@@ -245,7 +245,6 @@
     <ClInclude Include="ApplicationCode\Shake\IwaEffect.h" />
     <ClInclude Include="ApplicationCode\Shake\Shake.h" />
     <ClInclude Include="ApplicationCode\Skills\BaseSkill.h" />
-    <ClInclude Include="ApplicationCode\Skills\ISkill.h" />
     <ClInclude Include="ApplicationCode\UI\Button.h" />
     <ClInclude Include="Engine\Audio\Sound.h" />
     <ClInclude Include="Engine\Audio\SoundManager.h" />
