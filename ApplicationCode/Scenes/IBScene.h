@@ -17,7 +17,7 @@
 #include "SceneManager.h"
 #include "TextDraw.h"
 #include "JsonLoader.h"
-#include "Player.h"
+#include "Sprite.h"
 #include"GameMap.h"
 #include "Ore.h"
 #include"BossBase.h"
@@ -95,7 +95,9 @@ private: //メンバ変数
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル
 	Model* playerModel_[4];
-
+	std::unique_ptr<Sprite> susumu_;
+	std::unique_ptr<Sprite> skillSprite_;
+	std::unique_ptr<Sprite> skillB_;
 	//アニメーションカウント
 	int32_t animeCount_;
 	//アニメーションスピード

@@ -20,6 +20,9 @@ public: //‰æ‘œ–¼
 	enum class ImageName {
 		background = 1,
 		bar,
+		skill,
+		skillButton,
+		susumuButton,
 	};
 
 	enum Image2DName {

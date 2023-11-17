@@ -11,6 +11,9 @@ ImageManager* ImageManager::GetIns()
 void ImageManager::Initialize() {
 	Sprite::LoadTexture(int32_t(ImageName::background),L"Engine/Resources/Images/Background.png");
 	Sprite::LoadTexture(int32_t(ImageName::bar), L"Engine/Resources/Images/white1x1.png");
+	Sprite::LoadTexture(int32_t(ImageName::skill), L"Engine/Resources/Images/Skill_kari.png");
+	Sprite::LoadTexture(int32_t(ImageName::skillButton), L"Engine/Resources/Images/sukillB.png");
+	Sprite::LoadTexture(int32_t(ImageName::susumuButton), L"Engine/Resources/Images/susumu.png");
 
 	Texture::LoadTexture(Image2DName::USA_1, L"Engine/Resources/Images/usa/usa_idle1.png");
 	Texture::LoadTexture(Image2DName::USA_2, L"Engine/Resources/Images/usa/usa_idle2.png");

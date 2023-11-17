@@ -138,13 +138,16 @@ void GameScene::Update()
 	}
 
 	if (shake_->GetShakeFlag() == true) {
+		cameraPos_.x += shake_->GetShakePos();
+		targetPos_.x += shake_->GetShakePos();
 		cameraPos_.y += shake_->GetShakePos();
 		targetPos_.y += shake_->GetShakePos();
 	}
 	else {
+		cameraPos_.x = 30;
+		targetPos_.x = 30;
 		cameraPos_.y = 12;
-		targetPos_.y = 0;
-
+		targetPos_.y = 3;
 	}
 
 	camera_->SetEye(cameraPos_);
@@ -224,7 +227,7 @@ void GameScene::Draw()
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
-
+	//
 	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
 	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
 

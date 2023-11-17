@@ -43,6 +43,9 @@ void IBScene::Initialize()
 	player_->SetIsBillboardY(true);
 	player_->SetScale({ 0.15f, 0.15f, 0.15f });
 
+	skillB_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillButton, { 1000, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	skillSprite_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skill, { 0, 0 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	susumu_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::susumuButton, { 1000, 150 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -105,6 +108,10 @@ void IBScene::Update()
 			baseNo++;
 		}
 	}
+	skillB_->SetSize({ 256, 64 });
+	//skillSprite_->SetSize({ 1280, 720 });
+	susumu_->SetSize({ 256, 64 });
+
 	ib_->Update();
 	ib_->FloorSave(baseNo);
 
@@ -136,6 +143,9 @@ void IBScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	skillB_->Draw();
+	//skillSprite_->Draw();
+	susumu_->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 

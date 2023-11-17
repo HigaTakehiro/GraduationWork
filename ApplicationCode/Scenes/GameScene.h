@@ -92,6 +92,7 @@ private: //ƒƒ“ƒo•Ï”
 	Shake* shake_;
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
-
+	Vector3 pos{};
+	Vector3 target{};
 	IntermediateBase* ib_;
 };
