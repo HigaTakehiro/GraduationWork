@@ -95,6 +95,6 @@ void TitleScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
+		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
 	}
 }

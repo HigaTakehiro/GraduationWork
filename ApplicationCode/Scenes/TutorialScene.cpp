@@ -82,34 +82,18 @@ void TutorialScene::Initialize()
 void TutorialScene::Update()
 {
 	(this->*FuncTable[phase_])();
-
-	player_->Update();
-	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos[3] = {};
-
-	for (size_t i = 0; i < enemys_.size(); i++)
-	{
-		if (enemys_[i]->GetHP() <= 0)
-		{
-			enemys_.erase(enemys_.begin() + i);
-			continue;
-		}
+	if (shake_->GetShakeFlag() == true) {
+		cameraPos_.y += shake_->GetShakePos();
+		targetPos_.y += shake_->GetShakePos();
+	} else {
+		cameraPos_.y = 12;
+		targetPos_.y = 0;
 	}
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetHP() <= 0)continue;
-		enemyPos[i] = enemys_[i]->GetPos();
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
-			Vector3 playerPos = player_->GetPos();
-			enemys_[i]->GetDamage();
-			vec[i] = playerPos - enemyPos[i];
-			vec[i].normalize();
-			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i]);
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
-		}
-	}
+	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
-
+	player_->Update();
+	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
 }
@@ -164,11 +148,12 @@ void TutorialScene::Draw()
 	DirectXSetting::GetIns()->PreDraw(backColor);
 	//ポストエフェクト描画
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
-
-	//ポストエフェクトをかけないスプライト描画処理(UI等)
-	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	player_->SpriteDraw();
-	Sprite::PostDraw();
+	if (phase_ != Phase::Title) {
+		//ポストエフェクトをかけないスプライト描画処理(UI等)
+		Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+		player_->SpriteDraw();
+		Sprite::PostDraw();
+	}
 	DirectXSetting::GetIns()->PostDraw();
 }
 
@@ -245,6 +230,29 @@ void TutorialScene::SpownPhase()
 
 void TutorialScene::FightPhase()
 {
+	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
+	Vector3 enemyPos[3] = {};
+	for (size_t i = 0; i < enemys_.size(); i++)
+	{
+		if (enemys_[i]->GetHP() <= 0)
+		{
+			enemys_.erase(enemys_.begin() + i);
+			continue;
+		}
+	}
+	for (auto i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i]->GetHP() <= 0)continue;
+		enemyPos[i] = enemys_[i]->GetPos();
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+			Vector3 playerPos = player_->GetPos();
+			enemys_[i]->GetDamage();
+			vec[i] = playerPos - enemyPos[i];
+			vec[i].normalize();
+			vec[i].y = 0.0f;
+			player_->HitHammerToEnemy(vec[i]);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
+		}
+	}
 }
 
 void TutorialScene::DefeatPhase()
