@@ -104,5 +104,6 @@ private: //メンバ変数
 	int32_t animeTimer_;
 	//前フレームアニメーションカウント
 	int32_t preAnimeCount_;
+	int32_t hp_;
 };
 

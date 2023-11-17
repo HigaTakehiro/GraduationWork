@@ -36,16 +36,12 @@ void IBScene::Initialize()
 
 	//3dオブジェクト初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png",{ 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f },true);
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
-	player_->SetColType(Object3d::CollisionType::Obb);
-	player_->SetObjType((int32_t)Object3d::OBJType::Player);
-	player_->SetObbScl({ 2.f,4.f,2.f });
-	player_->SetHitRadius(0.5f);
-	player_->SetScale({ 0.028f, 0.028f, 0.028f });
+	player_->SetScale({ 0.2f, 0.2f, 0.2f });
 
 
 	postEffectNo_ = PostEffect::NONE;
@@ -65,7 +61,7 @@ void IBScene::Initialize()
 void IBScene::Update()
 {
 	Animation();
-	player_->SetPosition({ 10.0f,2.5f, 0.0f });
+	player_->SetPosition({ -10.0f,2.5f, 0.0f });
 	player_->Update();
 
 	//デバッグカメラ移動処理
@@ -103,10 +99,10 @@ void IBScene::Update()
 
 
 
-	/*if (死んでるとき) {
-	ib_->LoadFloor();
-	baseNo=ib_->GetBaseNo();
-	}*/
+	if (hp_ <= 0) {
+		ib_->LoadFloor();
+		baseNo = ib_->GetBaseNo();
+	}
 	ib_->Update();
 	ib_->FloorSave(baseNo);
 
