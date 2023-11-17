@@ -19,7 +19,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 
 	DrawingMap(StageNum, stream);
 
-	
+
 	while (getline(stream, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
@@ -122,7 +122,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			stairs_ = make_unique<Stairs>();
-			stairs_->Initialize(Pos, player,Count);
+			stairs_->Initialize(Pos, player, Count);
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
 			COUNT += 1;
@@ -146,7 +146,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			CameraPos.x = startpos_.x;
 			TargetPos.x = startpos_.x;
 			TargetPos.z = startpos_.z;
-			CameraPos.z=CameraPos.z + startpos_.z - 2.f;
+			CameraPos.z = CameraPos.z + startpos_.z - 2.f;
 			maps_.push_back(move(Map));
 			NEXTVERT += 1;
 			COUNT += 1;
@@ -193,11 +193,11 @@ void GameMap::CreateBridge()
 
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
-	LoadCsv(player,CameraPos,TargetPos,StageNum);
+	LoadCsv(player, CameraPos, TargetPos, StageNum);
 
 	CreateBridge();
 
-	CreateRock();
+	//CreateRock();
 
 	oldcount_ = count_;
 }
@@ -218,7 +218,9 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	}
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
-	rock_->Update();
+	/*for (unique_ptr<Object3d>& Rock : rock_) {
+		Rock->Update();
+	}*/
 }
 
 void GameMap::MapDraw()
@@ -228,12 +230,14 @@ void GameMap::MapDraw()
 			Map->stage_->Draw();
 		}
 		if (!stairs_.get()) { continue; }
-		if ( count_ == stairs_->GetCont()) {
+		if (count_ == stairs_->GetCont()) {
 			stairs_->Draw();
 		}
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
-	rock_->Draw();
+	/*for (unique_ptr<Object3d>& Rock : rock_) {
+		Rock->Draw();
+	}*/
 }
 
 void GameMap::BridgeDraw()
@@ -262,9 +266,9 @@ void GameMap::CheckHitTest(Player* player)
 	XMFLOAT3 PlayerPos = player->GetPos();
 	bool Flag = player->GetStop();
 	if (Flag) {
- 		nothit_ = true;
+		nothit_ = true;
 	}
-	if (nothit_ != false&&time_!=0.f) { return; }
+	if (nothit_ != false && time_ != 0.f) { return; }
 
 	for (unique_ptr<Stage>& Map : maps_) {
 
@@ -295,7 +299,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 			if (Map->num != Bridge->num) { continue; }
 			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
 			if (Bridge->state_ == Direction::Beside) {
-				if ((pos.z<Pos.z + 5 && pos.z>Pos.z+2)) {
+				if ((pos.z<Pos.z + 5 && pos.z>Pos.z + 2)) {
 					if (pos.x > Pos.x + 2 && Pos.x + 6.f > pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num;
@@ -304,7 +308,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						nowstate_ = Map->state_;
 						return;
 					}
-					else if (pos.x < Pos.x - 2 && Pos.x - 7.7f< pos.x) {
+					else if (pos.x < Pos.x - 2 && Pos.x - 7.7f < pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num + 1;
 						direction_ = 2;
@@ -358,7 +362,7 @@ XMFLOAT3 GameMap::GetNowMapPos()
 	}
 }
 
-void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos,float OldCameraPos)
+void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos)
 {
 
 	//ˆÚ“®’†‚Å‚Í‚È‚¢
@@ -422,12 +426,73 @@ void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 	}
 }
 
-void GameMap::CreateRock()
+//void GameMap::CreateRock()
+//{
+//	//c
+//	int Vert = -2;
+//	//‰¡
+//	int Hori = -2;
+//	XMFLOAT3 Pos{ 5.f,0.f,5.f };
+//	while (rockPos_.z >= 70 && rockPos_.x >= 70) {
+//		int Num = 0;
+//		rockPos_.x += Pos.x * Hori;
+//		rockPos_.z += Pos.z * Vert;
+//		if (CheckRockToMap(rockPos_)) {
+//			unique_ptr Rock = make_unique<Object3d>();
+//			//if (Num == 0) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock")); }
+//			/*else if (Num == 1) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock2")); }
+//			else if (Num == 2) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock3")); }
+//			else if (Num == 3) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock4")); }
+//			else if (Num == 4) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock5")); }*/
+//			Rock->SetScale({ 1.f,1.f,1.f });
+//			Rock->SetPosition(rockPos_);
+//			rock_.emplace_back(Rock);
+//		}
+//		Hori += 1;
+//		if (rockPos_.x >= 70.f) {
+//			Hori = 0;
+//			Vert += 1;
+//		}
+//	}
+//
+//}
+
+bool GameMap::CheckRockToMap(const XMFLOAT3& RockPos)
 {
-	rock_ = make_unique<Object3d>();
-	rock_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock3"));
-	rock_->SetScale({ 5.f,5.f,5.f });
-	rock_->SetPosition({ 10.f,0.f,0.f });
+	for (unique_ptr<Stage>& Map : maps_) {
+		XMFLOAT3 Pos = Map->stagePos_;
+		if ((Pos.x - 7.f < RockPos.x && Pos.x + 9.2f > RockPos.x) &&
+			(Pos.z - 6.f < RockPos.z && Pos.z + 10.f > RockPos.z)) {
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+void GameMap::ReflectHammer(XMFLOAT3& Pos)
+{
+	XMFLOAT3 Limit{};
+	for (unique_ptr<Stage>& Map : maps_) {
+
+		if (count_ != Map->num) { continue; }
+		//¶
+		if (Pos.x >= Map->stagePos_.x + 9.3f) {
+			Pos.x = Map->stagePos_.x + 9.3f;
+		}
+		if (Pos.x <= Map->stagePos_.x - 7.f) {
+			Pos.x = Map->stagePos_.x - 7.f;
+		}
+
+		if (Pos.z >= Map->stagePos_.z + 10.f) {
+			Pos.z = Map->stagePos_.z + 10.f;
+		}
+
+		if (Pos.z <= Map->stagePos_.z - 6.f) {
+			Pos.z = Map->stagePos_.z - 6.f;
+		}
+
+	}
 }
 
 

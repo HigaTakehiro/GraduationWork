@@ -91,6 +91,10 @@ public:
 
 	void CreateRock();
 
+	bool CheckRockToMap(const XMFLOAT3& RockPos);
+
+	void ReflectHammer(XMFLOAT3& Pos);
+
 private:
 
 	list<unique_ptr<Stage>> maps_;
@@ -99,7 +103,7 @@ private:
 
 	unique_ptr<Stairs> stairs_;
 
-	unique_ptr<Object3d> rock_;
+	list<unique_ptr<Object3d>> rock_;
 	//マップの番号
 	int count_ = 0;
 	//古い状態のマプ番号
@@ -118,7 +122,8 @@ private:
 	XMFLOAT3 startpos_{};
 
 	int nowstate_ = 0;
-
+	//岩の座標
+	XMFLOAT3 rockPos_{};
 };
 
 
