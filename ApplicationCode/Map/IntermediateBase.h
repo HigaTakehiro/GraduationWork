@@ -23,6 +23,6 @@ public:
 	int GetBaseNo() { return baseNo; }
 private:
 	unique_ptr<Object3d> stage_;
-	int baseNo;
+	int baseNo = 0;
 };
 

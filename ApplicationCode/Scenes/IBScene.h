@@ -89,7 +89,7 @@ private: //メンバ変数
 
 	IntermediateBase* ib_;
 
-	int baseNo;
+	int baseNo = 0;
 
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
@@ -104,6 +104,6 @@ private: //メンバ変数
 	int32_t animeTimer_;
 	//前フレームアニメーションカウント
 	int32_t preAnimeCount_;
-	int32_t hp_;
+	int32_t hp_ = 0;
 };
 

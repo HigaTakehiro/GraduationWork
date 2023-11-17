@@ -278,11 +278,14 @@
     <ClCompile Include="ApplicationCode\Scenes\BossScene.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Scenes\IBScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\IBScene.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -483,7 +486,10 @@
     <ClInclude Include="ApplicationCode\Scenes\BossScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Scenes\IBScene.h" />
+    <ClInclude Include="ApplicationCode\Skills\BaseSkill.h" />
+    <ClInclude Include="ApplicationCode\Scenes\IBScene.h">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">

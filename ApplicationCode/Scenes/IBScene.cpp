@@ -36,12 +36,12 @@ void IBScene::Initialize()
 
 	//3dオブジェクト初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png",{ 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f },true);
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
-	player_->SetScale({ 0.2f, 0.2f, 0.2f });
+	player_->SetScale({ 0.15f, 0.15f, 0.15f });
 
 
 	postEffectNo_ = PostEffect::NONE;
@@ -51,7 +51,8 @@ void IBScene::Initialize()
 
 	ib_ = new IntermediateBase();
 	ib_->Initialize();
-	baseNo = 1;
+	ib_->LoadFloor();
+	baseNo = ib_->GetBaseNo();
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
 	animeSpeed_ = 8;
@@ -61,7 +62,7 @@ void IBScene::Initialize()
 void IBScene::Update()
 {
 	Animation();
-	player_->SetPosition({ -10.0f,2.5f, 0.0f });
+	player_->SetPosition({ -8.0f,2.5f, 8.0f });
 	player_->Update();
 
 	//デバッグカメラ移動処理
@@ -99,9 +100,10 @@ void IBScene::Update()
 
 
 
-	if (hp_ <= 0) {
-		ib_->LoadFloor();
-		baseNo = ib_->GetBaseNo();
+	if (hp_ != 0) {
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+			baseNo++;
+		}
 	}
 	ib_->Update();
 	ib_->FloorSave(baseNo);
