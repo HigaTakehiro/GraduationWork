@@ -476,18 +476,18 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos)
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (pos.x >= Map->stagePos_.x + 9.3f) {
+		if (pos.x >= Map->stagePos_.x + 13.f) {
 			return true;
 		}
-		if (pos.x <= Map->stagePos_.x - 7.f) {
-			return true;
-		}
-
-		if (pos.z >= Map->stagePos_.z + 10.f) {
+		if (pos.x <= Map->stagePos_.x - 11.f) {
 			return true;
 		}
 
-		if (pos.z <= Map->stagePos_.z - 6.f) {
+		if (pos.z >= Map->stagePos_.z + 7.f) {
+			return true;
+		}
+
+		if (pos.z <= Map->stagePos_.z - 16.f) {
 			return true;
 		}
 
