@@ -93,7 +93,7 @@ public:
 
 	bool CheckRockToMap(const XMFLOAT3& RockPos);
 
-	void ReflectHammer(XMFLOAT3& Pos);
+	XMFLOAT3 ReflectHammer(XMFLOAT3& Pos);
 
 private:
 

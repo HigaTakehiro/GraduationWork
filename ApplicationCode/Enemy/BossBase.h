@@ -16,7 +16,7 @@ public:
 	virtual void Draw2()=0;
 	virtual void Finalize() = 0;
 	virtual void Attack()=0;
-
+	virtual void SpriteDraw() = 0;
 	
 protected:
 	void RecvDamage(Vector3 pos);

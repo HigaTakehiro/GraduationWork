@@ -2,6 +2,7 @@
 #include "Object3d.h"
 #include "Sprite.h"
 #include "Vector3.h"
+#include "TextDraw.h"
 
 class Player
 {
@@ -109,6 +110,22 @@ public: //メンバ関数
 	bool GetNextFlor() { return nextflor_; }
 
 	bool GetNext() { return next_; }
+
+	/// <summary>
+	/// ハンマー座標を取得
+	/// </summary>
+	/// <returns>ハンマー座標</returns>
+	Vector3 GetHammerPos() { return hammerPos_; }
+
+	/// <summary>
+	/// ハンマー座標をセット
+	/// </summary>
+	void SetHammerPos(Vector3 hammerPos) { hammerPos_ = hammerPos; }
+
+	/// <summary>
+	/// 文字描画
+	/// </summary>
+	void TextUIDraw();
 
 private: //メンバ関数
 
@@ -294,6 +311,8 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> epBar_;
 	std::unique_ptr<Sprite> epBarBack_;
 	float epBarSize_;
+	//テキスト
+	TextDraw* text_;
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }

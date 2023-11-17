@@ -9,6 +9,7 @@
 #include "KeyInput.h"
 #include "Shapes.h"
 
+#include"Helper.h"
 #define BOSSMAP_C 0.f
 #define BOSSMAP_H 12.f
 #define BOSSMAP_W 15.f
@@ -23,12 +24,13 @@ void Dogom::Init()
 	for (int32_t i = 0; i < 8; i++) {
 		BodyModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_face.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
+	m_HpTex=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 
 	m_Body = Object3d::UniquePtrCreate(BodyModel_[0]);
 	//m_Body->SetIsBillboardY(true);
 	m_Body->SetColType(Object3d::CollisionType::Obb);
 	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
-	m_Body->SetObbScl({ 2.f,4.f,2.f });
+	m_Body->SetObbScl({ 1.f,4.f,1.f });
 	m_Body->SetHitRadius(0.5f);
 	m_Body->SetScale({ 0.0f, 0.0f, 0.0f });
 
@@ -43,7 +45,7 @@ void Dogom::Init()
 		//m_Body->SetIsBillboardY(true);
 		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		m_Arm[i]->SetObbScl({ 2.f,2.f,2.f });
+		m_Arm[i]->SetObbScl({ 1.f,2.f,1.f });
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
@@ -52,6 +54,9 @@ void Dogom::Init()
 
 		m_ImpactTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }));
 		m_ImpactTex[i]->SetRotation({ 90,0,0 });
+
+		m_ArmHpTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {128.0f, 128.0f}, "white1x1.png", {128.0f, 64.0f}, {0.f, 0.f}, {128.0f * (float)i, 0.0f}, {128.0f, 128.0f}));
+		
 	}
 
 	CrossAreaTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "CrossArea.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 }));
@@ -137,6 +142,7 @@ void Dogom::Upda()
 
 	constexpr float alphaval = 0.05f;
 
+	float HpBarSclX[2] = {};
 	for (size_t i = 0; i < 2; i++)
 	{
 		if (m_ArmHp[i] <= 0)m_ArmAlpha[i] -= alphaval;
@@ -155,6 +161,19 @@ void Dogom::Upda()
 		m_ArmAlpha[i]=std::clamp(m_ArmAlpha[i], 0.f, 1.f);
 		m_Arm[i]->Update();
 
+		m_ArmHpTex[i]->SetPosition(Vector3(m_ArmPos[i].x+2.f, m_ArmPos[i].y + 2.5f, m_ArmPos[i].z));
+		
+		constexpr float magniVal = 0.04f;
+		const float maxSx = 0.05f;
+
+		//1までの値にスケールの倍率あわせる
+		HpBarSclX[i]=Helper::SmoothStep_Deb(0.f,m_ArmHp_Max[i], (float)(m_ArmHp[i]))*magniVal;
+
+		m_ArmHpTex[i]->SetColor(XMFLOAT4(1, 0, 0, 1));
+		m_ArmHpTex[i]->SetScale(Vector3(HpBarSclX[i], 0.01f, 1.f));
+		m_ArmHpTex[i]->Update();
+
+	
 		m_ImpactTex[i]->SetScale(m_ImpactTexScl[i]);
 		m_ImpactTex[i]->SetPosition(m_ImpactTexPos[i]);
 		m_ImpactTex[i]->SetColor({ 1, 1, 1, m_ImpactTexAlpha[i] });
@@ -177,7 +196,6 @@ void Dogom::Draw()
 	m_Body->Draw();
 	
 }
-#include"Helper.h"
 void Dogom::Draw2()
 {
 	if (isLeaveBoss)return;
@@ -187,11 +205,16 @@ void Dogom::Draw2()
 		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ShadowTex[i].get(),
 			BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
 
+		Helper::isDraw(m_player->GetPos(),m_ImpactTexPos[i], m_ImpactTex[i].get(),
+		BossDraw_maxlen, (m_HP<=0 || m_ArmHp[i] <= 0));
+		
 		Helper::isDraw(m_player->GetPos(), m_ArmPos[i],
 			m_Arm[i].get(),BossDraw_maxlen, (m_HP <= 0||m_ArmHp[i]<=0));
 
-		Helper::isDraw(m_player->GetPos(),m_ImpactTexPos[i], m_ImpactTex[i].get(),
-		BossDraw_maxlen, (m_HP<=0 || m_ArmHp[i] <= 0));
+		Helper::isDraw(m_player->GetPos(), m_ArmPos[i],
+			m_ArmHpTex[i].get(), BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
+
+		
 	}
 }
 
@@ -681,7 +704,7 @@ void Dogom::MoveBody()
 
 void Dogom::ImpactTexScling()
 {
-	constexpr float GroundY = 0.2f;
+	constexpr float GroundY = -3.5f;
 
 	if (phase_ == Phase_Impact::PHASE_2) {
 		for (size_t i = 0; i < 2; i++) {
@@ -713,6 +736,7 @@ void Dogom::CoollisionFace()
 
 	if (!isColJudg[0] &&!isColJudg[1])return;
 
+
 	for (size_t i = 0; i < 2; i++) {
 		if (ColF[i])continue;
 		if (m_ArmHp[i] <= 0)continue;
@@ -737,17 +761,14 @@ void Dogom::CoollisionFace()
 
 void Dogom::CoollisionArm()
 {
+	bool canCol = arm_move_ == DEFAULT && m_player->getisHammerActive();
 
-	if (m_player->getisHammerActive()) {
+	if (canCol) {
 		for (size_t i = 0; i < 2; i++) {
-			if (!m_ArmDamF[i]) {
-				if (m_Arm[i]->GetIsHit())
-				{
-					m_ArmHp[i]--;
-					m_ArmDamF[i] = TRUE;
-					continue;
-				}
-			}
+			if (m_ArmDamF[i])continue;
+			if (!m_Arm[i]->GetIsHit())continue;
+			m_ArmHp[i]--;
+			m_ArmDamF[i] = TRUE;
 		}
 	}
 	for (size_t i = 0; i < 2; i++) {
@@ -828,15 +849,17 @@ void Dogom::ImpactKnock()
 	for (size_t i = 0; i < 2; i++) {
 		if (m_ArmPos[i].y < HandsUnderGround)continue;
 		if (!Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
-			{ m_ArmPos[i].x, m_ArmPos[i].z }, 5.0f))continue;
+			{ m_ArmPos[i].x, m_ArmPos[i].z }, 3.0f))continue;
 
 		vec[i] = PlayerPos - m_ArmPos[i];
 		vec[i].normalize();
 		vec[i].y = 0.0f;
-
-		m_player->HitHammerToEnemy(vec[i]);
-
+		
+		m_player->HitHammerToEnemy(vec[i],0.5f);
+		m_Knock = TRUE;
 	}
+
+
 }
 
 void Dogom::FaceCol()
@@ -860,4 +883,13 @@ void Dogom::WinceIdle()
 		m_BodyRot = Vector3(0, 0, 0);
 		wince_phase_ = WincePhase::PHASE_1;//m_BodyRot.z = Easing::easeIn(l_t, maxET, 0.f, 720.f);
 	}
+}
+
+void Dogom::SpriteDraw()
+{
+	float sx;
+	sx = m_HP * 100;
+	m_HpTex->SetPosition(XMFLOAT2(900, 50));
+	m_HpTex->SetSize(XMFLOAT2(sx, 50));
+	m_HpTex->Draw();
 }
