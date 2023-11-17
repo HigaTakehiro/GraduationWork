@@ -260,6 +260,8 @@ void Player::PlayerStatusSetting() {
 		repulsionPower_ = 1.0f;
 	}
 	animeSpeed_ = animeSpeed;
+	initHammerPos_ = pos;
+	initHammerScale_ = scale;
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -395,7 +397,7 @@ void Player::Attack() {
 			isHammerRelease_ = true;
 			isHammerSwing_ = false;
 			Vector3 hammerPos = pos_;
-			hammerPos.y = 30.0f;
+			hammerPos.y = -30.0f;
 			hammerPos_ = hammerPos;
 			hammer_->SetParent(nullptr);
 			hammer_->SetScale(scale_);
@@ -446,7 +448,7 @@ void Player::HammerThrow() {
 		}
 
 		hammerPos_ += hammerVec_ * throwSpeed_;
-		hammerPos_.y = 2.0f;
+		hammerPos_.y = -2.0f;
 		hammer_->SetPosition(hammerPos_);
 		//hammer_->SetRotation(rot);
 	}
@@ -484,7 +486,7 @@ void Player::HammerReturn()
 	Vector3 hammerToPlayerVec = pos_ - hammerPos_;
 	hammerToPlayerVec.normalize();
 	hammerPos_ += hammerToPlayerVec * throwSpeed_;
-	hammerPos_.y = 2.0f;
+	hammerPos_.y = -2.0f;
 	hammer_->SetPosition(hammerPos_);
 	hammer_->SetRotation(rot);
 }
