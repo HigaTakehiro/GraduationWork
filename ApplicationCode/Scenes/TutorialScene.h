@@ -28,6 +28,7 @@ class TutorialScene :
 {
 private:
     enum Phase {
+		Title,
         Description,
         Move,
         Spown,
@@ -58,6 +59,8 @@ private:
     /// </summary>
     void CameraSetting();
 public:
+
+	void TitlePhase();
 
     void DescriptionPhase();
 
