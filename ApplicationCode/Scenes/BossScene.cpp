@@ -160,7 +160,7 @@ void BossScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hp = std::to_wstring(player_->GetHP());
+	std::wstring hp = boss_->GetStr();
 	text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
@@ -171,6 +171,7 @@ void BossScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	player_->SpriteDraw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }

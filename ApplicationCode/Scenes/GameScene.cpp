@@ -56,14 +56,14 @@ void GameScene::Initialize()
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 	}
-	enemys_[0]->SetPos(Vector3(10, -30, 10));
-	enemys_[2]->SetPos(Vector3(-15, -30, -5));
-	enemys_[2]->SetPos(Vector3(0, -30, -5));
+	enemys_[0]->SetPos(Vector3(30, -30, -4));
+	enemys_[2]->SetPos(Vector3(25, -30, 2));
+	enemys_[2]->SetPos(Vector3(35, -30, 5));
 
 	map_ = make_unique<GameMap>();
 
 
-	map_->Initalize(player_, cameraPos_, targetPos_, 0);
+	map_->Initalize(player_, cameraPos_, targetPos_, 1);
 
 
 
@@ -75,17 +75,7 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	//for (std::unique_ptr<Ore>& ore : oreItems_) {
-	//	if (ore != nullptr) {
-	//		if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-	//			player_->AddOreCount();
-	//			ore = nullptr;
-	//		}
-	//	}
-	//	if (ore != nullptr) {
-	//		ore->Update();
-	//	}
-	//}
+	
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
@@ -112,6 +102,7 @@ void GameScene::Update()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
+
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
@@ -166,8 +157,6 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-
-
 	for (auto i = 0; i < enemys_.size(); i++)
 	{
 		if (enemys_[i]->GetHP() <= 0) { continue; }
@@ -178,6 +167,10 @@ void GameScene::Update()
 	}
 	//boss_->Upda();
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
+	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
+	if (!player_->GetIsHammerReflect()) {
+		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
+	}
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
 	shake_->Update();
@@ -229,8 +222,9 @@ void GameScene::Draw()
 	//テキスト描画範囲
 	//
 	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
-
+	std::wstring hx = std::to_wstring(player_->GetPos().z);
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
+	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);

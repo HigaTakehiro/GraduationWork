@@ -1,4 +1,5 @@
 #include "TitleScene.h"
+#include"TutorialScene.h"
 #include <random>
 #include "SoundManager.h"
 #include "PadInput.h"

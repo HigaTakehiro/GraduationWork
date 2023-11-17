@@ -30,7 +30,7 @@ void Dogom::Init()
 	//m_Body->SetIsBillboardY(true);
 	m_Body->SetColType(Object3d::CollisionType::Obb);
 	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
-	m_Body->SetObbScl({ 2.f,4.f,2.f });
+	m_Body->SetObbScl({ 1.f,4.f,1.f });
 	m_Body->SetHitRadius(0.5f);
 	m_Body->SetScale({ 0.0f, 0.0f, 0.0f });
 
@@ -45,7 +45,7 @@ void Dogom::Init()
 		//m_Body->SetIsBillboardY(true);
 		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		m_Arm[i]->SetObbScl({ 2.f,2.f,2.f });
+		m_Arm[i]->SetObbScl({ 1.5f,2.f,1.5f });
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
@@ -55,7 +55,7 @@ void Dogom::Init()
 		m_ImpactTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }));
 		m_ImpactTex[i]->SetRotation({ 90,0,0 });
 
-		m_ArmHpTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {128.0f, 128.0f}, "white1x1.png", {128.0f, 64.0f}, {0.5f, 0.5f}, {128.0f * (float)i, 0.0f}, {128.0f, 128.0f}));
+		m_ArmHpTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {128.0f, 128.0f}, "white1x1.png", {128.0f, 64.0f}, {0.f, 0.f}, {128.0f * (float)i, 0.0f}, {128.0f, 128.0f}));
 		
 	}
 
@@ -79,15 +79,21 @@ void Dogom::Upda()
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
 	m_Body->SetScale({ BodyScl });
 	
-	if (!WinceF) {
-		MoveBody();
-		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
-		m_BodyPos.z =-4.f+cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+	//登場終わったら行動
+	if (Appear() == TRUE) {
+		if (!WinceF) {
+			MoveBody();
+			m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+			m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 
-		//m_BodyPos.x = std::clamp(m_BodyPos.x, -15.f, 15.f);
+			//m_BodyPos.x = std::clamp(m_BodyPos.x, -15.f, 15.f);
 
-		//m_BodyPos.z = std::clamp(m_BodyPos.z, -15.f, 15.f);
+			//m_BodyPos.z = std::clamp(m_BodyPos.z, -15.f, 15.f);
+		}
+		ImpactKnock();
+		ArmAct();
 	}
+
 	if (Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
 		{ m_BodyPos.x, m_BodyPos.z }, 8.0f))
 	{
@@ -97,7 +103,6 @@ void Dogom::Upda()
 		vec.y = 0.0f;
 
 		m_player->HitHammerToEnemy(vec);
-
 	}
 
 	CoollisionArm();
@@ -128,8 +133,6 @@ void Dogom::Upda()
 			}
 		}
 	}
-	ImpactKnock();
-	ArmAct();
 	for (size_t i = 0; i < 2; i++) {
 		m_ArmPos[i].x = std::clamp(m_ArmPos[i].x,-BOSSMAP_W, BOSSMAP_W);
 		m_ArmPos[i].z = std::clamp(m_ArmPos[i].z, -BOSSMAP_H, BOSSMAP_H);
@@ -161,7 +164,7 @@ void Dogom::Upda()
 		m_ArmAlpha[i]=std::clamp(m_ArmAlpha[i], 0.f, 1.f);
 		m_Arm[i]->Update();
 
-		m_ArmHpTex[i]->SetPosition(Vector3(m_ArmPos[i].x, m_ArmPos[i].y + 1.5f, m_ArmPos[i].z));
+		m_ArmHpTex[i]->SetPosition(Vector3(m_ArmPos[i].x+2.f, m_ArmPos[i].y + 2.5f, m_ArmPos[i].z));
 		
 		constexpr float magniVal = 0.04f;
 		const float maxSx = 0.05f;
@@ -169,9 +172,11 @@ void Dogom::Upda()
 		//1までの値にスケールの倍率あわせる
 		HpBarSclX[i]=Helper::SmoothStep_Deb(0.f,m_ArmHp_Max[i], (float)(m_ArmHp[i]))*magniVal;
 
+		m_ArmHpTex[i]->SetColor(XMFLOAT4(1, 0, 0, 1));
 		m_ArmHpTex[i]->SetScale(Vector3(HpBarSclX[i], 0.01f, 1.f));
 		m_ArmHpTex[i]->Update();
 
+	
 		m_ImpactTex[i]->SetScale(m_ImpactTexScl[i]);
 		m_ImpactTex[i]->SetPosition(m_ImpactTexPos[i]);
 		m_ImpactTex[i]->SetColor({ 1, 1, 1, m_ImpactTexAlpha[i] });
@@ -185,6 +190,8 @@ void Dogom::Upda()
 		isLeaveBoss = TRUE;
 	else
 		isLeaveBoss = FALSE;
+
+	str = std::to_wstring(m_KnockInterTime);
 }
 
 void Dogom::Draw()
@@ -203,14 +210,16 @@ void Dogom::Draw2()
 		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ShadowTex[i].get(),
 			BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
 
+		Helper::isDraw(m_player->GetPos(),m_ImpactTexPos[i], m_ImpactTex[i].get(),
+		BossDraw_maxlen, (m_HP<=0 || m_ArmHp[i] <= 0));
+		
 		Helper::isDraw(m_player->GetPos(), m_ArmPos[i],
 			m_Arm[i].get(),BossDraw_maxlen, (m_HP <= 0||m_ArmHp[i]<=0));
 
 		Helper::isDraw(m_player->GetPos(), m_ArmPos[i],
 			m_ArmHpTex[i].get(), BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
 
-		Helper::isDraw(m_player->GetPos(),m_ImpactTexPos[i], m_ImpactTex[i].get(),
-		BossDraw_maxlen, (m_HP<=0 || m_ArmHp[i] <= 0));
+		
 	}
 }
 
@@ -700,7 +709,7 @@ void Dogom::MoveBody()
 
 void Dogom::ImpactTexScling()
 {
-	constexpr float GroundY = 0.2f;
+	constexpr float GroundY = -3.5f;
 
 	if (phase_ == Phase_Impact::PHASE_2) {
 		for (size_t i = 0; i < 2; i++) {
@@ -757,17 +766,14 @@ void Dogom::CoollisionFace()
 
 void Dogom::CoollisionArm()
 {
+	bool canCol = arm_move_ == DEFAULT && m_player->getisHammerActive();
 
-	if (m_player->getisHammerActive()) {
+	if (canCol) {
 		for (size_t i = 0; i < 2; i++) {
-			if (!m_ArmDamF[i]) {
-				if (m_Arm[i]->GetIsHit())
-				{
-					m_ArmHp[i]--;
-					m_ArmDamF[i] = TRUE;
-					continue;
-				}
-			}
+			if (m_ArmDamF[i])continue;
+			if (!m_Arm[i]->GetIsHit())continue;
+			m_ArmHp[i]--;
+			m_ArmDamF[i] = TRUE;
 		}
 	}
 	for (size_t i = 0; i < 2; i++) {
@@ -843,20 +849,33 @@ void Dogom::RotationFace(const uint16_t& interval)
 void Dogom::ImpactKnock()
 {
 
-	if (phase_ != Phase_Impact::PHASE_2)return;
+	//if (phase_ != Phase_Impact::PHASE_2)return;
 	constexpr float HandsUnderGround = -3.f;
-	for (size_t i = 0; i < 2; i++) {
-		if (m_ArmPos[i].y < HandsUnderGround)continue;
-		if (!Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
-			{ m_ArmPos[i].x, m_ArmPos[i].z }, 5.0f))continue;
+	constexpr float KnockValMagni = 0.3f;/*ノック倍率*/
 
-		vec[i] = PlayerPos - m_ArmPos[i];
-		vec[i].normalize();
-		vec[i].y = 0.0f;
-		
-		m_player->HitHammerToEnemy(vec[i]);
+	bool KnockJudg = m_Knock == FALSE && phase_ == Phase_Impact::PHASE_2;
+	if (KnockJudg) {
+		for (size_t i = 0; i < 2; i++) {
+			if (m_ArmPos[i].y < HandsUnderGround)continue;
+			if (!Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
+				{ m_ArmPos[i].x, m_ArmPos[i].z }, 3.0f))continue;
 
+			vec[i] = PlayerPos - m_ArmPos[i];
+			vec[i].normalize();
+			vec[i].y = 0.0f;
+
+			m_player->HitHammerToEnemy(vec[i],KnockValMagni);
+			m_Knock = TRUE;
+		}
 	}
+
+	//フラグ値チェック
+	m_KnockInterTime = m_Knock ? ++m_KnockInterTime : 0;
+
+	constexpr UINT maxInter = 90;
+
+	if (m_KnockInterTime > maxInter)
+		m_Knock = FALSE;
 
 }
 
@@ -879,7 +898,7 @@ void Dogom::WinceIdle()
 	if (++l_t>maxET&& wince_phase_ == WincePhase::IDLE)
 	{
 		m_BodyRot = Vector3(0, 0, 0);
-		wince_phase_ = WincePhase::PHASE_1;//m_BodyRot.z = Easing::easeIn(l_t, maxET, 0.f, 720.f);
+		wince_phase_ = WincePhase::PHASE_1;
 	}
 }
 
@@ -890,4 +909,26 @@ void Dogom::SpriteDraw()
 	m_HpTex->SetPosition(XMFLOAT2(900, 50));
 	m_HpTex->SetSize(XMFLOAT2(sx, 50));
 	m_HpTex->Draw();
+}
+
+bool Dogom::Appear()
+{
+	if (_phase_appear == PHASE1) {
+		//本体処理
+
+		_phase_appear = PHASE2;
+
+	}
+	else if (_phase_appear == PHASE2) {
+		//カメラ処理
+
+		_phase_appear = PHASE3;
+	}
+
+	//こいつラスト行くまで更新きる
+	else if (_phase_appear == PHASE3) {
+		return true;
+	}
+
+	return false;
 }

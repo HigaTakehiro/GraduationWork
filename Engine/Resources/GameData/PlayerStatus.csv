@@ -1,10 +1,10 @@
 #Player Status
 
-pos 0 2.5 0
+pos 0 -2.5 0
 scale 0.028 0.028 0.028
 rot 0 180 0
 #プレイヤーの速度
-Smove 0.14
+Smove 0.12
 Srot 12.0
 RrotTime 60.0
 throwSpeed 0.3

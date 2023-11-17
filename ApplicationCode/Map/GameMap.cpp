@@ -274,19 +274,19 @@ void GameMap::CheckHitTest(Player* player)
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (PlayerPos.x >= Map->stagePos_.x + 9.3f) {
-			PlayerPos.x = Map->stagePos_.x + 9.3f;
+		if (PlayerPos.x >= Map->stagePos_.x + 13.f) {
+			PlayerPos.x = Map->stagePos_.x + 13.f;
 		}
-		if (PlayerPos.x <= Map->stagePos_.x - 7.f) {
-			PlayerPos.x = Map->stagePos_.x - 7.f;
-		}
-
-		if (PlayerPos.z >= Map->stagePos_.z + 10.f) {
-			PlayerPos.z = Map->stagePos_.z + 10.f;
+		if (PlayerPos.x <= Map->stagePos_.x - 11.f) {
+			PlayerPos.x = Map->stagePos_.x - 11.f;
 		}
 
-		if (PlayerPos.z <= Map->stagePos_.z - 6.f) {
-			PlayerPos.z = Map->stagePos_.z - 6.f;
+		if (PlayerPos.z >= Map->stagePos_.z + 7.f) {
+			PlayerPos.z = Map->stagePos_.z + 7.f;
+		}
+
+		if (PlayerPos.z <= Map->stagePos_.z - 16.f) {
+			PlayerPos.z = Map->stagePos_.z - 16.f;
 		}
 	}
 	player->SetPos(PlayerPos);
@@ -299,8 +299,8 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 			if (Map->num != Bridge->num) { continue; }
 			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
 			if (Bridge->state_ == Direction::Beside) {
-				if ((pos.z<Pos.z + 5 && pos.z>Pos.z + 2)) {
-					if (pos.x > Pos.x + 2 && Pos.x + 6.f > pos.x) {
+				if ((pos.z<Pos.z - 1 && pos.z>Pos.z - 4.f)) {
+					if (pos.x > Pos.x -2.f  && Pos.x + 2.f > pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num;
 						direction_ = 1;
@@ -308,7 +308,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						nowstate_ = Map->state_;
 						return;
 					}
-					else if (pos.x < Pos.x - 2 && Pos.x - 7.7f < pos.x) {
+					else if (pos.x < Pos.x - 2.f && Pos.x - 4.f < pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num + 1;
 						direction_ = 2;
@@ -320,7 +320,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 			}
 			else if (Bridge->state_ == Direction::Vertical) {
 				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 1)) {
-					if (pos.z > Pos.z - 5 && Pos.z - 2 > pos.z) {
+					if (pos.z > Pos.z - 8 && Pos.z - 5 > pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num + nextval_;
 						direction_ = 3;
@@ -328,7 +328,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						nowstate_ = Map->state_;
 						return;
 					}
-					else if (pos.z < Pos.z + 9 && Pos.z + 2 < pos.z) {
+					else if (pos.z < Pos.z-1  && Pos.z -4 < pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num;
 						direction_ = 4;
@@ -386,11 +386,11 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction_ == 4) {
-		NEXTPLAYERPOS.z = NextPos_.z + 9.f;
+		NEXTPLAYERPOS.z = NextPos_.z + 4.f;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 	else if (direction_ == 3) {
-		NEXTPLAYERPOS.z = NextPos_.z - 4.f;
+		NEXTPLAYERPOS.z = NextPos_.z - 10.f;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 
@@ -418,12 +418,10 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 
 void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 {
-	if (StageNum == 100) {
-		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");
-	}
-	else {
-		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");
-	}
+	if (StageNum == 0) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv");}
+	else if (StageNum == 1) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");}
+	else if (StageNum == 100) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");}
+	
 }
 
 //void GameMap::CreateRock()
@@ -470,29 +468,32 @@ bool GameMap::CheckRockToMap(const XMFLOAT3& RockPos)
 	return false;
 }
 
-void GameMap::ReflectHammer(XMFLOAT3& Pos)
+bool GameMap::ReflectHammer(XMFLOAT3& Pos)
 {
+	XMFLOAT3 pos = Pos;
 	XMFLOAT3 Limit{};
 	for (unique_ptr<Stage>& Map : maps_) {
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (Pos.x >= Map->stagePos_.x + 9.3f) {
-			Pos.x = Map->stagePos_.x + 9.3f;
+		if (pos.x >= Map->stagePos_.x + 13.f) {
+			return true;
 		}
-		if (Pos.x <= Map->stagePos_.x - 7.f) {
-			Pos.x = Map->stagePos_.x - 7.f;
-		}
-
-		if (Pos.z >= Map->stagePos_.z + 10.f) {
-			Pos.z = Map->stagePos_.z + 10.f;
+		if (pos.x <= Map->stagePos_.x - 11.f) {
+			return true;
 		}
 
-		if (Pos.z <= Map->stagePos_.z - 6.f) {
-			Pos.z = Map->stagePos_.z - 6.f;
+		if (pos.z >= Map->stagePos_.z + 7.f) {
+			return true;
+		}
+
+		if (pos.z <= Map->stagePos_.z - 16.f) {
+			return true;
 		}
 
 	}
+
+	return false;
 }
 
 

@@ -2,6 +2,7 @@
 
 #include "BaseScene.h"
 #include "TitleScene.h"
+#include"TutorialScene.h"
 #include "GameScene.h"
 #include"IBScene.h"
 #include "BossScene.h"
@@ -22,6 +23,7 @@ public:
 public: //ƒV[ƒ“ŠÇ—”Ô†
 	enum class SceneName {
 		Title,
+		Tutorial,
 		Game,
 		IB,
 		Boss,

@@ -2,6 +2,7 @@
 #include "Object3d.h"
 #include "Sprite.h"
 #include "Vector3.h"
+#include "TextDraw.h"
 
 class Player
 {
@@ -110,6 +111,23 @@ public: //メンバ関数
 
 	bool GetNext() { return next_; }
 
+	/// <summary>
+	/// ハンマー反射フラグを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsHammerReflect() { return isHammerReflect_; }
+
+	/// <summary>
+	/// ハンマー反射フラグをセット
+	/// </summary>
+	/// <param name="isReflect"></param>
+	void SetIsHammerReflect(bool isReflect) { isHammerReflect_ = isReflect; }
+
+	/// <summary>
+	/// 文字描画
+	/// </summary>
+	void TextUIDraw();
+
 private: //メンバ関数
 
 	/// <summary>
@@ -204,10 +222,6 @@ private: //メンバ変数
 	//ハンマー攻撃時加速度
 	float hammerAcc_;
 
-	//仮ハンマー投げ時間
-	int32_t hammerTime = 60;
-	int32_t hammerTimer = 0;
-
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//回転攻撃時プレイヤーオブジェクト
@@ -241,6 +255,8 @@ private: //メンバ変数
 	bool isAttack_;
 	//ハンマー回転フラグ
 	bool isHammerSwing_;
+	//ハンマー反射フラグ
+	bool isHammerReflect_;
 	//ハンマー座標
 	Vector3 hammerPos_;
 	//ハンマーサイズ
@@ -294,6 +310,8 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> epBar_;
 	std::unique_ptr<Sprite> epBarBack_;
 	float epBarSize_;
+	//テキスト
+	TextDraw* text_;
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
