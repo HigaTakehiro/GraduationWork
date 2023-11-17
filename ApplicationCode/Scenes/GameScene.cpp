@@ -75,18 +75,7 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	//for (std::unique_ptr<Ore>& ore : oreItems_) {
-	//	if (ore != nullptr) {
-	//		if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-	//			player_->AddOreCount();
-	//			ore = nullptr;
-	//		}
-	//	}
-	//	if (ore != nullptr) {
-	//		ore->Update();
-	//	}
-	//}
-	// 
+	
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
@@ -176,8 +165,9 @@ void GameScene::Update()
 	//boss_->Upda();
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
-	hammerPosition = map_->ReflectHammer(hammerPosition);
-	player_->SetHammerPos(hammerPosition);
+	if (!player_->GetIsHammerReflect()) {
+		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
+	}
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
 	shake_->Update();

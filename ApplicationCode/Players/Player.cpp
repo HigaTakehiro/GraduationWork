@@ -260,6 +260,8 @@ void Player::PlayerStatusSetting() {
 		repulsionPower_ = 1.0f;
 	}
 	animeSpeed_ = animeSpeed;
+	initHammerPos_ = pos;
+	initHammerScale_ = scale;
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -395,7 +397,7 @@ void Player::Attack() {
 			isHammerRelease_ = true;
 			isHammerSwing_ = false;
 			Vector3 hammerPos = pos_;
-			hammerPos.y = 30.0f;
+			hammerPos.y = -30.0f;
 			hammerPos_ = hammerPos;
 			hammer_->SetParent(nullptr);
 			hammer_->SetScale(scale_);
@@ -411,17 +413,7 @@ void Player::Attack() {
 	}
 	//攻撃キーを離している時プレイヤーの向きを修正
 	else {
-		//時間の割合を求める
-		float t = 0.0f;
-		if (++rotResetTimer_ < rotResetTime_) {
-			t = rotResetTimer_ / rotResetTime_;
-			//イージングをかける
-			rot_ = easeIn(rot_, initRot_, t);
-		}
-		else {
-			rot_ = initRot_;
-		}
-
+		rot_ = initRot_;
 	}
 
 	if (rot_.y < 0) {
@@ -437,7 +429,7 @@ void Player::HammerThrow() {
 	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
 	hammerSize_ = hammerSize + hammerScaleCorrection * (float)oreCount_;
 	hammer_->SetScale(hammerSize_);
-	if (++hammerTimer <= hammerTime) {
+	if (!isHammerReflect_) {
 		//回転角を求める
 		Vector3 rot = hammer_->GetRotation();
 		rot.y += 5.0f;
@@ -446,18 +438,15 @@ void Player::HammerThrow() {
 		}
 
 		hammerPos_ += hammerVec_ * throwSpeed_;
-		hammerPos_.y = 2.0f;
+		hammerPos_.y = -2.0f;
 		hammer_->SetPosition(hammerPos_);
 		//hammer_->SetRotation(rot);
-	}
-	else {
-		hammerTimer = hammerTime;
 	}
 }
 
 void Player::HammerGet()
 {
-	if (hammerTimer >= hammerTime) {
+	if (isHammerReflect_) {
 		HammerReturn();
 		if (player_->GetIsHit() && hammer_->GetIsHit()) {
 			hammer_->SetParent(player_.get());
@@ -466,7 +455,7 @@ void Player::HammerGet()
 			hammer_->SetRotation(initHammerRot_);
 			isHammerRelease_ = false;
 			isAttack_ = false;
-			hammerTimer = 0;
+			isHammerReflect_ = false;
 			notnext_ = false;
 		}
 	}
@@ -484,7 +473,7 @@ void Player::HammerReturn()
 	Vector3 hammerToPlayerVec = pos_ - hammerPos_;
 	hammerToPlayerVec.normalize();
 	hammerPos_ += hammerToPlayerVec * throwSpeed_;
-	hammerPos_.y = 2.0f;
+	hammerPos_.y = -2.0f;
 	hammer_->SetPosition(hammerPos_);
 	hammer_->SetRotation(rot);
 }
