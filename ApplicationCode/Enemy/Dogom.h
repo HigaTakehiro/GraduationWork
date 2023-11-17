@@ -18,7 +18,8 @@ private:
     float m_CrossAreaAlpha = 0.f;
     std::array<std::unique_ptr<Object3d>,2> m_Arm;
     std::array<std::unique_ptr<Object3d>, 2> m_ImpactTex;
-
+    std::unique_ptr<Sprite>m_HpTex=nullptr;
+    std::array<std::unique_ptr<Object3d>,2>m_ArmHpTex{};
     //プレイヤーモデル
     Model* BodyModel_[8];
     Model* ArmModel_[8];
@@ -34,7 +35,8 @@ private:
     std::array<float, 2>m_ArmAlpha;;
 	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
-	std::array<int, 2>m_ArmHp={1,1};
+	std::array<int, 2>m_ArmHp={6,6};
+    std::array<int, 2>m_ArmHp_Max = { 6,6 };
     std::array<bool, 2>m_ArmDamF;
 
     std::array<bool, 2>m_ImpactF;
@@ -55,6 +57,9 @@ private:
     UINT m_ActionTimer=1;
     UINT ActionRandom=1;
     UINT BossBodyMovingT=1;
+    UINT m_KnockInterTime=0;
+
+    BOOL m_Knock;
 private:
     void Init()override;
     void Upda()override;
@@ -62,7 +67,7 @@ private:
     void Draw2()override;
     void Finalize() override;
     void Attack()override;
-
+    void SpriteDraw()override;
 private:
     enum ArmMove
     {

@@ -68,6 +68,8 @@ void NormalEnemyA::Upda(Camera* camera)
 		_status.Tex->Update(camera);
 	}
 
+	ClampMap();
+
 	if (!_isAttack) {back_t = 0.f; }
 }
 #include"Helper.h"
@@ -256,4 +258,10 @@ void NormalEnemyA::AttackAction()
 	}
 	_status.Scl.x = std::clamp(_status.Scl.x, 1.f, 1.3f);
 	_status.Scl.y=std::clamp(_status.Scl.y, 1.3f, 1.8f);
+}
+
+void NormalEnemyA::ClampMap()
+{
+	_status.Pos.x = std::clamp(_status.Pos.x, mapOverX.x, mapOverX.y);
+	_status.Pos.z = std::clamp(_status.Pos.z, mapOverZ.x, mapOverZ.y);
 }
