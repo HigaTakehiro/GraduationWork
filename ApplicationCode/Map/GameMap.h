@@ -124,6 +124,8 @@ private:
 	int nowstate_ = 0;
 	//ä‚ÇÃç¿ïW
 	XMFLOAT3 rockPos_{};
+
+	XMFLOAT4 limit_ = { 13.f,11.f,7.f,16.f };
 };
 
 
