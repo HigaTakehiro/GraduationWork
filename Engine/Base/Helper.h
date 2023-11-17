@@ -17,6 +17,8 @@ public:
 	static void ColKnock(const Vector3& vec1, const Vector3& vec2, Player* obj, bool flag=false);
 	//
 	static float SmoothStep_Deb(float edge0, float edge1, float x);
+	//
+	static void DamageManager(UINT& Hp, UINT subHp, BOOL& damF,int& coolT,int maxcool);
 };
 
 //–ˆƒV[ƒ“‘‚­‚Ì‚¾‚é‚¢‚Ì‚Å
@@ -51,3 +53,4 @@ inline float Helper::SmoothStep_Deb(float edge0, float edge1, float x)
 	float t = std::clamp((x - edge0) / (edge1 - edge0), 0.f, 1.f);
 	return t * t * (3.f - 2.f * t);
 }
+

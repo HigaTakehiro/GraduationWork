@@ -10,7 +10,7 @@
 #include "Shapes.h"
 
 #include"Helper.h"
-#include <PadInput.cpp>
+#include "PadInput.h"
 #define BOSSMAP_C 0.f
 #define BOSSMAP_H 12.f
 #define BOSSMAP_W 15.f
@@ -108,6 +108,9 @@ void Dogom::Upda()
 		ArmAct();
 	}
 
+	constexpr UINT RecvCoolMax = 60;
+	BodyDamCool = BodyRecvDam ? ++BodyDamCool : 0;
+	//if(BodyDamCool>)
 	//
 
 	if (isHit(m_player->GetPos(), m_BodyPos,1.f,2.f))
