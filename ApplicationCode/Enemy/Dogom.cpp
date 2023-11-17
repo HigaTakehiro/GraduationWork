@@ -79,15 +79,21 @@ void Dogom::Upda()
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
 	m_Body->SetScale({ BodyScl });
 	
-	if (!WinceF) {
-		MoveBody();
-		m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
-		m_BodyPos.z =-4.f+cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+	//登場終わったら行動
+	if (Appear() == TRUE) {
+		if (!WinceF) {
+			MoveBody();
+			m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+			m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 
-		//m_BodyPos.x = std::clamp(m_BodyPos.x, -15.f, 15.f);
+			//m_BodyPos.x = std::clamp(m_BodyPos.x, -15.f, 15.f);
 
-		//m_BodyPos.z = std::clamp(m_BodyPos.z, -15.f, 15.f);
+			//m_BodyPos.z = std::clamp(m_BodyPos.z, -15.f, 15.f);
+		}
+		ImpactKnock();
+		ArmAct();
 	}
+
 	if (Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
 		{ m_BodyPos.x, m_BodyPos.z }, 8.0f))
 	{
@@ -97,7 +103,6 @@ void Dogom::Upda()
 		vec.y = 0.0f;
 
 		m_player->HitHammerToEnemy(vec);
-
 	}
 
 	CoollisionArm();
@@ -128,8 +133,6 @@ void Dogom::Upda()
 			}
 		}
 	}
-	ImpactKnock();
-	ArmAct();
 	for (size_t i = 0; i < 2; i++) {
 		m_ArmPos[i].x = std::clamp(m_ArmPos[i].x,-BOSSMAP_W, BOSSMAP_W);
 		m_ArmPos[i].z = std::clamp(m_ArmPos[i].z, -BOSSMAP_H, BOSSMAP_H);
@@ -895,7 +898,7 @@ void Dogom::WinceIdle()
 	if (++l_t>maxET&& wince_phase_ == WincePhase::IDLE)
 	{
 		m_BodyRot = Vector3(0, 0, 0);
-		wince_phase_ = WincePhase::PHASE_1;//m_BodyRot.z = Easing::easeIn(l_t, maxET, 0.f, 720.f);
+		wince_phase_ = WincePhase::PHASE_1;
 	}
 }
 
@@ -906,4 +909,26 @@ void Dogom::SpriteDraw()
 	m_HpTex->SetPosition(XMFLOAT2(900, 50));
 	m_HpTex->SetSize(XMFLOAT2(sx, 50));
 	m_HpTex->Draw();
+}
+
+bool Dogom::Appear()
+{
+	if (_phase_appear == PHASE1) {
+		//本体処理
+
+		_phase_appear = PHASE2;
+
+	}
+	else if (_phase_appear == PHASE2) {
+		//カメラ処理
+
+		_phase_appear = PHASE3;
+	}
+
+	//こいつラスト行くまで更新きる
+	else if (_phase_appear == PHASE3) {
+		return true;
+	}
+
+	return false;
 }
