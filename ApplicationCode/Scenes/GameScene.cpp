@@ -63,7 +63,7 @@ void GameScene::Initialize()
 	map_ = make_unique<GameMap>();
 
 
-	map_->Initalize(player_, cameraPos_, targetPos_, 0);
+	map_->Initalize(player_, cameraPos_, targetPos_, 1);
 
 
 
@@ -86,6 +86,7 @@ void GameScene::Update()
 	//		ore->Update();
 	//	}
 	//}
+	// 
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
@@ -112,6 +113,7 @@ void GameScene::Update()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
+
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
@@ -163,8 +165,6 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-
-
 	for (auto i = 0; i < enemys_.size(); i++)
 	{
 		if (enemys_[i]->GetHP() <= 0) { continue; }
@@ -175,6 +175,9 @@ void GameScene::Update()
 	}
 	//boss_->Upda();
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
+	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
+	hammerPosition = map_->ReflectHammer(hammerPosition);
+	player_->SetHammerPos(hammerPosition);
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
 	shake_->Update();
@@ -226,11 +229,9 @@ void GameScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
-	std::wstring hp = std::to_wstring(player_->GetPos().x);
-
 	std::wstring hx = std::to_wstring(player_->GetPos().z);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hp+hx, textDrawRange);
-
+	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
+	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);

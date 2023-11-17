@@ -134,6 +134,7 @@ void Player::Finalize()
 	}
 	safe_delete(hammerModel_);
 	safe_delete(shadowModel_);
+	safe_delete(text_);
 }
 
 void Player::HitHammerToEnemy(Vector3 vec,float dis)
@@ -594,4 +595,12 @@ void Player::UIUpdate()
 	hpBarSize_ = ((float)hp_ / (float)maxHp_) * HPBarSize;
 
 	hpBar_->SetSize({hpBarSize_, 20});
+}
+
+void Player::TextUIDraw()
+{
+	D2D1_RECT_F textDrawRange = { 30, 48, 158, 176 };
+	std::wstring hp = std::to_wstring(hp_);
+	std::wstring maxHP = std::to_wstring(maxHp_);
+	text_->Draw("meiryo_16", "white", hp + L"/" + maxHP, textDrawRange);
 }

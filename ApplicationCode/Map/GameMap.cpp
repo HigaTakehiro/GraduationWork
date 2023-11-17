@@ -418,12 +418,10 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 
 void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 {
-	if (StageNum == 100) {
-		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");
-	}
-	else {
-		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");
-	}
+	if (StageNum == 0) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv");}
+	else if (StageNum == 1) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");}
+	else if (StageNum == 100) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");}
+	
 }
 
 //void GameMap::CreateRock()
@@ -470,29 +468,32 @@ bool GameMap::CheckRockToMap(const XMFLOAT3& RockPos)
 	return false;
 }
 
-void GameMap::ReflectHammer(XMFLOAT3& Pos)
+XMFLOAT3 GameMap::ReflectHammer(XMFLOAT3& Pos)
 {
+	XMFLOAT3 pos = Pos;
 	XMFLOAT3 Limit{};
 	for (unique_ptr<Stage>& Map : maps_) {
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (Pos.x >= Map->stagePos_.x + 9.3f) {
-			Pos.x = Map->stagePos_.x + 9.3f;
+		if (pos.x >= Map->stagePos_.x + 9.3f) {
+			pos.x = Map->stagePos_.x + 9.3f;
 		}
-		if (Pos.x <= Map->stagePos_.x - 7.f) {
-			Pos.x = Map->stagePos_.x - 7.f;
-		}
-
-		if (Pos.z >= Map->stagePos_.z + 10.f) {
-			Pos.z = Map->stagePos_.z + 10.f;
+		if (pos.x <= Map->stagePos_.x - 7.f) {
+			pos.x = Map->stagePos_.x - 7.f;
 		}
 
-		if (Pos.z <= Map->stagePos_.z - 6.f) {
-			Pos.z = Map->stagePos_.z - 6.f;
+		if (pos.z >= Map->stagePos_.z + 10.f) {
+			pos.z = Map->stagePos_.z + 10.f;
+		}
+
+		if (pos.z <= Map->stagePos_.z - 6.f) {
+			pos.z = Map->stagePos_.z - 6.f;
 		}
 
 	}
+
+	return pos;
 }
 
 
