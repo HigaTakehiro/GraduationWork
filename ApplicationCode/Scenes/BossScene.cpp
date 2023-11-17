@@ -118,6 +118,10 @@ void BossScene::Update()
 	boss_->Upda();
 
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
+	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
+	if (!player_->GetIsHammerReflect()) {
+		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
+	}
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
