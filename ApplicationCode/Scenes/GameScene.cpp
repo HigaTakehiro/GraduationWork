@@ -163,8 +163,6 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
-
-
 	for (auto i = 0; i < enemys_.size(); i++)
 	{
 		if (enemys_[i]->GetHP() <= 0) { continue; }
@@ -175,6 +173,9 @@ void GameScene::Update()
 	}
 	//boss_->Upda();
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
+	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
+	hammerPosition = map_->ReflectHammer(hammerPosition);
+	player_->SetHammerPos(hammerPosition);
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
 	shake_->Update();

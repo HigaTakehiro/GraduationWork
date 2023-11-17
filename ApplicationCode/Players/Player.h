@@ -110,6 +110,17 @@ public: //メンバ関数
 
 	bool GetNext() { return next_; }
 
+	/// <summary>
+	/// ハンマー座標を取得
+	/// </summary>
+	/// <returns>ハンマー座標</returns>
+	Vector3 GetHammerPos() { return hammerPos_; }
+
+	/// <summary>
+	/// ハンマー座標をセット
+	/// </summary>
+	void SetHammerPos(Vector3 hammerPos) { hammerPos_ = hammerPos; }
+
 private: //メンバ関数
 
 	/// <summary>

@@ -39,9 +39,6 @@
     <Filter Include="ソース ファイル\ApplicationCode\CameraMove">
       <UniqueIdentifier>{f592ee56-c219-4ab0-b5d8-f5db7062530d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\ApplicationCode\Enemy">
-      <UniqueIdentifier>{7ef8022d-10d5-48f7-ab06-0f2aa77c548e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\ApplicationCode\Players">
       <UniqueIdentifier>{b205d163-4af7-475a-986b-0333913103b4}</UniqueIdentifier>
     </Filter>
@@ -87,12 +84,6 @@
     <Filter Include="ソース ファイル\Engine\Texture">
       <UniqueIdentifier>{2428a05e-5ceb-4f60-bcbe-4b3ac1355f78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\ApplicationCode\Enemy\Base">
-      <UniqueIdentifier>{83777728-e2c2-4d56-b4b9-35ac310b06de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\ApplicationCode\Enemy\Derivative">
-      <UniqueIdentifier>{4c8aaada-19f4-464e-b964-9216abf7f7fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\ApplicationCode\Collision">
       <UniqueIdentifier>{5f4982f8-2bc4-4258-82cc-fb1a3a14435e}</UniqueIdentifier>
     </Filter>
@@ -104,6 +95,18 @@
     </Filter>
     <Filter Include="ソース ファイル\ApplicationCode\GameMap">
       <UniqueIdentifier>{a68b8726-d559-4235-8f86-7bb9548b413f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Skills">
+      <UniqueIdentifier>{ddf76122-fe1a-437d-bf2f-a304a9a3b929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Enemy">
+      <UniqueIdentifier>{7ef8022d-10d5-48f7-ab06-0f2aa77c548e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Enemy\Base">
+      <UniqueIdentifier>{83777728-e2c2-4d56-b4b9-35ac310b06de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Enemy\Derivative">
+      <UniqueIdentifier>{4c8aaada-19f4-464e-b964-9216abf7f7fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -484,6 +490,7 @@
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Scenes\IBScene.h" />
+    <ClInclude Include="ApplicationCode\Skills\BaseSkill.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
