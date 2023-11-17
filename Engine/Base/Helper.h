@@ -17,8 +17,16 @@ public:
 	static void ColKnock(const Vector3& vec1, const Vector3& vec2, Player* obj, bool flag=false);
 	//
 	static float SmoothStep_Deb(float edge0, float edge1, float x);
-	//
-	static void DamageManager(UINT& Hp, UINT subHp, BOOL& damF,int& coolT,int maxcool);
+	/// <summary>
+	/// ダメージ計算
+	/// </summary>
+	/// <param name="Hp">体力</param>
+	/// <param name="subHp">減らす体力</param>
+	/// <param name="damF">ダメージフラグ</param>
+	/// <param name="coolT">被ダメージのクールタイム</param>
+	/// <param name="maxcool">クールタイム最大値</param>
+	/// <param name="DamJudg">被ダメージ発生条件</param>
+	static void DamageManager(int& Hp, int subHp, BOOL& damF,int& coolT,int maxcool,bool DamJudg=false);
 };
 
 //毎シーン書くのだるいので
@@ -54,3 +62,23 @@ inline float Helper::SmoothStep_Deb(float edge0, float edge1, float x)
 	return t * t * (3.f - 2.f * t);
 }
 
+inline void Helper::DamageManager(int& Hp, int subHp, BOOL& damF,int& coolT,int maxcool,bool DamageJudg)
+{
+	if (Hp <= 0)return;
+
+	//フラグが立ってる時は加算
+	if (!damF) {
+		//攻撃判定とったｔか
+		if (DamageJudg) {
+			Hp -= subHp;
+			damF = TRUE;
+		}
+	}
+
+	if (coolT > maxcool)
+		damF = FALSE;
+
+	//クールタイム加算するか？
+	coolT = damF ? ++coolT : 0;
+
+}

@@ -34,7 +34,7 @@ protected:
 	Name m_Name;
 	std::wstring str;
 
-	uint16_t BodyDamCool = 0;
+	int BodyDamCool = 0;
 	BOOL BodyRecvDam=FALSE;
 public:
 	void SetPlayerIns(Player* player) { m_player = player; }

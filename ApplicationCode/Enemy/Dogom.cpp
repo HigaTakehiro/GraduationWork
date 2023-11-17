@@ -80,7 +80,7 @@ void Dogom::Upda()
 	Follow();
 	Wince();
 	if (!WinceF)WinceEaseT = 0;
-	RecvDamage(m_BodyPos);
+	//RecvDamage(m_BodyPos);
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
 	m_Body->SetScale({ BodyScl });
 	
@@ -98,22 +98,17 @@ void Dogom::Upda()
 			m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 		}
 		else {
-			if (isAttack) {
-				if (isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f)) {
-					m_HP--;
-				}
-			}
+				constexpr int RecvCoolMax = 120;
+				const int DamageVal = 10;
+				bool judg =isAttack&& isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
+
+				Helper::DamageManager(m_HP, DamageVal, BodyRecvDam, BodyDamCool, RecvCoolMax, judg);
 		}
 		ImpactKnock();
 		ArmAct();
 	}
 
-	constexpr UINT RecvCoolMax = 60;
-	BodyDamCool = BodyRecvDam ? ++BodyDamCool : 0;
-	//if(BodyDamCool>)
-	//
-
-	if (isHit(m_player->GetPos(), m_BodyPos,1.f,2.f))
+	if (isHit(m_player->GetPos(), m_BodyPos,1.f,3.f))
 	{
 		Vector3 vec;
 		vec = PlayerPos - m_BodyPos;
@@ -127,6 +122,7 @@ void Dogom::Upda()
 	CoollisionFace();
 	ImpactTexScling();
 	RotationFace(120);
+
 	constexpr int AnimationInter = 10;
 	constexpr size_t TexNum = 8;
 	static int animeCount = 0;
@@ -209,7 +205,7 @@ void Dogom::Upda()
 	else
 		isLeaveBoss = FALSE;
 
-	str = std::to_wstring(m_KnockInterTime);
+	str = std::to_wstring(m_HP);
 }
 
 void Dogom::Draw()
@@ -337,13 +333,13 @@ void Dogom::ArmAct()
 
 		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
-			if (ActionRandom > 110) {
-				//SetAttack_Impact();
-				//arm_move_ = ATTACK_IMPACT;
+			if (ActionRandom > 0) {
+				SetAttack_Impact();
+				arm_move_ = ATTACK_IMPACT;
 			} else
 			{
-				//SetAttack_Cross();
-				//arm_move_ = ATTACK_CROSS;
+				SetAttack_Cross();
+				arm_move_ = ATTACK_CROSS;
 			}
 		}
 		if (!movF) {
@@ -655,7 +651,7 @@ void Dogom::Wince()
 
 		
 		StanCount++;
-		if (StanCount >= 120) {
+		if (StanCount >= 1320) {
 			if (++WinceEaseT >= 50)
 			{
 				m_ArmHp[LEFT] = m_ArmHp[RIGHT] = ArmHP();
@@ -672,7 +668,7 @@ void Dogom::Wince()
 		}
 		else
 		{
-			if (StanCount > 60) {
+			if (StanCount > 1360) {
 				t2 += 90.f;
 				m_BodyPos.x += sin(t2 * 3.14f / 180.f) / 6.f;
 			}
@@ -790,6 +786,7 @@ void Dogom::CoollisionArm()
 		for (size_t i = 0; i < 2; i++) {
 			if (m_ArmDamF[i])continue;
 			if (!m_Arm[i]->GetIsHit())continue;
+			//m_player->SetIsHammerReflect(true);
 			m_ArmHp[i]--;
 			m_ArmDamF[i] = TRUE;
 		}
