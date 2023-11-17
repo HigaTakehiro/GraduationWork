@@ -418,12 +418,10 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 
 void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 {
-	if (StageNum == 100) {
-		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");
-	}
-	else {
-		stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");
-	}
+	if (StageNum == 0) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv");}
+	else if (StageNum == 1) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");}
+	else if (StageNum == 100) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");}
+	
 }
 
 //void GameMap::CreateRock()

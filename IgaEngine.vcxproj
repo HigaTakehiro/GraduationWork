@@ -178,6 +178,7 @@
     <ClCompile Include="ApplicationCode\Scenes\SceneManager.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\TitleScene.cpp" />
+    <ClCompile Include="ApplicationCode\Scenes\TutorialScene.cpp" />
     <ClCompile Include="ApplicationCode\Shake\IwaEffect.cpp" />
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp" />
     <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="ApplicationCode\Scenes\SceneManager.h" />
     <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h" />
     <ClInclude Include="ApplicationCode\Scenes\TitleScene.h" />
+    <ClInclude Include="ApplicationCode\Scenes\TutorialScene.h" />
     <ClInclude Include="ApplicationCode\Shake\IwaEffect.h" />
     <ClInclude Include="ApplicationCode\Shake\Shake.h" />
     <ClInclude Include="ApplicationCode\Skills\BaseSkill.h" />

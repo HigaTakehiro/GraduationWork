@@ -63,7 +63,7 @@ void GameScene::Initialize()
 	map_ = make_unique<GameMap>();
 
 
-	map_->Initalize(player_, cameraPos_, targetPos_, 0);
+	map_->Initalize(player_, cameraPos_, targetPos_, 1);
 
 
 
@@ -87,31 +87,6 @@ void GameScene::Update()
 	//	}
 	//}
 
-	player_->Update();
-	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos[3] = {};
-
-	for (size_t i = 0; i < enemys_.size(); i++)
-	{
-		if (enemys_[i]->GetHP() <= 0)
-		{
-			enemys_.erase(enemys_.begin() + i);
-			continue;
-		}
-	}
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetHP() <= 0)continue;
-		enemyPos[i] = enemys_[i]->GetPos();
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
-			Vector3 playerPos = player_->GetPos();
-			enemys_[i]->GetDamage();
-			vec[i] = playerPos - enemyPos[i];
-			vec[i].normalize();
-			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i]);
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
-		}
-	}
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
