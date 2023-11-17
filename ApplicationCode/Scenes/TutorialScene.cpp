@@ -11,6 +11,7 @@
 
 
 void (TutorialScene::* TutorialScene::FuncTable[])() {
+	&TutorialScene::TitlePhase,
 	&TutorialScene::DescriptionPhase,
 		& TutorialScene::MovePhase,
 		& TutorialScene::SpownPhase,
@@ -224,6 +225,10 @@ void TutorialScene::CameraSetting()
 		camera_->SetEye(cameraPos_);
 		camera_->SetTarget(targetPos_);
 	}
+}
+
+void TutorialScene::TitlePhase()
+{
 }
 
 void TutorialScene::DescriptionPhase()
