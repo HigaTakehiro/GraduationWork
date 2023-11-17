@@ -58,8 +58,9 @@ private:
     UINT ActionRandom=1;
     UINT BossBodyMovingT=1;
     UINT m_KnockInterTime=0;
-
-    BOOL m_Knock;
+    UINT BossMaxHP;
+    BOOL m_Knock=FALSE;
+    BOOL isAttack;
 private:
     void Init()override;
     void Upda()override;
@@ -114,7 +115,7 @@ private:
     std::array<int, 2>DamCool;
     void CoollisionFace();
     void CoollisionArm();
-    uint16_t ArmHP();
+    int ArmHP();
 
     void FaceFall();
     bool m_FallF = false;

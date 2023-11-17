@@ -33,6 +33,9 @@ protected:
 	int m_HP=110;
 	Name m_Name;
 	std::wstring str;
+
+	uint16_t BodyDamCool = 0;
+	BOOL BodyRecvDam=FALSE;
 public:
 	void SetPlayerIns(Player* player) { m_player = player; }
 	void SetCamera(Camera* cam) { m_Camera = cam; }

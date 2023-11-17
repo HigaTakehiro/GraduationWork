@@ -10,6 +10,7 @@
 #include "Shapes.h"
 
 #include"Helper.h"
+#include <PadInput.cpp>
 #define BOSSMAP_C 0.f
 #define BOSSMAP_H 12.f
 #define BOSSMAP_W 15.f
@@ -24,13 +25,13 @@ void Dogom::Init()
 	for (int32_t i = 0; i < 8; i++) {
 		BodyModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_face.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
-	m_HpTex=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
+	m_HpTex=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
 
 	m_Body = Object3d::UniquePtrCreate(BodyModel_[0]);
 	//m_Body->SetIsBillboardY(true);
 	m_Body->SetColType(Object3d::CollisionType::Obb);
 	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
-	m_Body->SetObbScl({ 1.f,4.f,1.f });
+	m_Body->SetObbScl({ 9.f,9.f,9.f });
 	m_Body->SetHitRadius(0.5f);
 	m_Body->SetScale({ 0.0f, 0.0f, 0.0f });
 
@@ -45,7 +46,7 @@ void Dogom::Init()
 		//m_Body->SetIsBillboardY(true);
 		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		m_Arm[i]->SetObbScl({ 1.5f,2.f,1.5f });
+		m_Arm[i]->SetObbScl({ 1.5f,4.f,1.5f });
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
@@ -66,10 +67,14 @@ void Dogom::Init()
 	MovingAngle = 180.f;
 	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
 	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
+
+	BossMaxHP = m_HP;
 }
 
 void Dogom::Upda()
 {
+	isAttack = (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B));
+	
 	constexpr float pi_ = 3.14f;
 
 	Follow();
@@ -79,23 +84,33 @@ void Dogom::Upda()
 	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
 	m_Body->SetScale({ BodyScl });
 	
+	auto isHit = [](Vector3 pos1, Vector3 pos2, float radi1 = 1.f, float radi2 = 1.f) ->
+		bool { if (Collision::GetIns()->HitCircle({ pos1.x, pos1.z }, radi1,
+			{ pos2.x, pos2.z }, radi2))return true;
+	return false;
+	};
+
 	//“oêI‚í‚Á‚½‚çs“®
 	if (Appear() == TRUE) {
 		if (!WinceF) {
 			MoveBody();
 			m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 			m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
-
-			//m_BodyPos.x = std::clamp(m_BodyPos.x, -15.f, 15.f);
-
-			//m_BodyPos.z = std::clamp(m_BodyPos.z, -15.f, 15.f);
+		}
+		else {
+			if (isAttack) {
+				if (isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f)) {
+					m_HP--;
+				}
+			}
 		}
 		ImpactKnock();
 		ArmAct();
 	}
 
-	if (Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
-		{ m_BodyPos.x, m_BodyPos.z }, 8.0f))
+	//
+
+	if (isHit(m_player->GetPos(), m_BodyPos,1.f,2.f))
 	{
 		Vector3 vec;
 		vec = PlayerPos - m_BodyPos;
@@ -319,13 +334,13 @@ void Dogom::ArmAct()
 
 		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
-			if (ActionRandom > 0) {
-				SetAttack_Impact();
-				arm_move_ = ATTACK_IMPACT;
+			if (ActionRandom > 110) {
+				//SetAttack_Impact();
+				//arm_move_ = ATTACK_IMPACT;
 			} else
 			{
-				SetAttack_Cross();
-				arm_move_ = ATTACK_CROSS;
+				//SetAttack_Cross();
+				//arm_move_ = ATTACK_CROSS;
 			}
 		}
 		if (!movF) {
@@ -795,10 +810,10 @@ void Dogom::CoollisionArm()
 
 }
 
-uint16_t Dogom::ArmHP()
+int Dogom::ArmHP()
 {
 	//Œã‚Å•Ï‚¦‚é
-	return 2;
+	return m_ArmHp_Max[0];
 }
 
 void Dogom::RotationFace(const uint16_t& interval)
@@ -904,12 +919,19 @@ void Dogom::WinceIdle()
 
 void Dogom::SpriteDraw()
 {
-	float sx;
-	sx = m_HP * 100;
-	m_HpTex->SetPosition(XMFLOAT2(900, 50));
-	m_HpTex->SetSize(XMFLOAT2(sx, 50));
+	float px = 880.f, py = 30.f;
+	float sx,sy;
+	//0~400‚ÌŠÔ‚Å‚Ì•âŠ®Žæ‚é
+	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 400.f;
+	sy = 50.f;
+
+	m_HpTex->SetColor(XMFLOAT3(1, 0, 0));
+	m_HpTex->SetPosition(XMFLOAT2(px,py));
+	m_HpTex->SetSize(XMFLOAT2(sx, sy));
+	
 	m_HpTex->Draw();
 }
+
 
 bool Dogom::Appear()
 {
