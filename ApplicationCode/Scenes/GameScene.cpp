@@ -63,7 +63,7 @@ void GameScene::Initialize()
 	map_ = make_unique<GameMap>();
 
 
-	map_->Initalize(player_, cameraPos_, targetPos_, 0);
+	map_->Initalize(player_, cameraPos_, targetPos_, 1);
 
 
 
@@ -75,17 +75,7 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	//for (std::unique_ptr<Ore>& ore : oreItems_) {
-	//	if (ore != nullptr) {
-	//		if (ore->GetIsHit() && player_->GetOreCountRate() < 1.0f && player_->GetIsHammerSwing()) {
-	//			player_->AddOreCount();
-	//			ore = nullptr;
-	//		}
-	//	}
-	//	if (ore != nullptr) {
-	//		ore->Update();
-	//	}
-	//}
+	
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
@@ -112,6 +102,7 @@ void GameScene::Update()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
+
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;

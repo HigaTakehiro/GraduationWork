@@ -141,5 +141,12 @@ private:
 
 private:
     Vector3 ShadowScl(float YPos);
+
+    enum AppearPhase {
+        PHASE1,
+        PHASE2,
+        PHASE3
+    }_phase_appear;
+    bool Appear();
 };
 

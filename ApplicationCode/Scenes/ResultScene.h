@@ -17,6 +17,7 @@
 #include "TextDraw.h"
 #include "JsonLoader.h"
 #include "Button.h"
+#include"IntermediateBase.h"
 
 class ResultScene : public BaseScene
 {
