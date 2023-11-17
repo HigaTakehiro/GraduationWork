@@ -290,6 +290,9 @@
     <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\TutorialScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -491,6 +494,7 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Scenes\IBScene.h" />
     <ClInclude Include="ApplicationCode\Skills\BaseSkill.h" />
+    <ClInclude Include="ApplicationCode\Scenes\TutorialScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
