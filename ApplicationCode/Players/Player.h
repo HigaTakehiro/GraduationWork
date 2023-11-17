@@ -112,15 +112,16 @@ public: //メンバ関数
 	bool GetNext() { return next_; }
 
 	/// <summary>
-	/// ハンマー座標を取得
+	/// ハンマー反射フラグを取得
 	/// </summary>
-	/// <returns>ハンマー座標</returns>
-	Vector3 GetHammerPos() { return hammerPos_; }
+	/// <returns></returns>
+	bool GetIsHammerReflect() { return isHammerReflect_; }
 
 	/// <summary>
-	/// ハンマー座標をセット
+	/// ハンマー反射フラグをセット
 	/// </summary>
-	void SetHammerPos(Vector3 hammerPos) { hammerPos_ = hammerPos; }
+	/// <param name="isReflect"></param>
+	void SetIsHammerReflect(bool isReflect) { isHammerReflect_ = isReflect; }
 
 	/// <summary>
 	/// 文字描画
@@ -221,10 +222,6 @@ private: //メンバ変数
 	//ハンマー攻撃時加速度
 	float hammerAcc_;
 
-	//仮ハンマー投げ時間
-	int32_t hammerTime = 60;
-	int32_t hammerTimer = 0;
-
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//回転攻撃時プレイヤーオブジェクト
@@ -258,6 +255,8 @@ private: //メンバ変数
 	bool isAttack_;
 	//ハンマー回転フラグ
 	bool isHammerSwing_;
+	//ハンマー反射フラグ
+	bool isHammerReflect_;
 	//ハンマー座標
 	Vector3 hammerPos_;
 	//ハンマーサイズ

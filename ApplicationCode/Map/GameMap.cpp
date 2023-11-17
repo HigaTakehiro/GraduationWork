@@ -470,7 +470,7 @@ bool GameMap::CheckRockToMap(const XMFLOAT3& RockPos)
 	return false;
 }
 
-XMFLOAT3 GameMap::ReflectHammer(XMFLOAT3& Pos)
+bool GameMap::ReflectHammer(XMFLOAT3& Pos)
 {
 	XMFLOAT3 pos = Pos;
 	XMFLOAT3 Limit{};
@@ -479,23 +479,23 @@ XMFLOAT3 GameMap::ReflectHammer(XMFLOAT3& Pos)
 		if (count_ != Map->num) { continue; }
 		//¶
 		if (pos.x >= Map->stagePos_.x + 9.3f) {
-			pos.x = Map->stagePos_.x + 9.3f;
+			return true;
 		}
 		if (pos.x <= Map->stagePos_.x - 7.f) {
-			pos.x = Map->stagePos_.x - 7.f;
+			return true;
 		}
 
 		if (pos.z >= Map->stagePos_.z + 10.f) {
-			pos.z = Map->stagePos_.z + 10.f;
+			return true;
 		}
 
 		if (pos.z <= Map->stagePos_.z - 6.f) {
-			pos.z = Map->stagePos_.z - 6.f;
+			return true;
 		}
 
 	}
 
-	return pos;
+	return false;
 }
 
 
