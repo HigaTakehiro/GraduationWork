@@ -50,6 +50,7 @@ private:
     float CrossWaitCount = 0.f;
 	bool WinceF;
     bool isLeaveBoss;
+    float m_EaseRemBody;
     float nextAngle = 180.f;
     int randAct = 0;
 
