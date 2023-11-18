@@ -67,16 +67,20 @@ void TutorialScene::Initialize()
 	enemys_[2]->SetPos(Vector3(0, -30, -5));
 
 	map_ = make_unique<GameMap>();
-
-
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
-
-
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
+
+	titlefilter_=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::filter, { WinApp::window_width/2, WinApp::window_height/2 }, { 0.f, 0.f, 0.f, 1.0f }, { 0.5f, 0.5f });
+
+	Vector3 StartPos = player_->GetPos();
+	StartPos.z = StartPos.z + 15.f;
+	player_->SetPos(StartPos);
+	Vector3 startPos = player_->GetPos();
+
 }
 
 void TutorialScene::Update()
@@ -91,7 +95,8 @@ void TutorialScene::Update()
 	}
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
-	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
+	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,true);
+
 	player_->Update();
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
@@ -128,12 +133,13 @@ void TutorialScene::Draw()
 	//boss_->Draw();
 	//boss_->Draw2();
 	player_->Draw();
-	map_->BridgeDraw();
+	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	titlefilter_->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -141,7 +147,7 @@ void TutorialScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
+	text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -214,10 +220,32 @@ void TutorialScene::CameraSetting()
 
 void TutorialScene::TitlePhase()
 {
+	
+
+	if (action_ == false) {
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+			action_ = true;
+		}
+	}
+	else {
+		timer_ += 0.1f;
+		if (timer_ >= 1) {
+			phase_ = Phase::Description;
+		}
+	}
 }
 
 void TutorialScene::DescriptionPhase()
 {
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+		description_ += 1;
+	}
+
+
+	if (description_ == 5) {
+		description_ = 0;
+		phase_ = Phase::Move;
+	}
 }
 
 void TutorialScene::MovePhase()
@@ -226,6 +254,15 @@ void TutorialScene::MovePhase()
 
 void TutorialScene::SpownPhase()
 {
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+		description_ += 1;
+	}
+
+
+	if (description_ == 5) {
+		description_ = 0;
+		phase_ = Phase::Move;
+	}
 }
 
 void TutorialScene::FightPhase()
