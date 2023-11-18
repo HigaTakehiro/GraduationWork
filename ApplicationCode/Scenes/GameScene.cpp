@@ -41,9 +41,6 @@ void GameScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
-	//boss_.reset(new Dogom());
-	//boss_->Init();
-	//boss_->SetPlayerIns(player_);
 
 	//Œã‚Åcsv‚©‚ç
 	unsigned int EnemySize = 3;
@@ -64,8 +61,6 @@ void GameScene::Initialize()
 
 
 	map_->Initalize(player_, cameraPos_, targetPos_, 1);
-
-
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());

@@ -57,14 +57,14 @@ public:
 	/// <summary>
 	/// XVˆ—
 	/// </summary>
-	void Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos);
+	void Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos,bool flag=true);
 
 	/// <summary>
 	/// •`‰æ
 	/// </summary>
 	void MapDraw();
 
-	void BridgeDraw();
+	void BridgeDraw(bool flag = true);
 
 	/// <summary>
 	/// I—¹ˆ—
