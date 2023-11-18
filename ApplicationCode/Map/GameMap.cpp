@@ -274,19 +274,19 @@ void GameMap::CheckHitTest(Player* player)
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (PlayerPos.x >= Map->stagePos_.x + 13.f) {
-			PlayerPos.x = Map->stagePos_.x + 13.f;
+		if (PlayerPos.x >= Map->stagePos_.x + limit_.x) {
+			PlayerPos.x = Map->stagePos_.x + limit_.x;
 		}
-		if (PlayerPos.x <= Map->stagePos_.x - 11.f) {
-			PlayerPos.x = Map->stagePos_.x - 11.f;
-		}
-
-		if (PlayerPos.z >= Map->stagePos_.z + 7.f) {
-			PlayerPos.z = Map->stagePos_.z + 7.f;
+		if (PlayerPos.x <= Map->stagePos_.x - limit_.y) {
+			PlayerPos.x = Map->stagePos_.x - limit_.y;
 		}
 
-		if (PlayerPos.z <= Map->stagePos_.z - 16.f) {
-			PlayerPos.z = Map->stagePos_.z - 16.f;
+		if (PlayerPos.z >= Map->stagePos_.z + limit_.z) {
+			PlayerPos.z = Map->stagePos_.z + limit_.z;
+		}
+
+		if (PlayerPos.z <= Map->stagePos_.z - limit_.w) {
+			PlayerPos.z = Map->stagePos_.z - limit_.w;
 		}
 	}
 	player->SetPos(PlayerPos);
@@ -476,18 +476,18 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos)
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (pos.x >= Map->stagePos_.x + 13.f) {
+		if (pos.x >= Map->stagePos_.x + limit_.x) {
 			return true;
 		}
-		if (pos.x <= Map->stagePos_.x - 11.f) {
-			return true;
-		}
-
-		if (pos.z >= Map->stagePos_.z + 7.f) {
+		if (pos.x <= Map->stagePos_.x - limit_.y) {
 			return true;
 		}
 
-		if (pos.z <= Map->stagePos_.z - 16.f) {
+		if (pos.z >= Map->stagePos_.z + limit_.z) {
+			return true;
+		}
+
+		if (pos.z <= Map->stagePos_.z - limit_.w) {
 			return true;
 		}
 
