@@ -187,7 +187,7 @@ void Dogom::Upda()
 		HpBarSclX[i]=Helper::SmoothStep_Deb(0.f,m_ArmHp_Max[i], (float)(m_ArmHp[i]))*magniVal;
 
 		m_ArmHpTex[i]->SetColor(XMFLOAT4(1, 0, 0, 1));
-		m_ArmHpTex[i]->SetScale(Vector3(HpBarSclX[i], 0.01f, 1.f));
+		m_ArmHpTex[i]->SetScale(Vector3(HpBarSclX[i], 0.005f, 1.f));
 		m_ArmHpTex[i]->Update();
 
 	
@@ -511,13 +511,12 @@ void Dogom::ArmAct()
 
 	else if (arm_move_ == ATTACK_CROSS)
 	{
-
-		PlayerPos = m_player->GetPos();
 		/*XMVECTOR move = { 0.0f, 0.0f, 0.1f, 0.0f };
 		XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(m_player->GetRot().y));
-
+		
 		move = XMVector3TransformNormal(move, matRot);*/
 		bool next_1 = FALSE, next_2 = FALSE;
+		PlayerPos = m_player->GetPos();
 		float EndX[2] = { PlayerPos.x + 8.f ,PlayerPos.x - 8.f };
 		float EndZ[2] = { PlayerPos.z ,PlayerPos.z };
 		switch (phase_cross_)
@@ -800,20 +799,15 @@ void Dogom::CoollisionArm()
 
 	if (canCol) {
 		for (size_t i = 0; i < 2; i++) {
-			if (m_ArmDamF[i])continue;
-			if (!m_Arm[i]->GetIsHit())continue;
-			//m_player->SetIsHammerReflect(true);
-			m_ArmHp[i]--;
-			m_ArmDamF[i] = TRUE;
+		 	//
+			constexpr int damval = 1;
+			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, m_Arm[i]->GetIsHit());
+		
+			if(m_Arm[i]->GetIsHit())
+				m_player->SetIsHammerReflect(true);
 		}
 	}
-	for (size_t i = 0; i < 2; i++) {
-		if (m_ArmDamF[i]) {
-		if (m_Arm[i]->GetIsHit())
-			m_ArmDamF[i] = FALSE;
-		continue;
-		}
-	}
+
 	//óºòrÇÃëÃóÕÇ™è¡Ç¶ÇΩÇÁ
 	if ((m_ArmHp[LEFT] <=0&& m_ArmHp[RIGHT]<= 0))
 	{
