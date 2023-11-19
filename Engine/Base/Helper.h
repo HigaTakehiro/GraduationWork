@@ -1,6 +1,7 @@
 #pragma once
 #include"Collision.h"
 #include"Vector3.h"
+#include <algorithm>
 using namespace DirectX;
 
 class Helper
