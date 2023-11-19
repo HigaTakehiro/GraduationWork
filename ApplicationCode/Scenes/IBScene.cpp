@@ -199,7 +199,6 @@ void IBScene::Finalize()
 void IBScene::SceneChange()
 {
 
-
 	//else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 	//	SceneManager::SceneChange(SceneManager::SceneName::Result);
 	//}

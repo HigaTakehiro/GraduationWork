@@ -4,6 +4,9 @@
 #include "KeyInput.h"
 #include "MouseInput.h"
 #include"Easing.h"
+#include "Helper.h"
+#include "ImageManager.h"
+#include "Shapes.h"
 
 
 /***                    GETTER                      ***/
@@ -155,6 +158,53 @@ void BaseEnemy::CollideHummmer()
 	_status.Obb.SetParam_Scl({1,1,1});
 	//’e‚ÌXV
 }
+
+void BaseEnemy::TexInit()
+{
+	m_HpTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "white1x1.png", { 64, 64 }, { 0.f, 0.5f }, { 0, 0 }, { 128, 128 }));
+	m_HpTex->SetColor(XMFLOAT4(1, 0, 0, 1));
+
+	m_ShadowTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Shadow.png", { 48, 48 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 }));
+	m_ShadowTex->SetRotation(XMFLOAT3( 90.f,0.f,0.f ));
+
+}
+
+void BaseEnemy::TexUpda()
+{
+	
+
+	constexpr float GroundY = -2.5f;
+	constexpr float MagniVal = 0.04f;
+	float sx, sy;//HP
+	float sx2, sy2;//‰e
+
+	sx = Helper::SmoothStep_Deb(0, m_MaxHp, _status.HP) * MagniVal;
+	sy = 0.005f;
+
+	sx2= Helper::SmoothStep_Deb(GroundY, -GroundY, _status.Pos.y) * (MagniVal*4.f);
+	sy2 = Helper::SmoothStep_Deb(GroundY, -GroundY, _status.Pos.y) * (MagniVal/2.f);
+
+	m_HpTex->SetScale(XMFLOAT3(sx, sy, 1.f));
+	m_HpTex->SetPosition(XMFLOAT3(_status.Pos.x+1.5f, _status.Pos.y+1.5f, _status.Pos.z));
+	m_HpTex->Update();
+
+	m_ShadowTex->SetPosition(XMFLOAT3(_status.Pos.x, GroundY, _status.Pos.z));
+	m_ShadowTex->SetScale(XMFLOAT3(sx2, sy2, 1.f));
+	m_ShadowTex->SetRotation(XMFLOAT3(90, 0, 0));
+	m_ShadowTex->Update();
+}
+
+void BaseEnemy::TexDraw()
+{
+	constexpr float dis_max = 15.f;
+
+	Helper::isDraw(_player->GetPos(), _status.Pos, m_ShadowTex.get(), dis_max, _status.HP <= 0);
+
+	Helper::isDraw(_player->GetPos(), _status.Pos, m_HpTex.get(), dis_max, _status.HP <= 0);
+}
+
+
+
 
 void BaseEnemy::RecvFlashColor()
 {

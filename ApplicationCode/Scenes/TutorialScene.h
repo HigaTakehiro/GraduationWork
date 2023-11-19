@@ -86,6 +86,10 @@ private:
 	Player* player_;
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
+	//タイトル
+	unique_ptr<Sprite> titlefilter_;
+	unique_ptr<Sprite> title_;
+	unique_ptr<Sprite> asist_;
 
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;
@@ -107,5 +111,17 @@ private:
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
 
-	//IntermediateBase* ib_;
+	bool action_ = false;
+
+	float timer_ = 0;
+
+	int description_ = 0;
+
+	bool notlook_ = false;
+
+	XMFLOAT3 startpos_ = {};
+
+	bool titlepos_ = true;
+
+	XMFLOAT2 size_ = { 1280.f,720.f };
 };

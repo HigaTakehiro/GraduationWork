@@ -83,7 +83,15 @@ protected:
 	int FlashCount;
 	float back_t;
 	XMFLOAT4 _color;
-private:
+
+	int m_MaxHp=0;
+	std::unique_ptr<Object3d>m_HpTex;
+	std::unique_ptr<Object3d>m_ShadowTex;
+protected:
+	void TexInit();
+	void TexUpda();
+public:
+	void TexDraw();
 
 	//çUåÇéÛÇØÇΩÇ©ÅH
 	

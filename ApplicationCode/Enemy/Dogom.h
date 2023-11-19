@@ -37,7 +37,8 @@ private:
     std::array<float, 2>m_ArmAttckEaseT;
 	std::array<int, 2>m_ArmHp={6,6};
     std::array<int, 2>m_ArmHp_Max = { 6,6 };
-    std::array<bool, 2>m_ArmDamF;
+    std::array<BOOL, 2>m_ArmDamF;
+    std::array<int, 2>m_ArmDamCool;
 
     std::array<bool, 2>m_ImpactF;
     std::array<Vector3, 3>WaitPos = { Vector3(0,0,-20),Vector3(-18,0,0),Vector3(18,0,0) };
@@ -50,6 +51,7 @@ private:
     float CrossWaitCount = 0.f;
 	bool WinceF;
     bool isLeaveBoss;
+    float m_EaseRemBody;
     float nextAngle = 180.f;
     int randAct = 0;
 
@@ -58,8 +60,9 @@ private:
     UINT ActionRandom=1;
     UINT BossBodyMovingT=1;
     UINT m_KnockInterTime=0;
-
-    BOOL m_Knock;
+    UINT BossMaxHP;
+    BOOL m_Knock=FALSE;
+    BOOL isAttack;
 private:
     void Init()override;
     void Upda()override;
@@ -114,7 +117,7 @@ private:
     std::array<int, 2>DamCool;
     void CoollisionFace();
     void CoollisionArm();
-    uint16_t ArmHP();
+    int ArmHP();
 
     void FaceFall();
     bool m_FallF = false;

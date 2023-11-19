@@ -24,6 +24,9 @@ public: //‰æ‘œ–¼
 		skillButton,
 		susumuButton,
 		Arrow,
+		filter,
+		title,
+		asist_,
 	};
 
 	enum Image2DName {

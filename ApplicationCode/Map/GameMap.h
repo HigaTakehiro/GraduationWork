@@ -57,14 +57,14 @@ public:
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos);
+	void Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos,bool flag=true);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void MapDraw();
 
-	void BridgeDraw();
+	void BridgeDraw(bool flag = true);
 
 	/// <summary>
 	/// 終了処理
@@ -124,6 +124,8 @@ private:
 	int nowstate_ = 0;
 	//岩の座標
 	XMFLOAT3 rockPos_{};
+
+	XMFLOAT4 limit_ = { 13.f,11.f,7.f,16.f };
 };
 
 

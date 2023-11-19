@@ -15,6 +15,9 @@ void ImageManager::Initialize() {
 	Sprite::LoadTexture(int32_t(ImageName::skillButton), L"Engine/Resources/Images/sukillB.png");
 	Sprite::LoadTexture(int32_t(ImageName::susumuButton), L"Engine/Resources/Images/susumu.png");
 	Sprite::LoadTexture(int32_t(ImageName::Arrow), L"Engine/Resources/Images/arrow2.png");
+	Sprite::LoadTexture(int32_t(ImageName::filter), L"Engine/Resources/Images/titleFilter.png");
+	Sprite::LoadTexture(int32_t(ImageName::title), L"Engine/Resources/Images/TitleLOGO.png");
+	Sprite::LoadTexture(int32_t(ImageName::asist_), L"Engine/Resources/Images/susumuA.png");
 
 	Texture::LoadTexture(Image2DName::USA_1, L"Engine/Resources/Images/usa/usa_idle1.png");
 	Texture::LoadTexture(Image2DName::USA_2, L"Engine/Resources/Images/usa/usa_idle2.png");

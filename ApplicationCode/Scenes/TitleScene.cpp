@@ -35,7 +35,6 @@ void TitleScene::Initialize()
 	//3dオブジェクト初期化
 
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::game, true, 0.1f);
-	sceneFlag = false;
 }
 
 void TitleScene::Update()
@@ -97,20 +96,11 @@ void TitleScene::Finalize()
 void TitleScene::SceneChange()
 {
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		sceneFlag = false;
-		scange->SetStart(true);
-	}
-	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		sceneFlag = true;
 		scange->SetStart(true);
 	}
 	if (scange->GetEnd() == true) {
-		if (sceneFlag == true) {
-			SceneManager::SceneChange(SceneManager::SceneName::Game);
-		}
-		else {
-			SceneManager::SceneChange(SceneManager::SceneName::IB);
-		}
+
+		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
 	}
 
 }
