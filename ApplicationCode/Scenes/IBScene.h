@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "BaseScene.h"
 #include "PostEffect.h"
 #include "SafeDelete.h"
@@ -98,6 +97,7 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> susumu_;
 	std::unique_ptr<Sprite> skillSprite_;
 	std::unique_ptr<Sprite> skillB_;
+	std::unique_ptr<Sprite> arrow;
 	//アニメーションカウント
 	int32_t animeCount_;
 	//アニメーションスピード
@@ -107,5 +107,9 @@ private: //メンバ変数
 	//前フレームアニメーションカウント
 	int32_t preAnimeCount_;
 	int32_t hp_ = 0;
+	float count = 0;
+	float count2 = 2;
+	bool skillFlag = false;
+	int skillCount = 0;
 };
 

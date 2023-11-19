@@ -128,18 +128,18 @@ void GameScene::Update()
 		player_->SetHP(3);
 	}
 
-	if (shake_->GetShakeFlag() == true) {
-		cameraPos_.x += shake_->GetShakePos();
-		targetPos_.x += shake_->GetShakePos();
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
-	}
-	else {
-		cameraPos_.x = 30;
-		targetPos_.x = 30;
-		cameraPos_.y = 12;
-		targetPos_.y = 3;
-	}
+	//if (shake_->GetShakeFlag() == true) {
+	//	cameraPos_.x += shake_->GetShakePos();
+	//	targetPos_.x += shake_->GetShakePos();
+	//	cameraPos_.y += shake_->GetShakePos();
+	//	targetPos_.y += shake_->GetShakePos();
+	//}
+	//else {
+	//	cameraPos_.x = 30;
+	//	targetPos_.x = 30;
+	//	cameraPos_.y = 12;
+	//	targetPos_.y = 3;
+	//}
 
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);

@@ -46,6 +46,7 @@ void IBScene::Initialize()
 	skillB_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillButton, { 1000, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 	skillSprite_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skill, { 0, 0 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 	susumu_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::susumuButton, { 1000, 150 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	arrow = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::Arrow, { 900, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -94,7 +95,6 @@ void IBScene::Update()
 	else {
 		cameraPos_.y = 12;
 		targetPos_.y = 0;
-
 	}
 
 	camera_->SetEye(cameraPos_);
@@ -108,14 +108,30 @@ void IBScene::Update()
 			baseNo++;
 		}
 	}
-	skillB_->SetSize({ 256, 64 });
-	//skillSprite_->SetSize({ 1280, 720 });
-	susumu_->SetSize({ 256, 64 });
 
 	ib_->Update();
 	ib_->FloorSave(baseNo);
 
-	shake_->Update();
+	skillB_->SetSize({ 256, 64 });
+	//skillSprite_->SetSize({ 1280, 720 });
+	susumu_->SetSize({ 256, 64 });
+	if (count2 < 6) {
+		count2++;
+	}
+	if (count2 == 6) {
+		if (count < 4) {
+			count++;
+		}
+		else {
+			count = 0;
+		}
+		count2 = 0;
+	}
+
+
+	arrow->SetTextureRect({ 0 + 64 * count,0 }, { 64,64 });
+	arrow->SetSize({ 64,64 });
+	//shake_->Update();
 	//colManager_->Update();
 	//シーン切り替え
 	SceneChange();
@@ -143,9 +159,14 @@ void IBScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	skillB_->Draw();
-	//skillSprite_->Draw();
-	susumu_->Draw();
+	if (skillFlag == false) {
+		skillB_->Draw();
+		susumu_->Draw();
+		arrow->Draw();
+	}
+	else if (skillFlag == true) {
+		skillSprite_->Draw();
+	}
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -178,12 +199,34 @@ void IBScene::Finalize()
 void IBScene::SceneChange()
 {
 
-	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		baseNo++;
-		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+
+	//else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+	//	SceneManager::SceneChange(SceneManager::SceneName::Result);
+	//}
+	if (skillFlag == false) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
+			arrow->SetPosition({ 900,50 });
+		}
+		else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
+			arrow->SetPosition({ 900,150 });
+		}
 	}
-	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
+	if (arrow->GetPosition().y == 150) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+			SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		}
+	}
+	else if (arrow->GetPosition().y == 50) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+			skillCount++;
+		}
+		if (skillCount == 1) {
+			skillFlag = true;
+		}
+		else if (skillCount == 2) {
+			skillFlag = false;
+			skillCount = 0;
+		}
 	}
 }
 
