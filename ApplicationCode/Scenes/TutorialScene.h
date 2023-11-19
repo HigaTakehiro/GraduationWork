@@ -118,4 +118,10 @@ private:
 	int description_ = 0;
 
 	bool notlook_ = false;
+
+	XMFLOAT3 startpos_ = {};
+
+	bool titlepos_ = true;
+
+	XMFLOAT2 size_ = { 1280.f,720.f };
 };

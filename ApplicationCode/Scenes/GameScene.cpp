@@ -56,12 +56,10 @@ void GameScene::Initialize()
 	enemys_[0]->SetPos(Vector3(30, -30, -4));
 	enemys_[2]->SetPos(Vector3(25, -30, 2));
 	enemys_[2]->SetPos(Vector3(35, -30, 5));
-
+	
 	map_ = make_unique<GameMap>();
-
-
 	map_->Initalize(player_, cameraPos_, targetPos_, 1);
-
+	
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
@@ -70,9 +68,8 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	
-
 	player_->Update();
+
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
 
@@ -214,7 +211,7 @@ void GameScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
-	std::wstring hx = std::to_wstring(player_->GetPos().z);
+	std::wstring hx = std::to_wstring(player_->GetPos().x);
 	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
