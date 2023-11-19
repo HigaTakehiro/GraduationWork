@@ -161,7 +161,7 @@ void BaseEnemy::CollideHummmer()
 
 void BaseEnemy::TexInit()
 {
-	m_HpTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "bar.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 }));
+	m_HpTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "white1x1.png", { 64, 64 }, { 0.f, 0.5f }, { 0, 0 }, { 128, 128 }));
 	m_HpTex->SetColor(XMFLOAT4(1, 0, 0, 1));
 
 	m_ShadowTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Shadow.png", { 48, 48 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 }));
@@ -179,13 +179,13 @@ void BaseEnemy::TexUpda()
 	float sx2, sy2;//‰e
 
 	sx = Helper::SmoothStep_Deb(0, m_MaxHp, _status.HP) * MagniVal;
-	sy = 0.05f;
+	sy = 0.005f;
 
-	sx2= Helper::SmoothStep_Deb(GroundY, -GroundY, _status.Pos.y) * MagniVal;
+	sx2= Helper::SmoothStep_Deb(GroundY, -GroundY, _status.Pos.y) * (MagniVal*4.f);
 	sy2 = Helper::SmoothStep_Deb(GroundY, -GroundY, _status.Pos.y) * (MagniVal/2.f);
 
 	m_HpTex->SetScale(XMFLOAT3(sx, sy, 1.f));
-	m_HpTex->SetPosition(XMFLOAT3(_status.Pos.x, _status.Pos.y, _status.Pos.z));
+	m_HpTex->SetPosition(XMFLOAT3(_status.Pos.x+1.5f, _status.Pos.y+1.5f, _status.Pos.z));
 	m_HpTex->Update();
 
 	m_ShadowTex->SetPosition(XMFLOAT3(_status.Pos.x, GroundY, _status.Pos.z));

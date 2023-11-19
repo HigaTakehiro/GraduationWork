@@ -200,6 +200,8 @@ void GameScene::Draw()
 	}*/
 	//boss_->Draw();
 	//boss_->Draw2();
+	for (size_t i = 0; i < enemys_.size(); i++)
+		enemys_[i]->TexDraw();
 	player_->Draw();
 	map_->BridgeDraw();
 	Object3d::PostDraw();

@@ -15,7 +15,7 @@ public:
 	//距離がdistanceより小さいか
 	static void isDraw(const Vector3& pos1,const Vector3& pos2,Object3d*obj,float dis = 0.f,bool Flag=false);
 	//ノックバックとか
-	static void ColKnock(const Vector3& vec1, const Vector3& vec2, Player* obj, bool flag=false);
+	static void ColKnock(const Vector3& vec1, const Vector3& vec2, Player* obj, bool flag=false,float dis=0.5f);
 	//
 	static float SmoothStep_Deb(float edge0, float edge1, float x);
 	/// <summary>
@@ -43,7 +43,7 @@ inline void Helper::isDraw(const Vector3& POS1,const Vector3& POS2,Object3d*obj,
 	obj->Draw();
 }
 
-inline void Helper::ColKnock(const Vector3& vec1, const Vector3& vec2, Player*obj,bool flag) 
+inline void Helper::ColKnock(const Vector3& vec1, const Vector3& vec2, Player*obj,bool flag,float dis) 
 {
 	Vector3 vec;
 	vec = vec1 - vec2;
@@ -51,7 +51,7 @@ inline void Helper::ColKnock(const Vector3& vec1, const Vector3& vec2, Player*ob
 	vec.y = 0.0f;
 	if(flag)
 	{
-		obj->HitHammerToEnemy(vec,0.5f);
+		obj->HitHammerToEnemy(vec,dis);
 	}
 
 }

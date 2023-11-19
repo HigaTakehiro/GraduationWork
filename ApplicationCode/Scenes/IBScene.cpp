@@ -172,7 +172,7 @@ void IBScene::SceneChange()
 
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		baseNo++;
-		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Result);

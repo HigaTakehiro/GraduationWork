@@ -41,6 +41,8 @@ void NormalEnemyA::Init()
 	_status.Tex->SetIsBillboardY(true);
 
 	 */
+	m_MaxHp = _status.HP;;
+	TexInit();
 	AnimationInterval = 20;
 }
 
@@ -50,6 +52,7 @@ void NormalEnemyA::Upda(Camera* camera)
 
 	if (_status.Rot.y >= 360.f || _status.Rot.y <= -360.f)_status.Rot.y = 0.f;
 	//_status.Tex->
+	///_status.HP--;
 
 	TextureAnimation();
 
@@ -71,6 +74,8 @@ void NormalEnemyA::Upda(Camera* camera)
 	ClampMap();
 
 	if (!_isAttack) {back_t = 0.f; }
+
+	TexUpda();
 }
 #include"Helper.h"
 void NormalEnemyA::Draw()
@@ -83,6 +88,8 @@ void NormalEnemyA::Draw()
 	Texture::PreDraw();
 	_status.Tex->Draw();
 	Texture::PostDraw();
+
+	//TexDraw();
 }
 
 void NormalEnemyA::TextureAnimation()
@@ -185,7 +192,7 @@ void NormalEnemyA::Jump()
 	//—Ž‰º‚ÌŠÉ‹}
 	constexpr float Distortion = 3.f;
 	//’n–Ê‚Ì‚‚³
-	constexpr float GroundY = 0.5f;
+	constexpr float GroundY = -2.5f;
 	//ƒWƒƒƒ“ƒv‚‚³
 	constexpr float Height = 1.5f;
 
@@ -208,7 +215,7 @@ void NormalEnemyA::AttackAction()
 
 	bool isRecv = !PlayerRecv && Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f;
 
-	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), _status.Scl.y>1.3f&& Collision::GetLength(_status.Pos, _player->GetPos()) < 3.f);
+	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), _status.Scl.y>1.3f&& Collision::GetLength(_status.Pos, _player->GetPos()) < 3.f,1.f);
 
 	if(isRecv)
 	{

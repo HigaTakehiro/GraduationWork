@@ -87,9 +87,10 @@ protected:
 	int m_MaxHp=0;
 	std::unique_ptr<Object3d>m_HpTex;
 	std::unique_ptr<Object3d>m_ShadowTex;
-private:
+protected:
 	void TexInit();
 	void TexUpda();
+public:
 	void TexDraw();
 
 	//çUåÇéÛÇØÇΩÇ©ÅH
