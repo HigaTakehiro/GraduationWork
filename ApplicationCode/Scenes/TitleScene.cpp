@@ -99,7 +99,6 @@ void TitleScene::SceneChange()
 		scange->SetStart(true);
 	}
 	if (scange->GetEnd() == true) {
-
 		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
 	}
 
