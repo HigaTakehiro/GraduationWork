@@ -197,16 +197,17 @@ void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos
 
 	CreateBridge();
 
+	Vector3 Pos = player->GetPos();
 	//CreateRock();
 
 	oldcount_ = count_;
 }
 
-void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos)
+void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos,bool flag)
 {
 	CheckHitTest(player);
 
-	if (time_ < 1) {
+	if (time_ < 1&&flag == true) {
 		NextMap(player, CameraPos, TargetPos, OldCameraPos);
 	}
 	for (unique_ptr<Stage>& Map : maps_) {
@@ -240,8 +241,9 @@ void GameMap::MapDraw()
 	}*/
 }
 
-void GameMap::BridgeDraw()
+void GameMap::BridgeDraw(bool flag )
 {
+	if (flag == false) { return; }
 	for (unique_ptr<Bridge>& Bridge : bridge) {
 		if (nowstate_ == Map::Boss && time_ >= 1) { return; }
 		if (Bridge->num == count_ ||
