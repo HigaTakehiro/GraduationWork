@@ -96,7 +96,8 @@ void TitleScene::Finalize()
 void TitleScene::SceneChange()
 {
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		scange->SetStart(true);
+		scange->SetFadeNum(0);
+		scange->SetFStart(true);
 	}
 	if (scange->GetEnd() == true) {
 		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);

@@ -248,7 +248,7 @@ void GameScene::Finalize()
 void GameScene::SceneChange()
 {
 	bool Change = player_->GetNext();
-	if (Change) {
+	if (Change||player_->GetHP()<=0) {
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {

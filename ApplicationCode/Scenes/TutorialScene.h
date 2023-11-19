@@ -22,7 +22,7 @@
 #include"BossBase.h"
 #include"BaseEnemy.h"
 #include"Shake.h"
-
+#include "SceneChange.h"
 class TutorialScene :
 	public BaseScene
 {
@@ -124,4 +124,5 @@ private:
 	bool titlepos_ = true;
 
 	XMFLOAT2 size_ = { 1280.f,720.f };
+	SceneChangeEffect* scange;
 };

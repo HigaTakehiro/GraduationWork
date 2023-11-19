@@ -6,9 +6,11 @@ public:
 	void Initialize();
 	void Change(int num);
 	void Draw();
-	void SetStart(bool start) { changeStartFlag_ = start; }
-	bool GetEnd() { return changeEndFlag_; }
-	float GetFadeNum() {return fadeNum; }
+	void SetFStart(bool start) { fadeStartFlag_ = start; }
+	void SetFEnd(bool end) { fadeEndFlag_ = end; }
+	bool GetEnd() { return EndFlag_; }
+	float GetFadeNum() { return fadeNum; }
+	void SetFadeNum(float fadeNum) { this->fadeNum = fadeNum; }
 private:
 	std::unique_ptr<Sprite> fade_;
 	std::unique_ptr<Sprite> arrow;
@@ -16,7 +18,6 @@ private:
 	float fadeTime;
 	bool fadeStartFlag_;
 	bool fadeEndFlag_;
-	bool changeStartFlag_;
-	bool changeEndFlag_;
+	bool EndFlag_;
 };
 

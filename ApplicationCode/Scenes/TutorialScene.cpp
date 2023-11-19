@@ -76,6 +76,10 @@ void TutorialScene::Initialize()
 
 	titlefilter_=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::filter, { WinApp::window_width/2, WinApp::window_height/2+150.f }, { 0.f, 0.f, 0.f, 1.0f }, { 0.5f, 0.71f });
 	titlefilter_->SetSize(size_);
+	scange = new SceneChangeEffect();
+	scange->Initialize();
+	scange->SetFEnd(true);
+	scange->SetFadeNum(1);
 }
 
 void TutorialScene::Update()
@@ -93,7 +97,7 @@ void TutorialScene::Update()
 	camera_->SetTarget(targetPos_);
 	player_->Update();
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,true);
-
+	scange->Change(1);
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
@@ -136,6 +140,7 @@ void TutorialScene::Draw()
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	titlefilter_->Draw();
+	scange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
