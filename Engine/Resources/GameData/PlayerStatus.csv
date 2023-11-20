@@ -25,3 +25,7 @@ hammerRotCoeff 0.8
 sizeUp 0.2 0.2 0.2
 #アニメーション待機時間
 animeSpeed 8
+#初期レベルアップ必要経験値
+epUp 2
+#レベルアップごとの必要経験値倍率
+MagEp 0.0

@@ -180,6 +180,11 @@ private: //メンバ関数
 	/// </summary>
 	void UIUpdate();
 
+	/// <summary>
+	/// レベルアップ処理
+	/// </summary>
+	void LevelUp();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -190,6 +195,14 @@ private: //メンバ変数
 	//HP
 	int32_t hp_;
 	int32_t maxHp_;
+	//レベル
+	int32_t level_ = 0;
+	//経験値
+	int32_t ep_;
+	//レベルアップ必要経験値
+	int32_t levelUpEp_;
+	//経験値倍率
+	float magEp_;
 	//鉱石取得数
 	int32_t oreCount_;
 	//鉱石最大取得数
