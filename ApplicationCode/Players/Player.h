@@ -140,6 +140,12 @@ public: //メンバ関数
 	/// </summary>
 	void TextUIDraw();
 
+	/// <summary>
+	/// チュートリアル用アプデ
+	/// </summary>
+	void TutorialUpdate(bool Stop, bool NotAttack);
+
+
 private: //メンバ関数
 
 	/// <summary>

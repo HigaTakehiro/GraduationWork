@@ -24,19 +24,38 @@ void (TutorialScene::* TutorialScene::FuncTable[])() {
 void TutorialScene::Initialize()
 {
 	ShowCursor(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‰Šú‰»
-	//‰æ–Ê‘å‚«‚³İ’è
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+	//ç”»é¢å¤§ãã•è¨­å®š
 	const Vector3 LB = { -1.0f, -1.0f, 0.0f };
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
 	const Vector3 RT = { +1.0f, +1.0f, 0.0f };
+
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åˆæœŸåŒ–
+	for (int32_t i = 0; i < 4; i++) {
+		sleepModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_sleep.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+	}
+
+	for (int i = 0; i < 9; i++) {
+		title_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::title, { 0, 0 }, { 1.f, 1.f, 1.f, 1.f }, { 0.f, 0.f });
+		title_[i]->SetTextureRect({ 960.f * i,0.f }, { 960.f ,128.f });
+		title_[i]->SetSize({960.f,128.f});
+	}
+
+	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
+	sleep_->SetIsBillboardY(true);
+	sleep_->SetObbScl({ 2.f,4.f,2.f });
+	sleep_->SetHitRadius(0.5f);
+	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
+	sleep_->SetPosition({ 0.f,-2.5f,33.f });
+
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
-	//ƒJƒƒ‰‰Šú‰»
+	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	CameraSetting();
 	oldcamerapos_ = cameraPos_.z;
-	//ƒ‰ƒCƒg‰Šú‰»
+	//ãƒ©ã‚¤ãƒˆåˆæœŸåŒ–
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -46,7 +65,7 @@ void TutorialScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
-	//3dƒIƒuƒWƒFƒNƒg‰Šú‰»
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
 	player_ = new Player;
 	player_->Initialize();
 
@@ -83,6 +102,7 @@ void TutorialScene::Initialize()
 	scange->Initialize();
 	scange->SetFEnd(true);
 	scange->SetFadeNum(1);
+	phase_ = Phase::Title;
 }
 
 void TutorialScene::Update()
@@ -98,13 +118,15 @@ void TutorialScene::Update()
 		cameraPos_.y = 12;
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
-	player_->Update();
-	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,true);
-	textWindow_->Update();
+	player_->TutorialUpdate(stop_, true);
+
+	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,notlook_);
+
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
 	}
+
 	scange->Change(1);
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
@@ -114,12 +136,12 @@ void TutorialScene::Update()
 
 void TutorialScene::Draw()
 {
-	//”wŒiF
+	//èƒŒæ™¯è‰²
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
 
 	postEffect_->PreDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(”wŒi)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(èƒŒæ™¯)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	background_->Draw();
 	Sprite::PostDraw();
@@ -132,7 +154,7 @@ void TutorialScene::Draw()
 			enemys_[i]->Draw();
 		}
 	}
-	//3DƒIƒuƒWƒFƒNƒg•`‰æˆ—
+	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»å‡¦ç†
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	/*for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
@@ -141,23 +163,33 @@ void TutorialScene::Draw()
 	}*/
 	//boss_->Draw();
 	//boss_->Draw2();
-	player_->Draw();
+	if (phase_ == Phase::Title) {
+		sleep_->Draw();
+		
+	}
+	else {
+		player_->Draw();
+	}
 	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	//for (int i = 0; i < 9; i++) {
+		
+	//}
 	titlefilter_->Draw();
+	title_[titleanimeCount_]->Draw();
 	scange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
-	//ƒeƒLƒXƒg•`‰æ”ÍˆÍ
+	//ãƒ†ã‚­ã‚¹ãƒˆæç”»ç¯„å›²
 
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	text_->Draw("meiryo", "white", L"ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒV[ƒ“\n¶ƒNƒŠƒbƒN‚Ü‚½‚ÍLƒ{ƒ^ƒ“‚Åƒ^ƒCƒgƒ‹ƒV[ƒ“\n‰EƒNƒŠƒbƒN‚Ü‚½‚ÍRƒ{ƒ^ƒ“‚ÅƒŠƒUƒ‹ƒgƒV[ƒ“\nƒVƒFƒCƒN‚ÍEnter", textDrawRange);
+	//text_->Draw("meiryo", "white", L"ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚·ãƒ¼ãƒ³\nå·¦ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Lãƒœã‚¿ãƒ³ã§ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³\nå³ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Rãƒœã‚¿ãƒ³ã§ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³\nã‚·ã‚§ã‚¤ã‚¯ã¯Enter", textDrawRange);
 	if (phase_ != Phase::Title) {
 		player_->TextUIDraw();
 		textWindow_->TextMessageDraw();
@@ -165,10 +197,10 @@ void TutorialScene::Draw()
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg•`‰æ
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
 	if (phase_ != Phase::Title) {
-		//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚È‚¢ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+		//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ãªã„ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 		Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 		player_->SpriteDraw();
 		textWindow_->SpriteDraw();
@@ -232,6 +264,28 @@ void TutorialScene::CameraSetting()
 
 void TutorialScene::TitlePhase()
 {
+	//ã‚¿ã‚¤ãƒãƒ¼ã‚«ã‚¦ãƒ³ãƒˆ
+	if (++animeTimer_ >= animeSpeed_) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		animeTimer_ = 0;
+	}
+
+	//ã‚¿ã‚¤ãƒãƒ¼ã‚«ã‚¦ãƒ³ãƒˆ
+	if (++titleanimeTimer_ >= titleanimeSpeed_) {
+		if (++titleanimeCount_ >= 9) {
+			titleanimeCount_ = 0;
+		}
+		titleanimeTimer_ = 0;
+	}
+
+	if (titlepreAnimeCount_ != titleanimeCount_) {
+		titlepreAnimeCount_ = titleanimeCount_;
+	}
+
+	sleep_->SetModel(sleepModel_[animeCount_]);
+	sleep_->Initialize();
 	if (titlepos_) {
 		startpos_ = player_->Get();
 		startpos_.z = startpos_.z + 3.f;
@@ -252,16 +306,16 @@ void TutorialScene::TitlePhase()
 		}
 	}
 	titlefilter_->SetSize(size_);
+	sleep_->SetPosition(startpos_);
+	sleep_->Update();
+	if (preAnimeCount_ == animeCount_) return;
+	preAnimeCount_ = animeCount_;
 }
 
 void TutorialScene::DescriptionPhase()
 {
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-		description_ += 1;
-	}
-
-
-	if (description_ == 5) {
+	textWindow_->Update();
+	if (!textWindow_->GetCloseWindow()) {
 		description_ = 0;
 		phase_ = Phase::Move;
 	}
@@ -269,6 +323,7 @@ void TutorialScene::DescriptionPhase()
 
 void TutorialScene::MovePhase()
 {
+	stop_ = false;
 }
 
 void TutorialScene::SpownPhase()
