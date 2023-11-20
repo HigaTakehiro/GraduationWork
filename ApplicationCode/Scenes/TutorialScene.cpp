@@ -72,6 +72,9 @@ void TutorialScene::Initialize()
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
+	textWindow_ = new MessageWindow();
+	textWindow_->Initialize("TutorialMessage.csv");
+
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 
 	titlefilter_=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::filter, { WinApp::window_width/2, WinApp::window_height/2+150.f }, { 0.f, 0.f, 0.f, 1.0f }, { 0.5f, 0.71f });
@@ -97,6 +100,7 @@ void TutorialScene::Update()
 	camera_->SetTarget(targetPos_);
 	player_->Update();
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,true);
+	textWindow_->Update();
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
@@ -156,6 +160,7 @@ void TutorialScene::Draw()
 	text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
 	if (phase_ != Phase::Title) {
 		player_->TextUIDraw();
+		textWindow_->TextMessageDraw();
 	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -166,6 +171,7 @@ void TutorialScene::Draw()
 		//ポストエフェクトをかけないスプライト描画処理(UI等)
 		Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 		player_->SpriteDraw();
+		textWindow_->SpriteDraw();
 		Sprite::PostDraw();
 	}
 	DirectXSetting::GetIns()->PostDraw();
@@ -173,6 +179,7 @@ void TutorialScene::Draw()
 
 void TutorialScene::Finalize()
 {
+	safe_delete(textWindow_);
 }
 
 void TutorialScene::SceneChange()
