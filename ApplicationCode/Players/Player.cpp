@@ -36,8 +36,6 @@ void Player::Initialize()
 	shadow_->SetRotation({ -90, 0, 0 });
 	shadow_->SetPosition({ 0, -30, 0 });
 
-	PlayerStatusSetting();
-
 	initHammerPos_ = { 0, 0, 30 };
 	initHammerScale_ = { 1, 1, 1 };
 	initHammerRot_ = { -90, 0, 180 };
@@ -57,7 +55,7 @@ void Player::Initialize()
 	hammerSize_ = initHammerScale_;
 
 	//矢印初期化
-	arrowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Arrow.png", { 64, 64 }, {0.5f, 0.5f});
+	arrowModel_ = Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "Arrow.png", { 64, 64 }, { 0.5f, 0.5f });
 	arrow_ = Object3d::UniquePtrCreate(arrowModel_);
 	arrow_->SetParent(player_.get());
 	arrow_->SetPosition({ -60, -30, 200 });
@@ -66,16 +64,30 @@ void Player::Initialize()
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
 
+	//レベル初期化
+	if (level_ <= 0) {
+		level_ = 1;
+		ep_ = 0;
+	}
+
 	//UI初期化
+	//HPバー
 	hpBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 50 }, { 0.2f, 0.6f, 0.2f, 1.0f }, { 0.0f, 0.0f });
 	hpBarBack_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 50 }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f });
 	hpBarSize_ = 200.0f;
 	hpBar_->SetSize({ hpBarSize_, 20 });
 	hpBar_->SetLeftSizeCorrection(true);
 	hpBarBack_->SetSize({ hpBarSize_, 20 });
+	//経験値バー
+	epBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 70 }, { 0.5f, 0.5f, 0.2f, 1.0f }, { 0.0f, 0.0f });
+	epBarBack_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 70 }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f });
+	epBarSize_ = 200.0f;
+	epBar_->SetSize({ epBarSize_, 20 });
+	epBar_->SetLeftSizeCorrection(true);
+	epBarBack_->SetSize({ epBarSize_, 20 });
 
-	epBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 130, 120 }, { 0.5f, 0.5f, 0.2f, 1.0f }, { 0.5f, 0.5f });
-	epBar_->SetSize({ 200, 20 });
+	PlayerStatusSetting();
+
 }
 
 void Player::Update()
@@ -83,6 +95,7 @@ void Player::Update()
 
 	Repulsion();
 	HammerPowerUp();
+	LevelUp();
 
 	if (isHammerRelease_) {
 		HammerThrow();
@@ -137,16 +150,17 @@ void Player::Finalize()
 	safe_delete(text_);
 }
 
-void Player::HitHammerToEnemy(Vector3 vec,float dis)
+void Player::HitHammerToEnemy(Vector3 vec, float dis)
 {
 	repulsionVec_ = vec;
-	repulsionSpeed_ = repulsionPower_/dis;
+	repulsionSpeed_ = repulsionPower_ / dis;
 }
 
 void Player::SpriteDraw()
 {
 	hpBarBack_->Draw();
 	hpBar_->Draw();
+	epBarBack_->Draw();
 	epBar_->Draw();
 }
 
@@ -166,6 +180,8 @@ void Player::PlayerStatusSetting() {
 	int32_t atk;
 	int32_t maxOreCount;
 	int32_t animeSpeed;
+	int32_t ep;
+	float magEp;
 	float hammerRotCoeff;
 	Vector3 sizeUp;
 	std::stringstream stream;
@@ -236,6 +252,12 @@ void Player::PlayerStatusSetting() {
 		if (word.find("animeSpeed") == 0) {
 			line_stream >> animeSpeed;
 		}
+		if (word.find("epUp") == 0) {
+			line_stream >> ep;
+		}
+		if (word.find("MagEp") == 0) {
+			line_stream >> magEp;
+		}
 	}
 
 	//初期化
@@ -260,8 +282,8 @@ void Player::PlayerStatusSetting() {
 		repulsionPower_ = 1.0f;
 	}
 	animeSpeed_ = animeSpeed;
-	initHammerPos_ = pos;
-	initHammerScale_ = scale;
+	levelUpEp_ = ep;
+	magEp_ = magEp;
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -368,7 +390,7 @@ void Player::Move() {
 	}
 
 	if (nextflor_) {
-		if (KeyInput::GetIns()->PushKey(DIK_Z)|| PadInput::GetIns()->PushButton(PadInput::Button_A)) {
+		if (KeyInput::GetIns()->PushKey(DIK_Z) || PadInput::GetIns()->PushButton(PadInput::Button_A)) {
 			next_ = true;
 		}
 		else {
@@ -425,7 +447,7 @@ void Player::Attack() {
 }
 
 void Player::HammerThrow() {
-	const Vector3 hammerSize = { 0.03f, 0.03f, 0.03f };
+	const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
 	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
 	hammerSize_ = hammerSize + hammerScaleCorrection * (float)oreCount_;
 	hammer_->SetScale(hammerSize_);
@@ -524,7 +546,7 @@ void Player::Animation()
 		rotAttackPlayer_->SetModel(rotAttackModel_[3]);
 		rotAttackPlayer_->Initialize();
 	}
-	else if (rot_.y <= down + rotAnimeRange && rot_.y >= down - rotAnimeRange){
+	else if (rot_.y <= down + rotAnimeRange && rot_.y >= down - rotAnimeRange) {
 		rotAttackPlayer_->SetModel(rotAttackModel_[0]);
 		rotAttackPlayer_->Initialize();
 	}
@@ -536,7 +558,7 @@ void Player::Animation()
 		rotAttackPlayer_->SetModel(rotAttackModel_[2]);
 		rotAttackPlayer_->Initialize();
 	}
-	
+
 
 	if (preAnimeCount_ == animeCount_) return;
 
@@ -580,16 +602,34 @@ void Player::Animation()
 
 void Player::UIUpdate()
 {
-	const float HPBarSize = 200;
-	hpBarSize_ = ((float)hp_ / (float)maxHp_) * HPBarSize;
+	const float BarSize = 200;
+	hpBarSize_ = ((float)hp_ / (float)maxHp_) * BarSize;
+	hpBar_->SetSize({ hpBarSize_, 20 });
+	epBarSize_ = ((float)ep_ / (float)levelUpEp_) * BarSize;
+	epBar_->SetSize({ epBarSize_, 20 });
+}
 
-	hpBar_->SetSize({hpBarSize_, 20});
+void Player::LevelUp()
+{
+	const int32_t maxLevel = 99;
+
+	if (level_ >= maxLevel) return;
+
+	if (ep_ >= levelUpEp_) {
+		level_++;
+		ep_ = 0;
+		levelUpEp_ = levelUpEp_ + level_ * magEp_;
+	}
 }
 
 void Player::TextUIDraw()
 {
-	D2D1_RECT_F textDrawRange = { 30, 48, 158, 176 };
+	D2D1_RECT_F HPTextDrawRange = { 30, 48, 158, 176 };
+	D2D1_RECT_F EPTextDrawRange = { 30, 68, 158, 176 };
 	std::wstring hp = std::to_wstring(hp_);
 	std::wstring maxHP = std::to_wstring(maxHp_);
-	text_->Draw("meiryo_16", "white", hp + L"/" + maxHP, textDrawRange);
+	std::wstring ep = std::to_wstring(ep_);
+	std::wstring maxEP = std::to_wstring(levelUpEp_);
+	text_->Draw("meiryo_16", "white", hp + L"/" + maxHP, HPTextDrawRange);
+	text_->Draw("meiryo_16", "white", ep + L"/" + maxEP, EPTextDrawRange);
 }

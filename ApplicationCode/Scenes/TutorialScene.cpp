@@ -24,14 +24,14 @@ void (TutorialScene::* TutorialScene::FuncTable[])() {
 void TutorialScene::Initialize()
 {
 	ShowCursor(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‰Šú‰»
-	//‰æ–Ê‘å‚«‚³İ’è
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+	//ç”»é¢å¤§ãã•è¨­å®š
 	const Vector3 LB = { -1.0f, -1.0f, 0.0f };
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
 	const Vector3 RT = { +1.0f, +1.0f, 0.0f };
 
-	//ƒvƒŒƒCƒ„[‰Šú‰»
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åˆæœŸåŒ–
 	for (int32_t i = 0; i < 4; i++) {
 		sleepModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_sleep.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
@@ -52,10 +52,10 @@ void TutorialScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
-	//ƒJƒƒ‰‰Šú‰»
+	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	CameraSetting();
 	oldcamerapos_ = cameraPos_.z;
-	//ƒ‰ƒCƒg‰Šú‰»
+	//ãƒ©ã‚¤ãƒˆåˆæœŸåŒ–
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -65,7 +65,7 @@ void TutorialScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
-	//3dƒIƒuƒWƒFƒNƒg‰Šú‰»
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
 	player_ = new Player;
 	player_->Initialize();
 
@@ -90,6 +90,9 @@ void TutorialScene::Initialize()
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+
+	textWindow_ = new MessageWindow();
+	textWindow_->Initialize("TutorialMessage.csv");
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 
@@ -116,7 +119,15 @@ void TutorialScene::Update()
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	player_->Update();
+
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,notlook_);
+
+	textWindow_->Update();
+	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
+	if (!player_->GetIsHammerReflect()) {
+		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
+	}
+
 	scange->Change(1);
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
@@ -126,12 +137,12 @@ void TutorialScene::Update()
 
 void TutorialScene::Draw()
 {
-	//”wŒiF
+	//èƒŒæ™¯è‰²
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
 
 	postEffect_->PreDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(”wŒi)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(èƒŒæ™¯)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	background_->Draw();
 	Sprite::PostDraw();
@@ -144,7 +155,7 @@ void TutorialScene::Draw()
 			enemys_[i]->Draw();
 		}
 	}
-	//3DƒIƒuƒWƒFƒNƒg•`‰æˆ—
+	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»å‡¦ç†
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	/*for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
@@ -164,7 +175,7 @@ void TutorialScene::Draw()
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	//for (int i = 0; i < 9; i++) {
 		
@@ -176,20 +187,24 @@ void TutorialScene::Draw()
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
-	//ƒeƒLƒXƒg•`‰æ”ÍˆÍ
+	//ãƒ†ã‚­ã‚¹ãƒˆæç”»ç¯„å›²
 
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	text_->Draw("meiryo", "white", L"ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒV[ƒ“\n¶ƒNƒŠƒbƒN‚Ü‚½‚ÍLƒ{ƒ^ƒ“‚Åƒ^ƒCƒgƒ‹ƒV[ƒ“\n‰EƒNƒŠƒbƒN‚Ü‚½‚ÍRƒ{ƒ^ƒ“‚ÅƒŠƒUƒ‹ƒgƒV[ƒ“\nƒVƒFƒCƒN‚ÍEnter", textDrawRange);
-
+	text_->Draw("meiryo", "white", L"ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚·ãƒ¼ãƒ³\nå·¦ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Lãƒœã‚¿ãƒ³ã§ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³\nå³ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Rãƒœã‚¿ãƒ³ã§ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³\nã‚·ã‚§ã‚¤ã‚¯ã¯Enter", textDrawRange);
+	if (phase_ != Phase::Title) {
+		player_->TextUIDraw();
+		textWindow_->TextMessageDraw();
+	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg•`‰æ
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
 	if (phase_ != Phase::Title) {
-		//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚È‚¢ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+		//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ãªã„ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 		Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 		player_->SpriteDraw();
+		textWindow_->SpriteDraw();
 		Sprite::PostDraw();
 	}
 	DirectXSetting::GetIns()->PostDraw();
@@ -197,6 +212,7 @@ void TutorialScene::Draw()
 
 void TutorialScene::Finalize()
 {
+	safe_delete(textWindow_);
 }
 
 void TutorialScene::SceneChange()
@@ -249,7 +265,7 @@ void TutorialScene::CameraSetting()
 
 void TutorialScene::TitlePhase()
 {
-	//ƒ^ƒCƒ}[ƒJƒEƒ“ƒg
+	//ã‚¿ã‚¤ãƒãƒ¼ã‚«ã‚¦ãƒ³ãƒˆ
 	if (++animeTimer_ >= animeSpeed_) {
 		if (++animeCount_ >= 4) {
 			animeCount_ = 0;
@@ -257,7 +273,7 @@ void TutorialScene::TitlePhase()
 		animeTimer_ = 0;
 	}
 
-	//ƒ^ƒCƒ}[ƒJƒEƒ“ƒg
+	//ã‚¿ã‚¤ãƒãƒ¼ã‚«ã‚¦ãƒ³ãƒˆ
 	if (++titleanimeTimer_ >= titleanimeSpeed_) {
 		if (++titleanimeCount_ >= 9) {
 			titleanimeCount_ = 0;

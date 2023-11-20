@@ -252,7 +252,7 @@ Vector3 Dogom::ShadowScl(float YPos)
 	float armYpos_Ground[2] = { abs(m_ArmPos[RIGHT].y - Ground),abs(m_ArmPos[LEFT].y - Ground) };
 	
 
-	constexpr float maxX = 0.2f,maxY=0.07f;
+	constexpr float maxX = 0.14f,maxY=0.07f;
 	constexpr float minX = 0.04f,minY=0.03f;
 
 	//üŒ`•âŠÔ‚Å‰e‚Ì‘å‚«‚³•Ï‚¦‚é
@@ -334,7 +334,7 @@ void Dogom::ArmAct()
 
 		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
-			if (ActionRandom > 50) {
+			if (ActionRandom > 120) {
 				SetAttack_Impact();
 				arm_move_ = ATTACK_IMPACT;
 			} else
@@ -517,6 +517,7 @@ void Dogom::ArmAct()
 		move = XMVector3TransformNormal(move, matRot);*/
 		bool next_1 = FALSE, next_2 = FALSE;
 		PlayerPos = m_player->GetPos();
+		float ClushPos=0;
 		float EndX[2] = { PlayerPos.x + 8.f ,PlayerPos.x - 8.f };
 		float EndZ[2] = { PlayerPos.z ,PlayerPos.z };
 		switch (phase_cross_)
@@ -549,9 +550,12 @@ m_ArmAttckEaseT[LEFT]++;
 			}
 			else
 			{
+				if(m_ArmAttckEaseT[0]==0.f)
+				ClushPos = PlayerPos.x;
+
 					for (size_t i = 0; i < 2; i++) {
 				m_ArmPos[i].x = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].x, EndX[i]);
-				m_ArmPos[i].y = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].y, m_BodyPos.y);
+				m_ArmPos[i].y = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].y,-2.5f);
 				m_ArmPos[i].z = Easing::easeIn(m_ArmAttckEaseT[i], 30.f, BefoPos[i].z, EndZ[i]);
 			}
 			}
@@ -565,8 +569,8 @@ m_ArmAttckEaseT[LEFT]++;
 			m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT];
 			
 			//for (size_t i = 0; i < 2; i++)
-				m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], 30.f, BefoPos[RIGHT].x, PlayerPos.x-0.f);
-				m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], 30.f, BefoPos[LEFT].x, PlayerPos.x -3.f);
+				m_ArmPos[RIGHT].x = Easing::easeIn(m_ArmAttckEaseT[RIGHT], 30.f, BefoPos[RIGHT].x,ClushPos+1.f);
+				m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], 30.f, BefoPos[LEFT].x, ClushPos-2.f);
 
 			if (m_ArmAttckEaseT[LEFT] >= 30.f) {
 				m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT] = 0.f;
@@ -800,11 +804,11 @@ void Dogom::CoollisionArm()
 	if (canCol) {
 		for (size_t i = 0; i < 2; i++) {
 		 	//
+		 	if(m_Arm[i]->GetIsHit())
+				m_player->SetIsHammerReflect(true);
+		
 			constexpr int damval = 1;
 			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, m_Arm[i]->GetIsHit());
-		
-			if(m_Arm[i]->GetIsHit())
-				m_player->SetIsHammerReflect(true);
 		}
 	}
 

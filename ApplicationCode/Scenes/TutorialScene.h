@@ -23,6 +23,8 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include "SceneChange.h"
+#include "MessageWindow.h"
+
 class TutorialScene :
 	public BaseScene
 {
@@ -113,6 +115,8 @@ private:
 	Vector3 targetPos_;
 
 	Shake* shake_;
+	//テキストウィンドウ
+	MessageWindow* textWindow_;
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
 
