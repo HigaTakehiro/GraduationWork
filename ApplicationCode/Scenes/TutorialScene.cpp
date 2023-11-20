@@ -118,7 +118,7 @@ void TutorialScene::Update()
 		cameraPos_.y = 12;
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
-	player_->TutorialUpdate(stop_, true);
+	player_->TutorialUpdate(stop_, notattack_);
 
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,notlook_);
 
@@ -131,6 +131,7 @@ void TutorialScene::Update()
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
+	
 	SceneChange();
 }
 
@@ -171,6 +172,13 @@ void TutorialScene::Draw()
 		player_->Draw();
 	}
 	map_->BridgeDraw(notlook_);
+	if (phase_ >= Phase::Spown) {
+		for (auto i = 0; i < enemys_.size(); i++) {
+			if (enemys_[i] != nullptr) {
+				enemys_[i]->Draw();
+			}
+		}
+	}
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
@@ -301,11 +309,15 @@ void TutorialScene::TitlePhase()
 		timer_ += 0.1f;
 		size_.x += 500.f;
 		size_.y += 500.f;
+		titleposition_.y -= 20;
 		if (timer_ >= 1) {
 			phase_ = Phase::Description;
 		}
 	}
 	titlefilter_->SetSize(size_);
+	for (int i = 0; i < 9; i++) {
+		title_[i]->SetPosition(titleposition_);
+	}
 	sleep_->SetPosition(startpos_);
 	sleep_->Update();
 	if (preAnimeCount_ == animeCount_) return;
@@ -324,14 +336,17 @@ void TutorialScene::DescriptionPhase()
 void TutorialScene::MovePhase()
 {
 	stop_ = false;
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+		phase_ = Phase::Spown;
+	}
 }
 
 void TutorialScene::SpownPhase()
 {
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-		description_ += 1;
+		phase_ = Phase::Fight;
 	}
-
+	stop_ = true;
 
 	if (description_ == 5) {
 		description_ = 0;
@@ -341,6 +356,9 @@ void TutorialScene::SpownPhase()
 
 void TutorialScene::FightPhase()
 {
+	notattack_ = false;
+	stop_ = false;
+
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
 	for (size_t i = 0; i < enemys_.size(); i++)
@@ -364,6 +382,11 @@ void TutorialScene::FightPhase()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
+
+	if (enemys_.size() == 0) {
+		phase_ = Phase::Defeat;
+	}
+
 }
 
 void TutorialScene::DefeatPhase()
