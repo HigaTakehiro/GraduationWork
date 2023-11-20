@@ -97,6 +97,10 @@ void Player::Update()
 	HammerPowerUp();
 	LevelUp();
 
+	if (KeyInput::GetIns()->PushKey(DIK_SLASH) && level_ < 99) {
+		AddEP(1);
+	}
+	
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
@@ -618,7 +622,9 @@ void Player::LevelUp()
 	if (ep_ >= levelUpEp_) {
 		level_++;
 		ep_ = 0;
-		levelUpEp_ = levelUpEp_ + level_ * magEp_;
+		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
+		maxHp_ += 2;
+		hp_ = maxHp_;
 	}
 }
 
@@ -626,10 +632,13 @@ void Player::TextUIDraw()
 {
 	D2D1_RECT_F HPTextDrawRange = { 30, 48, 158, 176 };
 	D2D1_RECT_F EPTextDrawRange = { 30, 68, 158, 176 };
+	D2D1_RECT_F LevelTextDrawRange = { 30, 28, 158, 176 };
 	std::wstring hp = std::to_wstring(hp_);
 	std::wstring maxHP = std::to_wstring(maxHp_);
 	std::wstring ep = std::to_wstring(ep_);
 	std::wstring maxEP = std::to_wstring(levelUpEp_);
 	text_->Draw("meiryo_16", "white", hp + L"/" + maxHP, HPTextDrawRange);
 	text_->Draw("meiryo_16", "white", ep + L"/" + maxEP, EPTextDrawRange);
+	std::wstring level = std::to_wstring(level_);
+	text_->Draw("meiryo_16", "white", L"LV : " + level, LevelTextDrawRange);
 }
