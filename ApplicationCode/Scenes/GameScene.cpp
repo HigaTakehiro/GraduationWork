@@ -149,6 +149,23 @@ void GameScene::Update()
 
 	_hummmerObb = &l_obb;
 
+	for(size_t j=0;j<enemys_.size();j++)
+	{
+		for (size_t i = 0; i < enemys_.size(); i++)
+		{
+			if (i == j)continue;
+			if(Collision::HitCircle(XMFLOAT2(enemys_[i]->GetPos().x, enemys_[i]->GetPos().z),1.f,
+				XMFLOAT2(enemys_[j]->GetPos().x, enemys_[j]->GetPos().z),1.f))
+			{
+				XMFLOAT3 pos=enemys_[j]->GetPos();
+
+				pos.x += sin(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
+				pos.z += cos(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
+
+				enemys_[j]->SetPos(pos);
+			}
+		}
+	}
 	for (auto i = 0; i < enemys_.size(); i++)
 	{
 		if (enemys_[i]->GetHP() <= 0) { continue; }
