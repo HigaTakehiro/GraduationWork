@@ -154,4 +154,8 @@ private:
 	//前フレームアニメーションカウント
 	int32_t titlepreAnimeCount_;
 
+
+	bool stop_ = true;
+
+	bool notattack_ = true;
 };

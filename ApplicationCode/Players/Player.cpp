@@ -622,6 +622,37 @@ void Player::LevelUp()
 	}
 }
 
+void Player::TutorialUpdate(bool Stop, bool NotAttack)
+{
+	Repulsion();
+	HammerPowerUp();
+	LevelUp();
+
+	if (isHammerRelease_) {
+		HammerThrow();
+		HammerGet();
+	}
+	if (!stop_) {
+		UIUpdate();
+		if (Stop == false) {
+			Move();
+		}
+		Animation();
+		if (NotAttack == false) {
+			Attack();
+		}
+	}
+
+	player_->SetPosition(pos_);
+	player_->SetRotation(rot_);
+	player_->Update();
+	rotAttackPlayer_->SetPosition(pos_);
+	rotAttackPlayer_->Update();
+	shadow_->Update();
+	hammer_->Update();
+	arrow_->Update();
+}
+
 void Player::TextUIDraw()
 {
 	D2D1_RECT_F HPTextDrawRange = { 30, 48, 158, 176 };
