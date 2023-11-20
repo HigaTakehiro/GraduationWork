@@ -118,11 +118,10 @@ void TutorialScene::Update()
 		cameraPos_.y = 12;
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
-	player_->Update();
+	player_->TutorialUpdate(stop_, true);
 
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,notlook_);
 
-	textWindow_->Update();
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
@@ -190,7 +189,7 @@ void TutorialScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
+	//text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
 	if (phase_ != Phase::Title) {
 		player_->TextUIDraw();
 		textWindow_->TextMessageDraw();
@@ -315,12 +314,8 @@ void TutorialScene::TitlePhase()
 
 void TutorialScene::DescriptionPhase()
 {
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-		description_ += 1;
-	}
-
-
-	if (description_ == 5) {
+	textWindow_->Update();
+	if (!textWindow_->GetCloseWindow()) {
 		description_ = 0;
 		phase_ = Phase::Move;
 	}
@@ -328,6 +323,7 @@ void TutorialScene::DescriptionPhase()
 
 void TutorialScene::MovePhase()
 {
+	stop_ = false;
 }
 
 void TutorialScene::SpownPhase()
