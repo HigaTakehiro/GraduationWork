@@ -1,0 +1,43 @@
+#TEXT←テキスト
+#SPEED←テキスト速度
+#WAIT←次のテキストが表示されるまでの待機時間
+#OPEN←テキストウィンドウを開きます
+#CLOSE←テキストウィンドウを閉じます
+
+OPEN
+WAIT 60
+
+TEXT "TEXT"の後に半角スペースを開けメッセージを入力できます。
+SPEED 2
+WAIT 40
+
+TEXT "SPEED"でテキストの描画スピードを調整できます。(単位は秒です)
+SPEED 2
+WAIT 40
+
+TEXT "WAIT"で何秒か次のコマンドまで待機させるかを指定できます。
+SPEED 2
+WAIT 120
+
+TEXT "OPEN"でメッセージウィンドウを開き、"CLOSE"でメッセージウィンドウを閉じます。
+SPEED 2
+WAIT 120
+
+TEXT 途中でメッセージウィンドウを閉じても、また開くこともできます。
+SPEED 2
+WAIT 120
+
+TEXT このように
+SPEED 2
+WAIT 60
+CLOSE
+
+WAIT 60
+
+OPEN
+
+TEXT 開くことができます。(当然ながらメッセージウィンドウ画像がないとこの機能は意味ありません)
+SPEED 2
+WAIT 60
+
+CLOSE

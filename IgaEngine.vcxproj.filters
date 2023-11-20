@@ -293,6 +293,9 @@
     <ClCompile Include="ApplicationCode\Scenes\SceneChange.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\UI\MessageWindow.cpp">
+      <Filter>ソース ファイル\ApplicationCode\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -499,6 +502,9 @@
     <ClInclude Include="ApplicationCode\Scenes\TutorialScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\SceneChange.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\UI\MessageWindow.h">
+      <Filter>ソース ファイル\ApplicationCode\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
