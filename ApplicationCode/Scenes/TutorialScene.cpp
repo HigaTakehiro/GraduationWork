@@ -80,7 +80,7 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
-	
+
 	(this->*FuncTable[phase_])();
 	if (shake_->GetShakeFlag() == true) {
 		cameraPos_.y += shake_->GetShakePos();
@@ -97,6 +97,7 @@ void TutorialScene::Update()
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
+	SceneChange();
 }
 
 void TutorialScene::Draw()
@@ -165,15 +166,12 @@ void TutorialScene::Finalize()
 
 void TutorialScene::SceneChange()
 {
-	bool Change = player_->GetNext();
-	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
-	}
+
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
+		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 }
 
@@ -223,7 +221,7 @@ void TutorialScene::TitlePhase()
 		titlepos_ = false;
 	}
 	if (action_ == false) {
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			action_ = true;
 		}
 	}
