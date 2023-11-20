@@ -70,7 +70,7 @@ void MessageWindow::Update()
 
 void MessageWindow::SpriteDraw()
 {
-	textWindow_->Draw();
+	//textWindow_->Draw();
 }
 
 void MessageWindow::TextMessageDraw()
@@ -103,7 +103,7 @@ void MessageWindow::TextMessageDraw()
 	}
 
 	//メッセージウィンドウサイズを変更
-	textWindow_->SetSize(textWindowSize_);
+	//textWindow_->SetSize(textWindowSize_);
 
 	//読み込んだテキスト描画が完了していたら
 	//テキストスピードが0以下にならないようにする
