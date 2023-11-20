@@ -56,6 +56,12 @@ void IBScene::Initialize()
 	ib_ = new IntermediateBase();
 	ib_->Initialize();
 	ib_->LoadFloor();
+
+	schange = new SceneChangeEffect();
+	schange->Initialize();
+	//schange->SetFEnd(true);
+	//schange->SetFadeNum(1);
+
 	baseNo = ib_->GetBaseNo();
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
@@ -127,7 +133,7 @@ void IBScene::Update()
 		}
 		count2 = 0;
 	}
-
+	schange->Change(0);
 
 	arrow->SetTextureRect({ 0 + 64 * count,0 }, { 64,64 });
 	arrow->SetSize({ 64,64 });
@@ -167,6 +173,7 @@ void IBScene::Draw()
 	else if (skillFlag == true) {
 		skillSprite_->Draw();
 	}
+	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -174,7 +181,8 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\nHP : ", textDrawRange);
+	std::wstring hx = std::to_wstring(schange->GetFadeNum());
+	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n"+hx, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -205,28 +213,44 @@ void IBScene::SceneChange()
 	if (skillFlag == false) {
 		if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
 			arrow->SetPosition({ 900,50 });
+			//schange->SetEnd(false);
 		}
 		else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
 			arrow->SetPosition({ 900,150 });
+			//schange->SetEnd(false);
 		}
 	}
 	if (arrow->GetPosition().y == 150) {
-		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-			SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+			schange->SetEnd(false);
+			schange->SetFadeNum(0);
+			schange->SetFStart(true);
 		}
+		//if (schange->GetEnd() == true) {
+		//	schange->SetFStart(false);
+		//	//SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		//}
 	}
 	else if (arrow->GetPosition().y == 50) {
-		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			skillCount++;
+			
 		}
 		if (skillCount == 1) {
+			//schange->SetFadeNum(0);
+			
+			//schange->SetFStart(true);
 			skillFlag = true;
 		}
 		else if (skillCount == 2) {
+			//schange->SetFEnd(true);
+			//schange->SetFStart(false);
+			//schange->SetFadeNum(1);
 			skillFlag = false;
 			skillCount = 0;
 		}
 	}
+
 }
 
 void IBScene::CameraSetting()

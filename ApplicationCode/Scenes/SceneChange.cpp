@@ -14,6 +14,7 @@ void SceneChangeEffect::Initialize()
 void SceneChangeEffect::Change(int num)
 {
 		//fade
+	if (num == 0) {
 		if (fadeStartFlag_ == true) {
 			if (fadeNum < 1.0f) {
 				fadeTime++;
@@ -34,6 +35,7 @@ void SceneChangeEffect::Change(int num)
 				fadeEndFlag_ = false;
 				EndFlag_ = true;
 			}
+		}
 	}
 	fade_->SetSize({ 1280, 720 });
 	fade_->SetAlpha(fadeNum);

@@ -111,5 +111,6 @@ private: //ƒƒ“ƒo•Ï”
 	float count2 = 2;
 	bool skillFlag = false;
 	int skillCount = 0;
+	SceneChangeEffect* schange;
 };
 

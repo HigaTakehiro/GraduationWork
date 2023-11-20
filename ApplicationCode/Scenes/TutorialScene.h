@@ -124,5 +124,5 @@ private:
 	bool titlepos_ = true;
 
 	XMFLOAT2 size_ = { 1280.f,720.f };
-	SceneChangeEffect* scange;
+	SceneChangeEffect* schange;
 };
