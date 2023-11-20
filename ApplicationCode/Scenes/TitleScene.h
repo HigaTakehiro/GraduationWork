@@ -17,7 +17,7 @@
 #include "SceneManager.h"
 #include "JsonLoader.h"
 #include "Button.h"
-
+#include "SceneChange.h"
 class TitleScene : public BaseScene
 {
 public: //メンバ関数
@@ -66,4 +66,5 @@ private: //メンバ変数
 
 	//テキスト描画
 	TextDraw* text_;
+	SceneChangeEffect* scange;
 };

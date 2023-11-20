@@ -30,7 +30,8 @@ void TitleScene::Initialize()
 	}
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
-
+	scange = new SceneChangeEffect();
+	scange->Initialize();
 	//3dオブジェクト初期化
 
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::game, true, 0.1f);
@@ -40,6 +41,7 @@ void TitleScene::Update()
 {
 	camera_->SetEye(cameraPos_);
 	light_->Update();
+	scange->Change(0);
 	//シーン切り替え
 	SceneChange();
 }
@@ -62,6 +64,7 @@ void TitleScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	scange->Draw();
 	Sprite::PostDraw();
 
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -69,7 +72,8 @@ void TitleScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	text_->Draw("meiryo", "white", L"タイトルシーン\n左クリックまたはLボタンでリザルトシーン\n右クリックまたはRボタンでゲームシーン", textDrawRange);
+	std::wstring hx = std::to_wstring(scange->GetEnd());
+	text_->Draw("meiryo", "white", L"タイトルシーン\n左クリックまたはLボタンでリザルトシーン\n右クリックまたはRボタンでゲームシーン" + hx, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -92,9 +96,11 @@ void TitleScene::Finalize()
 void TitleScene::SceneChange()
 {
 	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
+		scange->SetFadeNum(0);
+		scange->SetFStart(true);
 	}
-	else if (MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+	if (scange->GetEnd() == true) {
 		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
 	}
+
 }

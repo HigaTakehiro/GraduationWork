@@ -20,6 +20,10 @@ public: //‰æ‘œ–¼
 	enum class ImageName {
 		background = 1,
 		bar,
+		skill,
+		skillButton,
+		susumuButton,
+		Arrow,
 		filter,
 		title,
 		asist_,

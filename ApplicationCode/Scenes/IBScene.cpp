@@ -36,17 +36,17 @@ void IBScene::Initialize()
 
 	//3dオブジェクト初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
-	player_->SetColType(Object3d::CollisionType::Obb);
-	player_->SetObjType((int32_t)Object3d::OBJType::Player);
-	player_->SetObbScl({ 2.f,4.f,2.f });
-	player_->SetHitRadius(0.5f);
-	player_->SetScale({ 0.028f, 0.028f, 0.028f });
+	player_->SetScale({ 0.15f, 0.15f, 0.15f });
 
+	skillB_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillButton, { 1000, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	skillSprite_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skill, { 0, 0 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	susumu_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::susumuButton, { 1000, 150 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	arrow = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::Arrow, { 900, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -55,7 +55,8 @@ void IBScene::Initialize()
 
 	ib_ = new IntermediateBase();
 	ib_->Initialize();
-	baseNo = 1;
+	ib_->LoadFloor();
+	baseNo = ib_->GetBaseNo();
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
 	animeSpeed_ = 8;
@@ -65,7 +66,7 @@ void IBScene::Initialize()
 void IBScene::Update()
 {
 	Animation();
-	player_->SetPosition({ 10.0f,2.5f, 0.0f });
+	player_->SetPosition({ -8.0f,2.5f, 8.0f });
 	player_->Update();
 
 	//デバッグカメラ移動処理
@@ -94,7 +95,6 @@ void IBScene::Update()
 	else {
 		cameraPos_.y = 12;
 		targetPos_.y = 0;
-
 	}
 
 	camera_->SetEye(cameraPos_);
@@ -103,14 +103,35 @@ void IBScene::Update()
 
 
 
-	/*if (死んでるとき) {
-	ib_->LoadFloor();
-	baseNo=ib_->GetBaseNo();
-	}*/
+	if (hp_ != 0) {
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+			baseNo++;
+		}
+	}
+
 	ib_->Update();
 	ib_->FloorSave(baseNo);
 
-	shake_->Update();
+	skillB_->SetSize({ 256, 64 });
+	//skillSprite_->SetSize({ 1280, 720 });
+	susumu_->SetSize({ 256, 64 });
+	if (count2 < 6) {
+		count2++;
+	}
+	if (count2 == 6) {
+		if (count < 4) {
+			count++;
+		}
+		else {
+			count = 0;
+		}
+		count2 = 0;
+	}
+
+
+	arrow->SetTextureRect({ 0 + 64 * count,0 }, { 64,64 });
+	arrow->SetSize({ 64,64 });
+	//shake_->Update();
 	//colManager_->Update();
 	//シーン切り替え
 	SceneChange();
@@ -138,6 +159,14 @@ void IBScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	if (skillFlag == false) {
+		skillB_->Draw();
+		susumu_->Draw();
+		arrow->Draw();
+	}
+	else if (skillFlag == true) {
+		skillSprite_->Draw();
+	}
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -170,12 +199,33 @@ void IBScene::Finalize()
 void IBScene::SceneChange()
 {
 
-	if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		baseNo++;
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
+	//else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+	//	SceneManager::SceneChange(SceneManager::SceneName::Result);
+	//}
+	if (skillFlag == false) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
+			arrow->SetPosition({ 900,50 });
+		}
+		else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
+			arrow->SetPosition({ 900,150 });
+		}
 	}
-	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
+	if (arrow->GetPosition().y == 150) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+			SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		}
+	}
+	else if (arrow->GetPosition().y == 50) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+			skillCount++;
+		}
+		if (skillCount == 1) {
+			skillFlag = true;
+		}
+		else if (skillCount == 2) {
+			skillFlag = false;
+			skillCount = 0;
+		}
 	}
 }
 

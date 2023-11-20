@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "BaseScene.h"
 #include "PostEffect.h"
 #include "SafeDelete.h"
@@ -17,7 +16,7 @@
 #include "SceneManager.h"
 #include "TextDraw.h"
 #include "JsonLoader.h"
-#include "Player.h"
+#include "Sprite.h"
 #include"GameMap.h"
 #include "Ore.h"
 #include"BossBase.h"
@@ -89,13 +88,16 @@ private: //メンバ変数
 
 	IntermediateBase* ib_;
 
-	int baseNo;
+	int baseNo = 0;
 
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル
 	Model* playerModel_[4];
-
+	std::unique_ptr<Sprite> susumu_;
+	std::unique_ptr<Sprite> skillSprite_;
+	std::unique_ptr<Sprite> skillB_;
+	std::unique_ptr<Sprite> arrow;
 	//アニメーションカウント
 	int32_t animeCount_;
 	//アニメーションスピード
@@ -104,5 +106,10 @@ private: //メンバ変数
 	int32_t animeTimer_;
 	//前フレームアニメーションカウント
 	int32_t preAnimeCount_;
+	int32_t hp_ = 0;
+	float count = 0;
+	float count2 = 2;
+	bool skillFlag = false;
+	int skillCount = 0;
 };
 

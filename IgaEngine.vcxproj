@@ -175,6 +175,7 @@
     <ClCompile Include="ApplicationCode\Scenes\GameScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\IBScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\ResultScene.cpp" />
+    <ClCompile Include="ApplicationCode\Scenes\SceneChange.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\SceneManager.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\TitleScene.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp" />
     <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp" />
     <ClCompile Include="ApplicationCode\UI\Button.cpp" />
+    <ClCompile Include="ApplicationCode\UI\MessageWindow.cpp" />
     <ClCompile Include="Engine\Audio\Sound.cpp" />
     <ClCompile Include="Engine\Audio\SoundManager.cpp" />
     <ClCompile Include="Engine\Base\CsvLoader.cpp" />
@@ -240,6 +242,7 @@
     <ClInclude Include="ApplicationCode\Scenes\GameScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\IBScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\ResultScene.h" />
+    <ClInclude Include="ApplicationCode\Scenes\SceneChange.h" />
     <ClInclude Include="ApplicationCode\Scenes\SceneManager.h" />
     <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h" />
     <ClInclude Include="ApplicationCode\Scenes\TitleScene.h" />
@@ -248,6 +251,7 @@
     <ClInclude Include="ApplicationCode\Shake\Shake.h" />
     <ClInclude Include="ApplicationCode\Skills\BaseSkill.h" />
     <ClInclude Include="ApplicationCode\UI\Button.h" />
+    <ClInclude Include="ApplicationCode\UI\MessageWindow.h" />
     <ClInclude Include="Engine\Audio\Sound.h" />
     <ClInclude Include="Engine\Audio\SoundManager.h" />
     <ClInclude Include="Engine\Base\CsvLoader.h" />

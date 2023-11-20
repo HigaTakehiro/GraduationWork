@@ -56,12 +56,10 @@ void GameScene::Initialize()
 	enemys_[0]->SetPos(Vector3(30, -30, -4));
 	enemys_[2]->SetPos(Vector3(25, -30, 2));
 	enemys_[2]->SetPos(Vector3(35, -30, 5));
-
+	
 	map_ = make_unique<GameMap>();
-
-
 	map_->Initalize(player_, cameraPos_, targetPos_, 1);
-
+	
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
@@ -70,9 +68,8 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	
-
 	player_->Update();
+
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
 
@@ -123,15 +120,18 @@ void GameScene::Update()
 		player_->SetHP(3);
 	}
 
-	if (shake_->GetShakeFlag() == true) {
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
-	}
-	else {
-		cameraPos_.y = 12;
-		targetPos_.y = 0;
-
-	}
+	//if (shake_->GetShakeFlag() == true) {
+	//	cameraPos_.x += shake_->GetShakePos();
+	//	targetPos_.x += shake_->GetShakePos();
+	//	cameraPos_.y += shake_->GetShakePos();
+	//	targetPos_.y += shake_->GetShakePos();
+	//}
+	//else {
+	//	cameraPos_.x = 30;
+	//	targetPos_.x = 30;
+	//	cameraPos_.y = 12;
+	//	targetPos_.y = 3;
+	//}
 
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
@@ -231,9 +231,9 @@ void GameScene::Draw()
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
-
+	//
 	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
-	std::wstring hx = std::to_wstring(player_->GetPos().z);
+	std::wstring hx = std::to_wstring(player_->GetPos().x);
 	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
@@ -265,7 +265,7 @@ void GameScene::Finalize()
 void GameScene::SceneChange()
 {
 	bool Change = player_->GetNext();
-	if (Change) {
+	if (Change||player_->GetHP()<=0) {
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {

@@ -74,33 +74,34 @@ void TutorialScene::Initialize()
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 
-	titlefilter_=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::filter, { WinApp::window_width/2, WinApp::window_height/2 }, { 0.f, 0.f, 0.f, 1.0f }, { 0.5f, 0.5f });
-
-	Vector3 StartPos = player_->GetPos();
-	StartPos.z = StartPos.z + 15.f;
-	player_->SetPos(StartPos);
-	Vector3 startPos = player_->GetPos();
-
+	titlefilter_=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::filter, { WinApp::window_width/2, WinApp::window_height/2+150.f }, { 0.f, 0.f, 0.f, 1.0f }, { 0.5f, 0.71f });
+	titlefilter_->SetSize(size_);
+	scange = new SceneChangeEffect();
+	scange->Initialize();
+	scange->SetFEnd(true);
+	scange->SetFadeNum(1);
 }
 
 void TutorialScene::Update()
 {
+
 	(this->*FuncTable[phase_])();
 	if (shake_->GetShakeFlag() == true) {
 		cameraPos_.y += shake_->GetShakePos();
 		targetPos_.y += shake_->GetShakePos();
 	} else {
-		cameraPos_.y = 12;
 		targetPos_.y = 0;
 	}
+		cameraPos_.y = 12;
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
-	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,true);
-
 	player_->Update();
+	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,true);
+	scange->Change(1);
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
+	SceneChange();
 }
 
 void TutorialScene::Draw()
@@ -140,6 +141,7 @@ void TutorialScene::Draw()
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	titlefilter_->Draw();
+	scange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -169,15 +171,12 @@ void TutorialScene::Finalize()
 
 void TutorialScene::SceneChange()
 {
-	bool Change = player_->GetNext();
-	if (Change) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
-	}
+
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
+		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 }
 
@@ -220,19 +219,26 @@ void TutorialScene::CameraSetting()
 
 void TutorialScene::TitlePhase()
 {
-	
-
+	if (titlepos_) {
+		startpos_ = player_->Get();
+		startpos_.z = startpos_.z + 3.f;
+		player_->SetPos(startpos_);
+		titlepos_ = false;
+	}
 	if (action_ == false) {
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			action_ = true;
 		}
 	}
 	else {
 		timer_ += 0.1f;
+		size_.x += 500.f;
+		size_.y += 500.f;
 		if (timer_ >= 1) {
 			phase_ = Phase::Description;
 		}
 	}
+	titlefilter_->SetSize(size_);
 }
 
 void TutorialScene::DescriptionPhase()
