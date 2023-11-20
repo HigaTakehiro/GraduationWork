@@ -194,7 +194,7 @@ void NormalEnemyA::Jump()
 	//地面の高さ
 	constexpr float GroundY = -2.5f;
 	//ジャンプ高さ
-	constexpr float Height = 1.f;
+	constexpr float Height = 0.6f;
 
 	//ドッスン挙動
 
