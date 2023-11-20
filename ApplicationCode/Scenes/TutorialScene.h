@@ -88,9 +88,9 @@ private:
 	std::list<std::unique_ptr<Ore>> oreItems_;
 	//タイトル
 	unique_ptr<Sprite> titlefilter_;
-	unique_ptr<Sprite> title_;
+	unique_ptr<Sprite> title_[9];
 	unique_ptr<Sprite> asist_;
-
+	unique_ptr<Object3d> sleep_;
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;
 	OBB* _hummmerObb;
@@ -102,6 +102,11 @@ private:
 	std::unique_ptr<GameMap> map_;
 	//背景画像
 	std::unique_ptr<Sprite> background_;
+	//モデル
+	Model* sleepModel_[4];
+
+	Model* titleModel_[9];
+
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点
@@ -125,4 +130,24 @@ private:
 
 	XMFLOAT2 size_ = { 1280.f,720.f };
 	SceneChangeEffect* scange;
+
+	//アニメーションカウント
+	int32_t animeCount_;
+	//アニメーションスピード
+	int32_t animeSpeed_=8;
+	//アニメーションタイマー
+	int32_t animeTimer_;
+	//前フレームアニメーションカウント
+	int32_t preAnimeCount_;
+
+
+	//アニメーションカウント
+	int32_t titleanimeCount_=0;
+	//アニメーションスピード
+	int32_t titleanimeSpeed_ = 8;
+	//アニメーションタイマー
+	int32_t titleanimeTimer_;
+	//前フレームアニメーションカウント
+	int32_t titlepreAnimeCount_;
+
 };

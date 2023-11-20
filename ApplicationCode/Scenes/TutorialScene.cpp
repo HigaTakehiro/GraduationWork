@@ -30,6 +30,25 @@ void TutorialScene::Initialize()
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
 	const Vector3 RT = { +1.0f, +1.0f, 0.0f };
+
+	//プレイヤー初期化
+	for (int32_t i = 0; i < 4; i++) {
+		sleepModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_sleep.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+	}
+
+	for (int i = 0; i < 9; i++) {
+		title_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::title, { 0, 0 }, { 1.f, 1.f, 1.f, 1.f }, { 0.f, 0.f });
+		title_[i]->SetTextureRect({ 960.f * i,0.f }, { 960.f ,128.f });
+		title_[i]->SetSize({960.f,128.f});
+	}
+
+	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
+	sleep_->SetIsBillboardY(true);
+	sleep_->SetObbScl({ 2.f,4.f,2.f });
+	sleep_->SetHitRadius(0.5f);
+	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
+	sleep_->SetPosition({ 0.f,-2.5f,33.f });
+
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
@@ -80,6 +99,7 @@ void TutorialScene::Initialize()
 	scange->Initialize();
 	scange->SetFEnd(true);
 	scange->SetFadeNum(1);
+	phase_ = Phase::Title;
 }
 
 void TutorialScene::Update()
@@ -96,7 +116,7 @@ void TutorialScene::Update()
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	player_->Update();
-	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,true);
+	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_,notlook_);
 	scange->Change(1);
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
@@ -133,14 +153,24 @@ void TutorialScene::Draw()
 	}*/
 	//boss_->Draw();
 	//boss_->Draw2();
-	player_->Draw();
+	if (phase_ == Phase::Title) {
+		sleep_->Draw();
+		
+	}
+	else {
+		player_->Draw();
+	}
 	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	//for (int i = 0; i < 9; i++) {
+		
+	//}
 	titlefilter_->Draw();
+	title_[titleanimeCount_]->Draw();
 	scange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -219,6 +249,28 @@ void TutorialScene::CameraSetting()
 
 void TutorialScene::TitlePhase()
 {
+	//タイマーカウント
+	if (++animeTimer_ >= animeSpeed_) {
+		if (++animeCount_ >= 4) {
+			animeCount_ = 0;
+		}
+		animeTimer_ = 0;
+	}
+
+	//タイマーカウント
+	if (++titleanimeTimer_ >= titleanimeSpeed_) {
+		if (++titleanimeCount_ >= 9) {
+			titleanimeCount_ = 0;
+		}
+		titleanimeTimer_ = 0;
+	}
+
+	if (titlepreAnimeCount_ != titleanimeCount_) {
+		titlepreAnimeCount_ = titleanimeCount_;
+	}
+
+	sleep_->SetModel(sleepModel_[animeCount_]);
+	sleep_->Initialize();
 	if (titlepos_) {
 		startpos_ = player_->Get();
 		startpos_.z = startpos_.z + 3.f;
@@ -239,6 +291,10 @@ void TutorialScene::TitlePhase()
 		}
 	}
 	titlefilter_->SetSize(size_);
+	sleep_->SetPosition(startpos_);
+	sleep_->Update();
+	if (preAnimeCount_ == animeCount_) return;
+	preAnimeCount_ = animeCount_;
 }
 
 void TutorialScene::DescriptionPhase()
