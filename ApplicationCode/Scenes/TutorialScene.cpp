@@ -154,7 +154,9 @@ void TutorialScene::Draw()
 
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
 	text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
-
+	if (phase_ != Phase::Title) {
+		player_->TextUIDraw();
+	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
