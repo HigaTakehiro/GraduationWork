@@ -335,8 +335,14 @@ void TutorialScene::DescriptionPhase()
 
 void TutorialScene::MovePhase()
 {
+	float LeftStickX = PadInput::GetIns()->leftStickX();
+	float LeftStickY = PadInput::GetIns()->leftStickY();
+	if (LeftStickX != 0 || LeftStickY != 0) {
+		movetimer_ += 0.1f;
+	}
+
 	stop_ = false;
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+	if (movetimer_>=50) {
 		phase_ = Phase::Spown;
 	}
 }

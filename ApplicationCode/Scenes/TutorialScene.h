@@ -159,4 +159,6 @@ private:
 	bool stop_ = true;
 
 	bool notattack_ = true;
+
+	float movetimer_ = 0;
 };
