@@ -13,27 +13,32 @@ void SceneChangeEffect::Initialize()
 
 void SceneChangeEffect::Change(int num)
 {
-		//fade
+	//fade
 	if (num == 0) {
-		if (fadeStartFlag_ == true) {
+		if (fadeStartFlag_ == true && fadeEndFlag_ == false) {
 			if (fadeNum < 1.0f) {
 				fadeTime++;
-				fadeNum = Easing::easeInOut(fadeTime, 30, 0, 1);
+				fadeNum = //fadeNum += 0.1f;
+					Easing::easeInOut(fadeTime, 30, 0, 1);
 			}
 			else if (fadeNum >= 1.0f) {
 				fadeStartFlag_ = false;
 				EndFlag_ = true;
+				fadeTime = 0;
 			}
 		}
 
-		if (fadeEndFlag_ == true) {
+		if (fadeStartFlag_ == false && fadeEndFlag_ == true) {
 			if (fadeNum > 0.0f) {
+				EndFlag_ = false;
 				fadeTime++;
-				fadeNum = Easing::easeInOut(fadeTime, 30, 1, 0);
+				fadeNum = //fadeNum -= 0.1f;
+					Easing::easeInOut(fadeTime, 30, 1, 0);
 			}
 			if (fadeNum <= 0.0f) {
 				fadeEndFlag_ = false;
-				EndFlag_ = true;
+				//EndFlag_ = true;
+				fadeTime = 0;
 			}
 		}
 	}

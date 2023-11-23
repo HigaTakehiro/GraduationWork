@@ -155,5 +155,4 @@ private:
 	//前フレームアニメーションカウント
 	int32_t titlepreAnimeCount_;
 
->>>>>>> main
 };

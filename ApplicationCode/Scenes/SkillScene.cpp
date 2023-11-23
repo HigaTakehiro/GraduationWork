@@ -1,4 +1,4 @@
-#include "IBScene.h"
+#include "SkillScene.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -9,7 +9,7 @@
 #include "Dogom.h"
 #include "SoundManager.h"
 
-void IBScene::Initialize()
+void SkillScene::Initialize()
 {
 	ShowCursor(true);
 	//ポストエフェクト初期化
@@ -34,18 +34,8 @@ void IBScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
-	//3dオブジェクト初期化
-	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
-	}
 
-	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
-	player_->SetIsBillboardY(true);
-	player_->SetScale({ 0.15f, 0.15f, 0.15f });
-
-	skillB_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillButton, { 1000, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
-	susumu_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::susumuButton, { 1000, 150 }, { 1,1,1,1 }, { 0.0f, 0.0f });
-	arrow = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::Arrow, { 900, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	skillSprite_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skill, { 0, 0 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -60,7 +50,6 @@ void IBScene::Initialize()
 	schange->Initialize();
 	schange->SetFEnd(true);
 	schange->SetFadeNum(1);
-
 	baseNo = ib_->GetBaseNo();
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
@@ -68,81 +57,17 @@ void IBScene::Initialize()
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 }
 
-void IBScene::Update()
+void SkillScene::Update()
 {
-	Animation();
-	player_->SetPosition({ -8.0f,2.5f, 8.0f });
-	player_->Update();
-
-	//デバッグカメラ移動処理
-	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
-		cameraPos_.z += 1.0f;
-		targetPos_.z += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f;
-		targetPos_.z -= 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
-		cameraPos_.x += 1.0f;
-		targetPos_.x += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
-		cameraPos_.x -= 1.0f;
-		targetPos_.x -= 1.0f;
-	}
-	//HPデバッグ処理
-
-	if (shake_->GetShakeFlag() == true) {
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
-	}
-	else {
-		cameraPos_.y = 12;
-		targetPos_.y = 0;
-	}
-
-	camera_->SetEye(cameraPos_);
-	camera_->SetTarget(targetPos_);
-	light_->Update();
-
-
-
-	if (hp_ != 0) {
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-			baseNo++;
-		}
-	}
-
-	ib_->Update();
-	ib_->FloorSave(baseNo);
-
-	skillB_->SetSize({ 256, 64 });
-	//skillSprite_->SetSize({ 1280, 720 });
-	susumu_->SetSize({ 256, 64 });
-	if (count2 < 6) {
-		count2++;
-	}
-	if (count2 == 6) {
-		if (count < 4) {
-			count++;
-		}
-		else {
-			count = 0;
-		}
-		count2 = 0;
-	}
+	
 	schange->Change(0);
-
-	arrow->SetTextureRect({ 0 + 64 * count,0 }, { 64,64 });
-	arrow->SetSize({ 64,64 });
 	//shake_->Update();
 	//colManager_->Update();
 	//シーン切り替え
 	SceneChange();
 }
 
-void IBScene::Draw()
+void SkillScene::Draw()
 {
 	//背景色
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
@@ -158,17 +83,12 @@ void IBScene::Draw()
 	Object3d::PostDraw();
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	player_->Draw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
-	skillB_->Draw();
-	susumu_->Draw();
-	arrow->Draw();
-
+		skillSprite_->Draw();
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -192,7 +112,7 @@ void IBScene::Draw()
 }
 
 
-void IBScene::Finalize()
+void SkillScene::Finalize()
 {
 	safe_delete(text_);
 	//safe_delete(ene);
@@ -200,43 +120,21 @@ void IBScene::Finalize()
 	//colManager_->Finalize();
 }
 
-void IBScene::SceneChange()
+void SkillScene::SceneChange()
 {
-	if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
-		arrow->SetPosition({ 900,50 });
+	if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+		schange->SetFEnd(false);
+		schange->SetFStart(true);
+		schange->SetFadeNum(0);
 	}
-	else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
-		arrow->SetPosition({ 900,150 });
+	if (schange->GetEnd() == true) {
+		schange->SetFStart(false);
+		schange->SetFadeNum(0);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
-
-	if (arrow->GetPosition().y == 150) {
-		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			//schange->SetFEnd(false);
-			schange->SetFStart(true);
-			schange->SetFadeNum(0);
-		}
-		if (schange->GetEnd() == true) {
-			schange->SetFStart(false);
-			schange->SetFadeNum(0);
-			SceneManager::SceneChange(SceneManager::SceneName::Boss);
-		}
-	}
-	else if (arrow->GetPosition().y == 50) {
-		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-				schange->SetFEnd(false);
-				schange->SetFStart(true);
-				schange->SetFadeNum(0);
-		}
-		if (schange->GetEnd() == true) {
-			schange->SetFStart(false);
-			schange->SetFadeNum(0);
-			SceneManager::SceneChange(SceneManager::SceneName::SKILL);
-		}
-	}
-
 }
 
-void IBScene::CameraSetting()
+void SkillScene::CameraSetting()
 {
 	std::string line;
 	Vector3 pos{};
@@ -273,7 +171,7 @@ void IBScene::CameraSetting()
 	}
 }
 
-void IBScene::Animation()
+void SkillScene::Animation()
 {
 	//タイマーカウント
 	if (++animeTimer_ >= animeSpeed_) {

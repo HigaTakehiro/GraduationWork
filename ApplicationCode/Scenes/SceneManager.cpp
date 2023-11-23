@@ -73,6 +73,11 @@ void SceneManager::SceneChange(SceneName scene) {
 		nowScene->Initialize();
 		nowScene->SetCollisionManager(colManager_);
 		break;
+	case SceneName::SKILL:
+		nowScene = new SkillScene();
+		nowScene->Initialize();
+		nowScene->SetCollisionManager(colManager_);
+		break;
 	case SceneName::Boss:
 		nowScene = new BossScene();
 		nowScene->Initialize();
