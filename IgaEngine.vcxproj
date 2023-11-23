@@ -184,6 +184,7 @@
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp" />
     <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp" />
     <ClCompile Include="ApplicationCode\UI\Button.cpp" />
+    <ClCompile Include="ApplicationCode\UI\MessageWindow.cpp" />
     <ClCompile Include="Engine\Audio\Sound.cpp" />
     <ClCompile Include="Engine\Audio\SoundManager.cpp" />
     <ClCompile Include="Engine\Base\CsvLoader.cpp" />
@@ -250,6 +251,7 @@
     <ClInclude Include="ApplicationCode\Shake\Shake.h" />
     <ClInclude Include="ApplicationCode\Skills\BaseSkill.h" />
     <ClInclude Include="ApplicationCode\UI\Button.h" />
+    <ClInclude Include="ApplicationCode\UI\MessageWindow.h" />
     <ClInclude Include="Engine\Audio\Sound.h" />
     <ClInclude Include="Engine\Audio\SoundManager.h" />
     <ClInclude Include="Engine\Base\CsvLoader.h" />
