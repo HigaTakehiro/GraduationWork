@@ -71,7 +71,7 @@ void TutorialScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
-	unsigned int EnemySize = 3;
+	unsigned int EnemySize = 1;
 
 	enemys_.resize(EnemySize);
 	vec.resize(EnemySize);
@@ -81,9 +81,7 @@ void TutorialScene::Initialize()
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 	}
-	enemys_[0]->SetPos(Vector3(10, -30, 10));
-	enemys_[2]->SetPos(Vector3(-15, -30, -5));
-	enemys_[2]->SetPos(Vector3(0, -30, -5));
+	
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
@@ -93,6 +91,9 @@ void TutorialScene::Initialize()
 
 	textWindow_ = new MessageWindow();
 	textWindow_->Initialize("TutorialMessage.csv");
+
+	fighttextwindow_ = new MessageWindow();
+	fighttextwindow_->Initialize("TutorialMessage2.csv");
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 
@@ -132,6 +133,71 @@ void TutorialScene::Update()
 	shake_->Update();
 	colManager_->Update();
 	
+	if (phase_ >= Phase::Spown) {
+		Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
+		Vector3 enemyPos[3] = {};
+		for (size_t i = 0; i < enemys_.size(); i++)
+		{
+			if (enemys_[i]->GetHP() <= 0)
+			{
+				player_->AddEP(1);
+				enemys_.erase(enemys_.begin() + i);
+				continue;
+			}
+		}
+		for (auto i = 0; i < enemys_.size(); i++) {
+			if (enemys_[i]->GetHP() <= 0)continue;
+			enemyPos[i] = enemys_[i]->GetPos();
+			if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+				Vector3 playerPos = player_->GetPos();
+				enemys_[i]->GetDamage();
+				vec[i] = playerPos - enemyPos[i];
+				vec[i].normalize();
+				vec[i].y = 0.0f;
+				player_->HitHammerToEnemy(vec[i]);
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
+			}
+		}
+
+		//プレイヤーのOBB設定
+		XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
+			player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
+			player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
+		};
+		OBB l_obb;
+		l_obb.SetParam_Pos(trans);
+		l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
+		l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
+
+		_hummmerObb = &l_obb;
+
+		for (size_t j = 0; j < enemys_.size(); j++)
+		{
+			for (size_t i = 0; i < enemys_.size(); i++)
+			{
+				if (i == j)continue;
+				if (Collision::HitCircle(XMFLOAT2(enemys_[i]->GetPos().x, enemys_[i]->GetPos().z), 1.f,
+					XMFLOAT2(enemys_[j]->GetPos().x, enemys_[j]->GetPos().z), 1.f))
+				{
+					XMFLOAT3 pos = enemys_[j]->GetPos();
+
+					pos.x += sin(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
+					pos.z += cos(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
+
+					enemys_[j]->SetPos(pos);
+				}
+			}
+		}
+		for (auto i = 0; i < enemys_.size(); i++)
+		{
+			if (enemys_[i]->GetHP() <= 0) { continue; }
+			if (enemys_[i] != nullptr) {
+				enemys_[i]->SetHammerObb(*_hummmerObb);
+				enemys_[i]->Upda(camera_.get());
+			}
+		}
+	}
+
 	SceneChange();
 }
 
@@ -139,39 +205,14 @@ void TutorialScene::Draw()
 {
 	//背景色
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
-
 	postEffect_->PreDrawScene(DirectXSetting::GetIns()->GetCmdList());
-
 	//スプライト描画処理(背景)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
 	map_->MapDraw();
 	Object3d::PostDraw();
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i] != nullptr) {
-			enemys_[i]->Draw();
-		}
-	}
-	//3Dオブジェクト描画処理
-	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	/*for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			ore->Draw();
-		}
-	}*/
-	//boss_->Draw();
-	//boss_->Draw2();
-	if (phase_ == Phase::Title) {
-		sleep_->Draw();
-		
-	}
-	else {
-		player_->Draw();
-	}
-	map_->BridgeDraw(notlook_);
 	if (phase_ >= Phase::Spown) {
 		for (auto i = 0; i < enemys_.size(); i++) {
 			if (enemys_[i] != nullptr) {
@@ -179,6 +220,13 @@ void TutorialScene::Draw()
 			}
 		}
 	}
+	//3Dオブジェクト描画処理
+	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	for (size_t i = 0; i < enemys_.size(); i++)
+		enemys_[i]->TexDraw();
+	if (phase_ == Phase::Title) {sleep_->Draw();}
+	else {player_->Draw();}
+	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
@@ -201,6 +249,7 @@ void TutorialScene::Draw()
 	if (phase_ != Phase::Title) {
 		player_->TextUIDraw();
 		textWindow_->TextMessageDraw();
+		fighttextwindow_->TextMessageDraw();
 	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -212,6 +261,7 @@ void TutorialScene::Draw()
 		Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 		player_->SpriteDraw();
 		textWindow_->SpriteDraw();
+		fighttextwindow_->SpriteDraw();
 		Sprite::PostDraw();
 	}
 	DirectXSetting::GetIns()->PostDraw();
@@ -349,14 +399,11 @@ void TutorialScene::MovePhase()
 
 void TutorialScene::SpownPhase()
 {
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-		phase_ = Phase::Fight;
-	}
-	stop_ = true;
-
-	if (description_ == 5) {
+	fighttextwindow_->Update();
+	enemys_[0]->SetPos(startpos_);
+	if (!fighttextwindow_->GetCloseWindow()) {
 		description_ = 0;
-		phase_ = Phase::Move;
+		phase_ = Phase::Fight;
 	}
 }
 
@@ -365,29 +412,7 @@ void TutorialScene::FightPhase()
 	notattack_ = false;
 	stop_ = false;
 
-	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos[3] = {};
-	for (size_t i = 0; i < enemys_.size(); i++)
-	{
-		if (enemys_[i]->GetHP() <= 0)
-		{
-			enemys_.erase(enemys_.begin() + i);
-			continue;
-		}
-	}
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetHP() <= 0)continue;
-		enemyPos[i] = enemys_[i]->GetPos();
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
-			Vector3 playerPos = player_->GetPos();
-			enemys_[i]->GetDamage();
-			vec[i] = playerPos - enemyPos[i];
-			vec[i].normalize();
-			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i]);
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
-		}
-	}
+	
 
 	if (enemys_.size() == 0) {
 		phase_ = Phase::Defeat;

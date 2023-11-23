@@ -117,6 +117,7 @@ private:
 	Shake* shake_;
 	//テキストウィンドウ
 	MessageWindow* textWindow_;
+	MessageWindow* fighttextwindow_;
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
 
