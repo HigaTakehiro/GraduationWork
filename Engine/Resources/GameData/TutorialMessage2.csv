@@ -7,9 +7,9 @@
 OPEN
 WAIT 60
 
-TEXT Lスティックで動いてみよう
+TEXT Bボダンでハンマーを振り回そう
 SPEED 2
 WAIT 40
 
-CLOSE
 
+CLOSE
