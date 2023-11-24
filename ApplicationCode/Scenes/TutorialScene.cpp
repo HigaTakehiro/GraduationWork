@@ -114,6 +114,7 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -318,9 +319,11 @@ void TutorialScene::SceneChange()
 {
 
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 }
