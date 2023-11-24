@@ -31,13 +31,15 @@ protected:
 	Camera* m_Camera = nullptr;
 	Vector3 m_Hummmer;
 	Vector3 m_CameraPos = {0,12,20}, m_Target,m_CameraStartPos;
-	int m_HP=110;
+	int m_HP=1;
 	Name m_Name;
 	std::wstring str;
 
 	int BodyDamCool = 0;
 	BOOL BodyRecvDam=FALSE;
 	bool AppearFlag;
+
+	bool m_ClearF=FALSE;
 public:
 	void SetPlayerIns(Player* player) { m_player = player; }
 	void SetCamera(Camera* cam) { m_Camera = cam; }
@@ -50,5 +52,7 @@ public:
 	void SetCamerains(Camera* cam) { m_camera = cam; }
 	virtual bool Appear() = 0;
 	bool GetAppearFlag() { return AppearFlag; };
+
+	bool GetClearF() { return m_ClearF; }
 };
 

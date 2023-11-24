@@ -82,7 +82,7 @@ void NormalEnemyA::Draw()
 {
 	constexpr float MinDis = 15.f;
 
-	if (Collision::GetLength(_status.Pos, _player->GetPos()) > 15.f)return;
+	if (Collision::GetLength(_status.Pos, _player->GetPos()) > 12.f)return;
 	if (_status.HP <= 0)return;
 	if (_status.Tex == nullptr)return;
 	Texture::PreDraw();

@@ -72,6 +72,12 @@ void Dogom::Init()
 	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
 	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
 
+	float pi_ = 3.14f;
+	m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+	m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+
+	DeathAct = &Dogom::Death_Non;
+
 	BossMaxHP = m_HP;
 }
 
@@ -85,8 +91,6 @@ void Dogom::Upda()
 	Wince();
 	if (!WinceF)WinceEaseT = 0;
 	//RecvDamage(m_BodyPos);
-	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
-	m_Body->SetScale({ BodyScl });
 	
 	auto isHit = [](Vector3 pos1, Vector3 pos2, float radi1 = 1.f, float radi2 = 1.f) ->
 		bool { if (Collision::GetIns()->HitCircle({ pos1.x, pos1.z }, radi1,
@@ -97,23 +101,31 @@ void Dogom::Upda()
 	
 	//登場終わったら行動
 	if (Appear() == TRUE) {
-		if (!WinceF) {
-			MoveBody();
-			m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
-			m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
-		}
-		else {
+		////////
+		m_player->SetStopF(FALSE);
+		if(m_player->GetPos().z<3.f)
+		StartWaitT++;
+		////////
+		
+			if (!WinceF) {
+				MoveBody();
+				m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+				m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+			} else {
 				constexpr int RecvCoolMax = 120;
-				const int DamageVal = 10;
-				bool judg =isAttack&& isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
+				const int DamageVal = 1;
+				bool judg = isAttack && isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
 
 				Helper::DamageManager(m_HP, DamageVal, BodyRecvDam, BodyDamCool, RecvCoolMax, judg);
-		}
-		ImpactKnock();
-		ArmAct();
+			}
+			
+			ImpactKnock();
+			ArmAct();
+		
 	}
 	else
 	{
+		m_player->SetStopF(TRUE);
 		m_camera->SetTarget(m_Target);
 		m_camera->SetEye(m_CameraPos);
 	}
@@ -162,8 +174,18 @@ void Dogom::Upda()
 	}
 	//m_BodyPos = std::clamp(m_BodyPos, Vector3(-BOSSMAP_W, -5, -BOSSMAP_H), Vector3(BOSSMAP_W, -5, BOSSMAP_H));
 
+	if(m_HP<=0)
+	DeathMotion();
+	m_Body->SetRotation({ m_BodyRot.x,m_BodyRot.y,m_BodyRot.z });
+	m_Body->SetScale({ BodyScl });
+
+	Feed();
+
+	m_FeedTex->SetAlpha(m_FeedAlpha);
+
 	m_Arm[RIGHT]->SetRotation(Vector3(0, 0, 180));
 	m_Body->SetPosition(m_BodyPos);
+	m_Body->SetColor({ 1,1,1,m_BodyAlpha });
 	m_Body->Update();
 
 	constexpr float alphaval = 0.05f;
@@ -209,21 +231,19 @@ void Dogom::Upda()
 	CrossAreaTex->SetColor({ 1,1,1,m_CrossAreaAlpha });
 	CrossAreaTex->Update();
 
-	Feed();
-
-	m_FeedTex->SetAlpha(m_FeedAlpha);
-
 	if (m_player->GetPos().z > BOSSMAP_H &&AppearFlag)
 		isLeaveBoss = TRUE;
 	else
 		isLeaveBoss = FALSE;
 
-	str = std::to_wstring(m_HP);
+	str = std::to_wstring(m_player->GetPos().z);
 }
 
 void Dogom::Draw()
 {
 	if (isLeaveBoss)return;
+	//if()
+	//if (m_HP <= 0)return;
 	CrossAreaTex->Draw();
 	m_Body->Draw();
 	
@@ -345,7 +365,7 @@ void Dogom::ArmAct()
 
 		bool isNextActTim = m_ActionTimer != 0 && m_ActionTimer % 160 == 0;
 
-		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
+		if (StartWaitT>90&&!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
 			if (ActionRandom > 0) {
 				SetAttack_Impact();
@@ -654,6 +674,8 @@ void Dogom::Follow()
 
 void Dogom::Wince()
 {
+	if (m_HP <= 0)return;
+
 	WinceIdle();
 
 	if (!WinceF)return;
@@ -710,6 +732,7 @@ void Dogom::Wince()
 
 void Dogom::MoveBody()
 {
+	if (StartWaitT <= 90)return;
 	//if (arm_move_ != DEFAULT)return;
 	if (movF && arm_move_ == DEFAULT) {
 		BodyMoveEase++;
@@ -864,6 +887,8 @@ int Dogom::ArmHP()
 
 void Dogom::RotationFace(const uint16_t& interval)
 {
+	if (m_HP <= 0)return;
+
 	float oldFaceRot=0.f;
 
 	//正負を返す
@@ -1018,15 +1043,13 @@ void Dogom::Feed()
 {
 	float addval = 0.02f;
 
-
-	//コピイでいい m_alphaの参照でもいい //暗転上がるときだけ早く
+	//参照でもいい //暗転上がるときだけ早く
 	auto judgfeed = [addval](bool f)->
 		float {return f ? +addval : -(addval*2.f); };
 
 	m_FeedAlpha += judgfeed(m_FeedF);
 
 	//制限
-	//Action = HandImp;
 	m_FeedAlpha = std::clamp(m_FeedAlpha, 0.f, 1.f);
 }
 
@@ -1035,8 +1058,97 @@ void Dogom::HandImp()
 	
 }
 
-void Dogom::Idle()
+
+void Dogom::DeathMotion()
 {
+	//if (m_HP > 1)return;
+	//m_FeedF = true;
+	float max = 50.f;
+	auto isNext = [max](float time)->
+		bool {return time > max; };
+
+	//1P
+	if (Dmotion_phase == DeathAct::CameraSet)
+	{
+		m_FeedF = true;
+		//motion//
+		if (m_FeedAlpha >= 1.f) {
+			m_FeedF = false;
+			DeathAct = &Dogom::Death_Idle;
+			Dmotion_phase = DeathAct::FeedShake;
+		}
+	}
+	//2P
+	else if(Dmotion_phase==DeathAct::FeedShake)
+	{
+		//motion//
+
+		DeathAct = &Dogom::Death_Shake;
+		//nextPhase//
+		if (m_BodyAlpha<=0.f && isNext(m_DeathT)) {
+			m_DeathT = 0.f;//reset
+			Dmotion_phase = DeathAct::End;
+		}
+	}
+	else
+	{
+		max = 30.f;
+	
+		//motion//
+		DeathAct = &Dogom::Death_End;
+	
+		if(m_FeedAlpha>=1.f && isNext(m_DeathT))
+		{
+			m_ClearF = TRUE;
+		}
+
+		m_FeedF = !m_ClearF;
+	}
+	(this->*DeathAct)();
+}
+
+void Dogom::Death_Idle()
+{
+	//ボス座標
+	Vector3 bSet = Vector3(m_BodyPos.x, m_BodyPos.y + 1.5f, m_BodyPos.z + 5.f);
+
+	m_FeedF = TRUE;
+	MovingAngle = 180.f;
+
+	float pi_ = 3.14f;
+	m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+	m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+
+	m_BodyRot = Vector3(0, 0, 0);
+	m_Body->SetRotation(m_BodyRot);
+	//CameraSetting//
+	m_Camera->SetTarget(m_BodyPos);
+	m_Camera->SetEye(bSet);
 
 }
 
+void Dogom::Death_Shake()
+{
+	constexpr float subalpha = 0.005f;
+
+	BodyScl = { 0.3f,0.3f,1.f };
+
+	//ShakeArm(m_BodyRot, m_DeathT);
+
+	if (m_FeedAlpha <= 0.1f) {
+		m_BodyAlpha -= subalpha;
+		for (size_t i = 0; i < 2; i++)
+			m_ArmAlpha[i] -= subalpha;
+	}
+	
+}
+
+void Dogom::Death_End()
+{
+	
+}
+
+void Dogom::Death_Non()
+{
+	return;
+}

@@ -35,8 +35,8 @@ private:
     std::array<float, 2>m_ArmAlpha;;
 	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
-	std::array<int, 2>m_ArmHp={6,6};
-    std::array<int, 2>m_ArmHp_Max = { 6,6 };
+	std::array<int, 2>m_ArmHp={1,1};
+    std::array<int, 2>m_ArmHp_Max = { 1,1 };
     std::array<BOOL, 2>m_ArmDamF;
     std::array<int, 2>m_ArmDamCool;
 
@@ -53,6 +53,7 @@ private:
     bool isLeaveBoss;
     float m_EaseRemBody;
     float nextAngle = 180.f;
+    float m_BodyAlpha = 1.f;
     int randAct = 0;
 
     UINT m_ImpactCout=0;
@@ -159,6 +160,29 @@ private:
     void Feed();
 
     void (Dogom::*Action)();
-    void Idle(), HandImp();
+    void (Dogom::*DeathAct)();
+
+
+    void Idle();
+	void HandImp();
+
+    void Death_Non();
+    void Death_Idle();
+    void Death_End();
+    void Death_Shake();
+
+    void DeathMotion();
+    enum DeathAct
+    {
+	    CameraSet,
+        FeedShake,
+        End
+    }Dmotion_phase;
+
+    float m_DeathT=0.f;
+    Vector3 StartPos={};
+
+    int StartWaitT = 0;
+    Vector3 m_BodyScl = {};
 };
 
