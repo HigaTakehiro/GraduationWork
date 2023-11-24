@@ -61,7 +61,7 @@ void BossScene::Initialize()
 
 void BossScene::Update()
 {
-	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.2f);
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];

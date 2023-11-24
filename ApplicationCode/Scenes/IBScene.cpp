@@ -73,6 +73,7 @@ void IBScene::Initialize()
 
 void IBScene::Update()
 {
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 	Animation();
 	player_->SetPosition({ -8.0f,2.5f, 8.0f });
 	player_->Update();
@@ -229,6 +230,7 @@ void IBScene::SceneChange()
 		if (schange->GetEnd() == true) {
 			schange->SetFStart(false);
 			schange->SetFadeNum(0);
+			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 			SceneManager::SceneChange(SceneManager::SceneName::Boss);
 		}
 	}
