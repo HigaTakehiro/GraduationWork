@@ -52,11 +52,14 @@ void GameScene::Initialize()
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
+
+		enemys_[i]->SetOverPos(XMFLOAT3(23.f, 100.f, -5.f), XMFLOAT3(39.f, -100.f, 49.f));
 	}
 	enemys_[0]->SetPos(Vector3(30, -30, -4));
 	enemys_[2]->SetPos(Vector3(25, -30, 2));
 	enemys_[2]->SetPos(Vector3(35, -30, 5));
-	
+
+
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 1);
 	

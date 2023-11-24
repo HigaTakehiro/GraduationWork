@@ -269,6 +269,6 @@ void NormalEnemyA::AttackAction()
 
 void NormalEnemyA::ClampMap()
 {
-	_status.Pos.x = std::clamp(_status.Pos.x, mapOverX.x, mapOverX.y);
-	_status.Pos.z = std::clamp(_status.Pos.z, mapOverZ.x, mapOverZ.y);
+	_status.Pos.x = std::clamp(_status.Pos.x, OverPosMin.x, OverPosMax.x);
+	_status.Pos.z = std::clamp(_status.Pos.z, OverPosMin.z, OverPosMax.z);
 }

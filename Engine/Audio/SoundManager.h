@@ -43,7 +43,7 @@ public: //サブクラス
 		hammerAttack,
 		hammerBigBlow,
 		hammerShake,
-		impact,
+		//impact,
 		playerDamage,
 		playerDestroy,
 		playerLevelUp,
