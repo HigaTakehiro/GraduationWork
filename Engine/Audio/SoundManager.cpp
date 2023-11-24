@@ -11,11 +11,33 @@ void SoundManager::Initialize(Sound* sound)
 	this->sound_ = sound;
 	//BGM
 	//LoadBGM("Engine/Resources/Sound/BGM/maou_bgm_neorock82.wav", BGMKey::game);
+	LoadBGM("Engine/Resources/Sound/BGM/BGM_dungeon.wav", BGMKey::dungeon);
+	LoadBGM("Engine/Resources/Sound/BGM/BGM_firstBoss.wav", BGMKey::firstBoss);
+	LoadBGM("Engine/Resources/Sound/BGM/BGM_restPoint.wav", BGMKey::restPoint);
+	LoadBGM("Engine/Resources/Sound/BGM/BGM_title.wav", BGMKey::title);
 
 	//SE
 	LoadSE("Engine/Resources/Sound/SE/SE_Attack.wav", SEKey::attack);
 	LoadSE("Engine/Resources/Sound/SE/SE_impact.wav", SEKey::impact);
 	LoadSE("Engine/Resources/Sound/SE/SE_releaseHammer.wav", SEKey::hammerRelease);
+	/*Å´íÜä‘ópí«â¡SEÅ´*/
+	LoadSE("Engine/Resources/Sound/SE/SE_firstBossCrossAttack.wav", SEKey::firstBossCrossAttack);
+	LoadSE("Engine/Resources/Sound/SE/SE_firstBossDestroy.wav", SEKey::firstBossDestroy);
+	LoadSE("Engine/Resources/Sound/SE/SE_firstBossFaceAttack.wav", SEKey::firstBossFaceAttack);
+	LoadSE("Engine/Resources/Sound/SE/SE_firstBossHitAttack.wav", SEKey::firstBossHitAttack);
+	LoadSE("Engine/Resources/Sound/SE/SE_firstBossShout", SEKey::firstBossShout);
+	LoadSE("Engine/Resources/Sound/SE/SE_gimmickSteps", SEKey::gimmickSteps);
+	LoadSE("Engine/Resources/Sound/SE/SE_hammerAttack", SEKey::hammerAttack);
+	LoadSE("Engine/Resources/Sound/SE/SE_hammerBigBlow", SEKey::hammerBigBlow);
+	LoadSE("Engine/Resources/Sound/SE/SE_hammerShake", SEKey::hammerShake);
+	LoadSE("Engine/Resources/Sound/SE/SE_SE_impact", SEKey::impact);
+	LoadSE("Engine/Resources/Sound/SE/SE_playerDamage", SEKey::playerDamage);
+	LoadSE("Engine/Resources/Sound/SE/SE_playerDestroy", SEKey::playerDestroy);
+	LoadSE("Engine/Resources/Sound/SE/SE_playerLevelUp", SEKey::playerLevelUp);
+	LoadSE("Engine/Resources/Sound/SE/SE_releaseHammer", SEKey::releaseHammer);
+	LoadSE("Engine/Resources/Sound/SE/SE_userChoice", SEKey::userChoice);
+	LoadSE("Engine/Resources/Sound/SE/SE_userDecision", SEKey::userDecision);
+
 }
 
 void SoundManager::PlayBGM(const BGMKey bgmKey, const bool isRoop, const float volume)

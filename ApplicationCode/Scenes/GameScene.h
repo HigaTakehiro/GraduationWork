@@ -59,6 +59,10 @@ private: //メンバ関数
 	/// </summary>
 	void CameraSetting();
 
+/// <summary>
+/// 敵に関係する処理
+/// </summary>
+	void EnemyProcess();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
