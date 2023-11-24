@@ -287,9 +287,6 @@
     <ClCompile Include="ApplicationCode\Scenes\IBScene.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Scenes\TutorialScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Scenes\SceneChange.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
@@ -297,6 +294,12 @@
       <Filter>ソース ファイル\ApplicationCode\UI</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Scenes\SkillScene.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Item\Deposit.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\TutorialScene.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -502,7 +505,6 @@
     <ClInclude Include="ApplicationCode\Scenes\IBScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Scenes\TutorialScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\SceneChange.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
@@ -510,6 +512,10 @@
       <Filter>ソース ファイル\ApplicationCode\UI</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Scenes\SkillScene.h">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Item\Deposit.h" />
+    <ClInclude Include="ApplicationCode\Scenes\TutorialScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
