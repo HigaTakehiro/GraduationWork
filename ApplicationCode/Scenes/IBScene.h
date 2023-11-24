@@ -113,7 +113,7 @@ private: //ƒƒ“ƒo•Ï”
 	int32_t hp_ = 0;
 	float count = 0;
 	float count2 = 2;
-
+	float soundCount;
 	SceneChangeEffect* schange;
 };
 

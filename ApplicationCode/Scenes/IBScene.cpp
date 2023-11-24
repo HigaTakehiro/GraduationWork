@@ -36,9 +36,9 @@ void IBScene::Initialize()
 
 	//3dオブジェクト初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 128.0f }, true);
 	}
-	fireModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "fire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * 0, 0.0f }, { 128.0f, 128.0f }, true);
+	fireModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "fire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * 0, 1.0f }, { 128.0f, 128.0f }, true);
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
 	player_->SetScale({ 0.15f, 0.15f, 0.15f });
@@ -78,7 +78,7 @@ void IBScene::Update()
 	player_->Update();
 	fire_->SetPosition({ 0.0f,2.5f, 8.0f });
 	fire_->Update();
-;	//デバッグカメラ移動処理
+	;	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
@@ -182,7 +182,7 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hx = std::to_wstring(schange->GetEnd());
+	std::wstring hx = std::to_wstring(soundCount);
 	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n" + hx, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -207,38 +207,54 @@ void IBScene::Finalize()
 
 void IBScene::SceneChange()
 {
-	if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW)) {
+	if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.2f);
 		arrow->SetPosition({ 900,50 });
 	}
-	else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW)) {
+	else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.2f);
 		arrow->SetPosition({ 900,150 });
 	}
 	float leftStick = PadInput::GetIns()->leftStickY();
 	if (leftStick > 0) {
+		soundCount++;
 		arrow->SetPosition({ 900,150 });
 	}
-	if (leftStick < 0) {
+	else if (leftStick < 0) {
+		soundCount++;
 		arrow->SetPosition({ 900,50 });
 	}
+	else {
+		soundCount = 0;
+	}
+	if (soundCount == 1) {
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.2f);
+	}
 	if (arrow->GetPosition().y == 150) {
-		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			//schange->SetFEnd(false);
-			schange->SetFStart(true);
-			schange->SetFadeNum(0);
+		if (schange->GetEnd() == false) {
+			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.2f);
+				//schange->SetFEnd(false);
+				schange->SetFStart(true);
+				schange->SetFadeNum(0);
+			}
 		}
-		if (schange->GetEnd() == true) {
+		else if (schange->GetEnd() == true) {
 			schange->SetFStart(false);
 			schange->SetFadeNum(0);
 			SceneManager::SceneChange(SceneManager::SceneName::Boss);
 		}
 	}
 	else if (arrow->GetPosition().y == 50) {
-		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+		if (schange->GetEnd() == false) {
+			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.2f);
 				schange->SetFEnd(false);
 				schange->SetFStart(true);
 				schange->SetFadeNum(0);
+			}
 		}
-		if (schange->GetEnd() == true) {
+		else if (schange->GetEnd() == true) {
 			schange->SetFStart(false);
 			schange->SetFadeNum(0);
 			SceneManager::SceneChange(SceneManager::SceneName::SKILL);

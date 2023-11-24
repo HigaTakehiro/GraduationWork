@@ -101,7 +101,7 @@ void TitleScene::SceneChange()
 	}
 	
 	if (schange->GetEnd() == true) {
-		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 
 }

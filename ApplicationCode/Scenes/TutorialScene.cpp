@@ -152,7 +152,7 @@ void TutorialScene::Update()
 		deposit_->Update();
 	}
 
-	schange->Change(1);
+	schange->Change(0);
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();

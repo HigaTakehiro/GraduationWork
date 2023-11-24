@@ -122,12 +122,15 @@ void SkillScene::Finalize()
 
 void SkillScene::SceneChange()
 {
-	if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-		schange->SetFEnd(false);
-		schange->SetFStart(true);
-		schange->SetFadeNum(0);
+	if (schange->GetEnd() == false) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.2f);
+			schange->SetFEnd(false);
+			schange->SetFStart(true);
+			schange->SetFadeNum(0);
+		}
 	}
-	if (schange->GetEnd() == true) {
+	else if (schange->GetEnd() == true) {
 		schange->SetFStart(false);
 		schange->SetFadeNum(0);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
