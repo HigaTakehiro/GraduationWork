@@ -1,6 +1,8 @@
 #include "MessageWindow.h"
 #include "safeDelete.h"
 #include "Easing.h"
+#include"PadInput.h"
+#include"KeyInput.h"
 
 void MessageWindow::Initialize(const std::string& fileName)
 {
@@ -38,6 +40,19 @@ void MessageWindow::Update()
 		return;
 	}
 
+	if (isTextFinishBottun) {
+		
+		messageWaitTimer_=10;
+		
+		if (PadInput::GetIns()->TriggerButton(PadInput::Button_A) || KeyInput::GetIns()->PushKey(DIK_SPACE)) {
+			isTextFinishBottun = false;
+			textCount_ = 0;
+			message_.clear();
+			drawMessage_.clear();
+		}
+		return;
+	}
+
 	while (getline(textData_, line)) {
 		std::istringstream line_stream(line);
 		std::string word;
@@ -64,6 +79,10 @@ void MessageWindow::Update()
 		}
 		if (word == "CLOSE") {
 			isTextWindowOpen_ = false;
+		}
+		if (word == "BOTTUN") {
+			isTextFinishBottun = true;
+			break;
 		}
 	}
 }
