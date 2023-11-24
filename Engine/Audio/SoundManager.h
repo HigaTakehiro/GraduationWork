@@ -24,13 +24,32 @@ class SoundManager final
 
 public: //サブクラス
 	enum class BGMKey {
-		game,
+		dungeon,
+		firstBoss,
+		restPoint,
+		title,
 	};
 
 	enum class SEKey {
 		attack,
 		impact,
 		hammerRelease,
+		firstBossCrossAttack,
+		firstBossDestroy,
+		firstBossFaceAttack,
+		firstBossHitAttack,
+		firstBossShout,
+		gimmickSteps,
+		hammerAttack,
+		hammerBigBlow,
+		hammerShake,
+		impact,
+		playerDamage,
+		playerDestroy,
+		playerLevelUp,
+		releaseHammer,
+		userChoice,
+		userDecision,
 	};
 
 public:  //静的メンバ関数
