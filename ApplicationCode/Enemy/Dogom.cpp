@@ -146,7 +146,7 @@ void Dogom::Upda()
 
 		for (size_t i = 0; i < m_Arm.size(); i++)
 		{
-			if (ColF[i] && DamCool[i] < 10) {
+			if (ColF[0] && DamCool[i] < 10) {
 				m_Arm[i]->SetModel(ArmModel_[animeCount / AnimationInter]);
 				m_Arm[i]->Initialize();
 			} else
@@ -789,21 +789,32 @@ void Dogom::CoollisionFace()
 	if (WinceF)return;
 
 	for (size_t i = 0; i < 2; i++) {
-		if (ColF[i])continue;
+		if (ColF[0])continue;
 		if (m_ArmHp[i] <= 0)continue;
 		DamCool[i] = 0;
+		float magniVal = 0.7f;
+
 		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<5.f)
-		{
+		{	
+			vec[i] = PlayerPos - m_ArmPos[i];
+			vec[i].normalize();
+			vec[i].y = 0.0f;
+
+			m_player->HitHammerToEnemy(vec[i], magniVal);
+			m_Knock = TRUE;
+
 			m_player->SubHP(1);
-			ColF[i] = TRUE;
+			ColF[0] = TRUE;
 		}
 	}
 
+	constexpr int cool = 30;
+
 	for (size_t i = 0; i < 2; i++) {
-		if (!ColF[i])continue;
-		if (++DamCool[i] > 90)
+		if (!ColF[0])continue;
+		if (++DamCool[i] > cool)
 		{
-			ColF[i] = FALSE;
+			ColF[0] = FALSE;
 		}
 	}
 
@@ -901,22 +912,11 @@ void Dogom::ImpactKnock()
 
 	//if (phase_ != Phase_Impact::PHASE_2)return;
 	constexpr float HandsUnderGround = -3.f;
-	constexpr float KnockValMagni = 0.03f;/*ノック倍率*/
+	constexpr float KnockValMagni = 0.3f;/*ノック倍率*/
 
 	bool KnockJudg = m_Knock == FALSE && phase_ == Phase_Impact::PHASE_2;
 	if (KnockJudg) {
-		for (size_t i = 0; i < 2; i++) {
-			if (m_ArmPos[i].y < HandsUnderGround)continue;
-			if (!Collision::GetIns()->HitCircle({ PlayerPos.x, PlayerPos.z }, 1.0f,
-				{ m_ArmPos[i].x, m_ArmPos[i].z }, 3.0f))continue;
-
-			vec[i] = PlayerPos - m_ArmPos[i];
-			vec[i].normalize();
-			vec[i].y = 0.0f;
-
-			m_player->HitHammerToEnemy(vec[i],KnockValMagni);
-			m_Knock = TRUE;
-		}
+	
 	}
 
 	//フラグ値チェック

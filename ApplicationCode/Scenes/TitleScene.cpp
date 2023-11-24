@@ -100,7 +100,7 @@ void TitleScene::SceneChange()
 		scange->SetFStart(true);
 	}
 	if (scange->GetEnd() == true) {
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
+		SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 
 }
