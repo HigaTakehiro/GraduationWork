@@ -224,6 +224,7 @@ void IBScene::SceneChange()
 	if (arrow->GetPosition().y == 150) {
 		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			//schange->SetFEnd(false);
+			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 			schange->SetFStart(true);
 			schange->SetFadeNum(0);
 		}
