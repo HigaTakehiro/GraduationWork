@@ -72,6 +72,7 @@ void GameScene::Initialize()
 void GameScene::Update()
 {
 	player_->Update();
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 
 	EnemyProcess();
 	if (shake_->GetShakeFlag() == true) {
@@ -177,12 +178,15 @@ void GameScene::SceneChange()
 {
 	bool Change = player_->GetNext();
 	if (Change||player_->GetHP()<=0) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
 }
