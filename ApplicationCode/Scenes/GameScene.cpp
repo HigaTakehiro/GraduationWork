@@ -146,7 +146,7 @@ void GameScene::Draw()
 	//
 	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
 	std::wstring hx = std::to_wstring(player_->GetPos().x);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
+	//text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
