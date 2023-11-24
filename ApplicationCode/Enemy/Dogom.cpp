@@ -1133,13 +1133,14 @@ void Dogom::Death_Shake()
 
 	BodyScl = { 0.3f,0.3f,1.f };
 
-	ShakeArm(m_BodyRot, m_DeathT);
+	//ShakeArm(m_BodyRot, m_DeathT);
 
 	if (m_FeedAlpha <= 0.1f) {
 		m_BodyAlpha -= subalpha;
 		for (size_t i = 0; i < 2; i++)
 			m_ArmAlpha[i] -= subalpha;
 	}
+	
 }
 
 void Dogom::Death_End()
