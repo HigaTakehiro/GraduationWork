@@ -44,6 +44,8 @@ void TutorialScene::Initialize()
 	}
 
 	wake_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::wake, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
+	wake_->SetAlpha(1.5f);
+	wake_->SetPosition(wakePos_);
 
 	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
 	sleep_->SetIsBillboardY(true);

@@ -144,6 +144,7 @@ private:
 	XMFLOAT2 size_ = { 1280.f,720.f };
 
 	XMFLOAT2 titleposition_{160,100};
+	XMFLOAT2 wakePos_{ 544.f,WinApp::window_height - 100 };
 	SceneChangeEffect* schange;
 
 
