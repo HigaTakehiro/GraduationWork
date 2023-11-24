@@ -56,7 +56,7 @@ void BossScene::Initialize()
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
-
+	boss_->GetCSPos(cameraPos_);
 }
 
 void BossScene::Update()
@@ -103,9 +103,11 @@ void BossScene::Update()
 		targetPos_.y = 0;
 
 	}
-
-	camera_->SetEye(cameraPos_);
-	camera_->SetTarget(targetPos_);
+	//if (boss_->GetAppearFlag() == FALSE) {
+		camera_->SetEye(cameraPos_);
+		camera_->SetTarget(targetPos_);
+	//}//
+		//boss_->SetCamera(camera_.get());
 	light_->Update();
 
 	//ƒvƒŒƒCƒ„[‚ÌOBBÝ’è
@@ -215,6 +217,7 @@ void BossScene::SceneChange()
 
 void BossScene::CameraSetting()
 {
+	//if (boss_->GetAppearFlag())return;
 	std::string line;
 	Vector3 pos{};
 	Vector3 target{};

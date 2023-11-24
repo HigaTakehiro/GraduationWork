@@ -87,12 +87,15 @@ protected:
 	int m_MaxHp=0;
 	std::unique_ptr<Object3d>m_HpTex;
 	std::unique_ptr<Object3d>m_ShadowTex;
+
+	XMFLOAT3 OverPosMax, OverPosMin;
 protected:
 	void TexInit();
 	void TexUpda();
 public:
 	void TexDraw();
 
+	void SetOverPos(XMFLOAT3 max, XMFLOAT3 min) { OverPosMax = max; OverPosMin = min; }
 	//çUåÇéÛÇØÇΩÇ©ÅH
 	
 public:

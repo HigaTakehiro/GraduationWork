@@ -23,7 +23,7 @@ public:
 	/// </summary>
 	/// <param name="Hp">体力</param>
 	/// <param name="subHp">減らす体力</param>
-	/// <param name="damF">ダメージフラグ</param>
+	/// <param name="damF">ダメージフラグ(作るだけでいい)</param>
 	/// <param name="coolT">被ダメージのクールタイム</param>
 	/// <param name="maxcool">クールタイム最大値</param>
 	/// <param name="DamJudg">被ダメージ発生条件</param>

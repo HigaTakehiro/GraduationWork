@@ -26,7 +26,11 @@ void Dogom::Init()
 		BodyModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_face.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
 	m_HpTex=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-
+	m_FeedTex = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
+	m_FeedTex->SetSize(XMFLOAT2(1280, 720));
+	m_FeedTex->SetColor(XMFLOAT3(0, 0, 0));
+	m_FeedTex->SetAlpha(m_FeedAlpha);
+	m_FeedAlpha = 0.f;
 	m_Body = Object3d::UniquePtrCreate(BodyModel_[0]);
 	//m_Body->SetIsBillboardY(true);
 	m_Body->SetColType(Object3d::CollisionType::Obb);
@@ -90,6 +94,7 @@ void Dogom::Upda()
 	return false;
 	};
 
+	
 	//登場終わったら行動
 	if (Appear() == TRUE) {
 		if (!WinceF) {
@@ -107,7 +112,11 @@ void Dogom::Upda()
 		ImpactKnock();
 		ArmAct();
 	}
-
+	else
+	{
+		m_camera->SetTarget(m_Target);
+		m_camera->SetEye(m_CameraPos);
+	}
 	if (isHit(m_player->GetPos(), m_BodyPos,1.f,3.f))
 	{
 		Vector3 vec;
@@ -200,7 +209,11 @@ void Dogom::Upda()
 	CrossAreaTex->SetColor({ 1,1,1,m_CrossAreaAlpha });
 	CrossAreaTex->Update();
 
-	if (m_player->GetPos().z > BOSSMAP_H )
+	Feed();
+
+	m_FeedTex->SetAlpha(m_FeedAlpha);
+
+	if (m_player->GetPos().z > BOSSMAP_H &&AppearFlag)
 		isLeaveBoss = TRUE;
 	else
 		isLeaveBoss = FALSE;
@@ -334,7 +347,7 @@ void Dogom::ArmAct()
 
 		if (!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
-			if (ActionRandom > 120) {
+			if (ActionRandom > 0) {
 				SetAttack_Impact();
 				arm_move_ = ATTACK_IMPACT;
 			} else
@@ -773,7 +786,7 @@ void Dogom::CoollisionFace()
 	bool isColJudg[] = { phase_ == Phase_Impact::PHASE_2 ,phase_cross_ == Phase_Cross::PHASE_2 };
 
 	if (!isColJudg[0] &&!isColJudg[1])return;
-
+	if (WinceF)return;
 
 	for (size_t i = 0; i < 2; i++) {
 		if (ColF[i])continue;
@@ -799,14 +812,22 @@ void Dogom::CoollisionFace()
 
 void Dogom::CoollisionArm()
 {
+
 	bool canCol = arm_move_ == DEFAULT && m_player->getisHammerActive();
 
 	if (canCol) {
 		for (size_t i = 0; i < 2; i++) {
 		 	//
-		 	if(m_Arm[i]->GetIsHit())
+			if (m_ArmHp[i] <= 0)continue;
+			if (m_Arm[i]->GetIsHit()) {
 				m_player->SetIsHammerReflect(true);
-		
+
+				vec[i] = PlayerPos - m_ArmPos[i];
+				vec[i].normalize();
+				vec[i].y = 0.0f;
+
+				m_player->HitHammerToEnemy(vec[i], 1.f);
+			}
 			constexpr int damval = 1;
 			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, m_Arm[i]->GetIsHit());
 		}
@@ -880,7 +901,7 @@ void Dogom::ImpactKnock()
 
 	//if (phase_ != Phase_Impact::PHASE_2)return;
 	constexpr float HandsUnderGround = -3.f;
-	constexpr float KnockValMagni = 0.3f;/*ノック倍率*/
+	constexpr float KnockValMagni = 0.03f;/*ノック倍率*/
 
 	bool KnockJudg = m_Knock == FALSE && phase_ == Phase_Impact::PHASE_2;
 	if (KnockJudg) {
@@ -944,27 +965,78 @@ void Dogom::SpriteDraw()
 	m_HpTex->SetSize(XMFLOAT2(sx, sy));
 	
 	m_HpTex->Draw();
+
+	m_FeedTex->Draw();
 }
 
 
 bool Dogom::Appear()
 {
+	constexpr float maxAppTime[] = { 160,100,100 };
+
 	if (_phase_appear == PHASE1) {
 		//本体処理
 
-		_phase_appear = PHASE2;
+		m_Target = Vector3(m_BodyPos.x, m_BodyPos.y + 2.5f, m_BodyPos.z);
 
+		if (++appeaset < 100)
+		{
+			m_CameraPos.z = Easing::easeIn(appeaset, 100.f, m_player->GetPos().z, m_BodyPos.z + 20.f);
+		}
+		if (appeaset > maxAppTime[0]) {
+			appeaset = 0;
+			_phase_appear = PHASE2;
+		}
 	}
 	else if (_phase_appear == PHASE2) {
 		//カメラ処理
+		if (++appeaset < maxAppTime[1])
+		{
+			m_CameraPos.z = Easing::easeIn(appeaset, 100.f, m_BodyPos.z + 20.f, m_CameraStartPos.z);
+		} else {
+			appeaset = 0;
+			_phase_appear = PHASE3;
+		}
 
-		_phase_appear = PHASE3;
+		bool feed = appeaset > 80;
+		if (feed)m_FeedF = true;
 	}
 
 	//こいつラスト行くまで更新きる
 	else if (_phase_appear == PHASE3) {
-		return true;
+		if (++appeaset > maxAppTime[2]) {
+			m_FeedF = false;
+			AppearFlag = true;
+			return true;
+		}
 	}
 
 	return false;
 }
+
+void Dogom::Feed()
+{
+	float addval = 0.02f;
+
+
+	//コピイでいい m_alphaの参照でもいい //暗転上がるときだけ早く
+	auto judgfeed = [addval](bool f)->
+		float {return f ? +addval : -(addval*2.f); };
+
+	m_FeedAlpha += judgfeed(m_FeedF);
+
+	//制限
+	//Action = HandImp;
+	m_FeedAlpha = std::clamp(m_FeedAlpha, 0.f, 1.f);
+}
+
+void Dogom::HandImp()
+{
+	
+}
+
+void Dogom::Idle()
+{
+
+}
+
