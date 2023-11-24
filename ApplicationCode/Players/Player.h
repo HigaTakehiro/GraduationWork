@@ -370,6 +370,9 @@ private: //メンバ変数
 	//テキスト
 	TextDraw* text_;
 
+	bool look_ = false;
+	bool animationflag_ = false;
+
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
 	DirectX::XMFLOAT3 GetPos() { return player_->GetPosition(); }

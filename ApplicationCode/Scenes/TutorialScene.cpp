@@ -54,8 +54,8 @@ void TutorialScene::Initialize()
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
 	sleep_->SetPosition(sleepPos_);
 	//鉱床
-	deposit_ = new Deposit();
-	deposit_->Initialize({ 0.f, 0.f, 30.f });
+	/*deposit_ = new Deposit();
+	deposit_->Initialize({ 0.f, 0.f, 30.f });*/
 
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
@@ -89,11 +89,11 @@ void TutorialScene::Initialize()
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
-		enemys_[i]->SetOverPos(XMFLOAT3(13.f, -100.f, 49.f), XMFLOAT3(-11.f, 100.f, -5.f));
+		enemys_[i]->SetOverPos(XMFLOAT3(13.f, -100.f, 37.f), XMFLOAT3(-11.f, 100.f, 14.f));
 	}
-	enemys_[0]->SetPos(Vector3(5, -30, 30));
-	enemys_[1]->SetPos(Vector3(-5, -30, 30));
-	enemys_[2]->SetPos(Vector3(0, -30, 30));
+	enemys_[0]->SetPos(Vector3(5, -30, 24));
+	enemys_[1]->SetPos(Vector3(-5, -30, 24));
+	enemys_[2]->SetPos(Vector3(0, -30, 24));
 	
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
@@ -156,9 +156,9 @@ void TutorialScene::Update()
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
 	}
 
-	if (deposit_ != nullptr) {
+	/*if (deposit_ != nullptr) {
 		deposit_->Update();
-	}
+	}*/
 
 	schange->Change(0);
 
@@ -166,7 +166,7 @@ void TutorialScene::Update()
 	shake_->Update();
 	colManager_->Update();
 
-	if (deposit_ != nullptr) {
+	/*if (deposit_ != nullptr) {
 		if (deposit_->GetIsHit()) {
 			std::unique_ptr<Ore> ore = std::make_unique<Ore>();
 			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
@@ -175,7 +175,7 @@ void TutorialScene::Update()
 		if (deposit_->GetHP() <= 0) {
 			safe_delete(deposit_);
 		}
-	}
+	}*/
 	
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
@@ -207,12 +207,12 @@ void TutorialScene::Draw()
 	else {player_->Draw();}
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
-			ore->Draw();
+			//ore->Draw();
 		}
 	}
-	if (deposit_ != nullptr) {
-		deposit_->Draw();
-	}
+	//if (deposit_ != nullptr) {
+	//	//deposit_->Draw();
+	//}
 	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
@@ -258,7 +258,7 @@ void TutorialScene::Draw()
 void TutorialScene::Finalize()
 {
 	safe_delete(textWindow_);
-	safe_delete(deposit_);
+	//safe_delete(deposit_);
 }
 
 void TutorialScene::SceneChange()
