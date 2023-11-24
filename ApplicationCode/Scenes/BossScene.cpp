@@ -36,6 +36,8 @@ void BossScene::Initialize()
 	//3dオブジェクト初期化
 	player_ = new Player;
 	player_->Initialize();
+	player_->SetLevel(SceneManager::GetLevel());
+	player_->SetEP(SceneManager::GetEP());
 
 	postEffectNo_ = PostEffect::NONE;
 

@@ -4,6 +4,8 @@ BaseScene* SceneManager::nowScene = nullptr;
 int32_t SceneManager::stageNo_ = 1;
 int32_t SceneManager::score = 0;
 CollisionManager* SceneManager::colManager_ = nullptr;
+int32_t SceneManager::level_ = 1;
+int32_t SceneManager::ep_ = 0;
 
 void SceneManager::Initialize() {
 	//マウスカーソルを非表示にする

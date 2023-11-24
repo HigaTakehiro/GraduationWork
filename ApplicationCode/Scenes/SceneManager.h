@@ -85,6 +85,30 @@ public: //静的メンバ関数
 	static void SetCollsionManager(CollisionManager* colManager) { colManager_ = colManager; }
 
 	/// <summary>
+	/// レベルをセット
+	/// </summary>
+	/// <param name="level">レベル</param>
+	static void SetLevel(int32_t level) { level_ = level; }
+
+	/// <summary>
+	/// レベルを取得
+	/// </summary>
+	/// <returns>レベル</returns>
+	static int32_t GetLevel() { return level_; }
+
+	/// <summary>
+	/// 経験値をセット
+	/// </summary>
+	/// <param name="ep">経験値</param>
+	static void SetEP(int32_t ep) { ep_ = ep; }
+
+	/// <summary>
+	/// 経験値を取得
+	/// </summary>
+	/// <returns>経験値</returns>
+	static int32_t GetEP() { return ep_; }
+
+	/// <summary>
 	/// ステージ番号取得
 	/// </summary>
 	/// <returns>ステージ番号</returns>
@@ -101,6 +125,10 @@ private: //静的メンバ変数
 	static int32_t stageNo_;
 	static int32_t score;
 	static CollisionManager* colManager_;
+	//プレイヤーレベル
+	static int32_t level_;
+	//経験値
+	static int32_t ep_;
 
 private: //メンバ変数
 	std::unique_ptr<TextDraw> textDraw;

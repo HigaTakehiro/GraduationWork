@@ -38,6 +38,8 @@ void GameScene::Initialize()
 	//3dオブジェクト初期化
 	player_ = new Player;
 	player_->Initialize();
+	player_->SetLevel(SceneManager::GetLevel());
+	player_->SetEP(SceneManager::GetEP());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -177,6 +179,8 @@ void GameScene::SceneChange()
 {
 	bool Change = player_->GetNext();
 	if (Change||player_->GetHP()<=0) {
+		SceneManager::SetLevel(player_->GetLevel());
+		SceneManager::SetEP(player_->GetEP());
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {

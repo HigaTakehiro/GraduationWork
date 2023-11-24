@@ -89,6 +89,24 @@ public: //メンバ関数
 	void SetHP(int32_t hp) { hp_ = hp; }
 
 	/// <summary>
+	/// レベルを取得
+	/// </summary>
+	/// <returns>レベル</returns>
+	int32_t GetLevel() { return level_; }
+
+	/// <summary>
+	/// レベルをセット
+	/// </summary>
+	/// <param name="level">レベル</param>
+	void SetLevel(int32_t level) { level_ = level; }
+
+	/// <summary>
+	/// 経験値を取得
+	/// </summary>
+	/// <returns>経験値</returns>
+	int32_t GetEP() { return ep_; }
+
+	/// <summary>
 	/// HPを加算
 	/// </summary>
 	/// <param name="addHP">加算するHP</param>

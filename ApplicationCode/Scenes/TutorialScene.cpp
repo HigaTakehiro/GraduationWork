@@ -318,6 +318,8 @@ void TutorialScene::SceneChange()
 {
 
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		SceneManager::SetLevel(player_->GetLevel());
+		SceneManager::SetEP(player_->GetEP());
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
