@@ -152,7 +152,7 @@ void TutorialScene::Update()
 		deposit_->Update();
 	}
 
-	schange->Change(1);
+	
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
@@ -261,7 +261,7 @@ void TutorialScene::Draw()
 	else {player_->Draw();}
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
-			ore->Draw();
+			//ore->Draw();
 		}
 	}
 	if (deposit_ != nullptr) {
