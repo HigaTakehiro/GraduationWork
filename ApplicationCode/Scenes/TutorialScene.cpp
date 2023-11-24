@@ -402,12 +402,14 @@ void TutorialScene::SleepShale()
 	if (pushCount_ > oldpushCount_) {
 		shaketimer_ += 1;
 		if (shaketimer_ % 2==0) {
-			startpos_.x += 0.05f;
+			startpos_.x +=shakeval_;
 		}
 		else {
-			startpos_.x -= 0.05f;
+			startpos_.x -= shakeval_;
+			shakeval_ -= 0.02f;
 		}
 		if (shaketimer_ >= 10) {
+			shakeval_ = 0.5f;
 			oldpushCount_ = pushCount_;
 		}
 	}
