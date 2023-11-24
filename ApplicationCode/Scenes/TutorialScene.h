@@ -140,8 +140,10 @@ private:
 	bool titlepos_ = true;
 
 	XMFLOAT2 size_ = { 1280.f,720.f };
+
 	XMFLOAT2 titleposition_{};
-	SceneChangeEffect* scange;
+	SceneChangeEffect* schange;
+
 
 	//アニメーションカウント
 	int32_t animeCount_;

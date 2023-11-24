@@ -5,6 +5,7 @@
 #include"TutorialScene.h"
 #include "GameScene.h"
 #include"IBScene.h"
+#include"SkillScene.h"
 #include "BossScene.h"
 #include "ResultScene.h"
 #include "DirectXSetting.h"
@@ -14,7 +15,7 @@
 #include "TextDraw.h"
 #include "CollisionManager.h"
 
-	class SceneManager
+class SceneManager
 {
 public:
 	SceneManager() = default;
@@ -26,6 +27,7 @@ public: //ƒV[ƒ“ŠÇ—”Ô†
 		Tutorial,
 		Game,
 		IB,
+		SKILL,
 		Boss,
 		Result,
 		None
