@@ -74,6 +74,7 @@ void GameScene::Initialize()
 void GameScene::Update()
 {
 	player_->Update();
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 
 	EnemyProcess();
 	if (shake_->GetShakeFlag() == true) {
@@ -147,7 +148,7 @@ void GameScene::Draw()
 	//
 	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
 	std::wstring hx = std::to_wstring(player_->GetPos().x);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
+	//text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -181,12 +182,15 @@ void GameScene::SceneChange()
 	if (Change||player_->GetHP()<=0) {
 		SceneManager::SetLevel(player_->GetLevel());
 		SceneManager::SetEP(player_->GetEP());
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::Title);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::Result);
 	}
 }

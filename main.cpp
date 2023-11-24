@@ -72,8 +72,8 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	LightGroup::StaticInitialize();
 
 	scene = new SceneManager();
-	scene->Initialize();
 	scene->SetCollsionManager(colManager);
+	scene->Initialize();
 
 	// DirectX初期化処理　ここまで
 

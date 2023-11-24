@@ -6,7 +6,7 @@ void MessageWindow::Initialize(const std::string& fileName)
 {
 	textData_ = ExternalFileLoader::GetIns()->ExternalFileOpen(fileName);
 	textWindow_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::TextWindow, { 580, 630 });
-	textWindow_->SetAlpha(0.4f);
+	textWindow_->SetAlpha(1.f);
 	textWindowSize_ = textWindow_->GetSize();
 	textWindowSize_.y = 0;
 	textWindow_->SetAnchorPoint({ 0.5f, 0.5f });

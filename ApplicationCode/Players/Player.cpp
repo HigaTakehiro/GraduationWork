@@ -620,6 +620,7 @@ void Player::LevelUp()
 	if (level_ >= maxLevel) return;
 
 	if (ep_ >= levelUpEp_) {
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerLevelUp, 0.3f);
 		level_++;
 		ep_ = 0;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);

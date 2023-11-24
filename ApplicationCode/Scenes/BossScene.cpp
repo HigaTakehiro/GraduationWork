@@ -63,7 +63,7 @@ void BossScene::Initialize()
 
 void BossScene::Update()
 {
-	
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
@@ -176,7 +176,7 @@ void BossScene::Draw()
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = boss_->GetStr();
-	text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
+	//text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
