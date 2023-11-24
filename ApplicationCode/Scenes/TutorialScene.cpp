@@ -84,6 +84,7 @@ void TutorialScene::Initialize()
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
+		enemys_[i]->SetOverPos(XMFLOAT3(13.f, -100.f, 49.f), XMFLOAT3(-11.f, 100.f, -5.f));
 	}
 	enemys_[0]->SetPos(Vector3(5, -30, 30));
 	enemys_[1]->SetPos(Vector3(-5, -30, 30));
@@ -170,71 +171,8 @@ void TutorialScene::Update()
 	}
 	
 	if (phase_ >= Phase::Spown) {
-		Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-		Vector3 enemyPos[3] = {};
-		for (size_t i = 0; i < enemys_.size(); i++)
-		{
-			if (enemys_[i]->GetHP() <= 0)
-			{
-				player_->AddEP(1);
-				enemys_.erase(enemys_.begin() + i);
-				continue;
-			}
-		}
-		for (auto i = 0; i < enemys_.size(); i++) {
-			if (enemys_[i]->GetHP() <= 0)continue;
-			enemyPos[i] = enemys_[i]->GetPos();
-			if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
-				Vector3 playerPos = player_->GetPos();
-				enemys_[i]->GetDamage();
-				vec[i] = playerPos - enemyPos[i];
-				vec[i].normalize();
-				vec[i].y = 0.0f;
-				player_->HitHammerToEnemy(vec[i]);
-				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
-			}
-		}
-
-		//プレイヤーのOBB設定
-		XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
-			player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
-			player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
-		};
-		OBB l_obb;
-		l_obb.SetParam_Pos(trans);
-		l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
-		l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
-
-		_hummmerObb = &l_obb;
-
-		for (size_t j = 0; j < enemys_.size(); j++)
-		{
-			for (size_t i = 0; i < enemys_.size(); i++)
-			{
-				if (i == j)continue;
-				if (Collision::HitCircle(XMFLOAT2(enemys_[i]->GetPos().x, enemys_[i]->GetPos().z), 1.f,
-					XMFLOAT2(enemys_[j]->GetPos().x, enemys_[j]->GetPos().z), 1.f))
-				{
-					XMFLOAT3 pos = enemys_[j]->GetPos();
-
-					pos.x += sin(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
-					pos.z += cos(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
-
-					enemys_[j]->SetPos(pos);
-				}
-			}
-		}
-		for (auto i = 0; i < enemys_.size(); i++)
-		{
-			if (enemys_[i]->GetHP() <= 0) { continue; }
-			if (enemys_[i] != nullptr) {
-				enemys_[i]->SetHammerObb(*_hummmerObb);
-				enemys_[i]->Upda(camera_.get());
-			}
-		}
+		EnemyProcess();
 	}
-	
-	EnemyProcess();
 	SceneChange();
 }
 
@@ -317,6 +255,11 @@ void TutorialScene::Finalize()
 
 void TutorialScene::SceneChange()
 {
+
+	bool Change = player_->GetNext();
+	if (Change || player_->GetHP() <= 0) {
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
+	}
 
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
@@ -533,6 +476,7 @@ void TutorialScene::FightPhase()
 
 void TutorialScene::DefeatPhase()
 {
+	notlook_ = true;
 }
 
 void TutorialScene::FreePhase()
