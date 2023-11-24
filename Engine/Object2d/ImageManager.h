@@ -27,6 +27,7 @@ public: //‰æ‘œ–¼
 		filter,
 		title,
 		asist_,
+		TextWindow,
 	};
 
 	enum Image2DName {

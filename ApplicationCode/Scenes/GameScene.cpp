@@ -77,6 +77,7 @@ void GameScene::Update()
 	{
 		if (enemys_[i]->GetHP() <= 0)
 		{
+			player_->AddEP(1);
 			enemys_.erase(enemys_.begin() + i);
 			continue;
 		}

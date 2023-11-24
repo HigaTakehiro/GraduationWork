@@ -58,7 +58,7 @@ public: // サブクラス
 		Player = 0x01,
 		Enemy = 0x02,
 		Hammer = 0x04,
-		Wall = 0x08,
+		Object = 0x08,
 		Item = 0x0a
 	};
 

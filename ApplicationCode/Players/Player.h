@@ -95,6 +95,18 @@ public: //メンバ関数
 	void AddHP(int32_t addHP) { hp_ += addHP; }
 
 	/// <summary>
+	/// 経験値を加算
+	/// </summary>
+	/// <param name="addEP">加算経験値</param>
+	void AddEP(int32_t addEP) { ep_ += addEP; }
+
+	/// <summary>
+	/// 経験値をセット
+	/// </summary>
+	/// <param name="ep">経験値</param>
+	void SetEP(int32_t ep) { ep_ = ep; }
+
+	/// <summary>
 	/// スプライト描画
 	/// </summary>
 	void SpriteDraw();
@@ -127,6 +139,12 @@ public: //メンバ関数
 	/// 文字描画
 	/// </summary>
 	void TextUIDraw();
+
+	/// <summary>
+	/// チュートリアル用アプデ
+	/// </summary>
+	void TutorialUpdate(bool Stop, bool NotAttack);
+
 
 private: //メンバ関数
 
