@@ -100,7 +100,7 @@ void TitleScene::SceneChange()
 		schange->SetFStart(true);
 	}
 	if (schange->GetEnd() == true) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
+		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 
 }

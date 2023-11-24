@@ -53,7 +53,7 @@ void GameScene::Initialize()
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 
-		enemys_[i]->SetOverPos(XMFLOAT3(23.f, 100.f, -5.f), XMFLOAT3(39.f, -100.f, 49.f));
+		enemys_[i]->SetOverPos(XMFLOAT3(39.f, -100.f, 49.f), XMFLOAT3(23.f, 100.f, -5.f));
 	}
 	enemys_[0]->SetPos(Vector3(30, -30, -4));
 	enemys_[2]->SetPos(Vector3(25, -30, 2));
