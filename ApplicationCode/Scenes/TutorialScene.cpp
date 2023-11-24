@@ -40,14 +40,19 @@ void TutorialScene::Initialize()
 		title_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::title, { 0, 0 }, { 1.f, 1.f, 1.f, 1.f }, { 0.f, 0.f });
 		title_[i]->SetTextureRect({ 960.f * i,0.f }, { 960.f ,128.f });
 		title_[i]->SetSize({ 960.f,128.f });
+		title_[i]->SetPosition(titleposition_);
 	}
+
+	wake_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::wake, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
+	wake_->SetAlpha(1.5f);
+	wake_->SetPosition(wakePos_);
 
 	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
 	sleep_->SetIsBillboardY(true);
 	sleep_->SetObbScl({ 2.f,4.f,2.f });
 	sleep_->SetHitRadius(0.5f);
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
-	sleep_->SetPosition({ 0.f,-2.5f,33.f });
+	sleep_->SetPosition(sleepPos_);
 	//鉱床
 	deposit_ = new Deposit();
 	deposit_->Initialize({ 0.f, 0.f, 30.f });
@@ -84,6 +89,7 @@ void TutorialScene::Initialize()
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
+		enemys_[i]->SetOverPos(XMFLOAT3(13.f, -100.f, 49.f), XMFLOAT3(-11.f, 100.f, -5.f));
 	}
 	enemys_[0]->SetPos(Vector3(5, -30, 30));
 	enemys_[1]->SetPos(Vector3(-5, -30, 30));
@@ -110,10 +116,12 @@ void TutorialScene::Initialize()
 	schange->SetFEnd(true);
 	schange->SetFadeNum(1);
 	phase_ = Phase::Title;
+	oldpushCount_ = pushCount_;
 }
 
 void TutorialScene::Update()
 {
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -170,71 +178,8 @@ void TutorialScene::Update()
 	}
 	
 	if (phase_ >= Phase::Spown) {
-		Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-		Vector3 enemyPos[3] = {};
-		for (size_t i = 0; i < enemys_.size(); i++)
-		{
-			if (enemys_[i]->GetHP() <= 0)
-			{
-				player_->AddEP(1);
-				enemys_.erase(enemys_.begin() + i);
-				continue;
-			}
-		}
-		for (auto i = 0; i < enemys_.size(); i++) {
-			if (enemys_[i]->GetHP() <= 0)continue;
-			enemyPos[i] = enemys_[i]->GetPos();
-			if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
-				Vector3 playerPos = player_->GetPos();
-				enemys_[i]->GetDamage();
-				vec[i] = playerPos - enemyPos[i];
-				vec[i].normalize();
-				vec[i].y = 0.0f;
-				player_->HitHammerToEnemy(vec[i]);
-				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
-			}
-		}
-
-		//プレイヤーのOBB設定
-		XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
-			player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
-			player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
-		};
-		OBB l_obb;
-		l_obb.SetParam_Pos(trans);
-		l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
-		l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
-
-		_hummmerObb = &l_obb;
-
-		for (size_t j = 0; j < enemys_.size(); j++)
-		{
-			for (size_t i = 0; i < enemys_.size(); i++)
-			{
-				if (i == j)continue;
-				if (Collision::HitCircle(XMFLOAT2(enemys_[i]->GetPos().x, enemys_[i]->GetPos().z), 1.f,
-					XMFLOAT2(enemys_[j]->GetPos().x, enemys_[j]->GetPos().z), 1.f))
-				{
-					XMFLOAT3 pos = enemys_[j]->GetPos();
-
-					pos.x += sin(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
-					pos.z += cos(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
-
-					enemys_[j]->SetPos(pos);
-				}
-			}
-		}
-		for (auto i = 0; i < enemys_.size(); i++)
-		{
-			if (enemys_[i]->GetHP() <= 0) { continue; }
-			if (enemys_[i] != nullptr) {
-				enemys_[i]->SetHammerObb(*_hummmerObb);
-				enemys_[i]->Upda(camera_.get());
-			}
-		}
+		EnemyProcess();
 	}
-	
-	EnemyProcess();
 	SceneChange();
 }
 
@@ -279,6 +224,7 @@ void TutorialScene::Draw()
 	//}
 	titlefilter_->Draw();
 	title_[titleanimeCount_]->Draw();
+	wake_->Draw();
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -318,10 +264,17 @@ void TutorialScene::Finalize()
 void TutorialScene::SceneChange()
 {
 
+	bool Change = player_->GetNext();
+	if (Change || player_->GetHP() <= 0) {
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
+	}
+
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 }
@@ -451,6 +404,7 @@ void TutorialScene::TitlePhase()
 	}
 
 	if (titlepreAnimeCount_ != titleanimeCount_) {
+
 		titlepreAnimeCount_ = titleanimeCount_;
 	}
 
@@ -460,19 +414,28 @@ void TutorialScene::TitlePhase()
 		startpos_ = player_->Get();
 		startpos_.z = startpos_.z + 3.f;
 		player_->SetPos(startpos_);
-
 		titlepos_ = false;
 	}
-	if (action_ == false) {
+	if (!action_) {
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			action_ = true;
+			pushCount_ += 1;
+			if (pushCount_ >= 10) {
+				action_ = true;
+			}
 		}
 	}
-	else {
+	if (pushCount_ > oldpushCount_) {
+		//startpos_.x -= 1;
+		oldpushCount_ = pushCount_;
+	}
+
+
+	if(action_) {
 		timer_ += 0.1f;
 		size_.x += 500.f;
 		size_.y += 500.f;
-		titleposition_.y -= 20;
+		titleposition_.y -= 40;
+		wakePos_.y += 100;
 		if (timer_ >= 1) {
 			phase_ = Phase::Description;
 		}
@@ -481,6 +444,7 @@ void TutorialScene::TitlePhase()
 	for (int i = 0; i < 9; i++) {
 		title_[i]->SetPosition(titleposition_);
 	}
+	wake_->SetPosition(wakePos_);
 	sleep_->SetPosition(startpos_);
 	sleep_->Update();
 	if (preAnimeCount_ == animeCount_) return;
@@ -531,6 +495,7 @@ void TutorialScene::FightPhase()
 
 void TutorialScene::DefeatPhase()
 {
+	notlook_ = true;
 }
 
 void TutorialScene::FreePhase()

@@ -73,12 +73,13 @@ void IBScene::Initialize()
 
 void IBScene::Update()
 {
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 	Animation();
 	player_->SetPosition({ -8.0f,2.5f, 8.0f });
 	player_->Update();
 	fire_->SetPosition({ 0.0f,2.5f, 8.0f });
 	fire_->Update();
-	;	//デバッグカメラ移動処理
+	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
@@ -232,9 +233,10 @@ void IBScene::SceneChange()
 	}
 	if (arrow->GetPosition().y == 150) {
 		if (schange->GetEnd() == false) {
+
 			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.2f);
 				//schange->SetFEnd(false);
+				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 				schange->SetFStart(true);
 				schange->SetFadeNum(0);
 			}
@@ -242,6 +244,7 @@ void IBScene::SceneChange()
 		else if (schange->GetEnd() == true) {
 			schange->SetFStart(false);
 			schange->SetFadeNum(0);
+			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 			SceneManager::SceneChange(SceneManager::SceneName::Boss);
 		}
 	}

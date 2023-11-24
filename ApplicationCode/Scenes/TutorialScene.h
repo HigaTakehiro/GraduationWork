@@ -99,6 +99,7 @@ private:
 	unique_ptr<Sprite> titlefilter_;
 	unique_ptr<Sprite> title_[9];
 	unique_ptr<Sprite> asist_;
+	unique_ptr<Sprite> wake_;
 	unique_ptr<Object3d> sleep_;
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;
@@ -142,7 +143,9 @@ private:
 
 	XMFLOAT2 size_ = { 1280.f,720.f };
 
-	XMFLOAT2 titleposition_{};
+	XMFLOAT2 titleposition_{160,100};
+	XMFLOAT2 wakePos_{ 544.f,WinApp::window_height - 100 };
+	XMFLOAT3 sleepPos_ = { 0.f,-2.5f,33.f };
 	SceneChangeEffect* schange;
 
 
@@ -171,4 +174,7 @@ private:
 	bool notattack_ = true;
 
 	float movetimer_ = 0;
+
+	int pushCount_ = 0;
+	int oldpushCount_ = 0;
 };
