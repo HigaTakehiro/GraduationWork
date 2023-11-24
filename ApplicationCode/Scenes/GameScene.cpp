@@ -71,7 +71,14 @@ void GameScene::Update()
 	player_->Update();
 
 	EnemyProcess();
-
+	if (shake_->GetShakeFlag() == true) {
+		cameraPos_.y += shake_->GetShakePos();
+		targetPos_.y += shake_->GetShakePos();
+	}
+	else {
+		targetPos_.y = 0;
+	}
+	cameraPos_.y = 12;
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	light_->Update();
@@ -280,6 +287,5 @@ void GameScene::EnemyProcess()
 			enemys_[i]->Upda(camera_.get());
 		}
 	}
-
 }
 
