@@ -38,10 +38,13 @@ void IBScene::Initialize()
 	for (int32_t i = 0; i < 4; i++) {
 		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
 	}
-
+	fireModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "fire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * 0, 0.0f }, { 128.0f, 128.0f }, true);
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
 	player_->SetScale({ 0.15f, 0.15f, 0.15f });
+	fire_ = Object3d::UniquePtrCreate(fireModel_);
+	fire_->SetIsBillboardY(true);
+	fire_->SetScale({ 0.1f, 0.1f, 0.1f });
 
 	skillB_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillButton, { 1000, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 	susumu_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::susumuButton, { 1000, 150 }, { 1,1,1,1 }, { 0.0f, 0.0f });
@@ -73,8 +76,9 @@ void IBScene::Update()
 	Animation();
 	player_->SetPosition({ -8.0f,2.5f, 8.0f });
 	player_->Update();
-
-	//デバッグカメラ移動処理
+	fire_->SetPosition({ 0.0f,2.5f, 8.0f });
+	fire_->Update();
+;	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
@@ -159,6 +163,7 @@ void IBScene::Draw()
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	player_->Draw();
+	fire_->Draw();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
