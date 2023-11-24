@@ -60,6 +60,12 @@ private:
     /// ƒJƒƒ‰‰Šú‰»İ’è
     /// </summary>
     void CameraSetting();
+
+/// <summary>
+/// “G‚Ìˆ—
+/// </summary>
+	void EnemyProcess();
+
 public:
 
 	void TitlePhase();
