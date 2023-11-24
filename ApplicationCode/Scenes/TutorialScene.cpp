@@ -40,7 +40,10 @@ void TutorialScene::Initialize()
 		title_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::title, { 0, 0 }, { 1.f, 1.f, 1.f, 1.f }, { 0.f, 0.f });
 		title_[i]->SetTextureRect({ 960.f * i,0.f }, { 960.f ,128.f });
 		title_[i]->SetSize({ 960.f,128.f });
+		title_[i]->SetPosition(titleposition_);
 	}
+
+	wake_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::wake, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
 
 	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
 	sleep_->SetIsBillboardY(true);
@@ -217,6 +220,7 @@ void TutorialScene::Draw()
 	//}
 	titlefilter_->Draw();
 	title_[titleanimeCount_]->Draw();
+	wake_->Draw();
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -417,7 +421,7 @@ void TutorialScene::TitlePhase()
 		timer_ += 0.1f;
 		size_.x += 500.f;
 		size_.y += 500.f;
-		titleposition_.y -= 20;
+		titleposition_.y -= 40;
 		if (timer_ >= 1) {
 			phase_ = Phase::Description;
 		}
