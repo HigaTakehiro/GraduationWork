@@ -660,6 +660,13 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 	arrow_->Update();
 }
 
+bool Player::OreCountOverMaxCount()
+{
+	if (oreCount_ >= maxOreCount_) return true;
+
+	return false;
+}
+
 void Player::TextUIDraw()
 {
 	D2D1_RECT_F HPTextDrawRange = { 30, 48, 158, 176 };

@@ -48,6 +48,9 @@ void TutorialScene::Initialize()
 	sleep_->SetHitRadius(0.5f);
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
 	sleep_->SetPosition({ 0.f,-2.5f,33.f });
+	//鉱床
+	deposit_ = new Deposit();
+	deposit_->Initialize({ 0.f, 0.f, 30.f });
 
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
@@ -111,6 +114,19 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
+	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
+
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			if (ore->GetIsHit() && player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
+				player_->AddOreCount();
+				ore = nullptr;
+			}
+		}
+		if (ore != nullptr) {
+			ore->Update();
+		}
+	}
 
 	(this->*FuncTable[phase_])();
 	if (shake_->GetShakeFlag() == true) {
@@ -132,12 +148,26 @@ void TutorialScene::Update()
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
 	}
 
-	schange->Change(0);
+	if (deposit_ != nullptr) {
+		deposit_->Update();
+	}
+
+	schange->Change(1);
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
 
-
+	if (deposit_ != nullptr) {
+		if (deposit_->GetIsHit()) {
+			std::unique_ptr<Ore> ore = std::make_unique<Ore>();
+			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
+			oreItems_.push_back(std::move(ore));
+		}
+		if (deposit_->GetHP() <= 0) {
+			safe_delete(deposit_);
+		}
+	}
+	
 	if (phase_ >= Phase::Spown) {
 		Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 		Vector3 enemyPos[3] = {};
@@ -227,8 +257,16 @@ void TutorialScene::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TexDraw();
-	if (phase_ == Phase::Title) { sleep_->Draw(); }
-	else { player_->Draw(); }
+	if (phase_ == Phase::Title) {sleep_->Draw();}
+	else {player_->Draw();}
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			ore->Draw();
+		}
+	}
+	if (deposit_ != nullptr) {
+		deposit_->Draw();
+	}
 	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
@@ -273,6 +311,7 @@ void TutorialScene::Draw()
 void TutorialScene::Finalize()
 {
 	safe_delete(textWindow_);
+	safe_delete(deposit_);
 }
 
 void TutorialScene::SceneChange()

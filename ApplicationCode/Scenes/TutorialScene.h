@@ -24,6 +24,7 @@
 #include"Shake.h"
 #include "SceneChange.h"
 #include "MessageWindow.h"
+#include "Deposit.h"
 
 class TutorialScene :
 	public BaseScene
@@ -93,6 +94,7 @@ private:
 	Player* player_;
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
+	Deposit* deposit_;
 	//タイトル
 	unique_ptr<Sprite> titlefilter_;
 	unique_ptr<Sprite> title_[9];

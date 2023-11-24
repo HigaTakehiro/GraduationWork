@@ -14,7 +14,7 @@ public: //メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(Vector3 pos);
 
 	/// <summary>
 	/// 更新処理
@@ -44,6 +44,12 @@ public: //メンバ関数
 	/// <returns>HP</returns>
 	int32_t GetHP() { return hp_; }
 
+	/// <summary>
+	/// 座標取得
+	/// </summary>
+	/// <returns>座標</returns>
+	Vector3 GetPos() { return deposit_->GetPosition(); }
+
 private: //メンバ変数
 	//鉱床オブジェクト
 	std::unique_ptr<Object3d> deposit_;
@@ -55,6 +61,5 @@ private: //メンバ変数
 	int32_t hitCoolTime_;
 	//無敵時間タイマー
 	int32_t hitCoolTimer_;
-	
 };
 
