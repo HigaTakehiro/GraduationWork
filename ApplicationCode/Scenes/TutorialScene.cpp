@@ -207,7 +207,7 @@ void TutorialScene::Draw()
 	else {player_->Draw();}
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
-			//ore->Draw();
+			ore->Draw();
 		}
 	}
 	if (deposit_ != nullptr) {

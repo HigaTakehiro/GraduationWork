@@ -36,7 +36,7 @@ public: //メンバ関数
 	/// 当たり判定取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsHit() { return ore_->GetIsHit(); }
+	bool GetIsHit();
 
 private: //メンバ変数
 	// 鉱石オブジェクト

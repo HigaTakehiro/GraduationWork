@@ -70,12 +70,30 @@ void GameScene::Initialize()
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
+
+	deposit_ = new Deposit();
+	deposit_->Initialize({0, 0, 30});
 }
 
 void GameScene::Update()
 {
+	
+
 	player_->Update();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
+	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
+
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			if (ore->GetIsHit() && player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
+				player_->AddOreCount();
+				ore = nullptr;
+			}
+		}
+		if (ore != nullptr) {
+			ore->Update();
+		}
+	}
 
 	EnemyProcess();
 	if (shake_->GetShakeFlag() == true) {
@@ -97,8 +115,23 @@ void GameScene::Update()
 	}
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
+	if (deposit_ != nullptr) {
+		deposit_->Update();
+	}
+
 	shake_->Update();
 	colManager_->Update();
+
+	if (deposit_ != nullptr) {
+		if (deposit_->GetIsHit()) {
+			std::unique_ptr<Ore> ore = std::make_unique<Ore>();
+			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
+			oreItems_.push_back(std::move(ore));
+		}
+		if (deposit_->GetHP() <= 0) {
+			safe_delete(deposit_);
+		}
+	}
 	//シーン切り替え
 	SceneChange();
 }
@@ -125,17 +158,20 @@ void GameScene::Draw()
 	}
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	/*for (std::unique_ptr<Ore>& ore : oreItems_) {
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			ore->Draw();
 		}
-	}*/
+	}
 	//boss_->Draw();
 	//boss_->Draw2();
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TexDraw();
 	player_->Draw();
 	map_->BridgeDraw();
+	if (deposit_ != nullptr) {
+		deposit_->Draw();
+	}
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
@@ -175,6 +211,7 @@ void GameScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
+	safe_delete(deposit_);
 }
 
 void GameScene::SceneChange()
