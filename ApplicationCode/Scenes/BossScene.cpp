@@ -46,6 +46,11 @@ void BossScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_,100);
+	
+	schange = new SceneChangeEffect();
+	schange->Initialize();
+	schange->SetFEnd(true);
+	schange->SetFadeNum(1);
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -127,6 +132,7 @@ void BossScene::Update()
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
+	schange->Change(0);
 	//シーン切り替え
 	SceneChange();
 }
@@ -159,6 +165,7 @@ void BossScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 

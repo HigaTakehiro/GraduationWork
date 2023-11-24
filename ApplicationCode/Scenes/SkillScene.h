@@ -23,8 +23,7 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include"IntermediateBase.h"
-#include "SceneChange.h"
-class IBScene :public BaseScene
+class SkillScene :public BaseScene
 {
 public: //メンバ関数
 	/// <summary>
@@ -99,9 +98,7 @@ private: //メンバ変数
 	std::unique_ptr<Object3d> fire_;
 	//プレイヤーモデル
 	Model* fireModel_;
-	std::unique_ptr<Sprite> susumu_;
-	std::unique_ptr<Sprite> skillB_;
-	std::unique_ptr<Sprite> arrow;
+	std::unique_ptr<Sprite> skillSprite_;
 	//アニメーションカウント
 	int32_t animeCount_;
 	//アニメーションスピード

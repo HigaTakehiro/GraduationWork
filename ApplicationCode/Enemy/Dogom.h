@@ -157,5 +157,8 @@ private:
     float m_FeedAlpha = 0.f;
     bool m_FeedF = false;
     void Feed();
+
+    void (Dogom::*Action)();
+    void Idle(), HandImp();
 };
 

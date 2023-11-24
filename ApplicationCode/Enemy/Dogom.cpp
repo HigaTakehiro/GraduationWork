@@ -209,7 +209,10 @@ void Dogom::Upda()
 	CrossAreaTex->SetColor({ 1,1,1,m_CrossAreaAlpha });
 	CrossAreaTex->Update();
 
+	Feed();
+
 	m_FeedTex->SetAlpha(m_FeedAlpha);
+
 	if (m_player->GetPos().z > BOSSMAP_H &&AppearFlag)
 		isLeaveBoss = TRUE;
 	else
@@ -969,6 +972,8 @@ void Dogom::SpriteDraw()
 
 bool Dogom::Appear()
 {
+	constexpr float maxAppTime[] = { 160,100,100 };
+
 	if (_phase_appear == PHASE1) {
 		//本体処理
 
@@ -978,26 +983,29 @@ bool Dogom::Appear()
 		{
 			m_CameraPos.z = Easing::easeIn(appeaset, 100.f, m_player->GetPos().z, m_BodyPos.z + 20.f);
 		}
-		if (appeaset > 160) {
+		if (appeaset > maxAppTime[0]) {
 			appeaset = 0;
 			_phase_appear = PHASE2;
 		}
 	}
 	else if (_phase_appear == PHASE2) {
 		//カメラ処理
-		if (++appeaset < 100)
+		if (++appeaset < maxAppTime[1])
 		{
 			m_CameraPos.z = Easing::easeIn(appeaset, 100.f, m_BodyPos.z + 20.f, m_CameraStartPos.z);
 		} else {
 			appeaset = 0;
 			_phase_appear = PHASE3;
 		}
+
+		bool feed = appeaset > 80;
+		if (feed)m_FeedF = true;
 	}
 
 	//こいつラスト行くまで更新きる
 	else if (_phase_appear == PHASE3) {
-		if (++appeaset > 100) {
-			m_FeedF = true;
+		if (++appeaset > maxAppTime[2]) {
+			m_FeedF = false;
 			AppearFlag = true;
 			return true;
 		}
@@ -1008,5 +1016,27 @@ bool Dogom::Appear()
 
 void Dogom::Feed()
 {
+	float addval = 0.02f;
+
+
+	//コピイでいい m_alphaの参照でもいい //暗転上がるときだけ早く
+	auto judgfeed = [addval](bool f)->
+		float {return f ? +addval : -(addval*2.f); };
+
+	m_FeedAlpha += judgfeed(m_FeedF);
+
+	//制限
+	//Action = HandImp;
+	m_FeedAlpha = std::clamp(m_FeedAlpha, 0.f, 1.f);
+}
+
+void Dogom::HandImp()
+{
+	
+}
+
+void Dogom::Idle()
+{
 
 }
+
