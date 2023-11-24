@@ -99,8 +99,7 @@ void TitleScene::SceneChange()
 		schange->SetFadeNum(0);
 		schange->SetFStart(true);
 	}
-	if (scange->GetEnd() == true) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+	
 	if (schange->GetEnd() == true) {
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
