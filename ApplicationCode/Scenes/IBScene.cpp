@@ -217,11 +217,11 @@ void IBScene::Finalize()
 void IBScene::SceneChange()
 {
 	if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
-		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.2f);
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
 		arrow->SetPosition({ 900,50 });
 	}
 	else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
-		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.2f);
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
 		arrow->SetPosition({ 900,150 });
 	}
 	float leftStick = PadInput::GetIns()->leftStickY();
@@ -237,14 +237,14 @@ void IBScene::SceneChange()
 		soundCount = 0;
 	}
 	if (soundCount == 1) {
-		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.2f);
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
 	}
 	if (arrow->GetPosition().y == 150) {
 		if (schange->GetEnd() == false) {
 
 			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 				//schange->SetFEnd(false);
-				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 				schange->SetFStart(true);
 				schange->SetFadeNum(0);
 			}
@@ -259,7 +259,7 @@ void IBScene::SceneChange()
 	else if (arrow->GetPosition().y == 50) {
 		if (schange->GetEnd() == false) {
 			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.2f);
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 				schange->SetFEnd(false);
 				schange->SetFStart(true);
 				schange->SetFadeNum(0);

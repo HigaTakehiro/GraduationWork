@@ -66,6 +66,8 @@ private:
 	/// </summary>
 	void EnemyProcess();
 
+	void SleepShale();
+
 public:
 
 	void TitlePhase();
@@ -177,4 +179,6 @@ private:
 
 	int pushCount_ = 0;
 	int oldpushCount_ = 0;
+	int shaketimer_ = 0;
+	float shakeval_ = 0.5f;
 };

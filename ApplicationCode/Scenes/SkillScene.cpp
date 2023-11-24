@@ -124,8 +124,7 @@ void SkillScene::SceneChange()
 {
 	if (schange->GetEnd() == false) {
 		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.2f);
-			schange->SetFEnd(false);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f); schange->SetFEnd(false);
 			schange->SetFStart(true);
 			schange->SetFadeNum(0);
 		}
