@@ -72,6 +72,8 @@ private: //メンバ変数
 	bool isTextDrawComplete_;
 	//テキストウィンドウ開閉フラグ
 	bool isTextWindowOpen_;
+	//テキストをボタンで管理用フラグ
+	bool isTextFinishBottun;
 	//メッセージデータ格納用文字列
 	std::stringstream textData_;
 	//メッセージ出力用文字列

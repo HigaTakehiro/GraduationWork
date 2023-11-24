@@ -5,11 +5,10 @@
 #CLOSE←テキストウィンドウを閉じます
 
 OPEN
-WAIT 60
 
 TEXT Lスティックで動いてみよう
 SPEED 2
-WAIT 40
+BOTTUN
 
 CLOSE
 
