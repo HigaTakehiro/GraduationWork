@@ -38,6 +38,7 @@ void BossScene::Initialize()
 	player_->Initialize();
 	player_->SetLevel(SceneManager::GetLevel());
 	player_->SetEP(SceneManager::GetEP());
+	player_->SetHP(SceneManager::GetHP());
 
 	postEffectNo_ = PostEffect::NONE;
 

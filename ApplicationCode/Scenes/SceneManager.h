@@ -85,6 +85,18 @@ public: //静的メンバ関数
 	static void SetCollsionManager(CollisionManager* colManager) { colManager_ = colManager; }
 
 	/// <summary>
+	/// HPをセット
+	/// </summary>
+	/// <param name="hp">HP</param>
+	static void SetHP(int32_t hp) { hp_ = hp; }
+
+	/// <summary>
+	/// HPを取得
+	/// </summary>
+	/// <returns>HP</returns>
+	static int32_t GetHP() { return hp_; }
+
+	/// <summary>
 	/// レベルをセット
 	/// </summary>
 	/// <param name="level">レベル</param>
@@ -129,6 +141,8 @@ private: //静的メンバ変数
 	static int32_t level_;
 	//経験値
 	static int32_t ep_;
+	//HP
+	static int32_t hp_;
 
 private: //メンバ変数
 	std::unique_ptr<TextDraw> textDraw;

@@ -40,6 +40,7 @@ void GameScene::Initialize()
 	player_->Initialize();
 	player_->SetLevel(SceneManager::GetLevel());
 	player_->SetEP(SceneManager::GetEP());
+	player_->SetHP(SceneManager::GetHP());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -182,6 +183,7 @@ void GameScene::SceneChange()
 	if (Change||player_->GetHP()<=0) {
 		SceneManager::SetLevel(player_->GetLevel());
 		SceneManager::SetEP(player_->GetEP());
+		SceneManager::SetHP(player_->GetHP());
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}

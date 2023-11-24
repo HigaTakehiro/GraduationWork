@@ -69,6 +69,12 @@ void IBScene::Initialize()
 	preAnimeCount_ = 999;
 	animeSpeed_ = 8;
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
+
+	playerUI_ = new Player();
+	playerUI_->Initialize();
+	playerUI_->SetEP(SceneManager::GetEP());
+	playerUI_->SetLevel(SceneManager::GetLevel());
+
 }
 
 void IBScene::Update()
@@ -110,7 +116,7 @@ void IBScene::Update()
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	light_->Update();
-
+	playerUI_->Update();
 
 
 	if (hp_ != 0) {
@@ -185,6 +191,7 @@ void IBScene::Draw()
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hx = std::to_wstring(schange->GetEnd());
 	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n" + hx, textDrawRange);
+	playerUI_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -193,6 +200,7 @@ void IBScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	playerUI_->SpriteDraw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -301,5 +309,10 @@ void IBScene::Animation()
 	player_->Initialize();
 
 	preAnimeCount_ = animeCount_;
+}
+
+void IBScene::UIUpdate()
+{
+
 }
 

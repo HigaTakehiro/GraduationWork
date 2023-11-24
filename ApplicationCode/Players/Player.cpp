@@ -616,6 +616,7 @@ void Player::UIUpdate()
 void Player::LevelUp()
 {
 	const int32_t maxLevel = 99;
+	maxHp_ = 3 + 2 * (level_ - 1);
 
 	if (level_ >= maxLevel) return;
 
@@ -624,7 +625,7 @@ void Player::LevelUp()
 		level_++;
 		ep_ = 0;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
-		maxHp_ += 2;
+		maxHp_ = 3 + 2 * (level_ - 1);
 		hp_ = maxHp_;
 	}
 }

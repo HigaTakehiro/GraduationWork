@@ -6,6 +6,7 @@ int32_t SceneManager::score = 0;
 CollisionManager* SceneManager::colManager_ = nullptr;
 int32_t SceneManager::level_ = 1;
 int32_t SceneManager::ep_ = 0;
+int32_t SceneManager::hp_ = 3;
 
 void SceneManager::Initialize() {
 	//マウスカーソルを非表示にする
