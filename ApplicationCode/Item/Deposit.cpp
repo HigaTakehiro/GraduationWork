@@ -10,7 +10,7 @@ Deposit::~Deposit()
 
 void Deposit::Initialize(Vector3 pos)
 {
-	model_ = Shapes::CreateSquare({ 0.0f, 0.0f }, { 256.0f, 256.0f }, "frontRock2.png", { 2.0f, 2.0f }, { 0.5f, 0.5f }, {0.0f, 0.0f}, {256.0f, 256.0f});
+	model_ = Shapes::CreateSquare({ 0.0f, 0.0f }, { 64.0f, 64.0f }, "ironOre.png", { 2.0f, 2.0f }, { 0.5f, 0.5f }, {0.0f, 0.0f}, {64.0f, 64.0f});
 	deposit_ = Object3d::UniquePtrCreate(model_);
 	deposit_->SetColType(Object3d::CollisionType::Obb);
 	deposit_->SetObjType((int32_t)Object3d::OBJType::Object);
