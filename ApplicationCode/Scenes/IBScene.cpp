@@ -237,7 +237,7 @@ void IBScene::SceneChange()
 		soundCount = 0;
 	}
 	if (soundCount == 1) {
-		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.2f);
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
 	}
 	if (arrow->GetPosition().y == 150) {
 		if (schange->GetEnd() == false) {
