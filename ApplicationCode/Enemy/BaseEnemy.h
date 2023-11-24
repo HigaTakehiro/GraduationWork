@@ -89,6 +89,12 @@ protected:
 	std::unique_ptr<Object3d>m_ShadowTex;
 
 	XMFLOAT3 OverPosMax, OverPosMin;
+
+	bool FlashF; float val=1;
+	//XMFLOAT4 color;
+public:
+	void SetFlash(bool f) { FlashF = f; }
+	void DamageFlash();
 protected:
 	void TexInit();
 	void TexUpda();
@@ -124,6 +130,7 @@ public:
 
 	inline void GetDamage()
 	{
+		if (!FlashF)FlashF = TRUE;
 		_status.HP--;
 		if (!_isAttack){ 
 			RecvDamage = TRUE;
