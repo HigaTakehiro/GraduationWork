@@ -1018,15 +1018,13 @@ void Dogom::Feed()
 {
 	float addval = 0.02f;
 
-
-	//コピイでいい m_alphaの参照でもいい //暗転上がるときだけ早く
+	//参照でもいい //暗転上がるときだけ早く
 	auto judgfeed = [addval](bool f)->
 		float {return f ? +addval : -(addval*2.f); };
 
 	m_FeedAlpha += judgfeed(m_FeedF);
 
 	//制限
-	//Action = HandImp;
 	m_FeedAlpha = std::clamp(m_FeedAlpha, 0.f, 1.f);
 }
 
@@ -1035,8 +1033,78 @@ void Dogom::HandImp()
 	
 }
 
-void Dogom::Idle()
+
+void Dogom::DeathMotion()
 {
+	if (m_HP > 0)return;
+
+	float max = 50.f;
+	auto isNext = [max](float time)->
+		bool {return time > max; };
+
+	//1P
+	if(Dmotion_phase==DeathAct::CameraSet)
+	{
+		//motion//
+		DeathAct = &Dogom::Death_Idle;
+
+		Dmotion_phase = DeathAct::FeedShake;
+	}
+	//2P
+	else if(Dmotion_phase==DeathAct::FeedShake)
+	{
+		//motion//
+		DeathAct = &Dogom::Death_Shake;
+		//nextPhase//
+		if (m_FeedAlpha >= 1.f && isNext(m_DeathT)) {
+			m_DeathT = 0.f;//reset
+			Dmotion_phase = DeathAct::End;
+		}
+	}
+	else
+	{
+		max = 30.f;
+		m_FeedF = false;
+		//motion//
+		DeathAct = &Dogom::Death_End;
+
+		if(m_FeedAlpha<0.f && isNext(m_DeathT))
+		{
+			m_ClearF = TRUE;
+		}
+	}
+}
+
+void Dogom::Death_Idle()
+{
+	//ボス座標
+	Vector3 bSet = Vector3(m_BodyPos.x, m_BodyPos.y + 1.5f, m_BodyPos.z + 5.f);
+
+	MovingAngle = 180.f;
+	//CameraSetting//
+	m_Camera->SetTarget(m_BodyPos);
+	m_Camera->SetEye(bSet);
 
 }
+
+void Dogom::Death_Shake()
+{
+	constexpr float subalpha = 0.05f;
+
+	//Feed & Shake//
+	m_FeedF = true;
+	ShakeArm(m_BodyPos, m_DeathT);
+
+	m_BodyAlpha -= subalpha;
+	for (size_t i = 0; i < 2; i++)
+		m_ArmAlpha[i] -= subalpha;
+
+}
+
+void Dogom::Death_End()
+{
+	
+}
+
+
 

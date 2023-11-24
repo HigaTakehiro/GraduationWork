@@ -53,6 +53,7 @@ private:
     bool isLeaveBoss;
     float m_EaseRemBody;
     float nextAngle = 180.f;
+    float m_BodyAlpha = 1.f;
     int randAct = 0;
 
     UINT m_ImpactCout=0;
@@ -159,6 +160,25 @@ private:
     void Feed();
 
     void (Dogom::*Action)();
-    void Idle(), HandImp();
+    void (Dogom::*DeathAct)();
+
+
+    void Idle();
+	void HandImp();
+
+    void Death_Idle();
+    void Death_End();
+    void Death_Shake();
+
+    void DeathMotion();
+    enum DeathAct
+    {
+	    CameraSet,
+        FeedShake,
+        End
+    }Dmotion_phase;
+
+    float m_DeathT=0.f;
+    Vector3 StartPos={};
 };
 

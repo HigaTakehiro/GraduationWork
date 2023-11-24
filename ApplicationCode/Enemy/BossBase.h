@@ -38,6 +38,8 @@ protected:
 	int BodyDamCool = 0;
 	BOOL BodyRecvDam=FALSE;
 	bool AppearFlag;
+
+	bool m_ClearF=FALSE;
 public:
 	void SetPlayerIns(Player* player) { m_player = player; }
 	void SetCamera(Camera* cam) { m_Camera = cam; }
@@ -50,5 +52,7 @@ public:
 	void SetCamerains(Camera* cam) { m_camera = cam; }
 	virtual bool Appear() = 0;
 	bool GetAppearFlag() { return AppearFlag; };
+
+	bool GetClearF() { return m_ClearF; }
 };
 
