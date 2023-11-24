@@ -25,18 +25,17 @@ void SoundManager::Initialize(Sound* sound)
 	LoadSE("Engine/Resources/Sound/SE/SE_firstBossDestroy.wav", SEKey::firstBossDestroy);
 	LoadSE("Engine/Resources/Sound/SE/SE_firstBossFaceAttack.wav", SEKey::firstBossFaceAttack);
 	LoadSE("Engine/Resources/Sound/SE/SE_firstBossHitAttack.wav", SEKey::firstBossHitAttack);
-	LoadSE("Engine/Resources/Sound/SE/SE_firstBossShout", SEKey::firstBossShout);
-	LoadSE("Engine/Resources/Sound/SE/SE_gimmickSteps", SEKey::gimmickSteps);
-	LoadSE("Engine/Resources/Sound/SE/SE_hammerAttack", SEKey::hammerAttack);
-	LoadSE("Engine/Resources/Sound/SE/SE_hammerBigBlow", SEKey::hammerBigBlow);
-	LoadSE("Engine/Resources/Sound/SE/SE_hammerShake", SEKey::hammerShake);
-	LoadSE("Engine/Resources/Sound/SE/SE_SE_impact", SEKey::impact);
-	LoadSE("Engine/Resources/Sound/SE/SE_playerDamage", SEKey::playerDamage);
-	LoadSE("Engine/Resources/Sound/SE/SE_playerDestroy", SEKey::playerDestroy);
-	LoadSE("Engine/Resources/Sound/SE/SE_playerLevelUp", SEKey::playerLevelUp);
-	LoadSE("Engine/Resources/Sound/SE/SE_releaseHammer", SEKey::releaseHammer);
-	LoadSE("Engine/Resources/Sound/SE/SE_userChoice", SEKey::userChoice);
-	LoadSE("Engine/Resources/Sound/SE/SE_userDecision", SEKey::userDecision);
+	LoadSE("Engine/Resources/Sound/SE/SE_firstBossShout.wav", SEKey::firstBossShout);
+	LoadSE("Engine/Resources/Sound/SE/SE_gimmickSteps.wav", SEKey::gimmickSteps);
+	LoadSE("Engine/Resources/Sound/SE/SE_hammerAttack.wav", SEKey::hammerAttack);
+	LoadSE("Engine/Resources/Sound/SE/SE_hammerBigBlow.wav", SEKey::hammerBigBlow);
+	LoadSE("Engine/Resources/Sound/SE/SE_hammerShake.wav", SEKey::hammerShake);
+	LoadSE("Engine/Resources/Sound/SE/SE_playerDamage.wav", SEKey::playerDamage);
+	LoadSE("Engine/Resources/Sound/SE/SE_playerDestroy.wav", SEKey::playerDestroy);
+	LoadSE("Engine/Resources/Sound/SE/SE_playerLevelUp.wav", SEKey::playerLevelUp);
+	LoadSE("Engine/Resources/Sound/SE/SE_releaseHammer.wav", SEKey::releaseHammer);
+	LoadSE("Engine/Resources/Sound/SE/SE_userChoice.wav", SEKey::userChoice);
+	LoadSE("Engine/Resources/Sound/SE/SE_userDecision.wav", SEKey::userDecision);
 
 }
 
