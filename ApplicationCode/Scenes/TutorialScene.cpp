@@ -387,6 +387,33 @@ void TutorialScene::EnemyProcess()
 	}
 }
 
+void TutorialScene::SleepShale()
+{
+	if (!action_) {
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+			pushCount_ += 1;
+			shaketimer_ = 0;
+			if (pushCount_ >= 5) {
+				action_ = true;
+			}
+		}
+	}
+
+	if (pushCount_ > oldpushCount_) {
+		shaketimer_ += 1;
+		if (shaketimer_ % 2==0) {
+			startpos_.x += 0.05f;
+		}
+		else {
+			startpos_.x -= 0.05f;
+		}
+		if (shaketimer_ >= 10) {
+			oldpushCount_ = pushCount_;
+		}
+	}
+
+}
+
 
 void TutorialScene::TitlePhase()
 {
@@ -411,6 +438,7 @@ void TutorialScene::TitlePhase()
 		titlepreAnimeCount_ = titleanimeCount_;
 	}
 
+	SleepShale();
 	sleep_->SetModel(sleepModel_[animeCount_]);
 	sleep_->Initialize();
 	if (titlepos_) {
@@ -419,21 +447,8 @@ void TutorialScene::TitlePhase()
 		player_->SetPos(startpos_);
 		titlepos_ = false;
 	}
-	if (!action_) {
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			pushCount_ += 1;
-			if (pushCount_ >= 10) {
-				action_ = true;
-			}
-		}
-	}
-	if (pushCount_ > oldpushCount_) {
-		//startpos_.x -= 1;
-		oldpushCount_ = pushCount_;
-	}
-
-
-	if(action_) {
+	
+	if(action_&&shaketimer_>=10) {
 		timer_ += 0.1f;
 		size_.x += 500.f;
 		size_.y += 500.f;
