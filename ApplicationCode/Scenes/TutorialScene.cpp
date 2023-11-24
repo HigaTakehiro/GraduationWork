@@ -71,7 +71,8 @@ void TutorialScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
-	unsigned int EnemySize = 1;
+	//後でcsvから
+	unsigned int EnemySize = 3;
 
 	enemys_.resize(EnemySize);
 	vec.resize(EnemySize);
@@ -81,10 +82,10 @@ void TutorialScene::Initialize()
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 	}
-
-	enemys_[0]->SetPos(Vector3(0, 0, 30));
-
-
+	enemys_[0]->SetPos(Vector3(5, -30, 30));
+	enemys_[1]->SetPos(Vector3(-5, -30, 30));
+	enemys_[2]->SetPos(Vector3(0, -30, 30));
+	
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
 
@@ -218,12 +219,11 @@ void TutorialScene::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->MapDraw();
 	Object3d::PostDraw();
-	if (phase_ >= Phase::Spown) {
-		for (auto i = 0; i < enemys_.size(); i++) {
-			if (enemys_[i] != nullptr) {enemys_[i]->Draw();}
+	for (auto i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i] != nullptr) {
+			enemys_[i]->Draw();
 		}
-	}
-	//3Dオブジェクト描画処理
+	}	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TexDraw();
@@ -326,7 +326,7 @@ void TutorialScene::CameraSetting()
 void TutorialScene::EnemyProcess()
 {
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos[1] = {};
+	Vector3 enemyPos[3] = {};
 
 	for (size_t i = 0; i < enemys_.size(); i++)
 	{
@@ -350,6 +350,7 @@ void TutorialScene::EnemyProcess()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
 		}
 	}
+
 
 	//プレイヤーのOBB設定
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
@@ -419,6 +420,7 @@ void TutorialScene::TitlePhase()
 		startpos_ = player_->Get();
 		startpos_.z = startpos_.z + 3.f;
 		player_->SetPos(startpos_);
+
 		titlepos_ = false;
 	}
 	if (action_ == false) {
@@ -439,7 +441,6 @@ void TutorialScene::TitlePhase()
 	for (int i = 0; i < 9; i++) {
 		title_[i]->SetPosition(titleposition_);
 	}
-	enemys_[0]->SetPos(Vector3(startpos_));
 	sleep_->SetPosition(startpos_);
 	sleep_->Update();
 	if (preAnimeCount_ == animeCount_) return;
