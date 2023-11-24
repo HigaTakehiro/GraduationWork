@@ -43,8 +43,11 @@ void CollisionManager::CollisionCheck(Object3d* obj1, Object3d* obj2)
 	const int32_t hammer = 0x04;
 	const int32_t enemy = 0x02;
 	const int32_t player = 0x01;
+	const int32_t object = 0x08;
 	const int32_t item = 0x0a;
 	const int32_t playerAndItem = 0x0b;
+	const int32_t objectAndEnemy = 0x0a;
+	const int32_t playerAndObject = 0x09;
 
 	int32_t type;
 	int32_t type1 = obj1->GetObjType();
@@ -58,11 +61,24 @@ void CollisionManager::CollisionCheck(Object3d* obj1, Object3d* obj2)
 
 	if (type == playerAndItem) {
 		HitTest(obj1, obj2);
+		return;
+	}
+	if (type == playerAndObject) {
+		HitTest(obj1, obj2);
+		if (type1 == object) {
+			obj1->SetIsHit(false);
+		}
+		else if (type2 == object) {
+			obj2->SetIsHit(false);
+		}
+		return;
 	}
 
 	if (type == player) return;
 	if (type == hammer) return;
 	if (type == enemy) return;
+	if (type == object) return;
+	if (type == objectAndEnemy) return;
 	if (type1 == 0x0a || type2 == 0x0a) return;
 
 	HitTest(obj1, obj2);

@@ -145,6 +145,12 @@ public: //メンバ関数
 	/// </summary>
 	void TutorialUpdate(bool Stop, bool NotAttack);
 
+	/// <summary>
+	/// 鉱石カウントが最大取得量以上かどうかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool OreCountOverMaxCount();
+
 
 private: //メンバ関数
 
