@@ -207,13 +207,19 @@ void IBScene::Finalize()
 
 void IBScene::SceneChange()
 {
-	if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
+	if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW)) {
 		arrow->SetPosition({ 900,50 });
 	}
-	else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
+	else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW)) {
 		arrow->SetPosition({ 900,150 });
 	}
-
+	float leftStick = PadInput::GetIns()->leftStickY();
+	if (leftStick > 0) {
+		arrow->SetPosition({ 900,150 });
+	}
+	if (leftStick < 0) {
+		arrow->SetPosition({ 900,50 });
+	}
 	if (arrow->GetPosition().y == 150) {
 		if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			//schange->SetFEnd(false);

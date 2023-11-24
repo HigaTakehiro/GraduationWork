@@ -23,6 +23,7 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include"IntermediateBase.h"
+#include "SceneChange.h"
 class IBScene :public BaseScene
 {
 public: //ƒƒ“ƒoŠÖ”
