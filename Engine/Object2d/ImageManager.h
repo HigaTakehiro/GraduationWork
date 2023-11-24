@@ -27,6 +27,7 @@ public: //‰æ‘œ–¼
 		filter,
 		title,
 		asist_,
+		wake,
 		TextWindow,
 	};
 
