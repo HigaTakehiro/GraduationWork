@@ -52,7 +52,7 @@ void TutorialScene::Initialize()
 	sleep_->SetObbScl({ 2.f,4.f,2.f });
 	sleep_->SetHitRadius(0.5f);
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
-	sleep_->SetPosition({ 0.f,-2.5f,33.f });
+	sleep_->SetPosition(sleepPos_);
 	//鉱床
 	deposit_ = new Deposit();
 	deposit_->Initialize({ 0.f, 0.f, 30.f });
@@ -116,6 +116,7 @@ void TutorialScene::Initialize()
 	schange->SetFEnd(true);
 	schange->SetFadeNum(1);
 	phase_ = Phase::Title;
+	oldpushCount_ = pushCount_;
 }
 
 void TutorialScene::Update()
@@ -402,6 +403,7 @@ void TutorialScene::TitlePhase()
 	}
 
 	if (titlepreAnimeCount_ != titleanimeCount_) {
+
 		titlepreAnimeCount_ = titleanimeCount_;
 	}
 
@@ -411,19 +413,28 @@ void TutorialScene::TitlePhase()
 		startpos_ = player_->Get();
 		startpos_.z = startpos_.z + 3.f;
 		player_->SetPos(startpos_);
-
 		titlepos_ = false;
 	}
-	if (action_ == false) {
+	if (!action_) {
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			action_ = true;
+			pushCount_ += 1;
+			if (pushCount_ >= 10) {
+				action_ = true;
+			}
 		}
 	}
-	else {
+	if (pushCount_ > oldpushCount_) {
+		//startpos_.x -= 1;
+		oldpushCount_ = pushCount_;
+	}
+
+
+	if(action_) {
 		timer_ += 0.1f;
 		size_.x += 500.f;
 		size_.y += 500.f;
 		titleposition_.y -= 40;
+		wakePos_.y += 100;
 		if (timer_ >= 1) {
 			phase_ = Phase::Description;
 		}
@@ -432,6 +443,7 @@ void TutorialScene::TitlePhase()
 	for (int i = 0; i < 9; i++) {
 		title_[i]->SetPosition(titleposition_);
 	}
+	wake_->SetPosition(wakePos_);
 	sleep_->SetPosition(startpos_);
 	sleep_->Update();
 	if (preAnimeCount_ == animeCount_) return;
