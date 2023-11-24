@@ -22,7 +22,7 @@ void Player::Initialize()
 	player_->SetIsBillboardY(true);
 	player_->SetColType(Object3d::CollisionType::Obb);
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
-	player_->SetObbScl({ 1.f,2.f,1.f });
+	player_->SetObbScl({ 2.f,2.f,2.f });
 	player_->SetHitRadius(0.5f);
 	player_->SetScale({ 0.0f, 0.0f, 0.0f });
 
