@@ -52,11 +52,14 @@ void GameScene::Initialize()
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
+
+		enemys_[i]->SetOverPos(XMFLOAT3(39.f, -100.f, 49.f), XMFLOAT3(23.f, 100.f, -5.f));
 	}
 	enemys_[0]->SetPos(Vector3(30, -30, -4));
 	enemys_[2]->SetPos(Vector3(25, -30, 2));
 	enemys_[2]->SetPos(Vector3(35, -30, 5));
-	
+
+
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 1);
 	
@@ -70,112 +73,19 @@ void GameScene::Update()
 {
 	player_->Update();
 
-	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	Vector3 enemyPos[3] = {};
-
-	for (size_t i = 0; i < enemys_.size(); i++)
-	{
-		if (enemys_[i]->GetHP() <= 0)
-		{
-			player_->AddEP(1);
-			enemys_.erase(enemys_.begin() + i);
-			continue;
-		}
+	EnemyProcess();
+	if (shake_->GetShakeFlag() == true) {
+		cameraPos_.y += shake_->GetShakePos();
+		targetPos_.y += shake_->GetShakePos();
 	}
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetHP() <= 0)continue;
-		enemyPos[i] = enemys_[i]->GetPos();
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
-			Vector3 playerPos = player_->GetPos();
-			enemys_[i]->GetDamage();
-			vec[i] = playerPos - enemyPos[i];
-			vec[i].normalize();
-			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i]);
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
-		}
+	else {
+		targetPos_.y = 0;
 	}
-
-	//デバッグカメラ移動処理
-	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
-		cameraPos_.z += 1.0f;
-		targetPos_.z += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f;
-		targetPos_.z -= 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
-		cameraPos_.x += 1.0f;
-		targetPos_.x += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
-		cameraPos_.x -= 1.0f;
-		targetPos_.x -= 1.0f;
-	}
-	//HPデバッグ処理
-	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
-		player_->SubHP(1);
-	}
-	if (KeyInput::GetIns()->TriggerKey(DIK_R)) {
-		player_->SetHP(3);
-	}
-
-	//if (shake_->GetShakeFlag() == true) {
-	//	cameraPos_.x += shake_->GetShakePos();
-	//	targetPos_.x += shake_->GetShakePos();
-	//	cameraPos_.y += shake_->GetShakePos();
-	//	targetPos_.y += shake_->GetShakePos();
-	//}
-	//else {
-	//	cameraPos_.x = 30;
-	//	targetPos_.x = 30;
-	//	cameraPos_.y = 12;
-	//	targetPos_.y = 3;
-	//}
-
+	cameraPos_.y = 12;
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	light_->Update();
 
-	//プレイヤーのOBB設定
-	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
-		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
-		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
-	};
-	OBB l_obb;
-	l_obb.SetParam_Pos(trans);
-	l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
-	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
-
-	_hummmerObb = &l_obb;
-
-	for(size_t j=0;j<enemys_.size();j++)
-	{
-		for (size_t i = 0; i < enemys_.size(); i++)
-		{
-			if (i == j)continue;
-			if(Collision::HitCircle(XMFLOAT2(enemys_[i]->GetPos().x, enemys_[i]->GetPos().z),1.f,
-				XMFLOAT2(enemys_[j]->GetPos().x, enemys_[j]->GetPos().z),1.f))
-			{
-				XMFLOAT3 pos=enemys_[j]->GetPos();
-
-				pos.x += sin(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
-				pos.z += cos(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
-
-				enemys_[j]->SetPos(pos);
-			}
-		}
-	}
-	for (auto i = 0; i < enemys_.size(); i++)
-	{
-		if (enemys_[i]->GetHP() <= 0) { continue; }
-		if (enemys_[i] != nullptr) {
-			enemys_[i]->SetHammerObb(*_hummmerObb);
-			enemys_[i]->Upda(camera_.get());
-		}
-	}
-	//boss_->Upda();
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
@@ -311,6 +221,74 @@ void GameScene::CameraSetting()
 		camera_ = std::make_unique<Camera>();
 		camera_->SetEye(cameraPos_);
 		camera_->SetTarget(targetPos_);
+	}
+}
+
+void GameScene::EnemyProcess()
+{
+	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
+	Vector3 enemyPos[3] = {};
+
+	for (size_t i = 0; i < enemys_.size(); i++)
+	{
+		if (enemys_[i]->GetHP() <= 0)
+		{
+			player_->AddEP(1);
+			enemys_.erase(enemys_.begin() + i);
+			continue;
+		}
+	}
+	for (auto i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i]->GetHP() <= 0)continue;
+		enemyPos[i] = enemys_[i]->GetPos();
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+			Vector3 playerPos = player_->GetPos();
+			enemys_[i]->GetDamage();
+			vec[i] = playerPos - enemyPos[i];
+			vec[i].normalize();
+			vec[i].y = 0.0f;
+			player_->HitHammerToEnemy(vec[i]);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::attack, 0.2f);
+		}
+	}
+
+
+	//プレイヤーのOBB設定
+	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
+		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
+		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
+	};
+	OBB l_obb;
+	l_obb.SetParam_Pos(trans);
+	l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
+	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
+
+	_hummmerObb = &l_obb;
+
+	for (size_t j = 0; j < enemys_.size(); j++)
+	{
+		for (size_t i = 0; i < enemys_.size(); i++)
+		{
+			if (i == j)continue;
+			if (Collision::HitCircle(XMFLOAT2(enemys_[i]->GetPos().x, enemys_[i]->GetPos().z), 1.f,
+				XMFLOAT2(enemys_[j]->GetPos().x, enemys_[j]->GetPos().z), 1.f))
+			{
+				XMFLOAT3 pos = enemys_[j]->GetPos();
+
+				pos.x += sin(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
+				pos.z += cos(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
+
+				enemys_[j]->SetPos(pos);
+			}
+		}
+	}
+	for (auto i = 0; i < enemys_.size(); i++)
+	{
+		if (enemys_[i]->GetHP() <= 0) { continue; }
+		if (enemys_[i] != nullptr) {
+			enemys_[i]->SetHammerObb(*_hummmerObb);
+			enemys_[i]->Upda(camera_.get());
+		}
 	}
 }
 

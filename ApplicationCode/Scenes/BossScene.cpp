@@ -46,12 +46,17 @@ void BossScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_,100);
+	
+	schange = new SceneChangeEffect();
+	schange->Initialize();
+	schange->SetFEnd(true);
+	schange->SetFadeNum(1);
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
-
+	boss_->GetCSPos(cameraPos_);
 }
 
 void BossScene::Update()
@@ -98,9 +103,11 @@ void BossScene::Update()
 		targetPos_.y = 0;
 
 	}
-
-	camera_->SetEye(cameraPos_);
-	camera_->SetTarget(targetPos_);
+	//if (boss_->GetAppearFlag() == FALSE) {
+		camera_->SetEye(cameraPos_);
+		camera_->SetTarget(targetPos_);
+	//}//
+		//boss_->SetCamera(camera_.get());
 	light_->Update();
 
 	//プレイヤーのOBB設定
@@ -125,6 +132,7 @@ void BossScene::Update()
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
+	schange->Change(0);
 	//シーン切り替え
 	SceneChange();
 }
@@ -157,6 +165,7 @@ void BossScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -208,6 +217,7 @@ void BossScene::SceneChange()
 
 void BossScene::CameraSetting()
 {
+	//if (boss_->GetAppearFlag())return;
 	std::string line;
 	Vector3 pos{};
 	Vector3 target{};

@@ -61,6 +61,12 @@ private:
     /// カメラ初期化設定
     /// </summary>
     void CameraSetting();
+
+/// <summary>
+/// 敵の処理
+/// </summary>
+	void EnemyProcess();
+
 public:
 
 	void TitlePhase();
@@ -136,8 +142,10 @@ private:
 	bool titlepos_ = true;
 
 	XMFLOAT2 size_ = { 1280.f,720.f };
+
 	XMFLOAT2 titleposition_{};
-	SceneChangeEffect* scange;
+	SceneChangeEffect* schange;
+
 
 	//アニメーションカウント
 	int32_t animeCount_;

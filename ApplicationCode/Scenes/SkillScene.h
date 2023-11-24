@@ -16,14 +16,14 @@
 #include "SceneManager.h"
 #include "TextDraw.h"
 #include "JsonLoader.h"
-#include "Player.h"
+#include "Sprite.h"
 #include"GameMap.h"
 #include "Ore.h"
 #include"BossBase.h"
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include"IntermediateBase.h"
-class GameScene : public BaseScene
+class SkillScene :public BaseScene
 {
 public: //メンバ関数
 	/// <summary>
@@ -58,11 +58,10 @@ private: //メンバ関数
 	/// カメラ初期化設定
 	/// </summary>
 	void CameraSetting();
-
-/// <summary>
-/// 敵に関係する処理
-/// </summary>
-	void EnemyProcess();
+	/// <summary>
+	/// アニメーション処理
+	/// </summary>
+	void Animation();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -72,16 +71,6 @@ private: //メンバ変数
 	std::unique_ptr<LightGroup> light_;
 	//カメラ
 	std::unique_ptr<Camera> camera_;
-	//プレイヤー
-	Player* player_;
-	//鉱石アイテム
-	std::list<std::unique_ptr<Ore>> oreItems_;
-
-	std::vector<BaseEnemy*> enemys_;
-	std::vector<Vector3> vec;
-	OBB* _hummmerObb;
-
-	std::unique_ptr<BossBase>boss_;
 	//テキスト描画
 	TextDraw* text_;
 	//仮地面
@@ -96,7 +85,32 @@ private: //メンバ変数
 	Shake* shake_;
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
-	Vector3 pos{};
-	Vector3 target{};
+
 	IntermediateBase* ib_;
+
+	int baseNo = 0;
+
+	//プレイヤーオブジェクト
+	std::unique_ptr<Object3d> player_;
+	//プレイヤーモデル
+	Model* playerModel_[4];
+	//プレイヤーオブジェクト
+	std::unique_ptr<Object3d> fire_;
+	//プレイヤーモデル
+	Model* fireModel_;
+	std::unique_ptr<Sprite> skillSprite_;
+	//アニメーションカウント
+	int32_t animeCount_;
+	//アニメーションスピード
+	int32_t animeSpeed_;
+	//アニメーションタイマー
+	int32_t animeTimer_;
+	//前フレームアニメーションカウント
+	int32_t preAnimeCount_;
+	int32_t hp_ = 0;
+	float count = 0;
+	float count2 = 2;
+
+	SceneChangeEffect* schange;
 };
+

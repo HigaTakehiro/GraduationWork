@@ -9,6 +9,8 @@ public:
 	void SetFStart(bool start) { fadeStartFlag_ = start; }
 	void SetFEnd(bool end) { fadeEndFlag_ = end; }
 	bool GetEnd() { return EndFlag_; }
+	void SetEnd(bool endFlag) { EndFlag_ = endFlag; }
+	bool GetFEnd(){return fadeEndFlag_;}
 	float GetFadeNum() { return fadeNum; }
 	void SetFadeNum(float fadeNum) { this->fadeNum = fadeNum; }
 private:

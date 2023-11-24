@@ -23,6 +23,7 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include"IntermediateBase.h"
+#include "SceneChange.h"
 class IBScene :public BaseScene
 {
 public: //メンバ関数
@@ -94,8 +95,11 @@ private: //メンバ変数
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル
 	Model* playerModel_[4];
+	//プレイヤーオブジェクト
+	std::unique_ptr<Object3d> fire_;
+	//プレイヤーモデル
+	Model* fireModel_;
 	std::unique_ptr<Sprite> susumu_;
-	std::unique_ptr<Sprite> skillSprite_;
 	std::unique_ptr<Sprite> skillB_;
 	std::unique_ptr<Sprite> arrow;
 	//アニメーションカウント
@@ -109,7 +113,7 @@ private: //メンバ変数
 	int32_t hp_ = 0;
 	float count = 0;
 	float count2 = 2;
-	bool skillFlag = false;
-	int skillCount = 0;
+
+	SceneChangeEffect* schange;
 };
 
