@@ -79,5 +79,7 @@ private: //メンバ変数
 	//メッセージ格納用文字列
 	std::wstring message_;
 
+public:
+	bool GetCloseWindow() { return isTextWindowOpen_; }
 };
 

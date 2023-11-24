@@ -5,11 +5,11 @@
 void MessageWindow::Initialize(const std::string& fileName)
 {
 	textData_ = ExternalFileLoader::GetIns()->ExternalFileOpen(fileName);
-	//textWindow_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::TextWindow, { 580, 630 });
-	//textWindow_->SetAlpha(0.4f);
-	//textWindowSize_ = textWindow_->GetSize();
-	//textWindowSize_.y = 0;
-	//textWindow_->SetAnchorPoint({ 0.5f, 0.5f });
+	textWindow_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::TextWindow, { 580, 630 });
+	textWindow_->SetAlpha(0.4f);
+	textWindowSize_ = textWindow_->GetSize();
+	textWindowSize_.y = 0;
+	textWindow_->SetAnchorPoint({ 0.5f, 0.5f });
 
 	textAddTimer_ = 0;
 	textSpeed_ = 1;
@@ -70,7 +70,7 @@ void MessageWindow::Update()
 
 void MessageWindow::SpriteDraw()
 {
-	//textWindow_->Draw();
+	textWindow_->Draw();
 }
 
 void MessageWindow::TextMessageDraw()
@@ -103,7 +103,7 @@ void MessageWindow::TextMessageDraw()
 	}
 
 	//メッセージウィンドウサイズを変更
-	//textWindow_->SetSize(textWindowSize_);
+		textWindow_->SetSize(textWindowSize_);
 
 	//読み込んだテキスト描画が完了していたら
 	//テキストスピードが0以下にならないようにする

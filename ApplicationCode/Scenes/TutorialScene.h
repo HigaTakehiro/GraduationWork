@@ -117,6 +117,7 @@ private:
 	Shake* shake_;
 	//テキストウィンドウ
 	MessageWindow* textWindow_;
+	MessageWindow* fighttextwindow_;
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
 
@@ -133,6 +134,7 @@ private:
 	bool titlepos_ = true;
 
 	XMFLOAT2 size_ = { 1280.f,720.f };
+	XMFLOAT2 titleposition_{};
 	SceneChangeEffect* scange;
 
 	//アニメーションカウント
@@ -154,4 +156,10 @@ private:
 	//前フレームアニメーションカウント
 	int32_t titlepreAnimeCount_;
 
+
+	bool stop_ = true;
+
+	bool notattack_ = true;
+
+	float movetimer_ = 0;
 };
