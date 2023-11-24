@@ -243,7 +243,7 @@ void IBScene::SceneChange()
 		if (schange->GetEnd() == false) {
 
 			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-				//schange->SetFEnd(false);
+				schange->SetFEnd(false);
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 				schange->SetFStart(true);
 				schange->SetFadeNum(0);
