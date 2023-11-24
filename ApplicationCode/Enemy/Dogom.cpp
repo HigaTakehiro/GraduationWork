@@ -1026,5 +1026,17 @@ void Dogom::Feed()
 	m_FeedAlpha += judgfeed(m_FeedF);
 
 	//êßå¿
+	//Action = HandImp;
 	m_FeedAlpha = std::clamp(m_FeedAlpha, 0.f, 1.f);
 }
+
+void Dogom::HandImp()
+{
+	
+}
+
+void Dogom::Idle()
+{
+
+}
+
