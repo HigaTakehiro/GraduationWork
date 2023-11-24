@@ -141,7 +141,8 @@ private:
     bool movF;
     float OldMovAngle;
     float BodyMoveEase;
-
+    uint16_t appt;
+	float appeaset;;
 private:
     Vector3 ShadowScl(float YPos);
 
@@ -150,6 +151,11 @@ private:
         PHASE2,
         PHASE3
     }_phase_appear;
-    bool Appear();
+    bool Appear()override;
+
+    std::unique_ptr<Sprite>m_FeedTex;
+    float m_FeedAlpha = 0.f;
+    bool m_FeedF = false;
+    void Feed();
 };
 
