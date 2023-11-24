@@ -8,13 +8,14 @@ Deposit::~Deposit()
 	safe_delete(model_);
 }
 
-void Deposit::Initialize()
+void Deposit::Initialize(Vector3 pos)
 {
-	model_ = Shapes::CreateSquare({ 0.0f, 0.0f }, { 256.0f, 256.0f }, "frontRock2.png", { 32.0f, 32.0f }, { 0.5f, 0.5f }, {0.0f, 0.0f}, {256.0f, 256.0f});
+	model_ = Shapes::CreateSquare({ 0.0f, 0.0f }, { 64.0f, 64.0f }, "ironOre.png", { 2.0f, 2.0f }, { 0.5f, 0.5f }, {0.0f, 2.0f}, {64.0f, 64.0f});
 	deposit_ = Object3d::UniquePtrCreate(model_);
 	deposit_->SetColType(Object3d::CollisionType::Obb);
 	deposit_->SetObjType((int32_t)Object3d::OBJType::Object);
 	deposit_->SetObbScl({ 2.f, 2.f, 2.f });
+	deposit_->SetPosition(pos);
 
 	hp_ = 5;
 	hitCoolTimer_ = hitCoolTime_ = 30;
@@ -48,8 +49,8 @@ Vector3 Deposit::OreDropVec()
 	std::uniform_int_distribution<> rand(0, 10);
 
 	//鉱石ドロップベクトル代入
-	vec.x = (float)rand(mt) * 0.01f;
-	vec.z = (float)rand(mt) * 0.01f;
+	vec.x = (float)rand(mt) * 0.01f - 0.05f;
+	vec.z = (float)rand(mt) * 0.01f - 0.05f;
 
 	return vec;
 }
@@ -57,6 +58,7 @@ Vector3 Deposit::OreDropVec()
 bool Deposit::GetIsHit()
 {
 	if (deposit_->GetIsHit() && hitCoolTimer_ >= hitCoolTime_) {
+		hp_--;
 		hitCoolTimer_ = 0;
 		return true;
 	}

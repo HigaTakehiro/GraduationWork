@@ -102,6 +102,7 @@ void TitleScene::SceneChange()
 	
 	if (schange->GetEnd() == true) {
 		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 
 }

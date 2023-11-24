@@ -24,6 +24,8 @@
 #include"Shake.h"
 #include"IntermediateBase.h"
 #include "SceneChange.h"
+#include "Player.h"
+
 class IBScene :public BaseScene
 {
 public: //メンバ関数
@@ -63,6 +65,11 @@ private: //メンバ関数
 	/// アニメーション処理
 	/// </summary>
 	void Animation();
+
+	/// <summary>
+	/// UI更新処理
+	/// </summary>
+	void UIUpdate();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -102,6 +109,7 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> susumu_;
 	std::unique_ptr<Sprite> skillB_;
 	std::unique_ptr<Sprite> arrow;
+
 	//アニメーションカウント
 	int32_t animeCount_;
 	//アニメーションスピード
@@ -113,7 +121,8 @@ private: //メンバ変数
 	int32_t hp_ = 0;
 	float count = 0;
 	float count2 = 2;
-
+	float soundCount;
 	SceneChangeEffect* schange;
+	Player* playerUI_;
 };
 

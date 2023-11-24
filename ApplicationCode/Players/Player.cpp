@@ -10,19 +10,19 @@ void Player::Initialize()
 {
 	//ƒvƒŒƒCƒ„[‰Šú‰»
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		frontMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_move.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f }, true);
-		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		rotAttackModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rot.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0 }, { 128, 128 });
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		frontMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_move.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f }, true);
+		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		rotAttackModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rot.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.f }, { 128, 128 });
 	}
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
 	player_->SetColType(Object3d::CollisionType::Obb);
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
-	player_->SetObbScl({ 2.f,4.f,2.f });
+	player_->SetObbScl({ 1.f,2.f,1.f });
 	player_->SetHitRadius(0.5f);
 	player_->SetScale({ 0.0f, 0.0f, 0.0f });
 
@@ -618,14 +618,16 @@ void Player::UIUpdate()
 void Player::LevelUp()
 {
 	const int32_t maxLevel = 99;
+	maxHp_ = 3 + 2 * (level_ - 1);
 
 	if (level_ >= maxLevel) return;
 
 	if (ep_ >= levelUpEp_) {
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerLevelUp, 0.3f);
 		level_++;
 		ep_ = 0;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
-		maxHp_ += 2;
+		maxHp_ = 3 + 2 * (level_ - 1);
 		hp_ = maxHp_;
 	}
 }
@@ -659,6 +661,13 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 	shadow_->Update();
 	hammer_->Update();
 	arrow_->Update();
+}
+
+bool Player::OreCountOverMaxCount()
+{
+	if (oreCount_ >= maxOreCount_) return true;
+
+	return false;
 }
 
 void Player::TextUIDraw()
