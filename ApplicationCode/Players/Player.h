@@ -308,6 +308,8 @@ private: //メンバ変数
 	bool isHammerRelease_;
 	//攻撃フラグ
 	bool isAttack_;
+	//行動停止
+	bool isStop_;
 	//ハンマー回転フラグ
 	bool isHammerSwing_;
 	//ハンマー反射フラグ
@@ -376,5 +378,7 @@ public:
 	bool getisHammerActive() {
 		if (isHammerRelease_ || isHammerSwing_)return true; return false;
 	}
+	void SetStopF(bool flag) { isStop_ = flag; }
+
 };
 
