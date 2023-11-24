@@ -65,7 +65,7 @@ inline float Helper::SmoothStep_Deb(float edge0, float edge1, float x)
 
 inline void Helper::DamageManager(int& Hp, int subHp, BOOL& damF,int& coolT,int maxcool,bool DamageJudg)
 {
-	if (Hp <= 0)return;
+	if (Hp < 0)return;
 
 	//ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚éŽž‚Í‰ÁŽZ
 	if (!damF) {

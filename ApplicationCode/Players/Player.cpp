@@ -298,6 +298,8 @@ void Player::PlayerStatusSetting() {
 }
 
 void Player::Move() {
+	if (isStop_)return;
+
 	const Vector3 upDownMoveVec = { 0.0f, 0.0f, 1.0f };
 	const Vector3 leftRightMoveVec = { 1.0f, 0.0f, 0.0f };
 
