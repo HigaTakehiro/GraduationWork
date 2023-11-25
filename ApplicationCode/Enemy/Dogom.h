@@ -19,6 +19,11 @@ private:
     std::array<std::unique_ptr<Object3d>,2> m_Arm;
     std::array<std::unique_ptr<Object3d>, 2> m_ImpactTex;
     std::unique_ptr<Sprite>m_HpTex=nullptr;
+    std::unique_ptr<Sprite>m_HpTex_Frame = nullptr;
+    std::unique_ptr<Sprite>m_HpTex_Inner = nullptr;
+    float m_hpInnerSizeX=400.f, InnerSclingT;;
+    float NowHP, BeforeHP;
+    bool bravegaugeF;
     std::array<std::unique_ptr<Object3d>,2>m_ArmHpTex{};
     //プレイヤーモデル
     Model* BodyModel_[8];
@@ -35,7 +40,7 @@ private:
     std::array<float, 2>m_ArmAlpha;;
 	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
-	std::array<int, 2>m_ArmHp={1,1};
+	std::array<int, 2>m_ArmHp={5,5};
     std::array<int, 2>m_ArmHp_Max = { 1,1 };
     std::array<BOOL, 2>m_ArmDamF;
     std::array<int, 2>m_ArmDamCool;
