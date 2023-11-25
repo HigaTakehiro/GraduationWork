@@ -16,6 +16,8 @@ public:
 	void TextureAnimation() override;
 
     void AttackAction() override;
+
+    void TutorialUpda(Camera* camera, bool flag) override;
 private:
     /*‚¶‚á‚ñ‚Õ*/
 	float JFrame;

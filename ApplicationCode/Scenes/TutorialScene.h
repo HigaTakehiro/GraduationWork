@@ -170,10 +170,14 @@ private:
 	//前フレームアニメーションカウント
 	int32_t titlepreAnimeCount_;
 
+	Vector3 startenemypos_[3];
+
 
 	bool stop_ = true;
 
 	bool notattack_ = true;
+
+	bool notjump_ = true;
 
 	float movetimer_ = 0;
 
@@ -181,4 +185,6 @@ private:
 	int oldpushCount_ = 0;
 	int shaketimer_ = 0;
 	float shakeval_ = 0.5f;
+
+
 };
