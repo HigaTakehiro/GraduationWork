@@ -272,6 +272,43 @@ void NormalEnemyA::AttackAction()
 	_status.Scl.y=std::clamp(_status.Scl.y, 1.3f, 1.8f);
 }
 
+void NormalEnemyA::TutorialUpda(Camera* camera, bool flag)
+{
+	(this->*stateTable[_action])();
+
+	if (_status.Rot.y >= 360.f || _status.Rot.y <= -360.f)_status.Rot.y = 0.f;
+	//_status.Tex->
+	///_status.HP--;
+
+	TextureAnimation();
+
+	CollideHummmer();
+
+	RecvFlashColor();
+
+	if (flag == false) {
+		Jump();
+	}
+	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f, 1.5f);
+
+	DamageFlash();
+	if (_status.Tex != nullptr) {
+
+		_status.Tex->SetPosition(_status.Pos);
+		_status.Tex->SetScale(_status.Scl);
+		_status.Tex->SetRotation({ _status.Rot.x,0,_status.Rot.z });
+		_status.Tex->SetBillboard(FALSE);
+		_status.Tex->SetColor(_color);
+		_status.Tex->Update(camera);
+	}
+
+	ClampMap();
+
+	if (!_isAttack) { back_t = 0.f; }
+
+	TexUpda();
+}
+
 void NormalEnemyA::ClampMap()
 {
 	_status.Pos.x = std::clamp(_status.Pos.x, OverPosMin.x, OverPosMax.x);

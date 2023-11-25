@@ -118,6 +118,8 @@ public:
 	virtual void TextureAnimation() = 0;
 
 	virtual void AttackAction()=0;
+
+	virtual void TutorialUpda(Camera* camera,bool flag) = 0;
 public:
 	bool DeathJudg();
 
