@@ -29,3 +29,5 @@ animeSpeed 8
 epUp 2
 #レベルアップごとの必要経験値倍率
 MagEp 0.0
+#無敵時間
+HitCool 30

@@ -133,7 +133,7 @@ public: //メンバ関数
 	/// HPを減算
 	/// </summary>
 	/// <param name="subHP">減算するHP</param>
-	void SubHP(int32_t subHP) { hp_ -= subHP; }
+	void SubHP(int32_t subHP);
 
 	void SetNextFlor(bool flag) { nextflor_ = flag; }
 
@@ -227,6 +227,11 @@ private: //メンバ関数
 	/// </summary>
 	void LevelUp();
 
+	/// <summary>
+	/// 無敵時間処理
+	/// </summary>
+	void HitCoolTime();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -255,6 +260,10 @@ private: //メンバ変数
 	Vector3 hammerSizeUp_;
 	//鉱石取得ごとの回転速度係数
 	float hammerRotCoeff_;
+	//無敵時間
+	int32_t hitCoolTime_;
+	//無敵時間タイマー
+	int32_t hitCoolTimer_;
 
 	//移動速度
 	float moveSpeed_;

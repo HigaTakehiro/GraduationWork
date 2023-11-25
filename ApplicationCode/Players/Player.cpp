@@ -86,13 +86,15 @@ void Player::Initialize()
 	epBar_->SetLeftSizeCorrection(true);
 	epBarBack_->SetSize({ epBarSize_, 20 });
 
+	hitCoolTime_ = hitCoolTimer_ = 30;
+
 	PlayerStatusSetting();
 
 }
 
 void Player::Update()
 {
-
+	HitCoolTime();
 	Repulsion();
 	HammerPowerUp();
 	LevelUp();
@@ -169,6 +171,14 @@ void Player::SpriteDraw()
 	epBar_->Draw();
 }
 
+void Player::SubHP(int32_t subHP)
+{
+	if (hitCoolTimer_ < hitCoolTime_) return;
+
+	hitCoolTimer_ = 0;
+	hp_ -= subHP;
+}
+
 void Player::PlayerStatusSetting() {
 	std::string line;
 	Vector3 pos{};
@@ -188,6 +198,7 @@ void Player::PlayerStatusSetting() {
 	int32_t ep;
 	float magEp;
 	float hammerRotCoeff;
+	int32_t hitCoolTime;
 	Vector3 sizeUp;
 	std::stringstream stream;
 
@@ -263,6 +274,9 @@ void Player::PlayerStatusSetting() {
 		if (word.find("MagEp") == 0) {
 			line_stream >> magEp;
 		}
+		if (word.find("HitCool") == 0) {
+			line_stream >> hitCoolTime;
+		}
 	}
 
 	//‰Šú‰»
@@ -289,6 +303,7 @@ void Player::PlayerStatusSetting() {
 	animeSpeed_ = animeSpeed;
 	levelUpEp_ = ep;
 	magEp_ = magEp;
+	hitCoolTime_ = hitCoolTimer_ = hitCoolTime;
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -634,8 +649,25 @@ void Player::LevelUp()
 	}
 }
 
+void Player::HitCoolTime()
+{
+	player_->SetColor({ 1.f, 1.f, 1.f, 1.f });
+
+	if (hitCoolTimer_ >= hitCoolTime_) return;
+
+	hitCoolTimer_++;
+	int32_t remainderNumber = hitCoolTime_ % hitCoolTimer_;
+
+	player_->SetColor({ 1.f, 1.f, 1.f, 1.f });
+	if (remainderNumber != 0) {
+		player_->SetColor({ 1.f, 0.5f, 0.5f, 1.f });
+	}
+
+}
+
 void Player::TutorialUpdate(bool Stop, bool NotAttack)
 {
+	HitCoolTime();
 	Repulsion();
 	HammerPowerUp();
 	LevelUp();
