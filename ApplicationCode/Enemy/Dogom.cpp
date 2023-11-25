@@ -26,6 +26,12 @@ void Dogom::Init()
 		BodyModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_face.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
 	m_HpTex=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
+	m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
+	m_HpTex_Inner = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
+
+	m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));
+	m_HpTex_Inner->SetColor(XMFLOAT3(1, 1, 0));
+
 	m_FeedTex = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
 	m_FeedTex->SetSize(XMFLOAT2(1280, 720));
 	m_FeedTex->SetColor(XMFLOAT3(0, 0, 0));
@@ -255,7 +261,7 @@ void Dogom::Draw2()
 	constexpr float BossDraw_maxlen = 125.f;
 	for (size_t i = 0; i < 2; i++) {
 		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ShadowTex[i].get(),
-			BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
+			BossDraw_maxlen, (!ShadowHpTexisDraw ||m_HP <= 0 || m_ArmHp[i] <= 0));
 	}
 	for (size_t i = 0; i < 2; i++) {
 		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ImpactTex[i].get(),
@@ -266,9 +272,9 @@ void Dogom::Draw2()
 
 	}
 	Helper::isDraw(m_player->GetPos(), m_ArmPos[0],
-		m_ArmHpTex[0].get(), BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[0] <= 0));
+		m_ArmHpTex[0].get(), BossDraw_maxlen, (!ShadowHpTexisDraw || m_HP <= 0 || m_ArmHp[0] <= 0));
 	Helper::isDraw(m_player->GetPos(), m_ArmPos[1],
-		m_ArmHpTex[1].get(), BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[1] <= 0));
+		m_ArmHpTex[1].get(), BossDraw_maxlen, (!ShadowHpTexisDraw || m_HP <= 0 || m_ArmHp[1] <= 0));
 
 }
 
@@ -705,7 +711,7 @@ void Dogom::Wince()
 
 		
 		StanCount++;
-		if (StanCount >= 1320) {
+		if (StanCount >= 240) {
 			if (++WinceEaseT >= 50)
 			{
 				m_ArmHp[LEFT] = m_ArmHp[RIGHT] = ArmHP();
@@ -985,11 +991,41 @@ void Dogom::SpriteDraw()
 	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 400.f;
 	sy = 50.f;
 
+	NowHP = sx;
+	if(BodyRecvDam)
+		bravegaugeF = TRUE;
+
+	if(bravegaugeF)
+	{
+		if (++InnerSclingT <= 60.f)
+			m_hpInnerSizeX = Easing::easeIn(InnerSclingT, 60.f, BeforeHP, NowHP-1.f);
+			else {
+				bravegaugeF = FALSE;
+			}
+	}
+	else
+	{
+		InnerSclingT = 0.f;
+		BeforeHP = sx;
+		m_hpInnerSizeX = sx;
+	}
+
+	InnerSclingT = std::clamp(InnerSclingT, 0.f, 60.f);
+
+	m_HpTex_Frame->SetPosition(XMFLOAT2(px - 10.f, py - 20.f));
+	m_HpTex_Frame->SetSize(XMFLOAT2(430.f, 70.f));
+
+	m_HpTex_Inner->SetPosition(XMFLOAT2(px, py));
+	m_HpTex_Inner->SetSize(XMFLOAT2(m_hpInnerSizeX, sy));
+
 	m_HpTex->SetColor(XMFLOAT3(1, 0, 0));
 	m_HpTex->SetPosition(XMFLOAT2(px,py));
 	m_HpTex->SetSize(XMFLOAT2(sx, sy));
-	
+
+	m_HpTex_Frame->Draw();
+	m_HpTex_Inner->Draw();
 	m_HpTex->Draw();
+
 
 	m_FeedTex->Draw();
 }
@@ -1001,7 +1037,6 @@ bool Dogom::Appear()
 
 	if (_phase_appear == PHASE1) {
 		//本体処理
-
 		m_Target = Vector3(m_BodyPos.x, m_BodyPos.y + 2.5f, m_BodyPos.z);
 
 		if (++appeaset < 100)
@@ -1030,7 +1065,9 @@ bool Dogom::Appear()
 	//こいつラスト行くまで更新きる
 	else if (_phase_appear == PHASE3) {
 		if (++appeaset > maxAppTime[2]) {
+			if(m_HP>0)
 			m_FeedF = false;
+			ShadowHpTexisDraw = TRUE;
 			AppearFlag = true;
 			return true;
 		}
@@ -1070,6 +1107,7 @@ void Dogom::DeathMotion()
 	//1P
 	if (Dmotion_phase == DeathAct::CameraSet)
 	{
+		m_player->SetStopF(TRUE);
 		m_FeedF = true;
 		//motion//
 		if (m_FeedAlpha >= 1.f) {
@@ -1082,10 +1120,9 @@ void Dogom::DeathMotion()
 	else if(Dmotion_phase==DeathAct::FeedShake)
 	{
 		//motion//
-
 		DeathAct = &Dogom::Death_Shake;
 		//nextPhase//
-		if (m_BodyAlpha<=0.f && isNext(m_DeathT)) {
+		if (m_FeedCount>2 && isNext(m_DeathT)) {
 			m_DeathT = 0.f;//reset
 			Dmotion_phase = DeathAct::End;
 		}
@@ -1101,9 +1138,10 @@ void Dogom::DeathMotion()
 		{
 			m_ClearF = TRUE;
 		}
-
+		m_player->SetStopF(FALSE);
 		m_FeedF = !m_ClearF;
 	}
+
 	(this->*DeathAct)();
 }
 
@@ -1132,7 +1170,18 @@ void Dogom::Death_Shake()
 	constexpr float subalpha = 0.005f;
 
 	BodyScl = { 0.3f,0.3f,1.f };
+	m_FeedTex->SetColor({ 1,1,1 });
 
+	if(m_FeedAlpha>=1.f)
+	{
+		++m_FeedCount;
+		m_FeedF = FALSE;
+	}
+	else if(m_FeedAlpha<=0.f)
+	{
+		if(m_FeedCount <3)
+		m_FeedF=TRUE;
+	}
 	//ShakeArm(m_BodyRot, m_DeathT);
 
 	if (m_FeedAlpha <= 0.1f) {

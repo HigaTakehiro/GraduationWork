@@ -131,8 +131,10 @@ void Player::Draw()
 	if (isAttack_) {
 		hammer_->Draw();
 	}
-	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
-		arrow_->Draw();
+	if (look_ == false) {
+		if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
+			arrow_->Draw();
+		}
 	}
 	if (!isHammerSwing_) {
 		player_->Draw();
@@ -334,7 +336,6 @@ void Player::Move() {
 	else if (acc_.z > 0) {
 		acc_.z -= hammerAcc_ / 5;
 	}
-
 	//’ÊíˆÚ“®
 	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
 		if (leftStick > 0) {
@@ -671,7 +672,7 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 	Repulsion();
 	HammerPowerUp();
 	LevelUp();
-
+	look_ = NotAttack;
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
@@ -680,8 +681,8 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 		UIUpdate();
 		if (Stop == false) {
 			Move();
+			Animation();
 		}
-		Animation();
 		if (NotAttack == false) {
 			Attack();
 		}
