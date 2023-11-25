@@ -64,6 +64,7 @@ private:
     UINT BossMaxHP;
     BOOL m_Knock=FALSE;
     BOOL isAttack;
+    BOOL ShadowHpTexisDraw;
 private:
     void Init()override;
     void Upda()override;
@@ -184,5 +185,8 @@ private:
 
     int StartWaitT = 0;
     Vector3 m_BodyScl = {};
+
+    int32_t m_FeedCount = 0;
+
 };
 

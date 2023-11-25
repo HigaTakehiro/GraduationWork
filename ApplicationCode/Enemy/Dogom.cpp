@@ -255,7 +255,7 @@ void Dogom::Draw2()
 	constexpr float BossDraw_maxlen = 125.f;
 	for (size_t i = 0; i < 2; i++) {
 		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ShadowTex[i].get(),
-			BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
+			BossDraw_maxlen, (!ShadowHpTexisDraw ||m_HP <= 0 || m_ArmHp[i] <= 0));
 	}
 	for (size_t i = 0; i < 2; i++) {
 		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ImpactTex[i].get(),
@@ -266,9 +266,9 @@ void Dogom::Draw2()
 
 	}
 	Helper::isDraw(m_player->GetPos(), m_ArmPos[0],
-		m_ArmHpTex[0].get(), BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[0] <= 0));
+		m_ArmHpTex[0].get(), BossDraw_maxlen, (!ShadowHpTexisDraw || m_HP <= 0 || m_ArmHp[0] <= 0));
 	Helper::isDraw(m_player->GetPos(), m_ArmPos[1],
-		m_ArmHpTex[1].get(), BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[1] <= 0));
+		m_ArmHpTex[1].get(), BossDraw_maxlen, (!ShadowHpTexisDraw || m_HP <= 0 || m_ArmHp[1] <= 0));
 
 }
 
@@ -1001,7 +1001,6 @@ bool Dogom::Appear()
 
 	if (_phase_appear == PHASE1) {
 		//本体処理
-
 		m_Target = Vector3(m_BodyPos.x, m_BodyPos.y + 2.5f, m_BodyPos.z);
 
 		if (++appeaset < 100)
@@ -1030,7 +1029,9 @@ bool Dogom::Appear()
 	//こいつラスト行くまで更新きる
 	else if (_phase_appear == PHASE3) {
 		if (++appeaset > maxAppTime[2]) {
+			if(m_HP>0)
 			m_FeedF = false;
+			ShadowHpTexisDraw = TRUE;
 			AppearFlag = true;
 			return true;
 		}
@@ -1070,6 +1071,7 @@ void Dogom::DeathMotion()
 	//1P
 	if (Dmotion_phase == DeathAct::CameraSet)
 	{
+		m_player->SetStopF(TRUE);
 		m_FeedF = true;
 		//motion//
 		if (m_FeedAlpha >= 1.f) {
@@ -1082,10 +1084,9 @@ void Dogom::DeathMotion()
 	else if(Dmotion_phase==DeathAct::FeedShake)
 	{
 		//motion//
-
 		DeathAct = &Dogom::Death_Shake;
 		//nextPhase//
-		if (m_BodyAlpha<=0.f && isNext(m_DeathT)) {
+		if (m_FeedCount>2 && isNext(m_DeathT)) {
 			m_DeathT = 0.f;//reset
 			Dmotion_phase = DeathAct::End;
 		}
@@ -1101,9 +1102,10 @@ void Dogom::DeathMotion()
 		{
 			m_ClearF = TRUE;
 		}
-
+		m_player->SetStopF(FALSE);
 		m_FeedF = !m_ClearF;
 	}
+
 	(this->*DeathAct)();
 }
 
@@ -1132,7 +1134,18 @@ void Dogom::Death_Shake()
 	constexpr float subalpha = 0.005f;
 
 	BodyScl = { 0.3f,0.3f,1.f };
+	m_FeedTex->SetColor({ 1,1,1 });
 
+	if(m_FeedAlpha>=1.f)
+	{
+		++m_FeedCount;
+		m_FeedF = FALSE;
+	}
+	else if(m_FeedAlpha<=0.f)
+	{
+		if(m_FeedCount <3)
+		m_FeedF=TRUE;
+	}
 	//ShakeArm(m_BodyRot, m_DeathT);
 
 	if (m_FeedAlpha <= 0.1f) {
