@@ -22,8 +22,10 @@ void Deposit::Initialize(Vector3 pos)
 
 }
 
-void Deposit::Update()
+void Deposit::Update(const Vector3& playerPos)
 {
+	AlphaTest(playerPos);
+
 	//–³“GŽžŠÔXV
 	if (hitCoolTime_ > hitCoolTimer_) {
 		hitCoolTimer_++;
@@ -55,13 +57,25 @@ Vector3 Deposit::OreDropVec()
 	return vec;
 }
 
-bool Deposit::GetIsHit()
+bool Deposit::GetIsHit(bool isHammerSwing)
 {
-	if (deposit_->GetIsHit() && hitCoolTimer_ >= hitCoolTime_) {
+	if (deposit_->GetIsHit() && hitCoolTimer_ >= hitCoolTime_ && isHammerSwing) {
 		hp_--;
 		hitCoolTimer_ = 0;
 		return true;
 	}
 
 	return false;
+}
+
+void Deposit::AlphaTest(const Vector3& playerPos)
+{
+	float depositSize = 2.f;
+	Vector3 depositPos = deposit_->GetPosition();
+	if (depositPos.x + depositSize >= playerPos.x && depositPos.x - depositSize <= playerPos.x && depositPos.z >= playerPos.z) {
+		deposit_->SetColor({ 1.f, 1.f, 1.f, 0.5f });
+	}
+	else {
+		deposit_->SetColor({ 1.f, 1.f, 1.f, 1.f });
+	}
 }

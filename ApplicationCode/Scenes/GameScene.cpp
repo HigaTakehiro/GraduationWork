@@ -116,14 +116,14 @@ void GameScene::Update()
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
 	if (deposit_ != nullptr) {
-		deposit_->Update();
+		deposit_->Update(player_->GetPos());
 	}
 
 	shake_->Update();
 	colManager_->Update();
 
 	if (deposit_ != nullptr) {
-		if (deposit_->GetIsHit()) {
+		if (deposit_->GetIsHit(player_->GetIsHammerSwing())) {
 			std::unique_ptr<Ore> ore = std::make_unique<Ore>();
 			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
 			oreItems_.push_back(std::move(ore));

@@ -157,7 +157,7 @@ void TutorialScene::Update()
 	}
 
 	if (deposit_ != nullptr) {
-		deposit_->Update();
+		deposit_->Update(player_->GetPos());
 	}
 
 	schange->Change(0);
@@ -167,7 +167,7 @@ void TutorialScene::Update()
 	colManager_->Update();
 
 	if (deposit_ != nullptr) {
-		if (deposit_->GetIsHit()) {
+		if (deposit_->GetIsHit(player_->GetIsHammerSwing())) {
 			std::unique_ptr<Ore> ore = std::make_unique<Ore>();
 			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
 			oreItems_.push_back(std::move(ore));

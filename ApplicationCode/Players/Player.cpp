@@ -120,6 +120,7 @@ void Player::Update()
 	shadow_->Update();
 	hammer_->Update();
 	arrow_->Update();
+
 }
 
 void Player::Draw()
@@ -487,6 +488,7 @@ void Player::HammerGet()
 			notnext_ = false;
 		}
 	}
+	player_->SetIsHit(false);
 }
 
 void Player::HammerReturn()
