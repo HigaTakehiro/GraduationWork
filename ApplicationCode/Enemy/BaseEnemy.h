@@ -101,6 +101,8 @@ protected:
 public:
 	void TexDraw();
 
+	void TutorialTexDraw();
+
 	void SetOverPos(XMFLOAT3 max, XMFLOAT3 min) { OverPosMax = max; OverPosMin = min; }
 	//çUåÇéÛÇØÇΩÇ©ÅH
 	
@@ -120,6 +122,8 @@ public:
 	virtual void AttackAction()=0;
 
 	virtual void TutorialUpda(Camera* camera,bool flag) = 0;
+
+	virtual void TutorialDraw(float Mindis) = 0;
 public:
 	bool DeathJudg();
 

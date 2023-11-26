@@ -201,12 +201,12 @@ void TutorialScene::Draw()
 	Object3d::PostDraw();
 	for (auto i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] != nullptr) {
-			enemys_[i]->Draw();
+			enemys_[i]->TutorialDraw(25.f);
 		}
 	}	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (size_t i = 0; i < enemys_.size(); i++)
-		enemys_[i]->TexDraw();
+		enemys_[i]->TutorialTexDraw();
 	if (phase_ == Phase::Title) {sleep_->Draw();}
 	else {player_->Draw();}
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
