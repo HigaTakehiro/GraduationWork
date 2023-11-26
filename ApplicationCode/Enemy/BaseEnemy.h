@@ -89,11 +89,19 @@ protected:
 	std::unique_ptr<Object3d>m_ShadowTex;
 
 	XMFLOAT3 OverPosMax, OverPosMin;
+
+	bool FlashF; float val=1;
+	//XMFLOAT4 color;
+public:
+	void SetFlash(bool f) { FlashF = f; }
+	void DamageFlash();
 protected:
 	void TexInit();
 	void TexUpda();
 public:
 	void TexDraw();
+
+	void TutorialTexDraw();
 
 	void SetOverPos(XMFLOAT3 max, XMFLOAT3 min) { OverPosMax = max; OverPosMin = min; }
 	//çUåÇéÛÇØÇΩÇ©ÅH
@@ -112,6 +120,10 @@ public:
 	virtual void TextureAnimation() = 0;
 
 	virtual void AttackAction()=0;
+
+	virtual void TutorialUpda(Camera* camera,bool flag) = 0;
+
+	virtual void TutorialDraw(float Mindis) = 0;
 public:
 	bool DeathJudg();
 
@@ -124,6 +136,7 @@ public:
 
 	inline void GetDamage()
 	{
+		if (!FlashF)FlashF = TRUE;
 		_status.HP--;
 		if (!_isAttack){ 
 			RecvDamage = TRUE;

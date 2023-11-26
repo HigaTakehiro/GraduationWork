@@ -22,7 +22,7 @@ void Player::Initialize()
 	player_->SetIsBillboardY(true);
 	player_->SetColType(Object3d::CollisionType::Obb);
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
-	player_->SetObbScl({ 2.f,4.f,2.f });
+	player_->SetObbScl({ 2.f,2.f,2.f });
 	player_->SetHitRadius(0.5f);
 	player_->SetScale({ 0.0f, 0.0f, 0.0f });
 
@@ -86,13 +86,15 @@ void Player::Initialize()
 	epBar_->SetLeftSizeCorrection(true);
 	epBarBack_->SetSize({ epBarSize_, 20 });
 
+	hitCoolTime_ = hitCoolTimer_ = 30;
+
 	PlayerStatusSetting();
 
 }
 
 void Player::Update()
 {
-
+	HitCoolTime();
 	Repulsion();
 	HammerPowerUp();
 	LevelUp();
@@ -120,6 +122,7 @@ void Player::Update()
 	shadow_->Update();
 	hammer_->Update();
 	arrow_->Update();
+
 }
 
 void Player::Draw()
@@ -128,8 +131,10 @@ void Player::Draw()
 	if (isAttack_) {
 		hammer_->Draw();
 	}
-	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
-		arrow_->Draw();
+	if (look_ == false) {
+		if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
+			arrow_->Draw();
+		}
 	}
 	if (!isHammerSwing_) {
 		player_->Draw();
@@ -168,6 +173,14 @@ void Player::SpriteDraw()
 	epBar_->Draw();
 }
 
+void Player::SubHP(int32_t subHP)
+{
+	if (hitCoolTimer_ < hitCoolTime_) return;
+
+	hitCoolTimer_ = 0;
+	hp_ -= subHP;
+}
+
 void Player::PlayerStatusSetting() {
 	std::string line;
 	Vector3 pos{};
@@ -187,6 +200,7 @@ void Player::PlayerStatusSetting() {
 	int32_t ep;
 	float magEp;
 	float hammerRotCoeff;
+	int32_t hitCoolTime;
 	Vector3 sizeUp;
 	std::stringstream stream;
 
@@ -262,6 +276,9 @@ void Player::PlayerStatusSetting() {
 		if (word.find("MagEp") == 0) {
 			line_stream >> magEp;
 		}
+		if (word.find("HitCool") == 0) {
+			line_stream >> hitCoolTime;
+		}
 	}
 
 	//‰Šú‰»
@@ -288,6 +305,7 @@ void Player::PlayerStatusSetting() {
 	animeSpeed_ = animeSpeed;
 	levelUpEp_ = ep;
 	magEp_ = magEp;
+	hitCoolTime_ = hitCoolTimer_ = hitCoolTime;
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -298,6 +316,8 @@ void Player::PlayerStatusSetting() {
 }
 
 void Player::Move() {
+	if (isStop_)return;
+
 	const Vector3 upDownMoveVec = { 0.0f, 0.0f, 1.0f };
 	const Vector3 leftRightMoveVec = { 1.0f, 0.0f, 0.0f };
 
@@ -316,7 +336,6 @@ void Player::Move() {
 	else if (acc_.z > 0) {
 		acc_.z -= hammerAcc_ / 5;
 	}
-
 	//’ÊíˆÚ“®
 	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
 		if (leftStick > 0) {
@@ -485,6 +504,7 @@ void Player::HammerGet()
 			notnext_ = false;
 		}
 	}
+	player_->SetIsHit(false);
 }
 
 void Player::HammerReturn()
@@ -630,12 +650,29 @@ void Player::LevelUp()
 	}
 }
 
+void Player::HitCoolTime()
+{
+	player_->SetColor({ 1.f, 1.f, 1.f, 1.f });
+
+	if (hitCoolTimer_ >= hitCoolTime_) return;
+
+	hitCoolTimer_++;
+	int32_t remainderNumber = hitCoolTime_ % hitCoolTimer_;
+
+	player_->SetColor({ 1.f, 1.f, 1.f, 1.f });
+	if (remainderNumber != 0) {
+		player_->SetColor({ 1.f, 0.5f, 0.5f, 1.f });
+	}
+
+}
+
 void Player::TutorialUpdate(bool Stop, bool NotAttack)
 {
+	HitCoolTime();
 	Repulsion();
 	HammerPowerUp();
 	LevelUp();
-
+	look_ = NotAttack;
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
@@ -644,8 +681,8 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 		UIUpdate();
 		if (Stop == false) {
 			Move();
+			Animation();
 		}
-		Animation();
 		if (NotAttack == false) {
 			Attack();
 		}

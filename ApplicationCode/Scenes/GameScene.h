@@ -23,6 +23,8 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include"IntermediateBase.h"
+#include "Deposit.h"
+
 class GameScene : public BaseScene
 {
 public: //メンバ関数
@@ -76,6 +78,7 @@ private: //メンバ変数
 	Player* player_;
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
+	Deposit* deposit_;
 
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;

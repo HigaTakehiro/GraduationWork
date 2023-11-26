@@ -203,6 +203,28 @@ void BaseEnemy::TexDraw()
 	Helper::isDraw(_player->GetPos(), _status.Pos, m_HpTex.get(), dis_max, _status.HP <= 0);
 }
 
+void BaseEnemy::TutorialTexDraw()
+{
+	constexpr float dis_max = 25.f;
+
+	Helper::isDraw(_player->GetPos(), _status.Pos, m_ShadowTex.get(), dis_max, _status.HP <= 0);
+
+	Helper::isDraw(_player->GetPos(), _status.Pos, m_HpTex.get(), dis_max, _status.HP <= 0);
+}
+
+void BaseEnemy::DamageFlash()
+{
+	if (!FlashF)return;
+
+	if (++val > 90) {
+		val = 0.f;
+		FlashF = FALSE;
+	} else {
+		_color.y = sinf(val);
+		_color.z = sinf(val);
+	}
+}
+
 
 
 
@@ -213,7 +235,7 @@ void BaseEnemy::RecvFlashColor()
 	if (!_isFlash&&RecvDamage)_isFlash = true;
 	if(FlashCount<3&& _isFlash)
 	{
-		_color = { 0,0,0,0 };
+	//	_color = { 0,0,0,0 };
 		//ŽžŠÔ‚ÌŠ„‡‚ð‹‚ß‚é
 	
 	}

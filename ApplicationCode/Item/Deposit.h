@@ -19,7 +19,7 @@ public: //メンバ関数
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update();
+	void Update(const Vector3& playerPos);
 
 	/// <summary>
 	/// 描画処理
@@ -36,7 +36,7 @@ public: //メンバ関数
 	/// 鉱床ヒット判定取得
 	/// </summary>
 	/// <returns>ヒット判定</returns>
-	bool GetIsHit();
+	bool GetIsHit(bool isHammerSwing);
 
 	/// <summary>
 	/// HP取得
@@ -49,6 +49,13 @@ public: //メンバ関数
 	/// </summary>
 	/// <returns>座標</returns>
 	Vector3 GetPos() { return deposit_->GetPosition(); }
+
+private: //メンバ関数
+	/// <summary>
+	/// アルファ値設定
+	/// </summary>
+	/// <param name="playerPos"></param>
+	void AlphaTest(const Vector3& playerPos);
 
 private: //メンバ変数
 	//鉱床オブジェクト

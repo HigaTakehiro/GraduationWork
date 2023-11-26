@@ -16,6 +16,10 @@ public:
 	void TextureAnimation() override;
 
     void AttackAction() override;
+
+    void TutorialUpda(Camera* camera, bool flag) override;
+
+    void TutorialDraw(float Mindis)override;
 private:
     /*‚¶‚á‚ñ‚Õ*/
 	float JFrame;

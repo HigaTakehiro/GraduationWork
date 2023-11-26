@@ -54,8 +54,8 @@ void TutorialScene::Initialize()
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
 	sleep_->SetPosition(sleepPos_);
 	//鉱床
-	deposit_ = new Deposit();
-	deposit_->Initialize({ 0.f, 0.f, 30.f });
+	/*deposit_ = new Deposit();
+	deposit_->Initialize({ 0.f, 0.f, 30.f });*/
 
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
@@ -89,11 +89,15 @@ void TutorialScene::Initialize()
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
-		enemys_[i]->SetOverPos(XMFLOAT3(13.f, -100.f, 49.f), XMFLOAT3(-11.f, 100.f, -5.f));
+		enemys_[i]->SetOverPos(XMFLOAT3(13.f, -100.f, 37.f), XMFLOAT3(-11.f, 100.f, 14.f));
 	}
-	enemys_[0]->SetPos(Vector3(5, -30, 30));
-	enemys_[1]->SetPos(Vector3(-5, -30, 30));
-	enemys_[2]->SetPos(Vector3(0, -30, 30));
+	startenemypos_[0] = { 5, 12.5, 18 };
+	startenemypos_[1] = { -5, 12.5, 18 };
+	startenemypos_[2] = { 0, 12.5, 18 };
+
+	enemys_[0]->SetPos(startenemypos_[0]);
+	enemys_[1]->SetPos(startenemypos_[1]);
+	enemys_[2]->SetPos(startenemypos_[2]);
 	
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
@@ -156,9 +160,9 @@ void TutorialScene::Update()
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
 	}
 
-	if (deposit_ != nullptr) {
-		deposit_->Update();
-	}
+	/*if (deposit_ != nullptr) {
+		deposit_->Update(player_->GetPos());
+	}*/
 
 	schange->Change(0);
 
@@ -166,16 +170,16 @@ void TutorialScene::Update()
 	shake_->Update();
 	colManager_->Update();
 
-	if (deposit_ != nullptr) {
-		if (deposit_->GetIsHit()) {
-			std::unique_ptr<Ore> ore = std::make_unique<Ore>();
-			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
-			oreItems_.push_back(std::move(ore));
-		}
-		if (deposit_->GetHP() <= 0) {
-			safe_delete(deposit_);
-		}
-	}
+	//if (deposit_ != nullptr) {
+	//	if (deposit_->GetIsHit(player_->GetIsHammerSwing())) {
+	//		std::unique_ptr<Ore> ore = std::make_unique<Ore>();
+	//		ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
+	//		oreItems_.push_back(std::move(ore));
+	//	}
+	//	if (deposit_->GetHP() <= 0) {
+	//		safe_delete(deposit_);
+	//	}
+	//}
 	
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
@@ -197,12 +201,12 @@ void TutorialScene::Draw()
 	Object3d::PostDraw();
 	for (auto i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] != nullptr) {
-			enemys_[i]->Draw();
+			enemys_[i]->TutorialDraw(25.f);
 		}
 	}	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (size_t i = 0; i < enemys_.size(); i++)
-		enemys_[i]->TexDraw();
+		enemys_[i]->TutorialTexDraw();
 	if (phase_ == Phase::Title) {sleep_->Draw();}
 	else {player_->Draw();}
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -210,9 +214,9 @@ void TutorialScene::Draw()
 			//ore->Draw();
 		}
 	}
-	if (deposit_ != nullptr) {
-		deposit_->Draw();
-	}
+	//if (deposit_ != nullptr) {
+	//	//deposit_->Draw();
+	//}
 	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
@@ -258,7 +262,7 @@ void TutorialScene::Draw()
 void TutorialScene::Finalize()
 {
 	safe_delete(textWindow_);
-	safe_delete(deposit_);
+	//safe_delete(deposit_);
 }
 
 void TutorialScene::SceneChange()
@@ -274,7 +278,7 @@ void TutorialScene::SceneChange()
 		SceneManager::SetEP(player_->GetEP());
 		SceneManager::SetHP(player_->GetHP());
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
+		SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
@@ -382,7 +386,7 @@ void TutorialScene::EnemyProcess()
 		if (enemys_[i]->GetHP() <= 0) { continue; }
 		if (enemys_[i] != nullptr) {
 			enemys_[i]->SetHammerObb(*_hummmerObb);
-			enemys_[i]->Upda(camera_.get());
+			enemys_[i]->TutorialUpda(camera_.get(), notjump_);
 		}
 	}
 }
@@ -489,7 +493,7 @@ void TutorialScene::MovePhase()
 	}
 
 	stop_ = false;
-	if (movetimer_ >= 50) {
+	if (movetimer_ >= 10) {
 		phase_ = Phase::Spown;
 	}
 }
@@ -497,6 +501,20 @@ void TutorialScene::MovePhase()
 void TutorialScene::SpownPhase()
 {
 	fighttextwindow_->Update();
+
+	if (startenemypos_[0].y >= -2.5f) {
+	startenemypos_[0].y -= 1.f;
+	enemys_[0]->SetPos(startenemypos_[0]);
+	}
+	if (startenemypos_[1].y >= -2.5f) {
+		startenemypos_[1].y -= 1.f;
+	enemys_[1]->SetPos(startenemypos_[1]);
+	}
+	if (startenemypos_[2].y >= -2.5f) {
+		startenemypos_[2].y -= 1.f;
+	enemys_[2]->SetPos(startenemypos_[2]);
+	}
+	
 	if (!fighttextwindow_->GetCloseWindow()) {
 		description_ = 0;
 		phase_ = Phase::Fight;
@@ -505,8 +523,10 @@ void TutorialScene::SpownPhase()
 
 void TutorialScene::FightPhase()
 {
+	notjump_ = false;
 	notattack_ = false;
 	stop_ = false;
+	
 	if (enemys_.size() == 0) {
 		phase_ = Phase::Defeat;
 	}
