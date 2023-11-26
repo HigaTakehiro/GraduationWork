@@ -203,6 +203,15 @@ void BaseEnemy::TexDraw()
 	Helper::isDraw(_player->GetPos(), _status.Pos, m_HpTex.get(), dis_max, _status.HP <= 0);
 }
 
+void BaseEnemy::TutorialTexDraw()
+{
+	constexpr float dis_max = 25.f;
+
+	Helper::isDraw(_player->GetPos(), _status.Pos, m_ShadowTex.get(), dis_max, _status.HP <= 0);
+
+	Helper::isDraw(_player->GetPos(), _status.Pos, m_HpTex.get(), dis_max, _status.HP <= 0);
+}
+
 void BaseEnemy::DamageFlash()
 {
 	if (!FlashF)return;

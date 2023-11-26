@@ -309,6 +309,17 @@ void NormalEnemyA::TutorialUpda(Camera* camera, bool flag)
 	TexUpda();
 }
 
+void NormalEnemyA::TutorialDraw(float Mindis)
+{
+	
+	if (Collision::GetLength(_status.Pos, _player->GetPos()) > Mindis)return;
+	if (_status.HP <= 0)return;
+	if (_status.Tex == nullptr)return;
+	Texture::PreDraw();
+	_status.Tex->Draw();
+	Texture::PostDraw();
+}
+
 void NormalEnemyA::ClampMap()
 {
 	_status.Pos.x = std::clamp(_status.Pos.x, OverPosMin.x, OverPosMax.x);
