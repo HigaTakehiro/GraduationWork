@@ -9,7 +9,7 @@ WAIT 60
 
 TEXT Bボダンでハンマーを振り回そう
 SPEED 2
-WAIT 40
+BOTTUN
 
 
 CLOSE
