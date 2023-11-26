@@ -31,7 +31,7 @@ protected:
 	Camera* m_Camera = nullptr;
 	Vector3 m_Hummmer;
 	Vector3 m_CameraPos = {0,12,20}, m_Target,m_CameraStartPos;
-	int m_HP=10;
+	int m_HP=6;
 	Name m_Name;
 	std::wstring str;
 
