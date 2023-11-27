@@ -2,6 +2,7 @@
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
 #include "Easing.h"
+#include "SoundManager.h"
 
 int Count = 0;
 
@@ -470,7 +471,7 @@ bool GameMap::CheckRockToMap(const XMFLOAT3& RockPos)
 	return false;
 }
 
-bool GameMap::ReflectHammer(XMFLOAT3& Pos)
+bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 {
 	XMFLOAT3 pos = Pos;
 	XMFLOAT3 Limit{};
@@ -478,18 +479,22 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos)
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (pos.x >= Map->stagePos_.x + limit_.x) {
+		if (pos.x >= Map->stagePos_.x + limit_.x && isHammerRelease) {
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
-		if (pos.x <= Map->stagePos_.x - limit_.y) {
+		if (pos.x <= Map->stagePos_.x - limit_.y && isHammerRelease) {
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 
-		if (pos.z >= Map->stagePos_.z + limit_.z) {
+		if (pos.z >= Map->stagePos_.z + limit_.z && isHammerRelease) {
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 
-		if (pos.z <= Map->stagePos_.z - limit_.w) {
+		if (pos.z <= Map->stagePos_.z - limit_.w && isHammerRelease) {
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 

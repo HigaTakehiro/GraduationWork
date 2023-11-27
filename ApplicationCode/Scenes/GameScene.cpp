@@ -71,9 +71,6 @@ void GameScene::Initialize()
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 
-	deposit_ = new Deposit();
-	deposit_->Initialize({0, 0, 30});
-
 	SoundManager::GetIns()->StopAllBGM();
 }
 
@@ -113,27 +110,13 @@ void GameScene::Update()
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
-		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
+		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-
-	if (deposit_ != nullptr) {
-		deposit_->Update(player_->GetPos());
-	}
 
 	shake_->Update();
 	colManager_->Update();
 
-	if (deposit_ != nullptr) {
-		if (deposit_->GetIsHit(player_->GetIsHammerSwing())) {
-			std::unique_ptr<Ore> ore = std::make_unique<Ore>();
-			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
-			oreItems_.push_back(std::move(ore));
-		}
-		if (deposit_->GetHP() <= 0) {
-			safe_delete(deposit_);
-		}
-	}
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
 	SceneChange();
 }
@@ -171,9 +154,6 @@ void GameScene::Draw()
 		enemys_[i]->TexDraw();
 	player_->Draw();
 	map_->BridgeDraw();
-	if (deposit_ != nullptr) {
-		deposit_->Draw();
-	}
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
@@ -213,7 +193,6 @@ void GameScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
-	safe_delete(deposit_);
 }
 
 void GameScene::SceneChange()

@@ -160,7 +160,7 @@ void TutorialScene::Update()
 
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
-		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
+		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
 
 	/*if (deposit_ != nullptr) {

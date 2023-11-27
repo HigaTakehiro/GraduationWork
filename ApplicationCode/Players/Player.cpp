@@ -177,6 +177,7 @@ void Player::SubHP(int32_t subHP)
 {
 	if (hitCoolTimer_ < hitCoolTime_) return;
 
+	SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDamage, 0.5f);
 	hitCoolTimer_ = 0;
 	hp_ -= subHP;
 }
@@ -504,6 +505,13 @@ void Player::HammerGet()
 			notnext_ = false;
 		}
 	}
+	if (hammer_->GetIsHit() && isHammerRelease_) {
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerBigBlow, 0.5f);
+		if (player_->GetIsHit() && hammer_->GetIsHit()) {
+			SoundManager::GetIns()->StopSE(SoundManager::SEKey::hammerBigBlow);
+		}
+	}
+
 	player_->SetIsHit(false);
 }
 
@@ -582,7 +590,6 @@ void Player::Animation()
 		rotAttackPlayer_->SetModel(rotAttackModel_[2]);
 		rotAttackPlayer_->Initialize();
 	}
-
 
 	if (preAnimeCount_ == animeCount_) return;
 
