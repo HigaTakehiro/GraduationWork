@@ -80,7 +80,7 @@ void TutorialScene::Initialize()
 	postEffectNo_ = PostEffect::NONE;
 
 	//後でcsvから
-	unsigned int EnemySize = 3;
+	unsigned int EnemySize = 2;
 
 	enemys_.resize(EnemySize);
 	vec.resize(EnemySize);
@@ -93,11 +93,9 @@ void TutorialScene::Initialize()
 	}
 	startenemypos_[0] = { 5, 12.5, 18 };
 	startenemypos_[1] = { -5, 12.5, 18 };
-	startenemypos_[2] = { 0, 12.5, 18 };
 
 	enemys_[0]->SetPos(startenemypos_[0]);
 	enemys_[1]->SetPos(startenemypos_[1]);
-	enemys_[2]->SetPos(startenemypos_[2]);
 	
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
@@ -524,10 +522,7 @@ void TutorialScene::SpownPhase()
 		startenemypos_[1].y -= 1.f;
 	enemys_[1]->SetPos(startenemypos_[1]);
 	}
-	if (startenemypos_[2].y >= -2.5f) {
-		startenemypos_[2].y -= 1.f;
-	enemys_[2]->SetPos(startenemypos_[2]);
-	}
+
 	
 	if (!fighttextwindow_->GetCloseWindow()) {
 		description_ = 0;

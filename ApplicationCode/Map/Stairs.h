@@ -26,14 +26,19 @@ private:
 
 private:
 	unique_ptr<Object3d> stairs_;
+	unique_ptr<Object3d> ui_;
 
 	Model* stairsModel_;
 
+	Model* uiModel_;
+
 	XMFLOAT3 pos_;
+	XMFLOAT3 uipos_;
 
 	Player* player_;
 
 	int count_ = 0;
+	bool f = false;
 };
 
 
