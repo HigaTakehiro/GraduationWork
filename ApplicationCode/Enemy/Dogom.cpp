@@ -56,7 +56,7 @@ void Dogom::Init()
 		//m_Body->SetIsBillboardY(true);
 		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		m_Arm[i]->SetObbScl({ 1.3f,4.f,0.4f });
+		m_Arm[i]->SetObbScl({ 1.3f,4.f,0.2f });
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
@@ -124,6 +124,7 @@ void Dogom::Upda()
 				bool judg = isAttack && isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
 
 				Helper::DamageManager(m_HP, DamageVal, BodyRecvDam, BodyDamCool, RecvCoolMax, judg);
+				if (judg)FlashF = TRUE;
 			}
 			
 			ImpactKnock();
@@ -145,7 +146,7 @@ void Dogom::Upda()
 
 		m_player->HitHammerToEnemy(vec);
 	}
-
+	RecvDamageFlash();
 	CoollisionArm();
 	CoollisionFace();
 	ImpactTexScling();
@@ -192,7 +193,7 @@ void Dogom::Upda()
 
 	m_Arm[RIGHT]->SetRotation(Vector3(0, 0, 180));
 	m_Body->SetPosition(m_BodyPos);
-	m_Body->SetColor({ 1,1,1,m_BodyAlpha });
+	m_Body->SetColor({ color_rgb.x,color_rgb.y,color_rgb.z,m_BodyAlpha });
 	m_Body->Update();
 
 	constexpr float alphaval = 0.05f;

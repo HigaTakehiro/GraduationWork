@@ -31,7 +31,7 @@ protected:
 	Camera* m_Camera = nullptr;
 	Vector3 m_Hummmer;
 	Vector3 m_CameraPos = {0,12,20}, m_Target,m_CameraStartPos;
-	int m_HP=6;
+	int m_HP=2;
 	Name m_Name;
 	std::wstring str;
 
@@ -54,6 +54,12 @@ public:
 	bool GetAppearFlag() { return AppearFlag; };
 
 	bool GetClearF() { return m_ClearF; }
+
+public:
+	int32_t val = 0;
+	bool FlashF;
+	XMFLOAT4 color_rgb=XMFLOAT4(1,1,1,1);
+	void RecvDamageFlash();
 	//bool GetHp() { return m_ClearF; }
 };
 
