@@ -74,6 +74,7 @@ void Stairs::BossInitialize(const XMFLOAT3& Pos, Player* player)
 	pos_ = Pos + pos_;
 
 	stairsModel_ = Shapes::CreateSquare({ 0,0 }, { 64, 64 }, "steps.png", { 2, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
+	uiModel_ = Shapes::CreateSquare({ 0,0 }, { 192, 64 }, "susumuA.png", { 2.5, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { -192, 64 });
 	stairs_ = make_unique<Object3d>();
 	stairs_ = Object3d::UniquePtrCreate(stairsModel_);
 	stairs_->SetIsBillboardY(true);
