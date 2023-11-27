@@ -118,6 +118,7 @@ void Dogom::Upda()
 				MoveBody();
 				m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
 				m_BodyPos.z = -4.f + cosf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
+				FlashF = FALSE;
 			} else {
 				constexpr int RecvCoolMax = 120;
 				const int DamageVal = 1;
