@@ -405,6 +405,7 @@ private: //ƒƒ“ƒo•Ï”
 
 	bool look_ = false;
 	bool animationflag_ = false;
+	bool sestop_ = true;
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
