@@ -76,12 +76,12 @@ void IBScene::Initialize()
 	playerUI_->SetLevel(SceneManager::GetLevel());
 
 	SoundManager::GetIns()->StopAllBGM();
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 
 }
 
 void IBScene::Update()
 {
-	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 	Animation();
 	player_->SetPosition({ -8.0f,2.5f, 8.0f });
 	player_->Update();

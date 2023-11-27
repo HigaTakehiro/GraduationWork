@@ -17,6 +17,7 @@ void Player::Initialize()
 		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
 		rotAttackModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rot.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.f }, { 128, 128 });
 	}
+	deadModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.f, 128.f }, "tuyu_sleep.png", { 64.f, 64.f }, { 0.5f, 0.5f }, { 0.f, 2.f }, { 128.f, 128.f });
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
@@ -94,6 +95,9 @@ void Player::Initialize()
 
 void Player::Update()
 {
+	DeadAction();
+	if (hp_ <= 0) return;
+
 	HitCoolTime();
 	Repulsion();
 	HammerPowerUp();
@@ -180,6 +184,10 @@ void Player::SubHP(int32_t subHP)
 	SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDamage, 0.5f);
 	hitCoolTimer_ = 0;
 	hp_ -= subHP;
+
+	if (hp_ <= 0) {
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDestroy, 0.5f);
+	}
 }
 
 void Player::PlayerStatusSetting() {
@@ -671,6 +679,20 @@ void Player::HitCoolTime()
 		player_->SetColor({ 1.f, 0.5f, 0.5f, 1.f });
 	}
 
+}
+
+void Player::DeadAction()
+{
+	if (hp_ > 0) return;
+
+	if (deadTimer_ >= deadTime_ * 0.6f) {
+		player_->SetModel(deadModel_);
+		player_->Initialize();
+		player_->Update();
+	}
+	if (++deadTimer_ >= deadTime_) {
+		isDead_ = true;
+	}
 }
 
 void Player::TutorialUpdate(bool Stop, bool NotAttack)

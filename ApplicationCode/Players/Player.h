@@ -175,6 +175,11 @@ public: //メンバ関数
 	/// <returns></returns>
 	bool OreCountOverMaxCount();
 
+	/// <summary>
+	/// 死亡フラグを取得
+	/// </summary>
+	/// <returns>死亡フラグ</returns>
+	bool GetIsDead() { return isDead_; }
 
 private: //メンバ関数
 
@@ -238,6 +243,11 @@ private: //メンバ関数
 	/// </summary>
 	void HitCoolTime();
 
+	/// <summary>
+	/// 死亡演出
+	/// </summary>
+	void DeadAction();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -270,6 +280,12 @@ private: //メンバ変数
 	int32_t hitCoolTime_;
 	//無敵時間タイマー
 	int32_t hitCoolTimer_;
+	//死亡フラグ
+	bool isDead_;
+	//死亡演出タイマー
+	int32_t deadTimer_;
+	//死亡演出時間
+	int32_t deadTime_ = 2 * 60;
 
 	//移動速度
 	float moveSpeed_;
@@ -310,6 +326,8 @@ private: //メンバ変数
 	Model* leftMoveModel_[4];
 	//回転攻撃モデル
 	Model* rotAttackModel_[4];
+	//死亡モデル
+	Model* deadModel_;
 	//影オブジェクト
 	std::unique_ptr<Object3d> shadow_;
 	//影

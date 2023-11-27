@@ -72,6 +72,8 @@ void GameScene::Initialize()
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 
 	SoundManager::GetIns()->StopAllBGM();
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
+
 }
 
 void GameScene::Update()
@@ -79,8 +81,10 @@ void GameScene::Update()
 	
 
 	player_->Update();
-	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
+	if (player_->GetHP() <= 0) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
+	}
 
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
@@ -202,7 +206,7 @@ void GameScene::SceneChange()
 	SceneManager::SetHP(player_->GetHP());
 
 	bool Change = player_->GetNext();
-	if (Change||player_->GetHP()<=0) {
+	if (Change||player_->GetIsDead()) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}

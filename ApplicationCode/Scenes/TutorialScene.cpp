@@ -121,6 +121,8 @@ void TutorialScene::Initialize()
 	oldpushCount_ = pushCount_;
 
 	SoundManager::GetIns()->StopAllBGM();
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
+
 }
 
 void TutorialScene::Update()
@@ -128,7 +130,6 @@ void TutorialScene::Update()
 	int32_t Max=player_->GetMaxHP();
 	player_->SetHP(Max);
 
-	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
