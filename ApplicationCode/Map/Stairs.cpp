@@ -74,8 +74,8 @@ void Stairs::CheckHit()
 {
 	XMFLOAT3 Pos = player_->Get();
 
-	if ((Pos.x >= pos_.x - 1.5f && Pos.x <= pos_.x + 1.5f) &&
-		(Pos.z >= pos_.z-1.5f  && Pos.z <= pos_.z + 1.5f)) {
+	if ((Pos.x >= pos_.x - 2.f && Pos.x <= pos_.x + 1.f) &&
+		(Pos.z >= pos_.z-2.f  && Pos.z <= pos_.z + 1.f)) {
 		player_->SetNextFlor(true);
 	}
 	else {
