@@ -61,8 +61,13 @@ void BossScene::Initialize()
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 	boss_->GetCSPos(cameraPos_);
 
+	m_ClearTex = Sprite::UniquePtrCreate((UINT)ImageManager::Image2DName::TestPlay, { 0, 0 });
+	m_ClearTexScl = { 0,0 };
+	m_ClearTex->SetAnchorPoint({ 0.5f,0.5f });
+	m_ClearTex->SetPosition({ 640.f,360.f });
+
 	m_Stairs.reset(new Stairs());
-	m_Stairs->BossInitialize(Vector3(0, -3.5f, 0), player_);
+	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 }
 
 void BossScene::Update()
@@ -75,7 +80,6 @@ void BossScene::Update()
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	//Vector3 //enemyPos[3] = {};
 
-	
 	
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
@@ -149,9 +153,34 @@ void BossScene::Update()
 	
 	m_Stairs->Update();
 	//シーン切り替え
-	SceneChange();if (boss_->GetClearF() && player_->GetNextFlor())
+	SceneChange();
+	if (boss_->GetClearF() && player_->GetNextFlor())
 	{
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+			touchFlor = TRUE;
+		}
+	}
+	if (touchFlor) {
+		if (++ClearTexEaseT >= 60)
+		{
+			NextClearF = TRUE;
+		}
+		m_ClearTexScl.x = Easing::easeIn(ClearTexEaseT, 60.f, 0, 1280.f);
+		m_ClearTexScl.y = Easing::easeIn(ClearTexEaseT, 60.f, 0, 720.f);
+	}
+	if(NextClearF)
+	{
+		
+		ClearTexEaseT = std::clamp(ClearTexEaseT, 0.f, 60.f);
+	}
+	
+	m_ClearTex->SetSize(m_ClearTexScl);
+
+	if(NextClearF)
+	{
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+		}
 	}
 }
 
@@ -208,6 +237,8 @@ void BossScene::Draw()
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	player_->SpriteDraw();
 	boss_->SpriteDraw();
+	if (boss_->GetClearF())
+	m_ClearTex->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
