@@ -510,12 +510,6 @@ void Player::HammerGet()
 			notnext_ = false;
 		}
 	}
-	if (hammer_->GetIsHit() && isHammerRelease_) {
-		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerBigBlow, 0.5f);
-		if (player_->GetIsHit() && hammer_->GetIsHit()) {
-			SoundManager::GetIns()->StopSE(SoundManager::SEKey::hammerBigBlow);
-		}
-	}
 
 	player_->SetIsHit(false);
 }
