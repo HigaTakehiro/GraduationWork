@@ -73,6 +73,8 @@ void GameScene::Initialize()
 
 	deposit_ = new Deposit();
 	deposit_->Initialize({0, 0, 30});
+
+	SoundManager::GetIns()->StopAllBGM();
 }
 
 void GameScene::Update()

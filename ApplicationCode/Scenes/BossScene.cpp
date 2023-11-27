@@ -60,6 +60,8 @@ void BossScene::Initialize()
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 	boss_->GetCSPos(cameraPos_);
+
+	SoundManager::GetIns()->StopAllBGM();
 }
 
 void BossScene::Update()

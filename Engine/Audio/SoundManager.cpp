@@ -71,6 +71,15 @@ void SoundManager::StopBGM(const BGMKey bgmKey, const bool isPause)
 	}
 }
 
+void SoundManager::StopAllBGM()
+{
+	for (auto itr = bgmMap_.begin(); itr != bgmMap_.end(); itr++) {
+		sound_->StopSoundData(bgmMap_[itr->first], false);
+		bgmMap_[itr->first].isPlay = false;
+		bgmMap_[itr->first].data.size = 0;
+	}
+}
+
 void SoundManager::StopSE(const SEKey seKey, const bool isPause)
 {
 	sound_->StopSoundData(seMap_[seKey], isPause);

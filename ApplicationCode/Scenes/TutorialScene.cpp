@@ -121,6 +121,8 @@ void TutorialScene::Initialize()
 	schange->SetFadeNum(1);
 	phase_ = Phase::Title;
 	oldpushCount_ = pushCount_;
+
+	SoundManager::GetIns()->StopAllBGM();
 }
 
 void TutorialScene::Update()
