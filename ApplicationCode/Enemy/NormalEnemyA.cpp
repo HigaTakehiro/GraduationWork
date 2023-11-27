@@ -63,7 +63,8 @@ void NormalEnemyA::Upda(Camera* camera)
 
 	Jump();
 
-	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(),Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f, 1.5f);
+	if(_status.Scl.y<=1.3f)
+	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(),Collision::GetLength(_status.Pos, _player->GetPos()) < 1.3f, 1.8f);
 
 	DamageFlash();
 	if (_status.Tex != nullptr) {
@@ -220,13 +221,20 @@ void NormalEnemyA::AttackAction()
 
 	bool isRecv = !PlayerRecv && Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f;
 
-	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), _status.Scl.y>1.3f&& Collision::GetLength(_status.Pos, _player->GetPos()) < 3.f,1.f);
+	bool aj = _status.Scl.y > 1.3f && Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f;
+	if (aj)
+	{
+		_player->SubHP(1);
+	}
+	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), aj,1.f);
 
 	if(isRecv)
 	{
+		//if(_status.Scl.y > 1.f)
+		
 		if(m_knockF)
 		m_knockF = TRUE;
-		_player->SubHP(1);
+		
 		PlayerRecv = TRUE;
 	}
 
@@ -245,9 +253,9 @@ void NormalEnemyA::AttackAction()
 
 	if(PlayerRecv&& _action != ATTACK)
 	{
-		PlayerRecv = FALSE;
+		
 	}
-
+PlayerRecv = FALSE;
 	if (back_t <= BackRVal) {
 		_status.Rot.x = Easing::easeIn(back_t, BackRVal, 180.f, 200.f);
 	} else if (back_t <= BackRVal + SecMotInter) {
@@ -289,7 +297,7 @@ void NormalEnemyA::TutorialUpda(Camera* camera, bool flag)
 	if (flag == false) {
 		Jump();
 	}
-	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f, 1.5f);
+	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f);
 
 	DamageFlash();
 	if (_status.Tex != nullptr) {
