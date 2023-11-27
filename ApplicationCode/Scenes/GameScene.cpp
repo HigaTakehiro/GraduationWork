@@ -73,6 +73,10 @@ void GameScene::Initialize()
 
 	deposit_ = new Deposit();
 	deposit_->Initialize({0, 0, 30});
+	schange = new SceneChangeEffect();
+	schange->Initialize();
+	schange->SetFadeNum(1);
+	schange->SetFEnd(true);
 }
 
 void GameScene::Update()
@@ -133,6 +137,7 @@ void GameScene::Update()
 		}
 	}
 	//シーン切り替え
+	schange->Change(0);
 	SceneChange();
 }
 
@@ -177,6 +182,7 @@ void GameScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -222,6 +228,10 @@ void GameScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change||player_->GetHP()<=0) {
+		schange->SetFStart(true);
+		schange->SetFadeNum(0);
+	}
+	if (schange->GetEnd() == true) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}

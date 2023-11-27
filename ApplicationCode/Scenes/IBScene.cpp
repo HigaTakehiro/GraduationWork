@@ -47,9 +47,9 @@ void IBScene::Initialize()
 	fire_->SetScale({ 0.1f, 0.1f, 0.1f });
 
 	skillB_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillButton, { 1000, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	skillSprite_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skill, { 0, 0 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 	susumu_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::susumuButton, { 1000, 150 }, { 1,1,1,1 }, { 0.0f, 0.0f });
 	arrow = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::Arrow, { 900, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
-
 	postEffectNo_ = PostEffect::NONE;
 
 	shake_ = new Shake();
@@ -61,8 +61,8 @@ void IBScene::Initialize()
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();
-	schange->SetFEnd(true);
 	schange->SetFadeNum(1);
+	schange->SetFEnd(true);
 	/*baseNo = 0;*/
 	baseNo = ib_->GetBaseNo();
 	animeTimer_ = 0;
@@ -180,11 +180,14 @@ void IBScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
-	skillB_->Draw();
-	susumu_->Draw();
-	arrow->Draw();
-
+	if (skillFlag == false) {
+		skillB_->Draw();
+		susumu_->Draw();
+		arrow->Draw();
+	}
+	else if (skillFlag == true) {
+		skillSprite_->Draw();
+	}
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -193,8 +196,8 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hx = std::to_wstring(playerUI_->GetHP());
-	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n" + hx, textDrawRange);
+	//std::wstring hx = std::to_wstring(playerUI_->GetHP());
+	//text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n" + hx, textDrawRange);
 	playerUI_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -223,26 +226,27 @@ void IBScene::SceneChange()
 	SceneManager::SetLevel(playerUI_->GetLevel());
 	SceneManager::SetEP(playerUI_->GetEP());
 	SceneManager::SetHP(playerUI_->GetHP());
-
-	if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
-		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
-		arrow->SetPosition({ 900,50 });
-	}
-	else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
-		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
-		arrow->SetPosition({ 900,150 });
-	}
-	float leftStick = PadInput::GetIns()->leftStickY();
-	if (leftStick > 0) {
-		soundCount++;
-		arrow->SetPosition({ 900,150 });
-	}
-	else if (leftStick < 0) {
-		soundCount++;
-		arrow->SetPosition({ 900,50 });
-	}
-	else {
-		soundCount = 0;
+	if (skillFlag == false) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
+			arrow->SetPosition({ 900,50 });
+		}
+		else if (KeyInput::GetIns()->TriggerKey(DIK_DOWNARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Down)) {
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
+			arrow->SetPosition({ 900,150 });
+		}
+		float leftStick = PadInput::GetIns()->leftStickY();
+		if (leftStick > 0) {
+			soundCount++;
+			arrow->SetPosition({ 900,150 });
+		}
+		else if (leftStick < 0) {
+			soundCount++;
+			arrow->SetPosition({ 900,50 });
+		}
+		else {
+			soundCount = 0;
+		}
 	}
 	if (soundCount == 1) {
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
@@ -271,24 +275,56 @@ void IBScene::SceneChange()
 				}
 			}
 			else {
-					SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
-					SceneManager::SetLevel(playerUI_->GetLevel());
-					SceneManager::SetEP(playerUI_->GetEP());
-					SceneManager::SetHP(playerUI_->GetHP());
-					SceneManager::SceneChange(SceneManager::SceneName::Boss);
+				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
+				SceneManager::SetLevel(playerUI_->GetLevel());
+				SceneManager::SetEP(playerUI_->GetEP());
+				SceneManager::SetHP(playerUI_->GetHP());
+				SceneManager::SceneChange(SceneManager::SceneName::Boss);
 			}
 		}
 	}
 	else if (arrow->GetPosition().y == 50) {
-		if (schange->GetEnd() == false) {
-			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
-				schange->SetFStart(true);
-				schange->SetFadeNum(0);
+		if (skillFlag == true) {
+			if (skillCount2 < 2) {
+				skillCount2++;
+			}
+			if (skillCount2 == 1) {
+				schange->SetFadeNum(1);
+				schange->SetFEnd(true);
+				schange->SetEnd(false);
+			}
+			if (schange->GetEnd() == false) {
+				if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+					SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
+					schange->SetFStart(true);
+					schange->SetFadeNum(0);
+				}
+			}
+			else if (schange->GetEnd() == true) {
+				skillCount2 = 0;
+				skillFlag = false;
 			}
 		}
-		else if (schange->GetEnd() == true) {
-			SceneManager::SceneChange(SceneManager::SceneName::SKILL);
+		else if (skillFlag == false) {
+			if (skillCount2 < 2) {
+				skillCount2++;
+			}
+			if (skillCount2 == 1) {
+				schange->SetFadeNum(1);
+				schange->SetFEnd(true);
+				schange->SetEnd(false);
+			}
+			if (schange->GetEnd() == false) {
+				if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+					SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
+					schange->SetFStart(true);
+					schange->SetFadeNum(0);
+				}
+			}
+			else if (schange->GetEnd() == true) {
+				skillCount2 = 0;
+				skillFlag = true;
+			}
 		}
 	}
 

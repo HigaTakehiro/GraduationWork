@@ -101,5 +101,5 @@ private: //ƒƒ“ƒo•Ï”
 	XMFLOAT3 nextPos_{};
 	Vector3 pos{};
 	Vector3 target{};
-	IntermediateBase* ib_;
+	SceneChangeEffect* schange;
 };

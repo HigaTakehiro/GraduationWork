@@ -44,8 +44,8 @@ void SkillScene::Initialize()
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();
-	schange->SetFEnd(true);
 	schange->SetFadeNum(1);
+	schange->SetFEnd(true);
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 }
@@ -89,7 +89,7 @@ void SkillScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hx = std::to_wstring(schange->GetEnd());
+	std::wstring hx = std::to_wstring(schange->GetFadeNum());
 	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n" + hx, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
