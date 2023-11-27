@@ -75,7 +75,7 @@ void IBScene::Initialize()
 	playerUI_->SetEP(SceneManager::GetEP());
 	playerUI_->SetHP(SceneManager::GetHP());
 	playerUI_->SetLevel(SceneManager::GetLevel());
-
+	hp_ = playerUI_->GetHP();
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 
@@ -122,13 +122,16 @@ void IBScene::Update()
 	playerUI_->Update();
 	playerUI_->SetHP(playerUI_->GetMaxHP());
 
-	if (playerUI_->GetHP() != 0) {
+	if (hp_!=0) {
 		if (baseCount < 2) {
 			baseCount++;
 		}
 		if (baseCount == 1) {
 			baseNo++;
 		}
+	}
+	else {
+		baseNo = ib_->GetBaseNo();
 	}
 
 	ib_->Update();
@@ -198,8 +201,8 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hx = std::to_wstring(skillCount2);
-	text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
+	//std::wstring hx = std::to_wstring(SceneManager::GetHP());
+	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
 	playerUI_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -225,9 +228,7 @@ void IBScene::Finalize()
 
 void IBScene::SceneChange()
 {
-	SceneManager::SetLevel(playerUI_->GetLevel());
-	SceneManager::SetEP(playerUI_->GetEP());
-	SceneManager::SetHP(playerUI_->GetHP());
+
 	if (skillFlag == false) {
 		if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
@@ -269,7 +270,7 @@ void IBScene::SceneChange()
 				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 				SceneManager::SetLevel(playerUI_->GetLevel());
 				SceneManager::SetEP(playerUI_->GetEP());
-				if (playerUI_->GetHP() <= 0) {
+				if (hp_ <= 0) {
 					//HP0の時
 					SceneManager::SetHP(playerUI_->GetMaxHP());
 				}
@@ -277,14 +278,13 @@ void IBScene::SceneChange()
 					SceneManager::SetHP(playerUI_->GetHP());
 				}
 					SceneManager::SceneChange(SceneManager::SceneName::Game);
-				
 			}
 			else {
 				//通常エリアから来た場合
 				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 				SceneManager::SetLevel(playerUI_->GetLevel());
 				SceneManager::SetEP(playerUI_->GetEP());
-				if (playerUI_->GetHP() <= 0) {
+				if (hp_ <= 0) {
 					//HP0の時
 					SceneManager::SetHP(playerUI_->GetMaxHP());
 				}
