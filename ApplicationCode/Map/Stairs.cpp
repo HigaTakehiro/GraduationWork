@@ -3,6 +3,15 @@
 #include"Player.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
+#include<SafeDelete.h>
+
+Stairs::~Stairs()
+{
+	safe_delete(stairsModel_);
+	safe_delete(uiModel_);
+	ui_.release();
+	stairs_.release();
+}
 
 void Stairs::LoadCsv()
 {
