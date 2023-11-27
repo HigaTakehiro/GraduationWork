@@ -290,8 +290,7 @@ void Player::PlayerStatusSetting() {
 	pos_ = pos;
 	initRot_ = rot_ = rot;
 	scale_ = scale;
-	hp_ = hp;
-	maxHp_ = hp;
+	hp_ = maxHp_ = initHP_ = hp;
 
 	moveSpeed_ = moveSpeed;
 	rotSpeed_ = initRotSpeed_ = rotSpeed;
@@ -644,7 +643,7 @@ void Player::UIUpdate()
 void Player::LevelUp()
 {
 	const int32_t maxLevel = 99;
-	maxHp_ = 3 + 2 * (level_ - 1);
+	maxHp_ = initHP_ + 2 * (level_ - 1);
 
 	if (level_ >= maxLevel) return;
 
@@ -653,7 +652,7 @@ void Player::LevelUp()
 		level_++;
 		ep_ = 0;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
-		maxHp_ = 3 + 2 * (level_ - 1);
+		maxHp_ = initHP_ + 2 * (level_ - 1);
 		hp_ = maxHp_;
 	}
 }

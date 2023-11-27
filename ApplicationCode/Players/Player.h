@@ -258,6 +258,7 @@ private: //メンバ変数
 	//HP
 	int32_t hp_;
 	int32_t maxHp_;
+	int32_t initHP_;
 	//レベル
 	int32_t level_ = 0;
 	//経験値
