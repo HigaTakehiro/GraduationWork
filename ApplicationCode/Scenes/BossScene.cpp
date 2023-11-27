@@ -150,12 +150,8 @@ void BossScene::Update()
 		//shake_->Update();
 	colManager_->Update();
 		//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-		
-	schange->Change(0);
 	
 	m_Stairs->Update();
-	//シーン切り替え
-	SceneChange();
 	if (boss_->GetClearF() && player_->GetNextFlor())
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
@@ -178,12 +174,18 @@ void BossScene::Update()
 	
 	m_ClearTex->SetSize(m_ClearTexScl);
 
+	schange->Change(0);
+
+	//シーン切り替えmmm
+	SceneChange();
 	if(NextClearF)
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
 		}
 	}
+
+	
 }
 
 void BossScene::Draw()
@@ -259,6 +261,7 @@ void BossScene::Finalize()
 
 void BossScene::SceneChange()
 {
+	if (!player_->GetIsDead())return;
 	SceneManager::SetLevel(player_->GetLevel());
 	SceneManager::SetEP(player_->GetEP());
 	SceneManager::SetHP(player_->GetHP());
