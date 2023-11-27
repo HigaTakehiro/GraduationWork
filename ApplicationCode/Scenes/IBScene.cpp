@@ -117,7 +117,7 @@ void IBScene::Update()
 	camera_->SetTarget(targetPos_);
 	light_->Update();
 	playerUI_->Update();
-
+	playerUI_->SetHP(playerUI_->GetMaxHP());
 
 	if (hp_ != 0) {
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
