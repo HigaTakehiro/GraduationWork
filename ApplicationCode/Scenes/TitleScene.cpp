@@ -35,6 +35,7 @@ void TitleScene::Initialize()
 	//3dオブジェクト初期化
 
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::game, true, 0.1f);
+	SoundManager::GetIns()->StopAllBGM();
 }
 
 void TitleScene::Update()
