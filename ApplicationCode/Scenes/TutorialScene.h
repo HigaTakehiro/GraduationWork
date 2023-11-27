@@ -119,6 +119,11 @@ private:
 
 	Model* titleModel_[9];
 
+	//テキスト
+	TextDraw* movetextui_;
+	
+	TextDraw* fighttextui_;
+
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点
