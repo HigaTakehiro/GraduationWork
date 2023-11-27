@@ -9,6 +9,8 @@ class Player;
 class Stairs
 {
 public:
+	~Stairs();
+public:
 
 	void LoadCsv();
 
