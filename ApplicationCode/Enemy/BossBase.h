@@ -54,5 +54,6 @@ public:
 	bool GetAppearFlag() { return AppearFlag; };
 
 	bool GetClearF() { return m_ClearF; }
+	//bool GetHp() { return m_ClearF; }
 };
 
