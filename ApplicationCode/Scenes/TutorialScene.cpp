@@ -278,7 +278,7 @@ void TutorialScene::SceneChange()
 		SceneManager::SetEP(player_->GetEP());
 		SceneManager::SetHP(player_->GetHP());
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
-		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
