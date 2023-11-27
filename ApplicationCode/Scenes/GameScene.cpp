@@ -77,6 +77,8 @@ void GameScene::Initialize()
 	schange->Initialize();
 	schange->SetFadeNum(1);
 	schange->SetFEnd(true);
+
+	SoundManager::GetIns()->StopAllBGM();
 }
 
 void GameScene::Update()
