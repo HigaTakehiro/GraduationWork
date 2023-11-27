@@ -8,7 +8,7 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
-
+#pragma warning(disable:4996)
 
 void (TutorialScene::* TutorialScene::FuncTable[])() {
 	&TutorialScene::TitlePhase,
@@ -187,6 +187,10 @@ void TutorialScene::Update()
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
 	}
+	FILE* fp;
+	fp = fopen("Engine/Resources/GameData/floor.csv", "w");
+	fprintf(fp, "floor %d", 0);
+	fclose(fp);
 	SceneChange();
 }
 

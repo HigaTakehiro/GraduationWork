@@ -122,6 +122,7 @@ private: //ƒƒ“ƒo•Ï”
 	float count = 0;
 	float count2 = 2;
 	float soundCount;
+	int32_t baseCount = 0;
 	SceneChangeEffect* schange;
 	Player* playerUI_;
 };

@@ -69,10 +69,11 @@ void IBScene::Initialize()
 	preAnimeCount_ = 999;
 	animeSpeed_ = 8;
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
-
+	baseCount = 0;
 	playerUI_ = new Player();
 	playerUI_->Initialize();
 	playerUI_->SetEP(SceneManager::GetEP());
+	playerUI_->SetHP(SceneManager::GetHP());
 	playerUI_->SetLevel(SceneManager::GetLevel());
 
 }
@@ -120,7 +121,10 @@ void IBScene::Update()
 
 
 	if (playerUI_->GetHP() != 0) {
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
+		if (baseCount < 2) {
+			baseCount++;
+		}
+		if (baseCount == 1) {
 			baseNo++;
 		}
 	}
@@ -189,7 +193,7 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hx = std::to_wstring(soundCount);
+	std::wstring hx = std::to_wstring(playerUI_->GetHP());
 	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n" + hx, textDrawRange);
 	playerUI_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
@@ -249,13 +253,25 @@ void IBScene::SceneChange()
 			}
 		}
 		else if (schange->GetEnd() == true) {
-			if (baseNo >= 0) {
-				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
-				SceneManager::SceneChange(SceneManager::SceneName::Boss);
+			if (baseNo % 2 == 0) {
+				if (playerUI_->GetHP() <= 0) {
+					SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
+					SceneManager::SetLevel(playerUI_->GetLevel());
+					SceneManager::SetEP(playerUI_->GetEP());
+					SceneManager::SetHP(playerUI_->GetMaxHP());
+					SceneManager::SceneChange(SceneManager::SceneName::Game);
+				}
+				else {
+					SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
+					SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+				}
 			}
-			if (baseNo >= 1) {
-				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
-				SceneManager::SceneChange(SceneManager::SceneName::Title);
+			else {
+					SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
+					SceneManager::SetLevel(playerUI_->GetLevel());
+					SceneManager::SetEP(playerUI_->GetEP());
+					SceneManager::SetHP(playerUI_->GetHP());
+					SceneManager::SceneChange(SceneManager::SceneName::Boss);
 			}
 		}
 	}
