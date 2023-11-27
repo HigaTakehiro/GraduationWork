@@ -134,19 +134,6 @@ void TutorialScene::Update()
 	int32_t Max=player_->GetMaxHP();
 	player_->SetHP(Max);
 
-	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
-
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			if (ore->GetIsHit() && player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
-				player_->AddOreCount();
-				ore = nullptr;
-			}
-		}
-		if (ore != nullptr) {
-			ore->Update();
-		}
-	}
 
 	(this->*FuncTable[phase_])();
 	if (shake_->GetShakeFlag() == true) {
@@ -168,9 +155,6 @@ void TutorialScene::Update()
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
 
-	/*if (deposit_ != nullptr) {
-		deposit_->Update(player_->GetPos());
-	}*/
 
 	schange->Change(0);
 
@@ -178,16 +162,6 @@ void TutorialScene::Update()
 	shake_->Update();
 	colManager_->Update();
 
-	//if (deposit_ != nullptr) {
-	//	if (deposit_->GetIsHit(player_->GetIsHammerSwing())) {
-	//		std::unique_ptr<Ore> ore = std::make_unique<Ore>();
-	//		ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
-	//		oreItems_.push_back(std::move(ore));
-	//	}
-	//	if (deposit_->GetHP() <= 0) {
-	//		safe_delete(deposit_);
-	//	}
-	//}
 	
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
@@ -221,23 +195,13 @@ void TutorialScene::Draw()
 		enemys_[i]->TutorialTexDraw();
 	if (phase_ == Phase::Title) {sleep_->Draw();}
 	else {player_->Draw();}
-	for (std::unique_ptr<Ore>& ore : oreItems_) {
-		if (ore != nullptr) {
-			//ore->Draw();
-		}
-	}
-	//if (deposit_ != nullptr) {
-	//	//deposit_->Draw();
-	//}
+
 	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	//for (int i = 0; i < 9; i++) {
-
-	//}
 	titlefilter_->Draw();
 	title_[titleanimeCount_]->Draw();
 	wake_->Draw();
@@ -294,9 +258,15 @@ void TutorialScene::Finalize()
 	safe_delete(movetextui_);
 	safe_delete(fighttextui_);
 	safe_delete(fighttextwindow_);
+	for (int i = 0; i < 4; i++) {
+		safe_delete(sleepModel_[i]);
+	}
 	player_->Finalize();
+	safe_delete(player_);
 	map_->Finalize();
-	//safe_delete(deposit_);
+	wake_.release();
+	nextui_.release();
+	titlefilter_.release();
 }
 
 void TutorialScene::SceneChange()

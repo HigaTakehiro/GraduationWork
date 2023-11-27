@@ -230,7 +230,9 @@ void BossScene::Draw()
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = boss_->GetStr();
 	//text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
+
 	//player_->TextUIDraw();
+
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -239,7 +241,9 @@ void BossScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	player_->SpriteDraw();
+	if (!boss_->GetClearF()) {
+		player_->SpriteDraw();
+	}
 	boss_->SpriteDraw();
 	if (boss_->GetClearF())
 	m_ClearTex->Draw();
@@ -251,6 +255,7 @@ void BossScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
+	safe_delete(player_);
 	//boss_->Finalize();
 	safe_delete(player_);
 	//safe_delete(ene);
@@ -262,19 +267,22 @@ void BossScene::Finalize()
 void BossScene::SceneChange()
 {
 	if (!player_->GetIsDead())return;
-	SceneManager::SetLevel(player_->GetLevel());
-	SceneManager::SetEP(player_->GetEP());
-	SceneManager::SetHP(player_->GetHP());
+
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetIsDead()) {
+		SceneManager::SetLevel(player_->GetLevel());
+		SceneManager::SetEP(player_->GetEP());
+		SceneManager::SetHP(player_->GetHP());
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
-	}
-	if (schange->GetEnd() == true) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
+	//if (schange->GetEnd() == true) {
+	//	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+	//	SceneManager::SceneChange(SceneManager::SceneName::IB);
+	//}
 	//if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 	//	SceneManager::SceneChange(SceneManager::SceneName::Title);
 	//}

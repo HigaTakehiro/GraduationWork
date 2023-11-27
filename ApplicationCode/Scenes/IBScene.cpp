@@ -75,8 +75,8 @@ void IBScene::Initialize()
 	playerUI_->SetEP(SceneManager::GetEP());
 	playerUI_->SetHP(SceneManager::GetHP());
 	playerUI_->SetLevel(SceneManager::GetLevel());
+	hp_ = playerUI_->GetHP();
 	playerUI_->SetStop(true);
-
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 
@@ -123,13 +123,16 @@ void IBScene::Update()
 	playerUI_->Update();
 	playerUI_->SetHP(playerUI_->GetMaxHP());
 
-	if (playerUI_->GetHP() != 0) {
+	if (hp_!=0) {
 		if (baseCount < 2) {
 			baseCount++;
 		}
 		if (baseCount == 1) {
 			baseNo++;
 		}
+	}
+	else {
+		baseNo = ib_->GetBaseNo();
 	}
 
 	ib_->Update();
@@ -199,8 +202,8 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	//std::wstring hx = std::to_wstring(playerUI_->GetHP());
-	//text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n" + hx, textDrawRange);
+	//std::wstring hx = std::to_wstring(SceneManager::GetHP());
+	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
 	playerUI_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -226,9 +229,7 @@ void IBScene::Finalize()
 
 void IBScene::SceneChange()
 {
-	SceneManager::SetLevel(playerUI_->GetLevel());
-	SceneManager::SetEP(playerUI_->GetEP());
-	SceneManager::SetHP(playerUI_->GetHP());
+
 	if (skillFlag == false) {
 		if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
@@ -255,6 +256,7 @@ void IBScene::SceneChange()
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
 	}
 	if (arrow->GetPosition().y == 150) {
+		//次のゲームシーンいく
 		if (schange->GetEnd() == false) {
 
 			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
@@ -265,23 +267,26 @@ void IBScene::SceneChange()
 		}
 		else if (schange->GetEnd() == true) {
 			if (baseNo % 2 == 0) {
-				if (playerUI_->GetHP() <= 0) {
-					SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
-					SceneManager::SetLevel(playerUI_->GetLevel());
-					SceneManager::SetEP(playerUI_->GetEP());
-					SceneManager::SetHP(playerUI_->GetMaxHP());
-					SceneManager::SceneChange(SceneManager::SceneName::Game);
-				}
-				else {
-					SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
-					SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
-				}
-			}
-			else {
+				//ボスエリアから来た場合
 				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 				SceneManager::SetLevel(playerUI_->GetLevel());
 				SceneManager::SetEP(playerUI_->GetEP());
-				if (playerUI_->GetHP() <= 0) {
+				if (hp_ <= 0) {
+					//HP0の時
+					SceneManager::SetHP(playerUI_->GetMaxHP());
+				}
+				else {
+					SceneManager::SetHP(playerUI_->GetHP());
+				}
+					SceneManager::SceneChange(SceneManager::SceneName::Game);
+			}
+			else {
+				//通常エリアから来た場合
+				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
+				SceneManager::SetLevel(playerUI_->GetLevel());
+				SceneManager::SetEP(playerUI_->GetEP());
+				if (hp_ <= 0) {
+					//HP0の時
 					SceneManager::SetHP(playerUI_->GetMaxHP());
 				}
 				else {
@@ -292,18 +297,13 @@ void IBScene::SceneChange()
 		}
 	}
 	else if (arrow->GetPosition().y == 50) {
+		//スキルエリアに行く
 		if (skillFlag == true) {
-			if (skillCount2 < 2) {
-				skillCount2++;
-			}
-			if (skillCount2 == 1) {
-				schange->SetFadeNum(1);
-				schange->SetFEnd(true);
-				schange->SetEnd(false);
-			}
+		
 			if (schange->GetEnd() == false) {
 				if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 					SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
+					schange->SetFEnd(false);
 					schange->SetFStart(true);
 					schange->SetFadeNum(0);
 				}
@@ -314,17 +314,10 @@ void IBScene::SceneChange()
 			}
 		}
 		else if (skillFlag == false) {
-			if (skillCount2 < 2) {
-				skillCount2++;
-			}
-			if (skillCount2 == 1) {
-				schange->SetFadeNum(1);
-				schange->SetFEnd(true);
-				schange->SetEnd(false);
-			}
 			if (schange->GetEnd() == false) {
 				if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 					SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
+					schange->SetFEnd(false);
 					schange->SetFStart(true);
 					schange->SetFadeNum(0);
 				}
@@ -333,6 +326,15 @@ void IBScene::SceneChange()
 				skillCount2 = 0;
 				skillFlag = true;
 			}
+		}
+		if (skillCount2 < 2) {
+			skillCount2++;
+		}
+		if (skillCount2 == 1) {
+			schange->SetFStart(false);
+			schange->SetFadeNum(1);
+			schange->SetFEnd(true);
+			schange->SetEnd(false);
 		}
 	}
 
