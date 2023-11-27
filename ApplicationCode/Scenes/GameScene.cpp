@@ -70,6 +70,10 @@ void GameScene::Initialize()
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
+	schange = new SceneChangeEffect();
+	schange->Initialize();
+	schange->SetFadeNum(1);
+	schange->SetFEnd(true);
 
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
@@ -122,6 +126,7 @@ void GameScene::Update()
 	colManager_->Update();
 
 	//シーン切り替え
+	schange->Change(0);
 	SceneChange();
 }
 
@@ -163,6 +168,7 @@ void GameScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -207,9 +213,18 @@ void GameScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change||player_->GetIsDead()) {
+		schange->SetFStart(true);
+		schange->SetFadeNum(0);
+	}
+	if (schange->GetEnd() == true) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
+	//if (player_->GetHP() <= 0) {
+	//	//最初の場所で死んだ場合まだ中間地点に到達してないのでゲームシーンから
+	//	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
+	//	SceneManager::SceneChange(SceneManager::SceneName::Game);
+	//}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::Title);

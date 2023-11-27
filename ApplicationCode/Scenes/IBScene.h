@@ -107,6 +107,7 @@ private: //メンバ変数
 	//プレイヤーモデル
 	Model* fireModel_;
 	std::unique_ptr<Sprite> susumu_;
+	std::unique_ptr<Sprite> skillSprite_;
 	std::unique_ptr<Sprite> skillB_;
 	std::unique_ptr<Sprite> arrow;
 
@@ -122,7 +123,11 @@ private: //メンバ変数
 	float count = 0;
 	float count2 = 2;
 	float soundCount;
+	int32_t baseCount = 0;
 	SceneChangeEffect* schange;
 	Player* playerUI_;
+	bool skillFlag = false;
+	int32_t skillCount = 0;
+	int32_t skillCount2 = 0;
 };
 

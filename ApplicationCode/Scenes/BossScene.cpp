@@ -11,8 +11,8 @@
 void BossScene::Initialize()
 {
 	ShowCursor(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‰Šú‰»
-	//‰æ–Ê‘å‚«‚³İ’è
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+	//ç”»é¢å¤§ãã•è¨­å®š
 	const Vector3 LB = { -1.0f, -1.0f, 0.0f };
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
@@ -20,10 +20,10 @@ void BossScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
-	//ƒJƒƒ‰‰Šú‰»
+	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	CameraSetting();
 	oldcamerapos_ = cameraPos_.z;
-	//ƒ‰ƒCƒg‰Šú‰»
+	//ãƒ©ã‚¤ãƒˆåˆæœŸåŒ–
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -33,7 +33,7 @@ void BossScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
-	//3dƒIƒuƒWƒFƒNƒg‰Šú‰»
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
 	player_ = new Player;
 	player_->Initialize();
 	player_->SetLevel(SceneManager::GetLevel());
@@ -61,8 +61,13 @@ void BossScene::Initialize()
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 	boss_->GetCSPos(cameraPos_);
 
+	m_ClearTex = Sprite::UniquePtrCreate((UINT)ImageManager::Image2DName::TestPlay, { 0, 0 });
+	m_ClearTexScl = { 0,0 };
+	m_ClearTex->SetAnchorPoint({ 0.5f,0.5f });
+	m_ClearTex->SetPosition({ 640.f,360.f });
+
 	m_Stairs.reset(new Stairs());
-	m_Stairs->BossInitialize(Vector3(0, -3.5f, 0), player_);
+	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
 	SoundManager::GetIns()->StopAllBGM();
 }
@@ -78,8 +83,7 @@ void BossScene::Update()
 	//Vector3 //enemyPos[3] = {};
 
 	
-	
-	//ƒfƒoƒbƒOƒJƒƒ‰ˆÚ“®ˆ—
+	//ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©ç§»å‹•å‡¦ç†
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
 		targetPos_.z += 1.0f;
@@ -96,7 +100,7 @@ void BossScene::Update()
 		cameraPos_.x -= 1.0f;
 		targetPos_.x -= 1.0f;
 	}
-	//HPƒfƒoƒbƒOˆ—
+	//HPãƒ‡ãƒãƒƒã‚°å‡¦ç†
 	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
 		player_->SubHP(1);
 	}
@@ -120,7 +124,7 @@ void BossScene::Update()
 		//boss_->SetCamera(camera_.get());
 	light_->Update();
 
-	//ƒvƒŒƒCƒ„[‚ÌOBBİ’è
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®OBBè¨­å®š
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
@@ -150,21 +154,46 @@ void BossScene::Update()
 	schange->Change(0);
 	
 	m_Stairs->Update();
-	//ƒV[ƒ“Ø‚è‘Ö‚¦
-	SceneChange();if (boss_->GetClearF() && player_->GetNextFlor())
+	//ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
+	SceneChange();
+	if (boss_->GetClearF() && player_->GetNextFlor())
 	{
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+			touchFlor = TRUE;
+		}
+	}
+	if (touchFlor) {
+		if (++ClearTexEaseT >= 60)
+		{
+			NextClearF = TRUE;
+		}
+		m_ClearTexScl.x = Easing::easeIn(ClearTexEaseT, 60.f, 0, 1280.f);
+		m_ClearTexScl.y = Easing::easeIn(ClearTexEaseT, 60.f, 0, 720.f);
+	}
+	if(NextClearF)
+	{
+		
+		ClearTexEaseT = std::clamp(ClearTexEaseT, 0.f, 60.f);
+	}
+	
+	m_ClearTex->SetSize(m_ClearTexScl);
+
+	if(NextClearF)
+	{
+		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+		}
 	}
 }
 
 void BossScene::Draw()
 {
-	//”wŒiF
+	//èƒŒæ™¯è‰²
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
 
 	postEffect_->PreDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(”wŒi)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(èƒŒæ™¯)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	background_->Draw();
 	Sprite::PostDraw();
@@ -176,7 +205,7 @@ void BossScene::Draw()
 	Object3d::PostDraw();
 
 
-	//3DƒIƒuƒWƒFƒNƒg•`‰æˆ—
+	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»å‡¦ç†
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 
 	boss_->Draw();
@@ -187,29 +216,31 @@ void BossScene::Draw()
 	Object3d::PostDraw();
 	//shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
-	//ƒeƒLƒXƒg•`‰æ”ÍˆÍ
+	//ãƒ†ã‚­ã‚¹ãƒˆæç”»ç¯„å›²
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = boss_->GetStr();
-	//text_->Draw("meiryo", "white", L"ƒ{ƒXƒV[ƒ“\n¶ƒNƒŠƒbƒN‚Ü‚½‚ÍLƒ{ƒ^ƒ“‚Åƒ^ƒCƒgƒ‹ƒV[ƒ“\n‰EƒNƒŠƒbƒN‚Ü‚½‚ÍRƒ{ƒ^ƒ“‚ÅƒŠƒUƒ‹ƒgƒV[ƒ“\nƒVƒFƒCƒN‚ÍEnter\nHP : " + hp, textDrawRange);
+	//text_->Draw("meiryo", "white", L"ãƒœã‚¹ã‚·ãƒ¼ãƒ³\nå·¦ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Lãƒœã‚¿ãƒ³ã§ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³\nå³ã‚¯ãƒªãƒƒã‚¯ã¾ãŸã¯Rãƒœã‚¿ãƒ³ã§ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³\nã‚·ã‚§ã‚¤ã‚¯ã¯Enter\nHP : " + hp, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg•`‰æ
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
 
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚È‚¢ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ãªã„ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	player_->SpriteDraw();
 	boss_->SpriteDraw();
+	if (boss_->GetClearF())
+	m_ClearTex->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -228,10 +259,19 @@ void BossScene::Finalize()
 
 void BossScene::SceneChange()
 {
-	//bool Change = player_->GetNext();
-	//if (Change) {
-	//	SceneManager::SceneChange(SceneManager::SceneName::Title);
-	//}
+	SceneManager::SetLevel(player_->GetLevel());
+	SceneManager::SetEP(player_->GetEP());
+	SceneManager::SetHP(player_->GetHP());
+
+	bool Change = player_->GetNext();
+	if (Change || player_->GetHP() <= 0) {
+		schange->SetFStart(true);
+		schange->SetFadeNum(0);
+	}
+	if (schange->GetEnd() == true) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
+	}
 	//if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 	//	SceneManager::SceneChange(SceneManager::SceneName::Title);
 	//}

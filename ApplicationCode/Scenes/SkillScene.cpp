@@ -42,24 +42,17 @@ void SkillScene::Initialize()
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
-	ib_ = new IntermediateBase();
-	ib_->Initialize();
-	ib_->LoadFloor();
-
 	schange = new SceneChangeEffect();
 	schange->Initialize();
-	schange->SetFEnd(true);
 	schange->SetFadeNum(1);
-	baseNo = ib_->GetBaseNo();
-	animeTimer_ = 0;
-	preAnimeCount_ = 999;
-	animeSpeed_ = 8;
+	schange->SetFEnd(true);
+
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 }
 
 void SkillScene::Update()
 {
-	
+
 	schange->Change(0);
 	//shake_->Update();
 	//colManager_->Update();
@@ -79,7 +72,6 @@ void SkillScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	ib_->Draw();
 	Object3d::PostDraw();
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
@@ -88,7 +80,7 @@ void SkillScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-		skillSprite_->Draw();
+	skillSprite_->Draw();
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -97,7 +89,7 @@ void SkillScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
-	std::wstring hx = std::to_wstring(schange->GetEnd());
+	std::wstring hx = std::to_wstring(schange->GetFadeNum());
 	text_->Draw("meiryo", "white", L"中間拠点シーン\n左クリックまたはLボタンで次の階層へ\n" + hx, textDrawRange);
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -130,8 +122,6 @@ void SkillScene::SceneChange()
 		}
 	}
 	else if (schange->GetEnd() == true) {
-		schange->SetFStart(false);
-		schange->SetFadeNum(0);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 }

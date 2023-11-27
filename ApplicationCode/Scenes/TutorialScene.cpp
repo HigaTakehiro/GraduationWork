@@ -8,7 +8,7 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
-
+#pragma warning(disable:4996)
 
 void (TutorialScene::* TutorialScene::FuncTable[])() {
 	&TutorialScene::TitlePhase,
@@ -46,6 +46,10 @@ void TutorialScene::Initialize()
 	wake_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::wake, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
 	wake_->SetAlpha(1.5f);
 	wake_->SetPosition(wakePos_);
+
+	nextui_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::asist_, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
+	nextui_->SetAlpha(1.5f);
+	nextui_->SetPosition(asistPos_);
 
 	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
 	sleep_->SetIsBillboardY(true);
@@ -188,6 +192,10 @@ void TutorialScene::Update()
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
 	}
+	FILE* fp;
+	fp = fopen("Engine/Resources/GameData/floor.csv", "w");
+	fprintf(fp, "floor %d", 0);
+	fclose(fp);
 	SceneChange();
 }
 
@@ -233,6 +241,10 @@ void TutorialScene::Draw()
 	titlefilter_->Draw();
 	title_[titleanimeCount_]->Draw();
 	wake_->Draw();
+	if (phase_ == Phase::Description || phase_ == Phase::Spown) {
+		nextui_->Draw();
+	}
+
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -515,6 +527,10 @@ void TutorialScene::MovePhase()
 
 void TutorialScene::SpownPhase()
 {
+	notjump_ = true;
+	notattack_ = true;
+	stop_ = true;
+
 	fighttextwindow_->Update();
 
 	if (startenemypos_[0].y >= -2.5f) {

@@ -96,23 +96,19 @@ void Player::Initialize()
 void Player::Update()
 {
 	DeadAction();
+	UIUpdate();
 	if (hp_ <= 0) return;
 
 	HitCoolTime();
 	Repulsion();
 	HammerPowerUp();
 	LevelUp();
-
-	if (KeyInput::GetIns()->PushKey(DIK_SLASH) && level_ < 99) {
-		AddEP(1);
-	}
 	
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
 	}
 	if (!stop_) {
-		UIUpdate();
 		Move();
 		Animation();
 		Attack();

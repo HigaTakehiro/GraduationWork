@@ -49,7 +49,8 @@ public: //‰æ‘œ–¼
 		LUSA2,
 		LUSA3,
 		//
-		STONE
+		STONE,
+		TestPlay
 	};
 public: //ƒƒ“ƒoŠÖ”
 	/// <summary>
