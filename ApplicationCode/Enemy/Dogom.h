@@ -41,7 +41,7 @@ private:
 	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
 	std::array<int, 2>m_ArmHp={5,5};
-    std::array<int, 2>m_ArmHp_Max = { 1,1 };
+    std::array<int, 2>m_ArmHp_Max = { 5,5 };
     std::array<BOOL, 2>m_ArmDamF;
     std::array<int, 2>m_ArmDamCool;
 
@@ -178,6 +178,7 @@ private:
     void Death_Shake();
 
     void DeathMotion();
+    void DamageFlash(float& colval, XMFLOAT4 &color, bool &judg);
     enum DeathAct
     {
 	    CameraSet,

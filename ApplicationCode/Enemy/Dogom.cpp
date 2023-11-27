@@ -56,7 +56,7 @@ void Dogom::Init()
 		//m_Body->SetIsBillboardY(true);
 		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		m_Arm[i]->SetObbScl({ 1.5f,4.f,1.5f });
+		m_Arm[i]->SetObbScl({ 1.3f,4.f,1.3f });
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
@@ -711,10 +711,10 @@ void Dogom::Wince()
 
 		
 		StanCount++;
-		if (StanCount >= 240) {
+		if (StanCount >= 180) {
 			if (++WinceEaseT >= 50)
 			{
-				m_ArmHp[LEFT] = m_ArmHp[RIGHT] = ArmHP();
+				m_ArmHp[LEFT] = m_ArmHp[RIGHT] = 5;
 				WinceF = FALSE;
 				WinceEaseT = 0.f;
 				
@@ -859,6 +859,9 @@ void Dogom::CoollisionArm()
 		for (size_t i = 0; i < 2; i++) {
 		 	//
 			if (m_ArmHp[i] <= 0)continue;
+			constexpr int damval = 1;
+			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, m_Arm[i]->GetIsHit());
+		
 			if (m_Arm[i]->GetIsHit()) {
 				m_player->SetIsHammerReflect(true);
 
@@ -868,9 +871,7 @@ void Dogom::CoollisionArm()
 
 				m_player->HitHammerToEnemy(vec[i], 1.f);
 			}
-			constexpr int damval = 1;
-			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, m_Arm[i]->GetIsHit());
-		}
+			}
 	}
 
 	//—¼˜r‚Ì‘Ì—Í‚ªÁ‚¦‚½‚ç
@@ -1200,4 +1201,21 @@ void Dogom::Death_End()
 void Dogom::Death_Non()
 {
 	return;
+}
+
+void Dogom::DamageFlash(float &colval,XMFLOAT4& color,bool& judg)
+{
+	if (!judg) {
+		return;
+	}
+
+	constexpr float FlashInter = 1.f / 60.f;
+
+	if (++colval > 90) {
+		colval = 0.f;
+		judg = FALSE;
+	} else {
+		color.y = sinf(colval)*FlashInter;
+		color.z = sinf(colval) * FlashInter;
+	}
 }
