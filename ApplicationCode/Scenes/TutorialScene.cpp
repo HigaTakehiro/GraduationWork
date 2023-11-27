@@ -285,6 +285,9 @@ void TutorialScene::Finalize()
 
 void TutorialScene::SceneChange()
 {
+	SceneManager::SetLevel(player_->GetLevel());
+	SceneManager::SetEP(player_->GetEP());
+	SceneManager::SetHP(player_->GetHP());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
@@ -292,9 +295,6 @@ void TutorialScene::SceneChange()
 	}
 
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SceneManager::SetLevel(player_->GetLevel());
-		SceneManager::SetEP(player_->GetEP());
-		SceneManager::SetHP(player_->GetHP());
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}

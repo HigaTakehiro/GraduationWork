@@ -40,8 +40,8 @@ private:
     std::array<float, 2>m_ArmAlpha;;
 	std::array<float, 2>m_ArmMov_Y;
     std::array<float, 2>m_ArmAttckEaseT;
-	std::array<int, 2>m_ArmHp={5,5};
-    std::array<int, 2>m_ArmHp_Max = { 5,5 };
+	std::array<int, 2>m_ArmHp={3,3};
+    std::array<int, 2>m_ArmHp_Max = { 3,3 };
     std::array<BOOL, 2>m_ArmDamF;
     std::array<int, 2>m_ArmDamCool;
 

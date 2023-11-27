@@ -60,10 +60,15 @@ void BossScene::Initialize()
 
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 	boss_->GetCSPos(cameraPos_);
+
+	m_Stairs.reset(new Stairs());
+	m_Stairs->BossInitialize(Vector3(0, -3.5f, 0), player_);
 }
 
 void BossScene::Update()
 {
+	if (!boss_.get()) return;
+
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
 	player_->Update();
@@ -97,10 +102,10 @@ void BossScene::Update()
 		player_->SetHP(3);
 	}
 
-	if (shake_->GetShakeFlag() == true) {
+	/*if (shake_->GetShakeFlag() == true) {
 		cameraPos_.y += shake_->GetShakePos();
 		targetPos_.y += shake_->GetShakePos();
-	}
+	}*/
 	else {
 		cameraPos_.y = 12;
 		targetPos_.y = 0;
@@ -132,12 +137,22 @@ void BossScene::Update()
 	if (!player_->GetIsHammerReflect()) {
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition));
 	}
-	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-	shake_->Update();
+
+		boss_->SetHummerPos(player_->GetHammer()->GetPosition());
+
+		
+		//shake_->Update();
 	colManager_->Update();
+		//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
+		
 	schange->Change(0);
+	
+	m_Stairs->Update();
 	//シーン切り替え
-	SceneChange();
+	SceneChange();if (boss_->GetClearF() && player_->GetNextFlor())
+	{
+		SceneManager::SceneChange(SceneManager::SceneName::Title);
+	}
 }
 
 void BossScene::Draw()
@@ -153,6 +168,9 @@ void BossScene::Draw()
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->MapDraw();
+	if(boss_->GetClearF())
+	m_Stairs->Draw();
+
 	Object3d::PostDraw();
 
 
@@ -162,9 +180,10 @@ void BossScene::Draw()
 	boss_->Draw();
 	player_->Draw();
 	map_->BridgeDraw();
+
 	boss_->Draw2();
 	Object3d::PostDraw();
-	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	//shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
@@ -197,8 +216,10 @@ void BossScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
-	boss_->Finalize();
+	//boss_->Finalize();
 	safe_delete(player_);
+	//safe_delete(ene);
+	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
 }

@@ -14,6 +14,8 @@ public:
 
 	void Initialize(const XMFLOAT3& Pos, Player* player,int Count);
 
+	void BossInitialize(const XMFLOAT3& Pos, Player* player);
+
 	void Update();
 
 	void Draw();

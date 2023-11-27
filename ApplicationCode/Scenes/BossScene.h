@@ -55,6 +55,8 @@ private:
 	std::unique_ptr<LightGroup> light_;
 	//カメラ
 	std::unique_ptr<Camera> camera_;
+	//
+	std::unique_ptr<Stairs>m_Stairs;
 	//プレイヤー
 	Player* player_;
 

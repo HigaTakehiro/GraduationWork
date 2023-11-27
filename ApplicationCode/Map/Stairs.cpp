@@ -58,6 +58,19 @@ void Stairs::Initialize(const XMFLOAT3& Pos, Player* player, int Count)
 	stairs_->SetPosition(pos_);
 }
 
+void Stairs::BossInitialize(const XMFLOAT3& Pos, Player* player)
+{
+	LoadCsv();
+	player_ = player;
+	pos_ = Pos + pos_;
+
+	stairsModel_ = Shapes::CreateSquare({ 0,0 }, { 64, 64 }, "steps.png", { 2, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
+	stairs_ = make_unique<Object3d>();
+	stairs_ = Object3d::UniquePtrCreate(stairsModel_);
+	stairs_->SetIsBillboardY(true);
+	stairs_->SetPosition(pos_);
+}
+
 void Stairs::Update()
 {
 	CheckHit();
@@ -74,8 +87,8 @@ void Stairs::CheckHit()
 {
 	XMFLOAT3 Pos = player_->Get();
 
-	if ((Pos.x >= pos_.x - 1.5f && Pos.x <= pos_.x + 1.5f) &&
-		(Pos.z >= pos_.z-1.5f  && Pos.z <= pos_.z + 1.5f)) {
+	if ((Pos.x >= pos_.x - 2.f && Pos.x <= pos_.x + 1.f) &&
+		(Pos.z >= pos_.z-2.f  && Pos.z <= pos_.z + 1.f)) {
 		player_->SetNextFlor(true);
 	}
 	else {
