@@ -125,6 +125,8 @@ private:
 	
 	TextDraw* fighttextui_;
 
+	TextDraw* lasttext_;
+
 	//ƒJƒƒ‰À•W
 	Vector3 cameraPos_;
 	//’‹“_
