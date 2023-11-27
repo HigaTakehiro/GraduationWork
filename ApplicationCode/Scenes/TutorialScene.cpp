@@ -288,6 +288,9 @@ void TutorialScene::Finalize()
 	safe_delete(textWindow_);
 	safe_delete(movetextui_);
 	safe_delete(fighttextui_);
+	safe_delete(fighttextwindow_);
+	player_->Finalize();
+	map_->Finalize();
 	//safe_delete(deposit_);
 }
 
