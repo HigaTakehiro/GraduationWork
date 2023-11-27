@@ -94,9 +94,7 @@ private:
 	std::unique_ptr<Camera> camera_;
 	//プレイヤー
 	Player* player_;
-	//鉱石アイテム
-	std::list<std::unique_ptr<Ore>> oreItems_;
-	Deposit* deposit_;
+
 	//タイトル
 	unique_ptr<Sprite> titlefilter_;
 	unique_ptr<Sprite> title_[9];
