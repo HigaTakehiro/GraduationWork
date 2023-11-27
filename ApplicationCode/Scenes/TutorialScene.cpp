@@ -262,6 +262,10 @@ void TutorialScene::Draw()
 	if (phase_ == Phase::Fight) {
 		fighttextui_->Draw("meiryo", "white", L"敵を全て倒そう\nBボタンでハンマーを振り回し体当たり\n", textDrawRange);
 	}
+
+	if (phase_ == Phase::Defeat) {
+		fighttextui_->Draw("meiryo", "white", L"洞窟を進んで階段へ向かおう\n", textDrawRange);
+	}
 	
 	if (phase_ != Phase::Title) {
 		player_->TextUIDraw();
