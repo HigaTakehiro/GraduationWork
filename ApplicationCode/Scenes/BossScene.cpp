@@ -269,6 +269,8 @@ void BossScene::SceneChange()
 		SceneManager::SetLevel(player_->GetLevel());
 		SceneManager::SetEP(player_->GetEP());
 		SceneManager::SetHP(player_->GetHP());
+		schange->SetFStart(true);
+		schange->SetFadeNum(0);
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}

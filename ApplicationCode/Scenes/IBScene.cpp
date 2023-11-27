@@ -76,6 +76,7 @@ void IBScene::Initialize()
 	playerUI_->SetHP(SceneManager::GetHP());
 	playerUI_->SetLevel(SceneManager::GetLevel());
 	hp_ = playerUI_->GetHP();
+	playerUI_->SetStop(true);
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 
