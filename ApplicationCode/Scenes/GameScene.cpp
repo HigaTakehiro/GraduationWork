@@ -216,11 +216,12 @@ void GameScene::Finalize()
 
 void GameScene::SceneChange()
 {
+	SceneManager::SetLevel(player_->GetLevel());
+	SceneManager::SetEP(player_->GetEP());
+	SceneManager::SetHP(player_->GetHP());
+
 	bool Change = player_->GetNext();
 	if (Change||player_->GetHP()<=0) {
-		SceneManager::SetLevel(player_->GetLevel());
-		SceneManager::SetEP(player_->GetEP());
-		SceneManager::SetHP(player_->GetHP());
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}

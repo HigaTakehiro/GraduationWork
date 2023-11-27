@@ -216,6 +216,10 @@ void IBScene::Finalize()
 
 void IBScene::SceneChange()
 {
+	SceneManager::SetLevel(playerUI_->GetLevel());
+	SceneManager::SetEP(playerUI_->GetEP());
+	SceneManager::SetHP(playerUI_->GetHP());
+
 	if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
 		arrow->SetPosition({ 900,50 });
