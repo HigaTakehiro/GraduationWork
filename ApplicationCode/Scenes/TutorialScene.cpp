@@ -1,4 +1,4 @@
-#include "TutorialScene.h"
+﻿#include "TutorialScene.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -125,6 +125,9 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
+	int32_t Max=player_->GetMaxHP();
+	player_->SetHP(Max);
+
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 
