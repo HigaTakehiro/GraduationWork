@@ -119,7 +119,7 @@ void IBScene::Update()
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	light_->Update();
-	//playerUI_->Update();
+	playerUI_->Update();
 	playerUI_->SetHP(playerUI_->GetMaxHP());
 
 	if (playerUI_->GetHP() != 0) {
