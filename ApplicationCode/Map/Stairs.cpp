@@ -78,6 +78,12 @@ void Stairs::BossInitialize(const XMFLOAT3& Pos, Player* player)
 	stairs_ = Object3d::UniquePtrCreate(stairsModel_);
 	stairs_->SetIsBillboardY(true);
 	stairs_->SetPosition(pos_);
+
+
+	ui_ = make_unique<Object3d>();
+	ui_ = Object3d::UniquePtrCreate(uiModel_);
+	ui_->SetIsBillboardY(true);
+	ui_->SetPosition(uipos_);
 }
 
 void Stairs::Update()
