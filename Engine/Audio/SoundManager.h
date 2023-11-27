@@ -88,6 +88,11 @@ public: //メンバ関数
 	void StopBGM(const BGMKey bgmKey, const bool isPause = false);
 
 	/// <summary>
+	/// 全てのBGMを停止
+	/// </summary>
+	void StopAllBGM();
+
+	/// <summary>
 	/// SEを停止
 	/// </summary>
 	/// <param name="seKey">停止したいSEマップのキー</param>

@@ -63,6 +63,8 @@ void BossScene::Initialize()
 
 	m_Stairs.reset(new Stairs());
 	m_Stairs->BossInitialize(Vector3(0, -3.5f, 0), player_);
+
+	SoundManager::GetIns()->StopAllBGM();
 }
 
 void BossScene::Update()

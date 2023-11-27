@@ -75,6 +75,8 @@ void IBScene::Initialize()
 	playerUI_->SetEP(SceneManager::GetEP());
 	playerUI_->SetLevel(SceneManager::GetLevel());
 
+	SoundManager::GetIns()->StopAllBGM();
+
 }
 
 void IBScene::Update()
