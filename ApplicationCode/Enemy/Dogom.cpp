@@ -89,6 +89,7 @@ void Dogom::Init()
 
 void Dogom::Upda()
 {
+	if (m_BodyAlpha <= 0.f)return;
 	isAttack = (KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B));
 	
 	constexpr float pi_ = 3.14f;
@@ -248,6 +249,7 @@ void Dogom::Upda()
 void Dogom::Draw()
 {
 	if (isLeaveBoss)return;
+	if (m_BodyAlpha <= 0.f)return;
 	//if()
 	//if (m_HP <= 0)return;
 	CrossAreaTex->Draw();
@@ -256,6 +258,7 @@ void Dogom::Draw()
 }
 void Dogom::Draw2()
 {
+	if (m_BodyAlpha <= 0.f)return;
 	if (isLeaveBoss)return;
 	//if (m_HP <= 0)return;
 	constexpr float BossDraw_maxlen = 125.f;
@@ -373,7 +376,7 @@ void Dogom::ArmAct()
 
 		if (StartWaitT>90&&!isLeaveBoss&&!WinceF&&isNextActTim) {
 			ActionRandom = rand() % 100;
-			if (ActionRandom > 0) {
+			if (ActionRandom > 50) {
 				SetAttack_Impact();
 				arm_move_ = ATTACK_IMPACT;
 			} else
@@ -714,7 +717,7 @@ void Dogom::Wince()
 		if (StanCount >= 180) {
 			if (++WinceEaseT >= 50)
 			{
-				m_ArmHp[LEFT] = m_ArmHp[RIGHT] = 5;
+				m_ArmHp[LEFT] = m_ArmHp[RIGHT] = 3;
 				WinceF = FALSE;
 				WinceEaseT = 0.f;
 				
@@ -986,6 +989,7 @@ void Dogom::WinceIdle()
 
 void Dogom::SpriteDraw()
 {
+	if (m_BodyAlpha <= 0.f)return;
 	float px = 880.f, py = 30.f;
 	float sx,sy;
 	//0~400‚ÌŠÔ‚Å‚Ì•âŠ®Žæ‚é
@@ -1122,8 +1126,12 @@ void Dogom::DeathMotion()
 	{
 		//motion//
 		DeathAct = &Dogom::Death_Shake;
-		//nextPhase//
+		if(m_BodyAlpha<=0.1f)
+		m_ClearF = TRUE;//nextPhase//
+		if(m_BodyAlpha<=0.1f)
+		m_player->SetStopF(FALSE);
 		if (m_FeedCount>2 && isNext(m_DeathT)) {
+			
 			m_DeathT = 0.f;//reset
 			Dmotion_phase = DeathAct::End;
 		}
@@ -1135,12 +1143,12 @@ void Dogom::DeathMotion()
 		//motion//
 		DeathAct = &Dogom::Death_End;
 	
-		if(m_FeedAlpha>=1.f && isNext(m_DeathT))
+		//if(m_FeedAlpha>=1.f && isNext(m_DeathT))
 		{
-			m_ClearF = TRUE;
+			
 		}
 		m_player->SetStopF(FALSE);
-		m_FeedF = !m_ClearF;
+		m_FeedF = FALSE;
 	}
 
 	(this->*DeathAct)();
