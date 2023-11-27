@@ -419,8 +419,10 @@ void Player::Move() {
 
 	if (nextflor_) {
 		if (KeyInput::GetIns()->PushKey(DIK_Z) || PadInput::GetIns()->PushButton(PadInput::Button_A)) {
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::gimmickSteps, 0.3f);
 			next_ = true;
+			if (!sestop_) { return; }
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::gimmickSteps, 0.3f);
+			sestop_ = false;
 		}
 		else {
 			next_ = false;
