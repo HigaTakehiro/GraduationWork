@@ -259,9 +259,20 @@ void BossScene::Finalize()
 
 void BossScene::SceneChange()
 {
-	//bool Change = player_->GetNext();
-	//if (Change) {
-	//	SceneManager::SceneChange(SceneManager::SceneName::Title);
+	SceneManager::SetLevel(player_->GetLevel());
+	SceneManager::SetEP(player_->GetEP());
+	SceneManager::SetHP(player_->GetHP());
+
+	bool Change = player_->GetNext();
+	if (Change || player_->GetHP() <= 0) {
+	/*	schange->SetFStart(true);
+		schange->SetFadeNum(0);*/
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
+	}
+	//if (schange->GetEnd() == true) {
+	//	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+	//	SceneManager::SceneChange(SceneManager::SceneName::IB);
 	//}
 	//if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 	//	SceneManager::SceneChange(SceneManager::SceneName::Title);

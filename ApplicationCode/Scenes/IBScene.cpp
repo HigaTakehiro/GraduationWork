@@ -280,7 +280,12 @@ void IBScene::SceneChange()
 				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 				SceneManager::SetLevel(playerUI_->GetLevel());
 				SceneManager::SetEP(playerUI_->GetEP());
-				SceneManager::SetHP(playerUI_->GetHP());
+				if (playerUI_->GetHP() <= 0) {
+					SceneManager::SetHP(playerUI_->GetMaxHP());
+				}
+				else {
+					SceneManager::SetHP(playerUI_->GetHP());
+				}
 				SceneManager::SceneChange(SceneManager::SceneName::Boss);
 			}
 		}
