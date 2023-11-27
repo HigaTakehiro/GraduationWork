@@ -259,6 +259,7 @@ void TutorialScene::Finalize()
 	safe_delete(fighttextui_);
 	safe_delete(fighttextwindow_);
 	player_->Finalize();
+	safe_delete(player_);
 	map_->Finalize();
 	
 }

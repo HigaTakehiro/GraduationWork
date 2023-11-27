@@ -255,6 +255,7 @@ void BossScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
+	safe_delete(player_);
 	//boss_->Finalize();
 	safe_delete(player_);
 	//safe_delete(ene);
