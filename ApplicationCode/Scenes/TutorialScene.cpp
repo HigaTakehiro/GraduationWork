@@ -280,14 +280,6 @@ void TutorialScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 
-	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
-	}
-	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::title);
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
-	}
 }
 
 void TutorialScene::CameraSetting()

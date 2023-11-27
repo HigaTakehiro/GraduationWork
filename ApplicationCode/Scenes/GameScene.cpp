@@ -220,19 +220,7 @@ void GameScene::SceneChange()
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
-	//if (player_->GetHP() <= 0) {
-	//	//最初の場所で死んだ場合まだ中間地点に到達してないのでゲームシーンから
-	//	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
-	//	SceneManager::SceneChange(SceneManager::SceneName::Game);
-	//}
-	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
-		SceneManager::SceneChange(SceneManager::SceneName::Title);
-	}
-	else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
-		SceneManager::SceneChange(SceneManager::SceneName::Result);
-	}
+
 }
 
 void GameScene::CameraSetting()
