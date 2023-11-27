@@ -47,6 +47,10 @@ void TutorialScene::Initialize()
 	wake_->SetAlpha(1.5f);
 	wake_->SetPosition(wakePos_);
 
+	nextui_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::asist_, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
+	nextui_->SetAlpha(1.5f);
+	nextui_->SetPosition(asistPos_);
+
 	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
 	sleep_->SetIsBillboardY(true);
 	sleep_->SetObbScl({ 2.f,4.f,2.f });
@@ -230,6 +234,10 @@ void TutorialScene::Draw()
 	titlefilter_->Draw();
 	title_[titleanimeCount_]->Draw();
 	wake_->Draw();
+	if (phase_ == Phase::Description || phase_ == Phase::Spown) {
+		nextui_->Draw();
+	}
+
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -512,6 +520,10 @@ void TutorialScene::MovePhase()
 
 void TutorialScene::SpownPhase()
 {
+	notjump_ = true;
+	notattack_ = true;
+	stop_ = true;
+
 	fighttextwindow_->Update();
 
 	if (startenemypos_[0].y >= -2.5f) {
