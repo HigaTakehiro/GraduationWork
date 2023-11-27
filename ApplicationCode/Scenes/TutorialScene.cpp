@@ -1,4 +1,4 @@
-#include "TutorialScene.h"
+﻿#include "TutorialScene.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -125,6 +125,9 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
+	int32_t Max=player_->GetMaxHP();
+	player_->SetHP(Max);
+
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 
@@ -238,6 +241,15 @@ void TutorialScene::Draw()
 
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
 	//text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
+	std::wstring MoveTimer = std::to_wstring((int32_t)movetimer_);
+	if (phase_ == Phase::Move) {
+		movetextui_->Draw("meiryo", "white", L"Lスティックで動いてみよう\n10/"+MoveTimer, textDrawRange);
+	}
+
+	if (phase_ == Phase::Fight) {
+		fighttextui_->Draw("meiryo", "white", L"敵を全て倒そう\nBボタンでハンマーを振り回し体当たり\n", textDrawRange);
+	}
+	
 	if (phase_ != Phase::Title) {
 		player_->TextUIDraw();
 		textWindow_->TextMessageDraw();
@@ -262,6 +274,8 @@ void TutorialScene::Draw()
 void TutorialScene::Finalize()
 {
 	safe_delete(textWindow_);
+	safe_delete(movetextui_);
+	safe_delete(fighttextui_);
 	//safe_delete(deposit_);
 }
 
@@ -273,7 +287,7 @@ void TutorialScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
+		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {

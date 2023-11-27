@@ -89,6 +89,12 @@ public: //メンバ関数
 	void SetHP(int32_t hp) { hp_ = hp; }
 
 	/// <summary>
+	/// 体力の最大値を取得
+	/// </summary>
+	/// <returns></returns>
+	int32_t GetMaxHP() { return maxHp_; }
+
+	/// <summary>
 	/// レベルを取得
 	/// </summary>
 	/// <returns>レベル</returns>
