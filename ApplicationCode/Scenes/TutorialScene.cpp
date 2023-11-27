@@ -258,9 +258,14 @@ void TutorialScene::Finalize()
 	safe_delete(movetextui_);
 	safe_delete(fighttextui_);
 	safe_delete(fighttextwindow_);
+	for (int i = 0; i < 4; i++) {
+		safe_delete(sleepModel_[i]);
+	}
 	player_->Finalize();
 	map_->Finalize();
-	
+	wake_.release();
+	nextui_.release();
+	titlefilter_.release();
 }
 
 void TutorialScene::SceneChange()
