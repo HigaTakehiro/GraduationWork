@@ -267,7 +267,7 @@ void BossScene::SceneChange()
 	SceneManager::SetHP(player_->GetHP());
 
 	bool Change = player_->GetNext();
-	if (Change || player_->GetHP() <= 0) {
+	if (Change || player_->GetIsDead()) {
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
 	}
