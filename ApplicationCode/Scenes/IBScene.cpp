@@ -63,7 +63,7 @@ void IBScene::Initialize()
 	schange->Initialize();
 	schange->SetFEnd(true);
 	schange->SetFadeNum(1);
-
+	/*baseNo = 0;*/
 	baseNo = ib_->GetBaseNo();
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
@@ -119,7 +119,7 @@ void IBScene::Update()
 	playerUI_->Update();
 
 
-	if (hp_ != 0) {
+	if (playerUI_->GetHP() != 0) {
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 			baseNo++;
 		}
@@ -243,31 +243,31 @@ void IBScene::SceneChange()
 		if (schange->GetEnd() == false) {
 
 			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-				schange->SetFEnd(false);
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 				schange->SetFStart(true);
 				schange->SetFadeNum(0);
 			}
 		}
 		else if (schange->GetEnd() == true) {
-			schange->SetFStart(false);
-			schange->SetFadeNum(0);
-			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
-			SceneManager::SceneChange(SceneManager::SceneName::Boss);
+			if (baseNo >= 0) {
+				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
+				SceneManager::SceneChange(SceneManager::SceneName::Boss);
+			}
+			if (baseNo >= 1) {
+				SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
+				SceneManager::SceneChange(SceneManager::SceneName::Title);
+			}
 		}
 	}
 	else if (arrow->GetPosition().y == 50) {
 		if (schange->GetEnd() == false) {
 			if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
-				schange->SetFEnd(false);
 				schange->SetFStart(true);
 				schange->SetFadeNum(0);
 			}
 		}
 		else if (schange->GetEnd() == true) {
-			schange->SetFStart(false);
-			schange->SetFadeNum(0);
 			SceneManager::SceneChange(SceneManager::SceneName::SKILL);
 		}
 	}

@@ -217,12 +217,17 @@ void GameScene::Finalize()
 void GameScene::SceneChange()
 {
 	bool Change = player_->GetNext();
-	if (Change||player_->GetHP()<=0) {
+	if (Change) {
 		SceneManager::SetLevel(player_->GetLevel());
 		SceneManager::SetEP(player_->GetEP());
 		SceneManager::SetHP(player_->GetHP());
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
+	}
+	if (player_->GetHP() <= 0) {
+		//最初の場所で死んだ場合まだ中間地点に到達してないのでゲームシーンから
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
+		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 	if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
