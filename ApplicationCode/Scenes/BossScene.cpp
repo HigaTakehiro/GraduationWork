@@ -230,7 +230,7 @@ void BossScene::Draw()
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = boss_->GetStr();
 	//text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
-	player_->TextUIDraw();
+	//player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
