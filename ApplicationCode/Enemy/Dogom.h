@@ -21,6 +21,7 @@ private:
     std::unique_ptr<Sprite>m_HpTex=nullptr;
     std::unique_ptr<Sprite>m_HpTex_Frame = nullptr;
     std::unique_ptr<Sprite>m_HpTex_Inner = nullptr;
+   
     float m_hpInnerSizeX=400.f, InnerSclingT;;
     float NowHP, BeforeHP;
     bool bravegaugeF;
