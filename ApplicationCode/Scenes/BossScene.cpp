@@ -176,7 +176,7 @@ void BossScene::Update()
 
 	schange->Change(0);
 
-	//シーン切り替え
+	//シーン切り替えmmm
 	SceneChange();
 	if(NextClearF)
 	{
