@@ -23,6 +23,7 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include"IntermediateBase.h"
+#include "Grass.h"
 
 class GameScene : public BaseScene
 {
@@ -77,6 +78,8 @@ private: //メンバ変数
 	Player* player_;
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
+	//草
+	std::list<std::unique_ptr<Grass>> grasses_;
 
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;
