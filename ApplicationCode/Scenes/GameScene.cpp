@@ -78,17 +78,23 @@ void GameScene::Initialize()
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 
-	//std::unique_ptr<Grass> grass;
+	std::unique_ptr<Grass> grass_1 = std::make_unique<Grass>();
+	grass_1->Initialize({24, 0, 24});
+	std::unique_ptr<Grass> grass_2 = std::make_unique<Grass>();
+	grass_2->Initialize({ 35, 0, 35 });
+	grasses_.push_back(std::move(grass_1));
+	grasses_.push_back(std::move(grass_2));
 }
 
 void GameScene::Update()
 {
-	
-
 	player_->Update();
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 	if (player_->GetHP() <= 0) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
+	}
+	for (std::unique_ptr<Grass>& grass : grasses_) {
+		grass->Update(player_->GetPos());
 	}
 
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -163,7 +169,11 @@ void GameScene::Draw()
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TexDraw();
 	player_->Draw();
+	for (std::unique_ptr<Grass>& grass : grasses_) {
+		grass->Draw();
+	}
 	map_->BridgeDraw();
+
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
@@ -204,6 +214,7 @@ void GameScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
+	grasses_.clear();
 }
 
 void GameScene::SceneChange()
