@@ -87,8 +87,8 @@ void NormalEnemyA::Upda(Camera* camera)
 void NormalEnemyA::Draw()
 {
 	constexpr float MinDis = 15.f;
-
-	if (Collision::GetLength(_status.Pos, _player->GetPos()) > 12.f)return;
+	if (_player->GetPos().z > 7)return;
+	if (Collision::GetLength(_status.Pos, _player->GetPos()) > 17.f)return;
 	if (_status.HP <= 0)return;
 	if (_status.Tex == nullptr)return;
 	Texture::PreDraw();
@@ -297,7 +297,7 @@ void NormalEnemyA::TutorialUpda(Camera* camera, bool flag)
 	if (flag == false) {
 		Jump();
 	}
-	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f);
+	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f,2.f);
 
 	DamageFlash();
 	if (_status.Tex != nullptr) {

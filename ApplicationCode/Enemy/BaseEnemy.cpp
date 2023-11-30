@@ -197,6 +197,7 @@ void BaseEnemy::TexUpda()
 void BaseEnemy::TexDraw()
 {
 	constexpr float dis_max = 15.f;
+	if (_player->GetPos().z > 7)return;
 
 	Helper::isDraw(_player->GetPos(), _status.Pos, m_ShadowTex.get(), dis_max, _status.HP <= 0);
 

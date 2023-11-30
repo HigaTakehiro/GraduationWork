@@ -342,7 +342,7 @@ void TutorialScene::EnemyProcess()
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i]);
+			player_->HitHammerToEnemy(vec[i]/2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
 	}
