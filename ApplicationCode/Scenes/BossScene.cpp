@@ -78,7 +78,7 @@ void BossScene::Update()
 {
 	if (!boss_.get()) return;
 
-	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
+	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
@@ -170,8 +170,6 @@ void BossScene::Update()
 	}
 	if(NextClearF)
 	{
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
-
 		ClearTexEaseT = std::clamp(ClearTexEaseT, 0.f, 60.f);
 	}
 	
