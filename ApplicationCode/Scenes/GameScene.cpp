@@ -78,6 +78,7 @@ void GameScene::Initialize()
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 
+	//std::unique_ptr<Grass> grass;
 }
 
 void GameScene::Update()
