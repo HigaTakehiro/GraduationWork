@@ -70,6 +70,8 @@ void BossScene::Initialize()
 	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
 	SoundManager::GetIns()->StopAllBGM();
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss, TRUE, 0.4f);
+
 }
 
 void BossScene::Update()
@@ -168,7 +170,8 @@ void BossScene::Update()
 	}
 	if(NextClearF)
 	{
-		
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+
 		ClearTexEaseT = std::clamp(ClearTexEaseT, 0.f, 60.f);
 	}
 	

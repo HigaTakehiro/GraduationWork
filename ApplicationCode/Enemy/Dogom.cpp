@@ -11,6 +11,7 @@
 
 #include"Helper.h"
 #include "PadInput.h"
+#include "SoundManager.h"
 #define BOSSMAP_C 0.f
 #define BOSSMAP_H 12.f
 #define BOSSMAP_W 15.f
@@ -123,7 +124,8 @@ void Dogom::Upda()
 				constexpr int RecvCoolMax = 120;
 				const int DamageVal = 1;
 				bool judg = isAttack && isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
-
+				if(judg)
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.3f);
 				Helper::DamageManager(m_HP, DamageVal, BodyRecvDam, BodyDamCool, RecvCoolMax, judg);
 				if (judg)FlashF = TRUE;
 			}
@@ -617,6 +619,7 @@ m_ArmAttckEaseT[LEFT]++;
 				m_ArmPos[LEFT].x = Easing::easeIn(m_ArmAttckEaseT[LEFT], 30.f, BefoPos[LEFT].x, ClushPos-2.f);
 
 			if (m_ArmAttckEaseT[LEFT] >= 30.f) {
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::firstBossCrossAttack, 0.3f);
 				m_ArmAttckEaseT[RIGHT] = m_ArmAttckEaseT[LEFT] = 0.f;
 				BefoPos[LEFT] = m_ArmPos[LEFT], BefoPos[RIGHT] = m_ArmPos[RIGHT];
 				next_2 = TRUE;
@@ -798,6 +801,7 @@ void Dogom::ImpactTexScling()
 			m_ImpactTexPos[i] = Vector3(m_ArmPos[i].x, GroundY, m_ArmPos[i].z);
 			m_ImpactTexScl[i] = Vector3(0, 0, 0);
 			m_ImpactTexAlpha[i] = 1.f;
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::impact, 0.3f);
 			m_ImpactF[i] = TRUE;
 		}
 	}
@@ -861,10 +865,15 @@ void Dogom::CoollisionArm()
 	bool canCol = arm_move_ == DEFAULT && m_player->getisHammerActive();
 
 	if (canCol) {
+	
+
 		for (size_t i = 0; i < 2; i++) {
 		 	//
 			if (m_ArmHp[i] <= 0)continue;
 			constexpr int damval = 1;
+			if (m_Arm[i]->GetIsHit() &&m_ArmDamCool[i]<2) {
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::firstBossHitAttack, 0.3f);
+			}
 			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, m_Arm[i]->GetIsHit());
 		
 			if (m_Arm[i]->GetIsHit()) {
@@ -1118,6 +1127,8 @@ void Dogom::DeathMotion()
 		m_FeedF = true;
 		//motion//
 		if (m_FeedAlpha >= 1.f) {
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::firstBossDestroy, 0.3f);
+
 			m_FeedF = false;
 			DeathAct = &Dogom::Death_Idle;
 			Dmotion_phase = DeathAct::FeedShake;
