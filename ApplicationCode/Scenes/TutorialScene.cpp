@@ -393,6 +393,7 @@ void TutorialScene::SleepShale()
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			pushCount_ += 1;
 			shaketimer_ = 0;
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDamage, 0.2f);
 			if (pushCount_ >= 5) {
 				action_ = true;
 			}
