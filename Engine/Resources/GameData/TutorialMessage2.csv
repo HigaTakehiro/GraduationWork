@@ -7,7 +7,7 @@
 OPEN
 WAIT 60
 
-TEXT Bボダンでハンマーを振り回そう
+TEXT Bボタンでハンマーを振り回そう
 SPEED 2
 BOTTUN
 
