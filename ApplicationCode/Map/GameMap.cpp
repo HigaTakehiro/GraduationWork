@@ -8,13 +8,16 @@ int Count = 0;
 
 void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
+
+	float startX = 30.f;
+	float startZ = 30.f;
 	std::string line;
 	int NUMBER = 0;
 	int NEXTVERT = 0;
 	int NEXTHORY = 0;
 	int COUNT = 0;
 	bool NEXTCOUNT = false;
-	XMFLOAT3 Pos = { 30.f ,0.f,30.f };
+	XMFLOAT3 Pos = { startX ,0.f,startZ };
 
 	std::stringstream stream;
 
@@ -65,7 +68,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Normal;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
@@ -78,7 +81,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Forest;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
@@ -91,7 +94,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Enemy;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
@@ -104,7 +107,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Boss;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
@@ -118,7 +121,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Kaidan;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
@@ -134,7 +137,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Normal;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			startpos_ = Pos;
 			Map->stage_->SetPosition(Pos);
