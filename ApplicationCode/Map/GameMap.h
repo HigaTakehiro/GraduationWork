@@ -125,7 +125,7 @@ private:
 	//ä‚ÇÃç¿ïW
 	XMFLOAT3 rockPos_{};
 
-	XMFLOAT4 limit_ = { 13.f,11.f,7.f,16.f };
+	XMFLOAT4 limit_ = { 10.f,10.f,8.8f,12.f };
 };
 
 
