@@ -446,7 +446,7 @@ void TutorialScene::TitlePhase()
 	sleep_->Initialize();
 	if (titlepos_) {
 		startpos_ = player_->Get();
-		startpos_.z = startpos_.z + 3.f;
+		startpos_.z = startpos_.z + 6.f;
 		player_->SetPos(startpos_);
 		titlepos_ = false;
 	}
