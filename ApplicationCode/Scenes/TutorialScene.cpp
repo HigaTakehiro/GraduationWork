@@ -33,7 +33,7 @@ void TutorialScene::Initialize()
 
 	//プレイヤー初期化
 	for (int32_t i = 0; i < 4; i++) {
-		sleepModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_sleep.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		sleepModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_sleep.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
 
 	for (int i = 0; i < 9; i++) {

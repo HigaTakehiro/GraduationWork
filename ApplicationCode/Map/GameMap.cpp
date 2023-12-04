@@ -305,8 +305,9 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 			if (Map->num != Bridge->num) { continue; }
 			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
 			if (Bridge->state_ == Direction::Beside) {
-				if ((pos.z<Pos.z - 1 && pos.z>Pos.z - 4.f)) {
-					if (pos.x > Pos.x -2.f  && Pos.x + 2.f > pos.x) {
+				if ((pos.z<Pos.z + 2 && pos.z>Pos.z - 2.f)) {
+					//¶‚ÉŒü‚©‚¤
+					if (pos.x > Pos.x && Pos.x + 3.f > pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num;
 						direction_ = 1;
@@ -314,7 +315,8 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						nowstate_ = Map->state_;
 						return;
 					}
-					else if (pos.x < Pos.x - 2.f && Pos.x - 4.f < pos.x) {
+					//‰E‚ÉŒü‚©‚¤
+					else if (pos.x < Pos.x && Pos.x  - 7.f< pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num + 1;
 						direction_ = 2;
@@ -325,8 +327,8 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 				}
 			}
 			else if (Bridge->state_ == Direction::Vertical) {
-				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 1)) {
-					if (pos.z > Pos.z - 8 && Pos.z - 5 > pos.z) {
+				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 2)) {
+					if (pos.z > Pos.z - 6.1f && Pos.z > pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num + nextval_;
 						direction_ = 3;
@@ -334,7 +336,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						nowstate_ = Map->state_;
 						return;
 					}
-					else if (pos.z < Pos.z-1  && Pos.z -4 < pos.z) {
+					else if (pos.z < Pos.z + 3.f  && Pos.z < pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num;
 						direction_ = 4;
