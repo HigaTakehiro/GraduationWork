@@ -410,7 +410,7 @@ private: //ƒƒ“ƒo•Ï”
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
-	DirectX::XMFLOAT3 GetPos() { return player_->GetPosition(); }
+	Vector3 GetPos() { return player_->GetMatWorld().r[3]; }
 	DirectX::XMFLOAT3 Get() { return pos_; }
 	bool GetisHit() { return player_->GetIsHit(); }
 	bool getisHammerActive() {
