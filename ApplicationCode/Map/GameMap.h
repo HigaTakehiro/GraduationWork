@@ -2,6 +2,7 @@
 #include"Object3d.h"
 #include"Player.h"
 #include"Stairs.h"
+#include"Grass.h"
 
 #include<memory.h>
 #include<DirectXMath.h>
@@ -43,11 +44,19 @@ private:
 		Direction state_;
 	};
 
+	struct Grassland
+	{
+		unique_ptr<Grass> grass_;
+		int num;
+	};
+
 public:
 
 	void LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum);
 
 	void CreateBridge();
+
+	void CreateGrass(const XMFLOAT3& MapPos,int Count);
 
 	/// <summary>
 	/// 初期化
@@ -104,6 +113,8 @@ private:
 	unique_ptr<Stairs> stairs_;
 
 	list<unique_ptr<Object3d>> rock_;
+	
+	list<unique_ptr<Grassland>> grass_;
 	//マップの番号
 	int count_ = 0;
 	//古い状態のマプ番号

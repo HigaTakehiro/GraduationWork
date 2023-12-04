@@ -3,6 +3,7 @@
 #include "ExternalFileLoader.h"
 #include "Easing.h"
 #include "SoundManager.h"
+#include <random>
 
 int Count = 0;
 
@@ -73,6 +74,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -86,6 +88,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -99,6 +102,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -128,6 +132,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			stairs_ = make_unique<Stairs>();
 			stairs_->Initialize(Pos, player, Count);
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -152,6 +157,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			TargetPos.z = startpos_.z;
 			CameraPos.z = CameraPos.z + startpos_.z - 2.f;
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -195,6 +201,32 @@ void GameMap::CreateBridge()
 	}
 }
 
+void GameMap::CreateGrass(const XMFLOAT3& MapPos,int Count)
+{
+	//鉱石ドロップベクトル
+	int Value = 0;
+	//乱数生成
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
+	std::uniform_int_distribution<> rand(4, 10);
+	Value = (int)rand(mt);
+
+	//乱数生成
+	std::random_device rnd2;
+	std::mt19937 mt2(rnd2());
+	std::uniform_int_distribution<> randX(-10, 10);
+	std::uniform_int_distribution<> randZ(-12, 8);
+	for (int i = 0; i < Value; i++) {
+		float posX = MapPos.x + (float)randX(mt2);
+		float posZ = MapPos.z + (float)randZ(mt2);
+		unique_ptr<Grassland>GrassLand = make_unique<Grassland>();
+		GrassLand->grass_= std::make_unique<Grass>();
+		GrassLand->grass_->Initialize({ posX, 0, posZ });
+		GrassLand->num = Count;
+		grass_.push_back(move(GrassLand));
+	}
+}
+
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
 	LoadCsv(player, CameraPos, TargetPos, StageNum);
@@ -221,6 +253,11 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	for (unique_ptr<Bridge>& Bridge : bridge) {
 		Bridge->bridge_->Update();
 	}
+
+	for (unique_ptr<Grassland>& GrassLand : grass_) {
+		GrassLand->grass_->Update(player->GetPos());
+	}
+
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
 	/*for (unique_ptr<Object3d>& Rock : rock_) {
@@ -240,6 +277,12 @@ void GameMap::MapDraw()
 		}
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
+	for (unique_ptr<Grassland>& GrassLand : grass_) {
+		if(count_ == GrassLand->num) {
+			GrassLand->grass_->Draw();
+		}
+	}
+
 	/*for (unique_ptr<Object3d>& Rock : rock_) {
 		Rock->Draw();
 	}*/
@@ -265,6 +308,7 @@ void GameMap::Finalize()
 	maps_.clear();
 	bridge.clear();
 	stairs_.release();
+	grass_.clear();
 }
 
 void GameMap::CheckHitTest(Player* player)
