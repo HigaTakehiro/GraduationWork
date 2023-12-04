@@ -214,8 +214,8 @@ void GameMap::CreateGrass(const XMFLOAT3& MapPos,int Count)
 	//—”¶¬
 	std::random_device rnd2;
 	std::mt19937 mt2(rnd2());
-	std::uniform_int_distribution<> randX(-10, 10);
-	std::uniform_int_distribution<> randZ(-12, 8);
+	std::uniform_int_distribution<> randX(-9, 9);
+	std::uniform_int_distribution<> randZ(-8, 8);
 	for (int i = 0; i < Value; i++) {
 		float posX = MapPos.x + (float)randX(mt2);
 		float posZ = MapPos.z + (float)randZ(mt2);
