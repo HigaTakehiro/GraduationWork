@@ -77,38 +77,6 @@ void GameScene::Initialize()
 
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
-
-	//ëêîzíuåàÇﬂë≈Çø
-	std::unique_ptr<Grass> grass_1 = std::make_unique<Grass>();
-	grass_1->Initialize({24, 0, 24});
-	std::unique_ptr<Grass> grass_2 = std::make_unique<Grass>();
-	grass_2->Initialize({ 24, 0, 35 });
-	std::unique_ptr<Grass> grass_3 = std::make_unique<Grass>();
-	grass_3->Initialize({ 35, 0, 24 });
-	std::unique_ptr<Grass> grass_4 = std::make_unique<Grass>();
-	grass_4->Initialize({ 24, 0, 8 });
-	std::unique_ptr<Grass> grass_5 = std::make_unique<Grass>();
-	grass_5->Initialize({ 35, 0, -9 });
-	std::unique_ptr<Grass> grass_6 = std::make_unique<Grass>();
-	grass_6->Initialize({ 37, 0, 8 });
-	std::unique_ptr<Grass> grass_7 = std::make_unique<Grass>();
-	grass_7->Initialize({ -3, 0, 2 });
-	std::unique_ptr<Grass> grass_8 = std::make_unique<Grass>();
-	grass_8->Initialize({ 5, 0, 8 });
-	std::unique_ptr<Grass> grass_9 = std::make_unique<Grass>();
-	grass_9->Initialize({ -3, 0, 35 });
-	std::unique_ptr<Grass> grass_10 = std::make_unique<Grass>();
-	grass_10->Initialize({ 5, 0, 24 });
-	grasses_.push_back(std::move(grass_1));
-	grasses_.push_back(std::move(grass_2));
-	grasses_.push_back(std::move(grass_3));
-	grasses_.push_back(std::move(grass_4));
-	grasses_.push_back(std::move(grass_5));
-	grasses_.push_back(std::move(grass_6));
-	grasses_.push_back(std::move(grass_7));
-	grasses_.push_back(std::move(grass_8));
-	grasses_.push_back(std::move(grass_9));
-	grasses_.push_back(std::move(grass_10));
 }
 
 void GameScene::Update()
@@ -118,10 +86,7 @@ void GameScene::Update()
 	if (player_->GetHP() <= 0) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 	}
-	for (std::unique_ptr<Grass>& grass : grasses_) {
-		grass->Update(player_->GetPos());
-	}
-
+	
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			if (ore->GetIsHit() && player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
@@ -228,7 +193,6 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->PostDraw();
 }
 
-
 void GameScene::Finalize()
 {
 	safe_delete(text_);
@@ -239,7 +203,6 @@ void GameScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
-	grasses_.clear();
 }
 
 void GameScene::SceneChange()

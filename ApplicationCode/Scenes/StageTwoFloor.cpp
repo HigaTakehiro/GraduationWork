@@ -1,4 +1,4 @@
-#include"StageOneFloor.h"
+#include "StageTwoFloor.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -9,7 +9,7 @@
 #include "Dogom.h"
 #include "SoundManager.h"
 
-void StageOneFloor::Initialize()
+void GameScene::Initialize()
 {
 	ShowCursor(true);
 	//ポストエフェクト初期化
@@ -76,11 +76,9 @@ void StageOneFloor::Initialize()
 
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
-
-	
 }
 
-void StageOneFloor::Update()
+void GameScene::Update()
 {
 	player_->Update();
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
@@ -128,7 +126,7 @@ void StageOneFloor::Update()
 	SceneChange();
 }
 
-void StageOneFloor::Draw()
+void GameScene::Draw()
 {
 	//背景色
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
@@ -194,17 +192,19 @@ void StageOneFloor::Draw()
 	DirectXSetting::GetIns()->PostDraw();
 }
 
-
-void StageOneFloor::Finalize()
+void GameScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
+	//boss_->Finalize();
 	safe_delete(player_);
+	//safe_delete(ene);
+	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
 }
 
-void StageOneFloor::SceneChange()
+void GameScene::SceneChange()
 {
 	SceneManager::SetLevel(player_->GetLevel());
 	SceneManager::SetEP(player_->GetEP());
@@ -222,7 +222,7 @@ void StageOneFloor::SceneChange()
 
 }
 
-void StageOneFloor::CameraSetting()
+void GameScene::CameraSetting()
 {
 	std::string line;
 	Vector3 pos{};
@@ -259,7 +259,7 @@ void StageOneFloor::CameraSetting()
 	}
 }
 
-void StageOneFloor::EnemyProcess()
+void GameScene::EnemyProcess()
 {
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
