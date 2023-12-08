@@ -305,6 +305,11 @@
     <ClCompile Include="ApplicationCode\Map\Grass.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\MunniAction.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Enemy\Derivative</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\NormalEnemyB.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Enemy\Derivative</Filter>
     <ClCompile Include="ApplicationCode\Scenes\StageTwoFloor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -525,6 +530,12 @@
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\Grass.h" />
+    <ClInclude Include="ApplicationCode\Enemy\MunniAction.h">
+      <Filter>ソース ファイル\ApplicationCode\Enemy\Derivative</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h">
+      <Filter>ソース ファイル\ApplicationCode\Enemy\Derivative</Filter>
+    </ClInclude>
     <ClInclude Include="ApplicationCode\Scenes\StageTwoFloor.h" />
   </ItemGroup>
   <ItemGroup>
