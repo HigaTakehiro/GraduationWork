@@ -432,6 +432,7 @@ void Player::Move() {
 }
 
 void Player::Attack() {
+	if (isStop_)return;
 	rotSpeed_ = initRotSpeed_ - (hammerRotCoeff_ * (float)oreCount_);
 	//ƒnƒ“ƒ}[‚ğ‚à‚Á‚Ä‚¢‚é‚©
 	if (!isHammerRelease_) {

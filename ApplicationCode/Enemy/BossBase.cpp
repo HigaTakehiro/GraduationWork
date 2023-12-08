@@ -23,3 +23,16 @@ void BossBase::RecvDamageFlash()
 		color_rgb = XMFLOAT4(1, 1, 1, 1);
 	}
 }
+
+void BossBase::ArmDamageFlash(bool& f, int& t,XMFLOAT4&c)
+{
+	if (!f)return;
+
+	if (++t > 90) {
+		t = 0.f;
+		f = FALSE;
+	} else {
+		c.y = sinf(t);
+		c.z = sinf(t);
+	}
+}

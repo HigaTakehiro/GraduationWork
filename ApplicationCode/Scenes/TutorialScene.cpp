@@ -171,6 +171,8 @@ void TutorialScene::Update()
 	fprintf(fp, "floor %d", 0);
 	fclose(fp);
 	SceneChange();
+	SceneManager::SceneChange(SceneManager::SceneName::Boss);
+
 }
 
 void TutorialScene::Draw()

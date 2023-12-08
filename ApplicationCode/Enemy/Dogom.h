@@ -44,6 +44,13 @@ private:
 	std::array<int, 2>m_ArmHp={3,3};
     std::array<int, 2>m_ArmHp_Max = { 3,3 };
     std::array<BOOL, 2>m_ArmDamF;
+
+
+    std::array<int, 2>m_ArmFlashT = {  };
+    std::array<bool, 2>m_ArmFlashF = { };
+    std::array<XMFLOAT4, 2>m_ArmColor={XMFLOAT4(1,1,1,1),XMFLOAT4(1,1,1,1)};
+
+    XMFLOAT3 ppos = {  };
     std::array<int, 2>m_ArmDamCool;
 
     std::array<bool, 2>m_ImpactF;
