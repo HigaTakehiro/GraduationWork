@@ -164,7 +164,9 @@
     <ClCompile Include="ApplicationCode\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\BossBase.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\Dogom.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\MunniAction.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\NormalEnemyB.cpp" />
     <ClCompile Include="ApplicationCode\Item\Deposit.cpp" />
     <ClCompile Include="ApplicationCode\Item\Ore.cpp" />
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp" />
@@ -233,7 +235,9 @@
     <ClInclude Include="ApplicationCode\Enemy\BaseEnemy.h" />
     <ClInclude Include="ApplicationCode\Enemy\BossBase.h" />
     <ClInclude Include="ApplicationCode\Enemy\Dogom.h" />
+    <ClInclude Include="ApplicationCode\Enemy\MunniAction.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h" />
+    <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h" />
     <ClInclude Include="ApplicationCode\Item\Deposit.h" />
     <ClInclude Include="ApplicationCode\Item\Ore.h" />
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />

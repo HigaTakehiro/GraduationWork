@@ -41,6 +41,31 @@ protected:
 		XMFLOAT3 Pos, Rot, Scl;
 		OBB Obb;
 	}_status;
+
+	/* OBJ */
+	struct StateObj
+	{
+		/*モデル*/
+		std::unique_ptr<Object3d>obj_={};
+		/* 画像枚数 */
+		unsigned int TexSize_ = 1;
+		/* モデル画像 */
+		std::vector<Model*>Model_ = {};
+		/* 体力 */
+		int Hp_ = 0;
+		//攻撃値*/
+		unsigned int DamageValue_=0;
+		/* 被ダメージ後の仰け反り時間 */
+		float KnockTime_=0.f;
+		/* 移動スピード */
+		float MoveSpeed_=0.f;
+		/* 索敵半径 */
+		float SearchRange_=0.f;
+		/* 各パラメータ */
+		Vector3 Pos_ = {}, Rot_ = {}, Scl = {};
+		/* 色 */
+		XMFLOAT4 Color_ = { 1,1,1,1 };
+	}state_obj_;
 	//**************************************
 
 	/*行動*/
@@ -91,6 +116,7 @@ protected:
 	XMFLOAT3 OverPosMax, OverPosMin;
 
 	bool FlashF; float val=1;
+	std::string Tag_;
 	//XMFLOAT4 color;
 public:
 	void SetFlash(bool f) { FlashF = f; }
