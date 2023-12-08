@@ -4,6 +4,7 @@
 #include "TitleScene.h"
 #include"TutorialScene.h"
 #include "GameScene.h"
+#include"StageOneFloor.h"
 #include"IBScene.h"
 #include"SkillScene.h"
 #include "BossScene.h"
@@ -26,6 +27,7 @@ public: //ÉVÅ[Éìä«óùî‘çÜ
 		Title,
 		Tutorial,
 		Game,
+		Floor1,
 		IB,
 		SKILL,
 		Boss,

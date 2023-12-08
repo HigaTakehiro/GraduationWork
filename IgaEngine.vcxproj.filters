@@ -310,6 +310,8 @@
     </ClCompile>
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyB.cpp">
       <Filter>ソース ファイル\ApplicationCode\Enemy\Derivative</Filter>
+    <ClCompile Include="ApplicationCode\Scenes\StageTwoFloor.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -534,6 +536,7 @@
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h">
       <Filter>ソース ファイル\ApplicationCode\Enemy\Derivative</Filter>
     </ClInclude>
+    <ClInclude Include="ApplicationCode\Scenes\StageTwoFloor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">

@@ -1,5 +1,4 @@
-#include "GameScene.h"
-
+#include "StageTwoFloor.h"
 #include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
@@ -10,7 +9,7 @@
 #include "Dogom.h"
 #include "SoundManager.h"
 
-void GameScene::Initialize()
+void StageTwoFloor::Initialize()
 {
 	ShowCursor(true);
 	//ポストエフェクト初期化
@@ -65,7 +64,7 @@ void GameScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 1);
-	
+
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
@@ -79,14 +78,14 @@ void GameScene::Initialize()
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 }
 
-void GameScene::Update()
+void StageTwoFloor::Update()
 {
 	player_->Update();
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 	if (player_->GetHP() <= 0) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 	}
-	
+
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			if (ore->GetIsHit() && player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
@@ -127,7 +126,7 @@ void GameScene::Update()
 	SceneChange();
 }
 
-void GameScene::Draw()
+void StageTwoFloor::Draw()
 {
 	//背景色
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
@@ -176,7 +175,7 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 	//
-	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
+	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
 	//std::wstring hx = std::to_wstring(player_->GetPos().z);
 	//text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
 	player_->TextUIDraw();
@@ -193,7 +192,7 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->PostDraw();
 }
 
-void GameScene::Finalize()
+void StageTwoFloor::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
@@ -205,14 +204,14 @@ void GameScene::Finalize()
 	map_->Finalize();
 }
 
-void GameScene::SceneChange()
+void StageTwoFloor::SceneChange()
 {
 	SceneManager::SetLevel(player_->GetLevel());
 	SceneManager::SetEP(player_->GetEP());
 	SceneManager::SetHP(player_->GetHP());
 
 	bool Change = player_->GetNext();
-	if (Change||player_->GetIsDead()) {
+	if (Change || player_->GetIsDead()) {
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
 	}
@@ -223,7 +222,7 @@ void GameScene::SceneChange()
 
 }
 
-void GameScene::CameraSetting()
+void StageTwoFloor::CameraSetting()
 {
 	std::string line;
 	Vector3 pos{};
@@ -260,7 +259,7 @@ void GameScene::CameraSetting()
 	}
 }
 
-void GameScene::EnemyProcess()
+void StageTwoFloor::EnemyProcess()
 {
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
@@ -327,4 +326,3 @@ void GameScene::EnemyProcess()
 		}
 	}
 }
-

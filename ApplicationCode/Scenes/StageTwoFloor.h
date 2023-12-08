@@ -25,7 +25,7 @@
 #include"IntermediateBase.h"
 #include "Grass.h"
 
-class GameScene : public BaseScene
+class StageTwoFloor :public BaseScene
 {
 public: //メンバ関数
 	/// <summary>
@@ -61,9 +61,9 @@ private: //メンバ関数
 	/// </summary>
 	void CameraSetting();
 
-/// <summary>
-/// 敵に関係する処理
-/// </summary>
+	/// <summary>
+	/// 敵に関係する処理
+	/// </summary>
 	void EnemyProcess();
 private: //メンバ変数
 	//ポストエフェクト
@@ -102,3 +102,4 @@ private: //メンバ変数
 	Vector3 target{};
 	SceneChangeEffect* schange;
 };
+

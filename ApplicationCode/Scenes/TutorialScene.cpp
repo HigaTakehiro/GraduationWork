@@ -279,7 +279,7 @@ void TutorialScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
+		SceneManager::SceneChange(SceneManager::SceneName::Floor1);
 	}
 
 }
@@ -487,6 +487,14 @@ void TutorialScene::MovePhase()
 {
 	float LeftStickX = PadInput::GetIns()->leftStickX();
 	float LeftStickY = PadInput::GetIns()->leftStickY();
+
+	if (KeyInput::GetIns()->PushKey(DIK_RIGHT) ||
+		KeyInput::GetIns()->PushKey(DIK_LEFT) ||
+		KeyInput::GetIns()->PushKey(DIK_UP) ||
+		KeyInput::GetIns()->PushKey(DIK_DOWN)) {
+		movetimer_ += 0.1f;
+	}
+
 	if (LeftStickX != 0 || LeftStickY != 0) {
 		movetimer_ += 0.1f;
 	}
