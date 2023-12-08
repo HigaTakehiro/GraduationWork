@@ -63,7 +63,7 @@ void StageOneFloor::Initialize()
 
 
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_, cameraPos_, targetPos_, 1);
+	map_->Initalize(player_, cameraPos_, targetPos_, 2);
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
