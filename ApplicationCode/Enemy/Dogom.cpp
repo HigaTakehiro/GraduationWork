@@ -735,7 +735,7 @@ void Dogom::Wince()
 			{
 				m_BodyPos.x = Easing::easeIn(WinceEaseT, 50.f, ppos.x, oldBodyPos.x);
 				m_BodyPos.z = Easing::easeIn(WinceEaseT, 50.f, ppos.z,oldBodyPos.z);
-				m_BodyPos.y = Easing::easeIn(WinceEaseT, 50.f, -2.f6k, 2.f);
+				m_BodyPos.y = Easing::easeIn(WinceEaseT, 50.f, -2.f ,2.f);
 				m_BodyRot.x = Easing::easeIn(WinceEaseT, 50.f, 90.f, 00.f);
 			}
 		}
