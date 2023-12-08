@@ -57,7 +57,7 @@ void Dogom::Init()
 		//m_Body->SetIsBillboardY(true);
 		m_Arm[i]->SetColType(Object3d::CollisionType::Obb);
 		m_Arm[i]->SetObjType((int32_t)Object3d::OBJType::Enemy);
-		m_Arm[i]->SetObbScl({ 3.f,4.f,1.f });
+		m_Arm[i]->SetObbScl({ 3.f,1.f,0.9f });
 		m_Arm[i]->SetHitRadius(0.5f);
 		m_Arm[i]->SetScale({ 0.10f, 0.20f, 0.0f });
 
@@ -68,7 +68,6 @@ void Dogom::Init()
 		m_ImpactTex[i]->SetRotation({ 90,0,0 });
 
 		m_ArmHpTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {128.0f, 128.0f}, "white1x1.png", {128.0f, 64.0f}, {0.f, 0.f}, {128.0f * (float)i, 0.0f}, {128.0f, 128.0f}));
-		
 	}
 
 	CrossAreaTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "CrossArea.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 }));
@@ -76,8 +75,8 @@ void Dogom::Init()
 	CrossAreaTex->SetScale(Vector3(0.2f, 0.05f, 2.f));
 
 	MovingAngle = 180.f;
-	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
-	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, m_BodyPos.y , m_BodyPos.z-30.f);
+	m_ArmPos[RIGHT] = Vector3(m_BodyPos.x + 8.f, -2.5f , m_BodyPos.z-30.f);
+	m_ArmPos[LEFT] = Vector3(m_BodyPos.x - 8.f, -2.5f , m_BodyPos.z-30.f);
 
 	float pi_ = 3.14f;
 	m_BodyPos.x = sinf(MovingAngle * (pi_ / 180.0f)) * 16.0f;
@@ -111,7 +110,7 @@ void Dogom::Upda()
 	if (Appear() == TRUE) {
 		////////
 		m_player->SetStopF(FALSE);
-		if(m_player->Get().z<3.f)
+		if(m_player->GetPos().z<3.f)
 		StartWaitT++;
 		////////
 		
@@ -140,7 +139,7 @@ void Dogom::Upda()
 		m_camera->SetTarget(m_Target);
 		m_camera->SetEye(m_CameraPos);
 	}
-	if (isHit(m_player->Get(), m_BodyPos,1.f,3.f))
+	if (isHit(m_player->GetPos(), m_BodyPos,1.f,3.f))
 	{
 		Vector3 vec;
 		vec = PlayerPos - m_BodyPos;
@@ -245,12 +244,12 @@ void Dogom::Upda()
 	CrossAreaTex->SetColor({ 1,1,1,m_CrossAreaAlpha });
 	CrossAreaTex->Update();
 
-	if (m_player->Get().z > BOSSMAP_H &&AppearFlag)
+	if (m_player->GetPos().z > BOSSMAP_H &&AppearFlag)
 		isLeaveBoss = TRUE;
 	else
 		isLeaveBoss = FALSE;
 
-	str = std::to_wstring(m_player->Get().z);
+	str = std::to_wstring(m_player->GetPos().z);
 }
 
 void Dogom::Draw()
@@ -270,20 +269,20 @@ void Dogom::Draw2()
 	//if (m_HP <= 0)return;
 	constexpr float BossDraw_maxlen = 125.f;
 	for (size_t i = 0; i < 2; i++) {
-		Helper::isDraw(m_player->Get(), m_ImpactTexPos[i], m_ShadowTex[i].get(),
+		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ShadowTex[i].get(),
 			BossDraw_maxlen, (!ShadowHpTexisDraw ||m_HP <= 0 || m_ArmHp[i] <= 0));
 	}
 	for (size_t i = 0; i < 2; i++) {
-		Helper::isDraw(m_player->Get(), m_ImpactTexPos[i], m_ImpactTex[i].get(),
+		Helper::isDraw(m_player->GetPos(), m_ImpactTexPos[i], m_ImpactTex[i].get(),
 			BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
 
-		Helper::isDraw(m_player->Get(), m_ArmPos[i],
+		Helper::isDraw(m_player->GetPos(), m_ArmPos[i],
 			m_Arm[i].get(), BossDraw_maxlen, (m_HP <= 0 || m_ArmHp[i] <= 0));
 
 	}
-	Helper::isDraw(m_player->Get(), m_ArmPos[0],
+	Helper::isDraw(m_player->GetPos(), m_ArmPos[0],
 		m_ArmHpTex[0].get(), BossDraw_maxlen, (!ShadowHpTexisDraw || m_HP <= 0 || m_ArmHp[0] <= 0));
-	Helper::isDraw(m_player->Get(), m_ArmPos[1],
+	Helper::isDraw(m_player->GetPos(), m_ArmPos[1],
 		m_ArmHpTex[1].get(), BossDraw_maxlen, (!ShadowHpTexisDraw || m_HP <= 0 || m_ArmHp[1] <= 0));
 
 }
@@ -565,7 +564,7 @@ void Dogom::ArmAct()
 		
 		move = XMVector3TransformNormal(move, matRot);*/
 		bool next_1 = FALSE, next_2 = FALSE;
-		PlayerPos = m_player->Get();
+		PlayerPos = m_player->GetPos();
 		float ClushPos=0;
 		float EndX[2] = { PlayerPos.x + 8.f ,PlayerPos.x - 8.f };
 		float EndZ[2] = { PlayerPos.z ,PlayerPos.z };
@@ -660,10 +659,10 @@ m_ArmAttckEaseT[LEFT]++;
 
 void Dogom::Follow()
 {
-	float Len = Collision::GetLength(m_player->Get(), m_BodyPos);
+	float Len = Collision::GetLength(m_player->GetPos(), m_BodyPos);
 	bool notFollow = Len < 1.f;
 
-	XMVECTOR posA = { m_player->Get().x,m_player->Get().y,m_player->Get().z };
+	XMVECTOR posA = { m_player->GetPos().x,m_player->GetPos().y,m_player->GetPos().z };
 	XMVECTOR posB = { m_BodyPos.x,m_BodyPos.y,m_BodyPos.z };
 
 	//プレイヤーと敵のベクトルの長さ(差)を求める
@@ -707,10 +706,10 @@ void Dogom::Wince()
 	} else if (wince_phase_ == WincePhase::PHASE_2)
 	{
 		m_BodyRot.x = Easing::easeIn(WinceEaseT, 30.f, -20.f, 90.f);
-		m_BodyPos.x= Easing::easeIn(WinceEaseT, 30.f, oldBodyPos.x, m_player->Get().x);
-		m_BodyPos.z = Easing::easeIn(WinceEaseT, 30.f, oldBodyPos.z, m_player->Get().z);
+		m_BodyPos.x= Easing::easeIn(WinceEaseT, 30.f, oldBodyPos.x, m_player->GetPos().x);
+		m_BodyPos.z = Easing::easeIn(WinceEaseT, 30.f, oldBodyPos.z, m_player->GetPos().z);
 
-		ppos = m_player->Get();
+		ppos = m_player->GetPos();
 		m_BodyPos.y = Easing::easeIn(WinceEaseT, 30.f, 2.f, -2.f);
 		if (++WinceEaseT >= 30)
 		{
@@ -837,7 +836,7 @@ void Dogom::CoollisionFace()
 		DamCool[i] = 0;
 		float magniVal = 0.7f;
 
-		if (Collision::GetLength(m_ArmPos[i], m_player->Get())<5.f)
+		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<5.f)
 		{	
 			vec[i] = PlayerPos - m_ArmPos[i];
 			vec[i].normalize();
@@ -879,7 +878,7 @@ void Dogom::CoollisionArm()
 			if (m_Arm[i]->GetIsHit() &&m_ArmDamCool[i]<2) {
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::firstBossHitAttack, 0.2f);
 			}
-			if (m_Arm[i]->GetIsHit()) {
+			if (Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z+3.f),2.f,XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z),1.f)) {
 				m_ArmFlashF[i] = true;
 				m_player->SetIsHammerReflect(true);
 
@@ -1065,7 +1064,7 @@ bool Dogom::Appear()
 
 		if (++appeaset < 100)
 		{
-			m_CameraPos.z = Easing::easeIn(appeaset, 100.f, m_player->Get().z, m_BodyPos.z + 20.f);
+			m_CameraPos.z = Easing::easeIn(appeaset, 100.f, m_player->GetPos().z, m_BodyPos.z + 20.f);
 		}
 		if (appeaset > maxAppTime[0]) {
 			appeaset = 0;

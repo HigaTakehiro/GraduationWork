@@ -49,7 +49,7 @@ void Player::Initialize()
 	hammer_->SetScale(initHammerScale_);
 	hammer_->SetRotation(initHammerRot_);
 	hammer_->SetColType(Object3d::CollisionType::Obb);
-	hammer_->SetObbScl({ 1.0f,1.f, 1.f });
+	hammer_->SetObbScl({ 1.0f,4.f, 1.f });
 	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
 	hammer_->SetHitRadius(1.0f);
 	oreCount_ = 0;
