@@ -9,7 +9,7 @@
 #include "Dogom.h"
 #include "SoundManager.h"
 
-void GameScene::Initialize()
+void StageTwoFloor::Initialize()
 {
 	ShowCursor(true);
 	//ポストエフェクト初期化
@@ -78,7 +78,7 @@ void GameScene::Initialize()
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 }
 
-void GameScene::Update()
+void StageTwoFloor::Update()
 {
 	player_->Update();
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
@@ -126,7 +126,7 @@ void GameScene::Update()
 	SceneChange();
 }
 
-void GameScene::Draw()
+void StageTwoFloor::Draw()
 {
 	//背景色
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
@@ -192,7 +192,7 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->PostDraw();
 }
 
-void GameScene::Finalize()
+void StageTwoFloor::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
@@ -204,7 +204,7 @@ void GameScene::Finalize()
 	map_->Finalize();
 }
 
-void GameScene::SceneChange()
+void StageTwoFloor::SceneChange()
 {
 	SceneManager::SetLevel(player_->GetLevel());
 	SceneManager::SetEP(player_->GetEP());
@@ -222,7 +222,7 @@ void GameScene::SceneChange()
 
 }
 
-void GameScene::CameraSetting()
+void StageTwoFloor::CameraSetting()
 {
 	std::string line;
 	Vector3 pos{};
@@ -259,7 +259,7 @@ void GameScene::CameraSetting()
 	}
 }
 
-void GameScene::EnemyProcess()
+void StageTwoFloor::EnemyProcess()
 {
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
