@@ -171,7 +171,7 @@ void TutorialScene::Update()
 	fprintf(fp, "floor %d", 0);
 	fclose(fp);
 	SceneChange();
-	SceneManager::SceneChange(SceneManager::SceneName::Boss);
+	//SceneManager::SceneChange(SceneManager::SceneName::Boss);
 
 }
 
@@ -487,6 +487,14 @@ void TutorialScene::MovePhase()
 {
 	float LeftStickX = PadInput::GetIns()->leftStickX();
 	float LeftStickY = PadInput::GetIns()->leftStickY();
+
+	if (KeyInput::GetIns()->PushKey(DIK_RIGHT) ||
+		KeyInput::GetIns()->PushKey(DIK_LEFT) ||
+		KeyInput::GetIns()->PushKey(DIK_UP) ||
+		KeyInput::GetIns()->PushKey(DIK_DOWN)) {
+		movetimer_ += 0.1f;
+	}
+
 	if (LeftStickX != 0 || LeftStickY != 0) {
 		movetimer_ += 0.1f;
 	}
