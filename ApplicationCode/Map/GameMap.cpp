@@ -121,7 +121,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			COUNT += 1;
 		}
 		else if (NUMBER == 5) {
-			unique_ptr<Stage> Map = make_unique<Stage>();
+		unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Kaidan;
@@ -531,11 +531,11 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 
 		if (count_ != Map->num) { continue; }
 		//¶
-		if (pos.x >= Map->stagePos_.x + limit_.x && isHammerRelease) {
+		if (pos.x >= Map->stagePos_.x + limit_.x+1 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
-		if (pos.x <= Map->stagePos_.x - limit_.y && isHammerRelease) {
+		if (pos.x <= Map->stagePos_.x - limit_.y-1 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
@@ -545,7 +545,7 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 			return true;
 		}
 
-		if (pos.z <= Map->stagePos_.z - limit_.w && isHammerRelease) {
+		if (pos.z <= Map->stagePos_.z - limit_.w-3 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
