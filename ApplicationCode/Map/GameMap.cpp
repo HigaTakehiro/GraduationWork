@@ -129,6 +129,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
+			Count = COUNT;
 			stairs_ = make_unique<Stairs>();
 			stairs_->Initialize(Pos, player, Count);
 			maps_.push_back(move(Map));
@@ -472,6 +473,8 @@ void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 {
 	if (StageNum == 0) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv");}
 	else if (StageNum == 1) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");}
+	else if (StageNum == 2) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map3.csv"); }
+	else if (StageNum == 3) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv"); }
 	else if (StageNum == 100) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");}
 	
 }
