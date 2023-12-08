@@ -880,7 +880,9 @@ void Dogom::CoollisionArm()
 			}
 			if (Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z+3.f),2.f,XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z),1.f)) {
 				m_ArmFlashF[i] = true;
-				m_player->SetIsHammerReflect(true);
+				if (m_player->GetIsHammerRelease()) {
+					m_player->SetIsHammerReflect(true);
+				}
 
 				vec[i] = PlayerPos - m_ArmPos[i];
 				vec[i].normalize();
