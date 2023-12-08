@@ -305,6 +305,9 @@
     <ClCompile Include="ApplicationCode\Map\Grass.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\StageTwoFloor.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -522,6 +525,7 @@
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\Grass.h" />
+    <ClInclude Include="ApplicationCode\Scenes\StageTwoFloor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
