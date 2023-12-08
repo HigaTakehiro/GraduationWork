@@ -3,18 +3,22 @@
 #include "ExternalFileLoader.h"
 #include "Easing.h"
 #include "SoundManager.h"
+#include <random>
 
 int Count = 0;
 
 void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
+
+	float startX = 30.f;
+	float startZ = 30.f;
 	std::string line;
 	int NUMBER = 0;
 	int NEXTVERT = 0;
 	int NEXTHORY = 0;
 	int COUNT = 0;
 	bool NEXTCOUNT = false;
-	XMFLOAT3 Pos = { 30.f ,0.f,30.f };
+	XMFLOAT3 Pos = { startX ,0.f,startZ };
 
 	std::stringstream stream;
 
@@ -65,11 +69,12 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Normal;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -78,11 +83,12 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Forest;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -91,11 +97,12 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Enemy;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -104,7 +111,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Boss;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
@@ -118,13 +125,14 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Kaidan;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			Map->stage_->SetPosition(Pos);
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			stairs_ = make_unique<Stairs>();
 			stairs_->Initialize(Pos, player, Count);
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -134,7 +142,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Normal;
-			Pos = { 30.f * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
 			startpos_ = Pos;
 			Map->stage_->SetPosition(Pos);
@@ -149,6 +157,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			TargetPos.z = startpos_.z;
 			CameraPos.z = CameraPos.z + startpos_.z - 2.f;
 			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -192,6 +201,32 @@ void GameMap::CreateBridge()
 	}
 }
 
+void GameMap::CreateGrass(const XMFLOAT3& MapPos,int Count)
+{
+	//鉱石ドロップベクトル
+	int Value = 0;
+	//乱数生成
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
+	std::uniform_int_distribution<> rand(4, 10);
+	Value = (int)rand(mt);
+
+	//乱数生成
+	std::random_device rnd2;
+	std::mt19937 mt2(rnd2());
+	std::uniform_int_distribution<> randX(-9, 9);
+	std::uniform_int_distribution<> randZ(-8, 8);
+	for (int i = 0; i < Value; i++) {
+		float posX = MapPos.x + (float)randX(mt2);
+		float posZ = MapPos.z + (float)randZ(mt2);
+		unique_ptr<Grassland>GrassLand = make_unique<Grassland>();
+		GrassLand->grass_= std::make_unique<Grass>();
+		GrassLand->grass_->Initialize({ posX, 0, posZ });
+		GrassLand->num = Count;
+		grass_.push_back(move(GrassLand));
+	}
+}
+
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
 	LoadCsv(player, CameraPos, TargetPos, StageNum);
@@ -218,6 +253,11 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	for (unique_ptr<Bridge>& Bridge : bridge) {
 		Bridge->bridge_->Update();
 	}
+
+	for (unique_ptr<Grassland>& GrassLand : grass_) {
+		GrassLand->grass_->Update(player->GetPos());
+	}
+
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
 	/*for (unique_ptr<Object3d>& Rock : rock_) {
@@ -237,6 +277,12 @@ void GameMap::MapDraw()
 		}
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
+	for (unique_ptr<Grassland>& GrassLand : grass_) {
+		if(count_ == GrassLand->num) {
+			GrassLand->grass_->Draw();
+		}
+	}
+
 	/*for (unique_ptr<Object3d>& Rock : rock_) {
 		Rock->Draw();
 	}*/
@@ -262,6 +308,7 @@ void GameMap::Finalize()
 	maps_.clear();
 	bridge.clear();
 	stairs_.release();
+	grass_.clear();
 }
 
 void GameMap::CheckHitTest(Player* player)
@@ -302,8 +349,9 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 			if (Map->num != Bridge->num) { continue; }
 			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
 			if (Bridge->state_ == Direction::Beside) {
-				if ((pos.z<Pos.z - 1 && pos.z>Pos.z - 4.f)) {
-					if (pos.x > Pos.x -2.f  && Pos.x + 2.f > pos.x) {
+				if ((pos.z<Pos.z + 2 && pos.z>Pos.z - 2.f)) {
+					//左に向かう
+					if (pos.x > Pos.x && Pos.x + 3.f > pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num;
 						direction_ = 1;
@@ -311,7 +359,8 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						nowstate_ = Map->state_;
 						return;
 					}
-					else if (pos.x < Pos.x - 2.f && Pos.x - 4.f < pos.x) {
+					//右に向かう
+					else if (pos.x < Pos.x && Pos.x  - 7.f< pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num + 1;
 						direction_ = 2;
@@ -322,8 +371,8 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 				}
 			}
 			else if (Bridge->state_ == Direction::Vertical) {
-				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 1)) {
-					if (pos.z > Pos.z - 8 && Pos.z - 5 > pos.z) {
+				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 2)) {
+					if (pos.z > Pos.z - 6.1f && Pos.z > pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num + nextval_;
 						direction_ = 3;
@@ -331,7 +380,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						nowstate_ = Map->state_;
 						return;
 					}
-					else if (pos.z < Pos.z-1  && Pos.z -4 < pos.z) {
+					else if (pos.z < Pos.z + 3.f  && Pos.z < pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num;
 						direction_ = 4;

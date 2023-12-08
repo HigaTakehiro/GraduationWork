@@ -33,7 +33,7 @@ void TutorialScene::Initialize()
 
 	//プレイヤー初期化
 	for (int32_t i = 0; i < 4; i++) {
-		sleepModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_sleep.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		sleepModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_sleep.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
 
 	for (int i = 0; i < 9; i++) {
@@ -171,6 +171,8 @@ void TutorialScene::Update()
 	fprintf(fp, "floor %d", 0);
 	fclose(fp);
 	SceneChange();
+	SceneManager::SceneChange(SceneManager::SceneName::Boss);
+
 }
 
 void TutorialScene::Draw()
@@ -393,6 +395,7 @@ void TutorialScene::SleepShale()
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			pushCount_ += 1;
 			shaketimer_ = 0;
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDamage, 0.2f);
 			if (pushCount_ >= 5) {
 				action_ = true;
 			}
@@ -445,7 +448,7 @@ void TutorialScene::TitlePhase()
 	sleep_->Initialize();
 	if (titlepos_) {
 		startpos_ = player_->Get();
-		startpos_.z = startpos_.z + 3.f;
+		startpos_.z = startpos_.z + 6.f;
 		player_->SetPos(startpos_);
 		titlepos_ = false;
 	}

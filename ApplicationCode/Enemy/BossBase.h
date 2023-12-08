@@ -44,7 +44,7 @@ public:
 	void SetPlayerIns(Player* player) { m_player = player; }
 	void SetCamera(Camera* cam) { m_Camera = cam; }
 	void SetHummerPos(Vector3 pos) { m_Hummmer = pos; }
-
+	void ArmDamageFlash(bool&f,int&t, XMFLOAT4& c);
 	std::wstring GetStr() { return str;}
 	Name GetName() { return m_Name; }
 	Camera* m_camera;

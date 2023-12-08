@@ -194,9 +194,9 @@ void GameScene::Draw()
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TexDraw();
 	player_->Draw();
-	for (std::unique_ptr<Grass>& grass : grasses_) {
+	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
-	}
+	}*/
 	map_->BridgeDraw();
 
 	Object3d::PostDraw();

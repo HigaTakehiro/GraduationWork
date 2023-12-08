@@ -10,20 +10,20 @@ void Player::Initialize()
 {
 	//プレイヤー初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
-		frontMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_move.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
-		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
-		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f }, true);
-		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
-		rotAttackModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rot.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.f }, { 128, 128 });
+		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		frontMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_move.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		backMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_moveBack.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		leftMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f }, true);
+		rightMoveModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_Rmove.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		rotAttackModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rot.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.f }, { 128, 128 });
 	}
-	deadModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.f, 128.f }, "tuyu_sleep.png", { 64.f, 64.f }, { 0.5f, 0.5f }, { 0.f, 2.f }, { 128.f, 128.f });
+	deadModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.f, 128.f }, "tuyu_sleep.png", { 96.f, 96.f }, { 0.5f, 0.5f }, { 0.f, 2.f }, { 128.f, 128.f });
 
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
 	player_->SetIsBillboardY(true);
 	player_->SetColType(Object3d::CollisionType::Obb);
 	player_->SetObjType((int32_t)Object3d::OBJType::Player);
-	player_->SetObbScl({ 2.f,2.f,2.f });
+	player_->SetObbScl({ 1.f,1.f,1.f });
 	player_->SetHitRadius(0.5f);
 	player_->SetScale({ 0.0f, 0.0f, 0.0f });
 
@@ -49,7 +49,7 @@ void Player::Initialize()
 	hammer_->SetScale(initHammerScale_);
 	hammer_->SetRotation(initHammerRot_);
 	hammer_->SetColType(Object3d::CollisionType::Obb);
-	hammer_->SetObbScl({ 1.0f,1.f,5.f });
+	hammer_->SetObbScl({ 1.0f,1.f, 1.f });
 	hammer_->SetObjType((int32_t)Object3d::OBJType::Hammer);
 	hammer_->SetHitRadius(1.0f);
 	oreCount_ = 0;
@@ -432,6 +432,7 @@ void Player::Move() {
 }
 
 void Player::Attack() {
+	if (isStop_)return;
 	rotSpeed_ = initRotSpeed_ - (hammerRotCoeff_ * (float)oreCount_);
 	//ハンマーをもっているか
 	if (!isHammerRelease_) {
@@ -668,7 +669,7 @@ void Player::HitCoolTime()
 
 	player_->SetColor({ 1.f, 1.f, 1.f, 1.f });
 	if (remainderNumber != 0) {
-		player_->SetColor({ 1.f, 0.5f, 0.5f, 1.f });
+		player_->SetColor({ 1.f, 0.2f, 0.2f, 1.f });
 	}
 
 }
