@@ -24,8 +24,8 @@
 #include"Shake.h"
 #include"IntermediateBase.h"
 #include "Grass.h"
-#include"AttackEffect.h"
-class GameScene : public BaseScene
+
+class StageTwoFloor :public BaseScene
 {
 public: //ƒƒ“ƒoŠÖ”
 	/// <summary>
@@ -101,6 +101,5 @@ private: //ƒƒ“ƒo•Ï”
 	Vector3 pos{};
 	Vector3 target{};
 	SceneChangeEffect* schange;
-	AttackEffect* aEffect_;
-	bool aeFlag = false;
 };
+
