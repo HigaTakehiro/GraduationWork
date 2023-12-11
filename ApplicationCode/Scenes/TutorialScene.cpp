@@ -147,8 +147,11 @@ void TutorialScene::Update()
 		}
 	}
 	
-	if (map_->GetDePosit() != nullptr) {
-		Helper::ColKnock(player_->GetPos(), map_->GetDePosit()->GetPos(), player_, Collision::GetLength(player_->GetPos(), map_->GetDePosit()->GetPos()) < 3.f, 1.5f);
+	for (int32_t i = 0; i < map_->GetDepositsSize(); i++) {
+		std::unique_ptr<Deposit>& deposit = map_->GetDeposit(i);
+		if (deposit != nullptr) {
+			Helper::ColKnock(player_->GetPos(), deposit->GetPos(), player_, Collision::GetLength(player_->GetPos(), deposit->GetPos()) < 3.f, 1.5f);
+		}
 	}
 
 	(this->*FuncTable[phase_])();
