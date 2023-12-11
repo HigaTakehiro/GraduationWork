@@ -158,17 +158,9 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			TargetPos.x = startpos_.x;
 			TargetPos.z = startpos_.z;
 			CameraPos.z = CameraPos.z + startpos_.z - 2.f;
-			//çzè∞
-			std::unique_ptr<Deposit> deposit = make_unique<Deposit>();
-			deposit->Initialize({ Pos.x, Pos.y, Pos.z - 5.f });
-			std::unique_ptr<Deposit> deposit_2 = make_unique<Deposit>();
-			deposit_2->Initialize({ Pos.x - 5.f, Pos.y, Pos.z + 5.f });
-			deposits_.push_back(std::move(deposit));
-			deposits_.push_back(std::move(deposit_2));
-			/*deposit_ = new Deposit();
-			deposit_->Initialize({ Pos.x,Pos.y,Pos.z - 5 });*/
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
+			CreateDeposits(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -238,6 +230,21 @@ void GameMap::CreateGrass(const XMFLOAT3& MapPos,int Count)
 	}
 }
 
+void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
+{
+	//çzè∞
+	std::unique_ptr<Deposit> deposit = make_unique<Deposit>();
+	deposit->Initialize({ MapPos.x, MapPos.y,MapPos.z - 5.f });
+	deposit->SetMapNum(MapNum);
+	std::unique_ptr<Deposit> deposit_2 = make_unique<Deposit>();
+	deposit_2->Initialize({ MapPos.x - 5.f, MapPos.y, MapPos.z + 5.f });
+	deposit_2->SetMapNum(MapNum);
+	deposits_.push_back(std::move(deposit));
+	deposits_.push_back(std::move(deposit_2));
+
+	
+}
+
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
 	LoadCsv(player, CameraPos, TargetPos, StageNum);
@@ -274,13 +281,6 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	//if (deposit_ != nullptr) {
-	//	deposit_->Update(player->GetPos());
-	//	if (deposit_->GetHP() <= 0) {
-	//		safe_delete(deposit_);
-	//	}
-	//}
-
 	for (int32_t i = 0; i < deposits_.size(); i++) {
 		deposits_[i]->Update(player->GetPos());
 	}
@@ -316,6 +316,7 @@ void GameMap::MapDraw()
 	}*/
 
 	for (int32_t i = 0; i < deposits_.size(); i++) {
+		if(count_==deposits_[i]->GetMapNum())
 		deposits_[i]->Draw();
 	}
 }
