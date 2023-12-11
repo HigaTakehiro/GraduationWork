@@ -102,6 +102,7 @@ private:
 	unique_ptr<Sprite> wake_;
 	unique_ptr<Sprite> nextui_;
 	unique_ptr<Object3d> sleep_;
+	Deposit* deposit_;
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;
 	OBB* _hummmerObb;
@@ -113,6 +114,8 @@ private:
 	std::unique_ptr<GameMap> map_;
 	//”wŒi‰æ‘œ
 	std::unique_ptr<Sprite> background_;
+	//zÎƒAƒCƒeƒ€
+	std::list<std::unique_ptr<Ore>> oreItems_;
 	//ƒ‚ƒfƒ‹
 	Model* sleepModel_[4];
 

@@ -3,6 +3,8 @@
 #include"Player.h"
 #include"Stairs.h"
 #include"Grass.h"
+#include "Deposit.h"
+#include "Ore.h"
 
 #include<memory.h>
 #include<DirectXMath.h>
@@ -104,6 +106,9 @@ public:
 
 	bool ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease);
 
+	Deposit* GetDePosit() { return deposit_; }
+	bool DepositIsHit(bool flag) { return deposit_->GetIsHit(flag); }
+
 private:
 
 	list<unique_ptr<Stage>> maps_;
@@ -115,6 +120,12 @@ private:
 	list<unique_ptr<Object3d>> rock_;
 	
 	list<unique_ptr<Grassland>> grass_;
+
+	//鉱石アイテム
+	std::list<std::unique_ptr<Ore>> oreItems_;
+
+	Deposit* deposit_;
+
 	//マップの番号
 	int count_ = 0;
 	//古い状態のマプ番号

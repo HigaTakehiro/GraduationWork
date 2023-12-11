@@ -3,6 +3,7 @@
 #include "ExternalFileLoader.h"
 #include "Easing.h"
 #include "SoundManager.h"
+#include "SafeDelete.h"
 #include <random>
 
 int Count = 0;
@@ -157,6 +158,9 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			TargetPos.x = startpos_.x;
 			TargetPos.z = startpos_.z;
 			CameraPos.z = CameraPos.z + startpos_.z - 2.f;
+			//z°
+			deposit_ = new Deposit();
+			deposit_->Initialize({ Pos.x,Pos.y,Pos.z - 5 });
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
@@ -259,6 +263,15 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
+	if (deposit_ != nullptr) {
+		deposit_->Update(player->GetPos());
+		if (deposit_->GetHP() <= 0) {
+			safe_delete(deposit_);
+		}
+	}
+
+	
+
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
 	/*for (unique_ptr<Object3d>& Rock : rock_) {
@@ -284,9 +297,10 @@ void GameMap::MapDraw()
 		}
 	}
 
-	/*for (unique_ptr<Object3d>& Rock : rock_) {
-		Rock->Draw();
-	}*/
+	
+	if (deposit_ != nullptr) {
+		deposit_->Draw();
+	}
 }
 
 void GameMap::BridgeDraw(bool flag )
