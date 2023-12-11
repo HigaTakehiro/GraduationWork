@@ -569,4 +569,12 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 	return false;
 }
 
+Deposit* GameMap::GetDePosit()
+{
+	if (deposit_ != nullptr) {
+		return deposit_;
+	}
+	return nullptr;
+}
+
 

@@ -106,7 +106,7 @@ public:
 
 	bool ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease);
 
-	Deposit* GetDePosit() { return deposit_; }
+	Deposit* GetDePosit();
 	bool DepositIsHit(bool flag) { return deposit_->GetIsHit(flag); }
 
 private:

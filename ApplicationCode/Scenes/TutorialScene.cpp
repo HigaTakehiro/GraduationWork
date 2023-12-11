@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
+#include "Helper.h"
 #pragma warning(disable:4996)
 
 void (TutorialScene::* TutorialScene::FuncTable[])() {
@@ -144,6 +145,10 @@ void TutorialScene::Update()
 		if (ore != nullptr) {
 			ore->Update();
 		}
+	}
+	
+	if (map_->GetDePosit() != nullptr) {
+		Helper::ColKnock(player_->GetPos(), map_->GetDePosit()->GetPos(), player_, Collision::GetLength(player_->GetPos(), map_->GetDePosit()->GetPos()) < 3.f, 1.5f);
 	}
 
 	(this->*FuncTable[phase_])();
