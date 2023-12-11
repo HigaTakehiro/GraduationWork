@@ -474,7 +474,7 @@ void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 	if (StageNum == 0) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv");}
 	else if (StageNum == 1) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");}
 	else if (StageNum == 2) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map3.csv"); }
-	else if (StageNum == 3) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv"); }
+	else if (StageNum == 3) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map4.csv"); }
 	else if (StageNum == 100) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");}
 	
 }

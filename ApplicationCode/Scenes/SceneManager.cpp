@@ -76,6 +76,11 @@ void SceneManager::SceneChange(SceneName scene) {
 		nowScene->Initialize();
 		nowScene->SetCollisionManager(colManager_);
 		break;
+	case SceneName::Floor2:
+		nowScene = new StageTwoFloor();
+		nowScene->Initialize();
+		nowScene->SetCollisionManager(colManager_);
+		break;
 	case SceneName::IB:
 		nowScene = new IBScene();
 		nowScene->Initialize();
