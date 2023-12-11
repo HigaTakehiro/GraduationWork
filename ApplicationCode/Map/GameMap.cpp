@@ -161,7 +161,10 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			//çzè∞
 			std::unique_ptr<Deposit> deposit = make_unique<Deposit>();
 			deposit->Initialize({ Pos.x, Pos.y, Pos.z - 5.f });
+			std::unique_ptr<Deposit> deposit_2 = make_unique<Deposit>();
+			deposit_2->Initialize({ Pos.x - 5.f, Pos.y, Pos.z + 5.f });
 			deposits_.push_back(std::move(deposit));
+			deposits_.push_back(std::move(deposit_2));
 			/*deposit_ = new Deposit();
 			deposit_->Initialize({ Pos.x,Pos.y,Pos.z - 5 });*/
 			maps_.push_back(move(Map));
