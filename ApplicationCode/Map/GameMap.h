@@ -52,6 +52,7 @@ private:
 		int num;
 	};
 
+
 public:
 
 	void LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum);
@@ -59,6 +60,8 @@ public:
 	void CreateBridge();
 
 	void CreateGrass(const XMFLOAT3& MapPos,int Count);
+
+	void CreateDeposits(const XMFLOAT3& MapPos, int MapNum);
 
 	/// <summary>
 	/// ‰Šú‰»

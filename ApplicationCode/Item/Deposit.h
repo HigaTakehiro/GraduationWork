@@ -50,6 +50,18 @@ public: //メンバ関数
 	/// <returns>座標</returns>
 	Vector3 GetPos() { return deposit_->GetPosition(); }
 
+	/// <summary>
+	/// マップの番号をセット
+	/// </summary>
+	/// <returns></returns>
+	void SetMapNum(int Num) { this->mapnum_=Num; }
+
+	/// <summary>
+	/// マップの番号を取得
+	/// </summary>
+	/// <returns></returns>
+	int GetMapNum() { return mapnum_; }
+
 private: //メンバ関数
 	/// <summary>
 	/// アルファ値設定
@@ -68,5 +80,7 @@ private: //メンバ変数
 	int32_t hitCoolTime_;
 	//無敵時間タイマー
 	int32_t hitCoolTimer_;
+	//マップ番号
+	int mapnum_;
 };
 
