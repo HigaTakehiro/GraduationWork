@@ -94,6 +94,7 @@ protected:
 	//XMFLOAT4 color;
 public:
 	void SetFlash(bool f) { FlashF = f; }
+	bool GetRecv() { return _isFlash; }
 	void DamageFlash();
 protected:
 	void TexInit();

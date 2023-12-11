@@ -65,7 +65,7 @@ void GameScene::Initialize()
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 1);
-	
+
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
@@ -74,13 +74,14 @@ void GameScene::Initialize()
 	schange->Initialize();
 	schange->SetFadeNum(1);
 	schange->SetFEnd(true);
-
+	aEffect_ = new AttackEffect();
+	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 
 	//草配置決め打ち
 	std::unique_ptr<Grass> grass_1 = std::make_unique<Grass>();
-	grass_1->Initialize({24, 0, 24});
+	grass_1->Initialize({ 24, 0, 24 });
 	std::unique_ptr<Grass> grass_2 = std::make_unique<Grass>();
 	grass_2->Initialize({ 24, 0, 35 });
 	std::unique_ptr<Grass> grass_3 = std::make_unique<Grass>();
@@ -153,7 +154,7 @@ void GameScene::Update()
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-
+	aEffect_->Update(hammerPosition);
 	shake_->Update();
 	colManager_->Update();
 
@@ -194,6 +195,9 @@ void GameScene::Draw()
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TexDraw();
 	player_->Draw();
+	if (player_->GetIsHammerRelease() == true || player_-> GetIsHammerSwing()) {
+		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	}
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
 	}*/
@@ -211,7 +215,7 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 	//
-	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
+	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
 	//std::wstring hx = std::to_wstring(player_->GetPos().z);
 	//text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
 	player_->TextUIDraw();
@@ -249,7 +253,7 @@ void GameScene::SceneChange()
 	SceneManager::SetHP(player_->GetHP());
 
 	bool Change = player_->GetNext();
-	if (Change||player_->GetIsDead()) {
+	if (Change || player_->GetIsDead()) {
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
 	}
@@ -320,8 +324,12 @@ void GameScene::EnemyProcess()
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
+			aeFlag = true;
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+		}
+		else {
+			aeFlag = false;
 		}
 	}
 
