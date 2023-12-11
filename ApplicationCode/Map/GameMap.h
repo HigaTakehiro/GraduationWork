@@ -106,8 +106,19 @@ public:
 
 	bool ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease);
 
-	Deposit* GetDePosit() { return deposit_; }
+	Deposit* GetDePosit();
 	bool DepositIsHit(bool flag) { return deposit_->GetIsHit(flag); }
+
+	/// <summary>
+	/// 鉱脈リストを取得
+	/// </summary>
+	/// <returns>鉱脈</returns>
+	std::unique_ptr<Deposit>& GetDeposit(int32_t number) { return deposits_[number]; }
+	/// <summary>
+	/// 鉱脈リストサイズを取得
+	/// </summary>
+	/// <returns>鉱脈リストサイズ</returns>
+	int32_t GetDepositsSize() { return deposits_.size(); }
 
 private:
 
@@ -125,6 +136,7 @@ private:
 	std::list<std::unique_ptr<Ore>> oreItems_;
 
 	Deposit* deposit_;
+	std::vector<std::unique_ptr<Deposit>> deposits_;
 
 	//マップの番号
 	int count_ = 0;

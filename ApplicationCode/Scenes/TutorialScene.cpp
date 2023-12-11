@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
+#include "Helper.h"
 #pragma warning(disable:4996)
 
 void (TutorialScene::* TutorialScene::FuncTable[])() {
@@ -143,6 +144,13 @@ void TutorialScene::Update()
 		}
 		if (ore != nullptr) {
 			ore->Update();
+		}
+	}
+	
+	for (int32_t i = 0; i < map_->GetDepositsSize(); i++) {
+		std::unique_ptr<Deposit>& deposit = map_->GetDeposit(i);
+		if (deposit != nullptr) {
+			Helper::ColKnock(player_->GetPos(), deposit->GetPos(), player_, Collision::GetLength(player_->GetPos(), deposit->GetPos()) < 3.f, 1.5f);
 		}
 	}
 

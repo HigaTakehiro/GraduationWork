@@ -159,8 +159,14 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			TargetPos.z = startpos_.z;
 			CameraPos.z = CameraPos.z + startpos_.z - 2.f;
 			//z°
-			deposit_ = new Deposit();
-			deposit_->Initialize({ Pos.x,Pos.y,Pos.z - 5 });
+			std::unique_ptr<Deposit> deposit = make_unique<Deposit>();
+			deposit->Initialize({ Pos.x, Pos.y, Pos.z - 5.f });
+			std::unique_ptr<Deposit> deposit_2 = make_unique<Deposit>();
+			deposit_2->Initialize({ Pos.x - 5.f, Pos.y, Pos.z + 5.f });
+			deposits_.push_back(std::move(deposit));
+			deposits_.push_back(std::move(deposit_2));
+			/*deposit_ = new Deposit();
+			deposit_->Initialize({ Pos.x,Pos.y,Pos.z - 5 });*/
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
@@ -246,6 +252,11 @@ void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos
 
 void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos,bool flag)
 {
+	for (int32_t i = 0; i < deposits_.size(); i++) {
+		if (deposits_[i]->GetHP() <= 0) {
+			deposits_[i]->~Deposit();
+		}
+	}
 	CheckHitTest(player);
 
 	if (time_ < 1&&flag == true) {
@@ -263,14 +274,16 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	if (deposit_ != nullptr) {
-		deposit_->Update(player->GetPos());
-		if (deposit_->GetHP() <= 0) {
-			safe_delete(deposit_);
-		}
-	}
+	//if (deposit_ != nullptr) {
+	//	deposit_->Update(player->GetPos());
+	//	if (deposit_->GetHP() <= 0) {
+	//		safe_delete(deposit_);
+	//	}
+	//}
 
-	
+	for (int32_t i = 0; i < deposits_.size(); i++) {
+		deposits_[i]->Update(player->GetPos());
+	}
 
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
@@ -298,8 +311,12 @@ void GameMap::MapDraw()
 	}
 
 	
-	if (deposit_ != nullptr) {
+	/*if (deposit_ != nullptr) {
 		deposit_->Draw();
+	}*/
+
+	for (int32_t i = 0; i < deposits_.size(); i++) {
+		deposits_[i]->Draw();
 	}
 }
 
@@ -567,6 +584,14 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 	}
 
 	return false;
+}
+
+Deposit* GameMap::GetDePosit()
+{
+	if (deposit_ != nullptr) {
+		return deposit_;
+	}
+	return nullptr;
 }
 
 
