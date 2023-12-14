@@ -282,6 +282,8 @@ void TutorialScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::Floor1);
 	}
 
+	SceneManager::SceneChange(SceneManager::SceneName::Floor1);
+
 }
 
 void TutorialScene::CameraSetting()

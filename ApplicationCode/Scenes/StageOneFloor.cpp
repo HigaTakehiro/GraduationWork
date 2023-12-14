@@ -7,6 +7,7 @@
 #include "PadInput.h"
 #include "Collision.h"
 #include "Dogom.h"
+#include "NormalEnemyB.h"
 #include "SoundManager.h"
 
 void StageOneFloor::Initialize()
@@ -51,16 +52,18 @@ void StageOneFloor::Initialize()
 	vec.resize(EnemySize);
 
 	for (size_t i = 0; i < enemys_.size(); i++) {
-		enemys_[i] = new NormalEnemyA();
+		enemys_[i] = new NormalEnemyB();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 
 		enemys_[i]->SetOverPos(XMFLOAT3(39.f, -100.f, 5.f), XMFLOAT3(23.f, 100.f, -5.f));
 	}
-	enemys_[0]->SetPos(Vector3(30, -30, -4));
-	enemys_[2]->SetPos(Vector3(25, -30, 2));
-	enemys_[2]->SetPos(Vector3(35, -30, 5));
+	enemys_[0]->SetPos2(Vector3(30, 0, -4));
+	enemys_[1]->SetPos2(Vector3(25, 0, 2));
+	enemys_[2]->SetPos2(Vector3(35, 0, 5));
 
+	for (size_t i = 0; i < enemys_.size(); i++)
+		enemys_[i]->SetPosDeb(enemys_[i]->GetPos());
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 2);
@@ -142,12 +145,9 @@ void StageOneFloor::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 
 	map_->MapDraw();
+	
 	Object3d::PostDraw();
-	for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i] != nullptr) {
-			enemys_[i]->Draw();
-		}
-	}
+
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -155,10 +155,10 @@ void StageOneFloor::Draw()
 			ore->Draw();
 		}
 	}
+	
 	//boss_->Draw();
 	//boss_->Draw2();
-	for (size_t i = 0; i < enemys_.size(); i++)
-		enemys_[i]->TexDraw();
+
 	player_->Draw();
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
@@ -166,6 +166,17 @@ void StageOneFloor::Draw()
 	map_->BridgeDraw();
 
 	Object3d::PostDraw();
+	for (auto i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i] != nullptr) {
+			enemys_[i]->Draw();
+		}
+	}
+
+	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	for (size_t i = 0; i < enemys_.size(); i++)
+		//enemys_[i]->TexDraw();
+	Object3d::PostDraw();
+
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
 	//スプライト描画処理(UI等)
@@ -178,7 +189,7 @@ void StageOneFloor::Draw()
 	//テキスト描画範囲
 	//
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	//std::wstring hx = std::to_wstring(player_->GetPos().z);
+	//std::wstring hx = std::to_wstring(player_->GetPos2().z);
 	//text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
@@ -275,7 +286,7 @@ void StageOneFloor::EnemyProcess()
 	}
 	for (auto i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i]->GetHP() <= 0)continue;
-		enemyPos[i] = enemys_[i]->GetPos();
+		enemyPos[i] = enemys_[i]->GetPos2();
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			enemys_[i]->GetDamage();
@@ -305,21 +316,21 @@ void StageOneFloor::EnemyProcess()
 		for (size_t i = 0; i < enemys_.size(); i++)
 		{
 			if (i == j)continue;
-			if (Collision::HitCircle(XMFLOAT2(enemys_[i]->GetPos().x, enemys_[i]->GetPos().z), 1.f,
-				XMFLOAT2(enemys_[j]->GetPos().x, enemys_[j]->GetPos().z), 1.f))
+			if (Collision::HitCircle(XMFLOAT2(enemys_[i]->GetPos2().x, enemys_[i]->GetPos2().z), 1.f,
+				XMFLOAT2(enemys_[j]->GetPos2().x, enemys_[j]->GetPos2().z), 1.f))
 			{
-				XMFLOAT3 pos = enemys_[j]->GetPos();
+				XMFLOAT3 pos = enemys_[j]->GetPos2();
 
-				pos.x += sin(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
-				pos.z += cos(atan2f((enemys_[j]->GetPos().x - enemys_[i]->GetPos().x), (enemys_[j]->GetPos().z - enemys_[i]->GetPos().z))) * 0.3f;
+				pos.x += sin(atan2f((enemys_[j]->GetPos2().x - enemys_[i]->GetPos2().x), (enemys_[j]->GetPos2().z - enemys_[i]->GetPos2().z))) * 0.3f;
+				pos.z += cos(atan2f((enemys_[j]->GetPos2().x - enemys_[i]->GetPos2().x), (enemys_[j]->GetPos2().z - enemys_[i]->GetPos2().z))) * 0.3f;
 
-				enemys_[j]->SetPos(pos);
+				enemys_[j]->SetPos2(pos);
 			}
 		}
 	}
 	for (auto i = 0; i < enemys_.size(); i++)
 	{
-		if (enemys_[i]->GetHP() <= 0) { continue; }
+		//if (enemys_[i]->GetHP() <= 0) { continue; }
 		if (enemys_[i] != nullptr) {
 			enemys_[i]->SetHammerObb(*_hummmerObb);
 			enemys_[i]->Upda(camera_.get());

@@ -8,6 +8,7 @@
 #include "PadInput.h"
 #include "Collision.h"
 #include "Dogom.h"
+#include "NormalEnemyB.h"
 #include "SoundManager.h"
 
 void GameScene::Initialize()

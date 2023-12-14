@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include"CollisionPrimitive.h"
+#include "MunniAction.h"
 #include "Player.h"
 //#include
 using namespace DirectX;
@@ -20,7 +21,7 @@ protected:
 	struct Status
 	{
 		//体力
-		int HP;
+		int HP=1;
 		//攻撃値
 		unsigned int DamageValue;
 		//被ダメージ後の仰け反り時間
@@ -48,11 +49,11 @@ protected:
 		/*モデル*/
 		std::unique_ptr<Object3d>obj_={};
 		/* 画像枚数 */
-		unsigned int TexSize_ = 1;
+		unsigned int TexSize_ = 4;
 		/* モデル画像 */
 		std::vector<Model*>Model_ = {};
 		/* 体力 */
-		int Hp_ = 0;
+		int Hp_ = 10;
 		//攻撃値*/
 		unsigned int DamageValue_=0;
 		/* 被ダメージ後の仰け反り時間 */
@@ -65,6 +66,8 @@ protected:
 		Vector3 Pos_ = {}, Rot_ = {}, Scl = {};
 		/* 色 */
 		XMFLOAT4 Color_ = { 1,1,1,1 };
+		/*  */
+		bool DamCool = FALSE;
 	}state_obj_;
 	//**************************************
 
@@ -168,6 +171,8 @@ public:
 			RecvDamage = TRUE;
 		}
 	}
+
+	void CollideHammerDeb();
 private:
 	void RotforPlayer();
 public:
@@ -178,7 +183,14 @@ public:
 	XMFLOAT3 GetRot() const;
 	XMFLOAT3 GetScl() const;
 
+	XMFLOAT3 GetPos2() const;
+	XMFLOAT3 GetRot2() const;
+	XMFLOAT3 GetScl2() const;
+
 public:
+	void SetPos2(Vector3 pos) { state_obj_.Pos_ = pos;  }
 	void SetPos(Vector3 pos) { _status.Pos = pos; }
+
+	virtual void SetPosDeb(Vector3 pos) = 0;
 };
 

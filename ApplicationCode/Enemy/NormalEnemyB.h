@@ -1,4 +1,6 @@
 #pragma once
+
+#include "MunniAction.h"
 #include "BaseEnemy.h"
 class NormalEnemyB :
     public BaseEnemy
@@ -19,12 +21,15 @@ public:
 
     void TutorialDraw(float Mindis)override;
 
+    void SetPosDeb(Vector3 pos)override;
 private:
     /* JUMP */
     std::unique_ptr<Object3d>m_ImpactTex = nullptr;
     float m_JumpInter_ = 0.f;
     float m_JumpPower = 1.f;
     void Jump();
-    /*      */
+
+    //çsìÆëJà⁄óp
+    MunniAction* action_=nullptr;
 };
 

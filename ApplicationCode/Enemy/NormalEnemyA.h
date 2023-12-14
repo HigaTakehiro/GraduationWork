@@ -20,6 +20,8 @@ public:
     void TutorialUpda(Camera* camera, bool flag) override;
 
     void TutorialDraw(float Mindis)override;
+
+    void SetPosDeb(Vector3 pos)override;
 private:
     /*‚¶‚á‚ñ‚Õ*/
 	float JFrame;
