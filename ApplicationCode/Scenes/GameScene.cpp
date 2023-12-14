@@ -219,8 +219,13 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
+		if (StageCount::GetIns()->Now() < 3) {
+			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
+			SceneManager::SceneChange(SceneManager::SceneName::Game);
+		}
+		else {
+			SceneManager::SceneChange(SceneManager::SceneName::IB);
+		}
 	}
 
 }
