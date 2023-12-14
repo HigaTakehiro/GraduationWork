@@ -9,6 +9,8 @@ public:
 
 	void Initi();
 
+	int Now();
+
 	int Up();
 
 	static StageCount* GetIns();
@@ -31,6 +33,11 @@ StageCount::~StageCount()
 inline void StageCount::Initi()
 {
 	stagenum = 0;
+}
+
+inline int StageCount::Now()
+{
+	return stagenum;
 }
 
 inline int StageCount::Up()
