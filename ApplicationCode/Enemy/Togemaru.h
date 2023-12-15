@@ -22,6 +22,7 @@ private:
     static constexpr UINT m_ScaleArray = 3;
     //
     static constexpr UINT m_TexArray = 8;
+    //
 private:
     //–{‘Ì
     std::unique_ptr<Object3d>m_Body=nullptr;
