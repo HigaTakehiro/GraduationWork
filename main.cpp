@@ -15,8 +15,17 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#else
+#define DBG_NEW new
+#endif
+
 int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 {
+	//CRT系メモリリーク検出設定
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	const int32_t debugTextNumber = 0;
 
 	//ポインタ置き場
@@ -28,7 +37,7 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	CollisionManager* colManager = nullptr;
 
 	//WindowsAPIの初期化
-	winApp = new WinApp();
+	winApp = DBG_NEW WinApp();
 	winApp->SetWindowStyle(WS_SYSMENU | WS_CAPTION | WS_EX_CONTEXTHELP | WS_MINIMIZEBOX);
 	winApp->Initialize();
 
@@ -41,7 +50,7 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	PadInput::GetIns()->Initialize(winApp);
 
 	//Soundの初期化
-	sound = new Sound();
+	sound = DBG_NEW Sound();
 	if (!sound->Initialize()) {
 		assert(0);
 		return 1;
@@ -58,7 +67,7 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 
 	ImageManager::GetIns()->Initialize();
 	//当たり判定マネージャーの初期化
-	colManager = new CollisionManager();
+	colManager = DBG_NEW CollisionManager();
 
 	//FBXの初期化
 	FbxLoader::GetInstance()->Initialize(DirectXSetting::GetIns()->GetDev());
@@ -71,7 +80,7 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	Object3d::SetCollisionManager(colManager);
 	LightGroup::StaticInitialize();
 
-	scene = new SceneManager();
+	scene = DBG_NEW SceneManager();
 	scene->SetCollsionManager(colManager);
 	scene->Initialize();
 
@@ -99,5 +108,10 @@ int32_t WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	//WindowsAPI解放
 	winApp->Finalize();
 	safe_delete(winApp);
+
+	//CRT系メモリリーク検出
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtDumpMemoryLeaks();
+
 	return 0;
 }

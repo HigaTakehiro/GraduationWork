@@ -103,4 +103,5 @@ private: //ƒƒ“ƒo•Ï”
 	SceneChangeEffect* schange;
 	AttackEffect* aEffect_;
 	bool aeFlag = false;
+	int aeCount = 0;
 };

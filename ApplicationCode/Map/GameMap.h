@@ -3,6 +3,8 @@
 #include"Player.h"
 #include"Stairs.h"
 #include"Grass.h"
+#include "Deposit.h"
+#include "Ore.h"
 
 #include<memory.h>
 #include<DirectXMath.h>
@@ -50,6 +52,7 @@ private:
 		int num;
 	};
 
+
 public:
 
 	void LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum);
@@ -57,6 +60,8 @@ public:
 	void CreateBridge();
 
 	void CreateGrass(const XMFLOAT3& MapPos,int Count);
+
+	void CreateDeposits(const XMFLOAT3& MapPos, int MapNum);
 
 	/// <summary>
 	/// 初期化
@@ -104,6 +109,20 @@ public:
 
 	bool ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease);
 
+	Deposit* GetDePosit();
+	bool DepositIsHit(bool flag) { return deposit_->GetIsHit(flag); }
+
+	/// <summary>
+	/// 鉱脈リストを取得
+	/// </summary>
+	/// <returns>鉱脈</returns>
+	std::unique_ptr<Deposit>& GetDeposit(int32_t number) { return deposits_[number]; }
+	/// <summary>
+	/// 鉱脈リストサイズを取得
+	/// </summary>
+	/// <returns>鉱脈リストサイズ</returns>
+	int32_t GetDepositsSize() { return deposits_.size(); }
+
 private:
 
 	list<unique_ptr<Stage>> maps_;
@@ -115,6 +134,13 @@ private:
 	list<unique_ptr<Object3d>> rock_;
 	
 	list<unique_ptr<Grassland>> grass_;
+
+	//鉱石アイテム
+	std::list<std::unique_ptr<Ore>> oreItems_;
+
+	Deposit* deposit_;
+	std::vector<std::unique_ptr<Deposit>> deposits_;
+
 	//マップの番号
 	int count_ = 0;
 	//古い状態のマプ番号

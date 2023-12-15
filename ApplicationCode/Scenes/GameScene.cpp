@@ -9,6 +9,7 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
+#include"StageCount.h"
 
 void GameScene::Initialize()
 {
@@ -62,9 +63,11 @@ void GameScene::Initialize()
 	enemys_[2]->SetPos(Vector3(25, -30, 2));
 	enemys_[2]->SetPos(Vector3(35, -30, 5));
 
+	int Num = StageCount::GetIns()->Up();
 
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_, cameraPos_, targetPos_, 1);
+
+	map_->Initalize(player_, cameraPos_, targetPos_, Num);
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -76,6 +79,8 @@ void GameScene::Initialize()
 	schange->SetFEnd(true);
 	aEffect_ = new AttackEffect();
 	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+	aeFlag = false;
+	aeCount = 0;
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 }
@@ -87,7 +92,7 @@ void GameScene::Update()
 	if (player_->GetHP() <= 0) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 	}
-	
+
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			if (ore->GetIsHit() && player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
@@ -119,7 +124,7 @@ void GameScene::Update()
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-	aEffect_->Update(hammerPosition);
+
 	shake_->Update();
 	colManager_->Update();
 
@@ -160,7 +165,7 @@ void GameScene::Draw()
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TexDraw();
 	player_->Draw();
-	if (player_->GetIsHammerRelease() == true || player_-> GetIsHammerSwing()) {
+	if (aeFlag == true) {
 		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	}
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
@@ -221,8 +226,13 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
+		if (StageCount::GetIns()->Now() < 3) {
+			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
+			SceneManager::SceneChange(SceneManager::SceneName::Game);
+		}
+		else {
+			SceneManager::SceneChange(SceneManager::SceneName::IB);
+		}
 	}
 
 }
@@ -291,11 +301,20 @@ void GameScene::EnemyProcess()
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
-		else {
-			aeFlag = false;
+		if (aeFlag == true) {
+			aEffect_->Update(enemyPos[0]);
 		}
 	}
+	if (aeFlag == true) {
+		if (aeCount < 30) {
+			aeCount++;
+		}
+		else {
+			aeCount = 0;
+			aeFlag = false;
+		}
 
+	}
 
 	//ƒvƒŒƒCƒ„[‚ÌOBBÝ’è
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],

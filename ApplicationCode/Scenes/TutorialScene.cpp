@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
+#include "Helper.h"
 #pragma warning(disable:4996)
 
 void (TutorialScene::* TutorialScene::FuncTable[])() {
@@ -57,9 +58,7 @@ void TutorialScene::Initialize()
 	sleep_->SetHitRadius(0.5f);
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
 	sleep_->SetPosition(sleepPos_);
-	//鉱床
-	/*deposit_ = new Deposit();
-	deposit_->Initialize({ 0.f, 0.f, 30.f });*/
+	
 
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
@@ -104,6 +103,8 @@ void TutorialScene::Initialize()
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
 
+	deposit_ = map_->GetDePosit();
+
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
@@ -133,7 +134,25 @@ void TutorialScene::Update()
 {
 	int32_t Max=player_->GetMaxHP();
 	player_->SetHP(Max);
-
+	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			if (ore->GetIsHit() && player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
+				player_->AddOreCount();
+				ore = nullptr;
+			}
+		}
+		if (ore != nullptr) {
+			ore->Update();
+		}
+	}
+	
+	for (int32_t i = 0; i < map_->GetDepositsSize(); i++) {
+		std::unique_ptr<Deposit>& deposit = map_->GetDeposit(i);
+		if (deposit != nullptr) {
+			Helper::ColKnock(player_->GetPos(), deposit->GetPos(), player_, Collision::GetLength(player_->GetPos(), deposit->GetPos()) < 3.f, 1.5f);
+		}
+	}
 
 	(this->*FuncTable[phase_])();
 	if (shake_->GetShakeFlag() == true) {
@@ -155,13 +174,23 @@ void TutorialScene::Update()
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
 
-
 	schange->Change(0);
 
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
+	
+	
 
+	if (deposit_ != nullptr&& deposit_->GetHP() > 0) {
+		
+		if (deposit_->GetIsHit(true)) {
+			unique_ptr<Ore> ore = make_unique<Ore>();
+			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
+			oreItems_.push_back(std::move(ore));
+		}
+		
+	}
 	
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
@@ -193,6 +222,11 @@ void TutorialScene::Draw()
 		}
 	}	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			ore->Draw();
+		}
+	}
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TutorialTexDraw();
 	if (phase_ == Phase::Title) {sleep_->Draw();}
@@ -279,7 +313,7 @@ void TutorialScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
-		SceneManager::SceneChange(SceneManager::SceneName::Floor1);
+		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 
 }
