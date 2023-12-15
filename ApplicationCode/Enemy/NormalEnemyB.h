@@ -29,7 +29,12 @@ private:
     float m_JumpPower = 1.f;
     void Jump();
 
-    //行動遷移用
+    /* ANIMATION */
+    uint32_t m_AnimationCount = 0;
+    //向きの状態
+    enum AState{FRONT,BACK,RIGHT,LEFT}animeState_;
+
+	//行動遷移用
     MunniAction* action_=nullptr;
 };
 

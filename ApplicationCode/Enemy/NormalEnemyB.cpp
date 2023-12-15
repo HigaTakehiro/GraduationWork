@@ -5,12 +5,13 @@
 
 void NormalEnemyB::Init()
 {
+	state_obj_.TexSize_ = 6;
 	state_obj_.Model_.resize(state_obj_.TexSize_);
 
 	for (size_t i = 0; i < state_obj_.TexSize_; i++) {
-		state_obj_.Model_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
+		state_obj_.Model_[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "rockmuni_idle.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 2.0f }, { 64.0f, 64.0f });
 	}
-	state_obj_.obj_ = Object3d::UniquePtrCreate(state_obj_.Model_[0]);
+	state_obj_.obj_ = Object3d::UniquePtrCreate(state_obj_.Model_[m_AnimationCount]);
 
 	state_obj_.obj_->SetColType(Object3d::CollisionType::Obb);
 	state_obj_.obj_->SetObjType((int32_t)Object3d::OBJType::Enemy);
@@ -20,6 +21,7 @@ void NormalEnemyB::Init()
 
 	Tag_ = "Munni";
 	action_ = new MunniAction();
+
 }
 
 void NormalEnemyB::Upda(Camera* camera)
@@ -30,11 +32,33 @@ void NormalEnemyB::Upda(Camera* camera)
 	state_obj_.Pos_ = action_->GetPos();
 	state_obj_.Rot_ = action_->GetRor();
 
+	// アニメーションのカウンタ
+	{
+		//アニメーション間隔
+		constexpr uint32_t animationInter = 30;
+		//インデクス
+		int animeTexIndx = m_AnimationCount / animationInter;
+
+		if (++m_AnimationCount % animationInter == 0) {
+			// 最後まで行ったら０番に
+			if (animeTexIndx > (state_obj_.TexSize_ - 1)) {
+				m_AnimationCount = 0;
+			} else {
+				//テクスチャ切り替え30フレーム毎
+				state_obj_.obj_ = Object3d::UniquePtrCreate(state_obj_.Model_[animeTexIndx]);
+			}
+		}
+		//インデックス範囲制限
+		animeTexIndx= std::clamp(animeTexIndx, 0, state_obj_.TexSize_-1);
+	}
+
+
 	//各種パラメータセット 更新
-	state_obj_.obj_->SetRotation(state_obj_.Rot_);
+	//state_obj_.obj_->SetRotation(state_obj_.Rot_);
 	state_obj_.obj_->SetScale(state_obj_.Scl);
 	state_obj_.obj_->SetPosition(state_obj_.Pos_);
 	state_obj_.obj_->SetColor(state_obj_.Color_);
+	state_obj_.obj_->SetIsBillboardY(true);
 	state_obj_.obj_->Update();
 }
 
@@ -43,6 +67,7 @@ void NormalEnemyB::Upda(Camera* camera)
 void NormalEnemyB::Draw()
 {
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	action_->ImpTexDraw();
 	state_obj_.obj_->Draw();
 	Object3d::PostDraw();
 }

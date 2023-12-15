@@ -2,13 +2,19 @@
 #include "Vector3.h"
 #include<DirectXMath.h>
 #include"Player.h"
+#include"Object3d.h"
+#include<memory>
 using namespace DirectX;
 class MunniAction
 {
 public:
+	MunniAction();
 	static MunniAction* GetIns();
 private:
+	// 座標
 	Vector3 Pos_,Rot_,Scl_;
+	Vector3 InitPos;
+	// プレイヤー用インススタンス
 	Player* m_Player_ = nullptr;
 
 	/* MOVE */
@@ -39,11 +45,26 @@ private:
 	uint32_t atckCoolTime=0;
 	bool isAtck = false;
 	bool canAtck = true;
+	float shakeCount = 0.f;
+	void IdleShake(bool shakestop);
+
+	/* IMPACTTEX */
+	std::unique_ptr<Object3d>ImpactTex = nullptr;
+	std::unique_ptr<Object3d>ImpactAreaTex = nullptr;
+	Vector3 impTexScl = { 0,0,0 };
+	float impTexAlpha = 1.f;
+	float impAreaalpha = 0.f;
+	bool isTexScling = FALSE;
+	void ImpTexInit();
+	void ImpTexUpda();
 
 	/* TRANSITION */
 	void Attack();
 	void Move();
 	void Death();
+
+	/* COLLISION */
+	void Collide();
 
 	enum List
 	{
@@ -70,7 +91,10 @@ public:
 	Vector3 GetRor()const { return Rot_; }
 	Vector3 GetScl()const { return Scl_; }
 
-	void SetInitPos(Vector3 pos) { Pos_ = pos; }
+	void SetInitPos(Vector3 pos) { Pos_ = pos; InitPos = pos; }
+
+public:
+	void ImpTexDraw();
 
 };
 

@@ -888,9 +888,7 @@ void Dogom::CoollisionArm()
 				m_player->HitHammerToEnemy(vec[i], 1.f);
 			}
 			
-			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, m_Arm[i]->GetIsHit());
-		
-		
+			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f));
 			}
 	}
 

@@ -49,7 +49,7 @@ protected:
 		/*ƒ‚ƒfƒ‹*/
 		std::unique_ptr<Object3d>obj_={};
 		/* ‰æ‘œ–‡” */
-		unsigned int TexSize_ = 4;
+		int TexSize_ = 4;
 		/* ƒ‚ƒfƒ‹‰æ‘œ */
 		std::vector<Model*>Model_ = {};
 		/* ‘Ì—Í */

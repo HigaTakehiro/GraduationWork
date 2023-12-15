@@ -732,8 +732,8 @@ void Player::TextUIDraw()
 	D2D1_RECT_F HPTextDrawRange = { 30, 48, 158, 176 };
 	D2D1_RECT_F EPTextDrawRange = { 30, 68, 158, 176 };
 	D2D1_RECT_F LevelTextDrawRange = { 30, 28, 158, 176 };
-	std::wstring hp = std::to_wstring(pos_.y);
-	std::wstring maxHP = std::to_wstring(maxHp_);
+	std::wstring hp = std::to_wstring(pos_.x);
+	std::wstring maxHP = std::to_wstring(pos_.z);
 	std::wstring ep = std::to_wstring(ep_);
 	std::wstring maxEP = std::to_wstring(levelUpEp_);
 	text_->Draw("meiryo_16", "white", hp+ L"/" + maxHP, HPTextDrawRange);

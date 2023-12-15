@@ -31,6 +31,7 @@ public: //ƒV[ƒ“ŠÇ—”Ô†
 		IB,
 		SKILL,
 		Boss,
+		Boss2,
 		Result,
 		None
 	};
