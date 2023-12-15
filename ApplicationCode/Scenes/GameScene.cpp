@@ -64,6 +64,9 @@ void GameScene::Initialize()
 	enemys_[2]->SetPos(Vector3(25, -30, 2));
 	enemys_[2]->SetPos(Vector3(35, -30, 5));
 
+	for (size_t i = 0; i < enemys_.size(); i++)
+		enemys_[i]->SetPosDeb(enemys_[i]->GetPos());
+
 	int Num=StageCount::GetIns()->Up();
 
 	map_ = make_unique<GameMap>();
