@@ -253,7 +253,7 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 
 void GameMap::CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy)
 {
-	for (int i = 0; i < Enemy; i++) {
+	/*for (int i = 0; i < Enemy; i++) {
 		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
 		Enemy1->Init();
 		Enemy1->SetPlayerIns(player);
@@ -261,7 +261,7 @@ void GameMap::CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy)
 		Enemy1->SetCount(count_);
 		Enemy1->SetPos(MapPos);
 		enemys_.push_back(move(Enemy1));
-	}
+	}*/
 }
 
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
@@ -284,11 +284,11 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		}
 	}
 
-	for (int32_t i = 0; i < enemys_.size(); i++) {
+	/*for (int32_t i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i]->GetHP() <= 0) {
 			enemys_.erase(enemys_.begin());
 		}
-	}
+	}*/
 
 	CheckHitTest(player);
 
@@ -604,5 +604,13 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 	return false;
 }
 
+
+Deposit* GameMap::GetDePosit()
+{
+	if (deposit_ != nullptr) {
+		return deposit_;
+	}
+	return nullptr;
+}
 
 
