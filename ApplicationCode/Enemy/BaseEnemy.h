@@ -118,6 +118,8 @@ protected:
 	bool FlashF; float val=1;
 	std::string Tag_;
 	//XMFLOAT4 color;
+
+	int count_;
 public:
 	void SetFlash(bool f) { FlashF = f; }
 	void DamageFlash();
@@ -150,6 +152,8 @@ public:
 	virtual void TutorialUpda(Camera* camera,bool flag) = 0;
 
 	virtual void TutorialDraw(float Mindis) = 0;
+
+
 public:
 	bool DeathJudg();
 
@@ -159,6 +163,9 @@ public:
 	//プレイヤーのインスタンス引き継ぎ　あとで直す部分
 	void SetPlayerIns(Player* player) { _player.reset(player); }
 	void SetHammerObb(OBB obb) { _playerOBB=obb; }
+
+	void SetCount(int Count) { this->count_ = Count; }
+	int GetCount() { return count_; }
 
 	inline void GetDamage()
 	{

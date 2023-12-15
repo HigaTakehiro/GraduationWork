@@ -20,6 +20,7 @@ public:
     void TutorialUpda(Camera* camera, bool flag) override;
 
     void TutorialDraw(float Mindis)override;
+
 private:
     /*‚¶‚á‚ñ‚Õ*/
 	float JFrame;
@@ -30,6 +31,5 @@ private:
     void ClampMap();
     uint16_t m_KnockCoolT = 0;
     bool m_knockF = FALSE;
-
 };
 
