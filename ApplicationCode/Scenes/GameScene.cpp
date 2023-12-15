@@ -10,6 +10,7 @@
 #include "Dogom.h"
 #include "NormalEnemyB.h"
 #include "SoundManager.h"
+#include"StageCount.h"
 
 void GameScene::Initialize()
 {
@@ -63,9 +64,10 @@ void GameScene::Initialize()
 	enemys_[2]->SetPos(Vector3(25, -30, 2));
 	enemys_[2]->SetPos(Vector3(35, -30, 5));
 
+	int Num=StageCount::GetIns()->Up();
 
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_, cameraPos_, targetPos_, 1);
+	map_->Initalize(player_, cameraPos_, targetPos_, Num);
 	
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -218,8 +220,13 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
+		if (StageCount::GetIns()->Now() < 3) {
+			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
+			SceneManager::SceneChange(SceneManager::SceneName::Game);
+		}
+		else {
+			SceneManager::SceneChange(SceneManager::SceneName::IB);
+		}
 	}
 
 }

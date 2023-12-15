@@ -3,6 +3,7 @@
 #include "ExternalFileLoader.h"
 #include "Easing.h"
 #include "SoundManager.h"
+#include "SafeDelete.h"
 #include <random>
 
 int Count = 0;
@@ -30,6 +31,11 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 		std::string word;
 		getline(line_stream, word, ' ');
 
+		if (word.find("ENEMY1") == 0) {
+			getline(line_stream, word, ',');
+			int ENEMYCOUNT = (int)std::atof(word.c_str());
+			enemyscount_ = ENEMYCOUNT;
+		}
 
 		if (word.find("MAP") == 0) {
 			getline(line_stream, word, ',');
@@ -121,7 +127,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			COUNT += 1;
 		}
 		else if (NUMBER == 5) {
-			unique_ptr<Stage> Map = make_unique<Stage>();
+		unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Kaidan;
@@ -159,6 +165,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			CameraPos.z = CameraPos.z + startpos_.z - 2.f;
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
+			CreateDeposits(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -228,6 +235,20 @@ void GameMap::CreateGrass(const XMFLOAT3& MapPos,int Count)
 	}
 }
 
+void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
+{
+	//çzè∞
+	std::unique_ptr<Deposit> deposit = make_unique<Deposit>();
+	deposit->Initialize({ MapPos.x, MapPos.y,MapPos.z - 5.f });
+	deposit->SetMapNum(MapNum);
+	std::unique_ptr<Deposit> deposit_2 = make_unique<Deposit>();
+	deposit_2->Initialize({ MapPos.x - 5.f, MapPos.y, MapPos.z + 5.f });
+	deposit_2->SetMapNum(MapNum);
+	deposits_.push_back(std::move(deposit));
+	deposits_.push_back(std::move(deposit_2));
+	
+}
+
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
 	LoadCsv(player, CameraPos, TargetPos, StageNum);
@@ -242,6 +263,11 @@ void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos
 
 void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos,bool flag)
 {
+	for (int32_t i = 0; i < deposits_.size(); i++) {
+		if (deposits_[i]->GetHP() <= 0) {
+			deposits_.erase(deposits_.begin()+i);
+		}
+	}
 	CheckHitTest(player);
 
 	if (time_ < 1&&flag == true) {
@@ -258,6 +284,11 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	for (unique_ptr<Grassland>& GrassLand : grass_) {
 		GrassLand->grass_->Update(player->GetPos());
 	}
+
+
+	/*for (int32_t i = 0; i < deposits_.size(); i++) {
+		deposits_[i]->Update(player->GetPos());
+	}*/
 
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
@@ -284,9 +315,15 @@ void GameMap::MapDraw()
 		}
 	}
 
-	/*for (unique_ptr<Object3d>& Rock : rock_) {
-		Rock->Draw();
+	
+	/*if (deposit_ != nullptr) {
+		deposit_->Draw();
 	}*/
+
+	//for (int32_t i = 0; i < deposits_.size(); i++) {
+	//	if(count_==deposits_[i]->GetMapNum())
+	//	deposits_[i]->Draw();
+	//}
 }
 
 void GameMap::BridgeDraw(bool flag )
@@ -474,7 +511,7 @@ void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 	if (StageNum == 0) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv");}
 	else if (StageNum == 1) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");}
 	else if (StageNum == 2) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map3.csv"); }
-	else if (StageNum == 3) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv"); }
+	else if (StageNum == 3) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map4.csv"); }
 	else if (StageNum == 100) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");}
 	
 }
@@ -531,11 +568,11 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 
 		if (count_ != Map->num) { continue; }
 		//ç∂
-		if (pos.x >= Map->stagePos_.x + limit_.x && isHammerRelease) {
+		if (pos.x >= Map->stagePos_.x + limit_.x+1 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
-		if (pos.x <= Map->stagePos_.x - limit_.y && isHammerRelease) {
+		if (pos.x <= Map->stagePos_.x - limit_.y-1 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
@@ -545,7 +582,7 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 			return true;
 		}
 
-		if (pos.z <= Map->stagePos_.z - limit_.w && isHammerRelease) {
+		if (pos.z <= Map->stagePos_.z - limit_.w-3 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
@@ -553,6 +590,14 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 	}
 
 	return false;
+}
+
+Deposit* GameMap::GetDePosit()
+{
+	if (deposit_ != nullptr) {
+		return deposit_;
+	}
+	return nullptr;
 }
 
 

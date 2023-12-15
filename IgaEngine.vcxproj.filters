@@ -551,6 +551,10 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Enemy\TogemaruAct.h">
       <Filter>ソース ファイル\ApplicationCode</Filter>
+    <ClInclude Include="ApplicationCode\Enemy\MunniAction.h" />
+    <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h" />
+    <ClInclude Include="ApplicationCode\Map\StageCount.h">
+      <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
