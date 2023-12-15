@@ -164,7 +164,7 @@ void TutorialScene::Update()
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
 		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
 		if (Dep != nullptr && Dep->GetHP() > 0) {
-			if (Dep->GetIsHit(true)) {
+			if (Dep->GetIsHit(player_->GetIsHammerSwing())) {
 				unique_ptr<Ore> ore = make_unique<Ore>();
 				ore->Initialize(Dep->GetPos(), Dep->OreDropVec());
 				oreItems_.push_back(std::move(ore));
