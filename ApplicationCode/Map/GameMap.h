@@ -5,7 +5,7 @@
 #include"Grass.h"
 #include "Deposit.h"
 #include "Ore.h"
-
+#include"BaseEnemy.h"
 #include<memory.h>
 #include<DirectXMath.h>
 using namespace std;
@@ -116,12 +116,14 @@ public:
 	/// 鉱脈リストを取得
 	/// </summary>
 	/// <returns>鉱脈</returns>
-	std::unique_ptr<Deposit>& GetDeposit(int32_t number) { return deposits_[number]; }
+	unique_ptr<Deposit>& GetDeposit(int32_t number) { return deposits_[number]; }
 	/// <summary>
 	/// 鉱脈リストサイズを取得
 	/// </summary>
 	/// <returns>鉱脈リストサイズ</returns>
 	int32_t GetDepositsSize() { return deposits_.size(); }
+
+	int GetEnemyCount() { return enemyscount_; }
 
 private:
 
@@ -141,10 +143,16 @@ private:
 	Deposit* deposit_;
 	std::vector<std::unique_ptr<Deposit>> deposits_;
 
+
 	//マップの番号
 	int count_ = 0;
 	//古い状態のマプ番号
 	int oldcount_ = 0;
+	
+	int enemyscount_ = 0;
+
+
+
 	//
 	bool stopCount_ = false;
 
