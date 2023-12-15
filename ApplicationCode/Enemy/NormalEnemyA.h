@@ -6,13 +6,13 @@ class NormalEnemyA :
 public:
 
 public:
-    /** ‰Šú‰» **/
+    /** åˆæœŸåŒ– **/
     void Init() override;
-    /** XV **/
+    /** æ›´æ–° **/
     void Upda(Camera*camera) override;
-    /** •`‰æ **/
+    /** æç”» **/
     void Draw() override;
-    /** ‚ ‚É‚ß[‚µ‚å‚ñ **/
+    /** ã‚ã«ã‚ãƒ¼ã—ã‚‡ã‚“ **/
 	void TextureAnimation() override;
 
     void AttackAction() override;
@@ -21,11 +21,12 @@ public:
 
     void TutorialDraw(float Mindis)override;
 
+    void SetPosDeb(Vector3 pos)override;
 private:
-    /*‚¶‚á‚ñ‚Õ*/
+    /*ã˜ã‚ƒã‚“ã·*/
 	float JFrame;
     void Jump();
-    /*‚±‚¤‚°‚«*/
+    /*ã“ã†ã’ã*/
     void Attack();
 
     void ClampMap();

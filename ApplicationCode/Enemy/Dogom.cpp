@@ -122,7 +122,7 @@ void Dogom::Upda()
 			} else {
 				constexpr int RecvCoolMax = 120;
 				const int DamageVal = 1;
-				bool judg = isAttack && isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
+				bool judg = m_player->getisHammerActive()&& isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
 				if(judg)
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 				Helper::DamageManager(m_HP, DamageVal, BodyRecvDam, BodyDamCool, RecvCoolMax, judg);
@@ -836,8 +836,7 @@ void Dogom::CoollisionFace()
 		DamCool[i] = 0;
 		float magniVal = 0.7f;
 
-		if (Collision::GetLength(m_ArmPos[i], m_player->GetPos())<5.f)
-		{	
+		if (Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f)) {
 			vec[i] = PlayerPos - m_ArmPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
@@ -866,7 +865,7 @@ void Dogom::CoollisionFace()
 void Dogom::CoollisionArm()
 {
 
-	bool canCol = arm_move_ == DEFAULT;//&& m_player->getisHammerActive();
+	bool canCol = arm_move_ == DEFAULT&& m_player->getisHammerActive();
 
 	if (canCol) {
 	
@@ -891,9 +890,7 @@ void Dogom::CoollisionArm()
 				m_player->HitHammerToEnemy(vec[i], 1.f);
 			}
 			
-			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, m_Arm[i]->GetIsHit());
-		
-		
+			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f));
 			}
 	}
 

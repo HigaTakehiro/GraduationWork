@@ -7,6 +7,7 @@
 #include "Helper.h"
 #include "ImageManager.h"
 #include "Shapes.h"
+#include "SoundManager.h"
 
 
 /***                    GETTER                      ***/
@@ -17,6 +18,10 @@ unsigned int BaseEnemy::GetAttackVal() const { return _status.DamageValue; }
 XMFLOAT3 BaseEnemy::GetPos() const { return _status.Pos; }
 XMFLOAT3 BaseEnemy::GetRot() const { return _status.Rot; }
 XMFLOAT3 BaseEnemy::GetScl() const { return  _status.Scl; }
+
+XMFLOAT3 BaseEnemy::GetPos2() const { return state_obj_.Pos_; }
+XMFLOAT3 BaseEnemy::GetRot2() const { return state_obj_.Rot_; }
+XMFLOAT3 BaseEnemy::GetScl2() const { return  state_obj_.Scl; }
 /*******************************************************/
 
 
@@ -242,4 +247,21 @@ void BaseEnemy::RecvFlashColor()
 	}
 
 	if (!_isFlash)FlashCount = 0;
+}
+
+void BaseEnemy::CollideHammerDeb()
+{
+	Vector3 vec = {};
+	Vector3 hammerPos = _player->GetHammer()->GetPosition();
+	if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { state_obj_.Pos_.x, state_obj_.Pos_.z }, 1.0f) && 
+		!_player->GetIsHammerRelease() && _player->GetIsAttack()) {
+			Vector3 playerPos = _player->GetPos();
+			
+			vec = playerPos - state_obj_.Pos_;
+			vec.normalize();
+			vec.y = 0.0f;
+			_player->HitHammerToEnemy(vec);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+		}
+	//int cool=DamCool
 }
