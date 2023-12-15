@@ -105,6 +105,9 @@
     <Filter Include="ソース ファイル\ApplicationCode\GameMap">
       <UniqueIdentifier>{a68b8726-d559-4235-8f86-7bb9548b413f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\ApplicationCode\Players\Skill">
+      <UniqueIdentifier>{98a0d155-bb03-4d41-a77b-20ef87ca8318}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -281,9 +284,6 @@
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Scenes\IBScene.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
@@ -313,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyB.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -513,7 +516,6 @@
     <ClInclude Include="ApplicationCode\Scenes\BossScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Skills\BaseSkill.h" />
     <ClInclude Include="ApplicationCode\Scenes\IBScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
@@ -536,6 +538,9 @@
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h" />
     <ClInclude Include="ApplicationCode\Map\StageCount.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\BaseSkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

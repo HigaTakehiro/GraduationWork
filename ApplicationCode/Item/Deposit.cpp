@@ -24,7 +24,7 @@ void Deposit::Initialize(Vector3 pos)
 
 void Deposit::Update(const Vector3& playerPos)
 {
-	AlphaTest(playerPos);
+	//AlphaTest(playerPos);
 
 	//–³“GŽžŠÔXV
 	if (hitCoolTime_ > hitCoolTimer_) {

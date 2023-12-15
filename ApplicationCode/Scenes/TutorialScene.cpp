@@ -150,7 +150,7 @@ void TutorialScene::Update()
 	for (int32_t i = 0; i < map_->GetDepositsSize(); i++) {
 		std::unique_ptr<Deposit>& deposit = map_->GetDeposit(i);
 		if (deposit != nullptr) {
-			Helper::ColKnock(player_->GetPos(), deposit->GetPos(), player_, Collision::GetLength(player_->GetPos(), deposit->GetPos()) < 3.f, 1.5f);
+			Helper::ColKnock(player_->GetPos(), deposit->GetPos(), player_, Collision::GetLength(player_->GetPos(), deposit->GetPos()) < 2.f, 1.5f);
 		}
 	}
 
@@ -180,8 +180,6 @@ void TutorialScene::Update()
 	shake_->Update();
 	colManager_->Update();
 	
-	
-
 	if (deposit_ != nullptr&& deposit_->GetHP() > 0) {
 		
 		if (deposit_->GetIsHit(true)) {
