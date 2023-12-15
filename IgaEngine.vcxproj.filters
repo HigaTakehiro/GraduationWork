@@ -272,9 +272,6 @@
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Scenes\BossScene.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
@@ -303,9 +300,6 @@
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Map\Grass.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ApplicationCode\Scenes\StageTwoFloor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Enemy\MunniAction.cpp">
@@ -503,9 +497,6 @@
     <ClInclude Include="ApplicationCode\Map\Stairs.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h">
-      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
@@ -531,7 +522,6 @@
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\Grass.h" />
-    <ClInclude Include="ApplicationCode\Scenes\StageTwoFloor.h" />
     <ClInclude Include="ApplicationCode\Enemy\MunniAction.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h" />
     <ClInclude Include="ApplicationCode\Map\StageCount.h">
