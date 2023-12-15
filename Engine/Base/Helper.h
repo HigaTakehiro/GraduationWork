@@ -12,6 +12,8 @@ public:
 private:
 	uint16_t m_KnockCoolT = 0;
 public:
+	//
+	static bool GetCircleCollide(Vector3 pos, Vector3 pos2, float r, float r2);
 	//距離がdistanceより小さいか
 	static void isDraw(const Vector3& pos1,const Vector3& pos2,Object3d*obj,float dis = 0.f,bool Flag=false);
 	//ノックバックとか
@@ -53,7 +55,6 @@ inline void Helper::ColKnock(const Vector3& vec1, const Vector3& vec2, Player*ob
 	{
 		obj->HitHammerToEnemy(vec,dis);
 	}
-
 }
 
 inline float Helper::SmoothStep_Deb(float edge0, float edge1, float x)
@@ -82,4 +83,10 @@ inline void Helper::DamageManager(int& Hp, int subHp, BOOL& damF,int& coolT,int 
 	//クールタイム加算するか？
 	coolT = damF ? ++coolT : 0;
 
+}
+
+#include"Collision.h"
+inline bool Helper::GetCircleCollide(Vector3 pos, Vector3 pos2, float r, float r2)
+{
+	return Collision::HitCircle(XMFLOAT2(pos.x, pos.z), r, XMFLOAT2(pos2.x, pos2.z), r2);
 }
