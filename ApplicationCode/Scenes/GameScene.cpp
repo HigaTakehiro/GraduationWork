@@ -54,7 +54,7 @@ void GameScene::Initialize()
 	vec.resize(EnemySize);
 
 	for (size_t i = 0; i < enemys_.size(); i++) {
-		enemys_[i] = new NormalEnemyA();
+		enemys_[i] = new NormalEnemyB();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 
@@ -160,7 +160,7 @@ void GameScene::Draw()
 	//boss_->Draw();
 	//boss_->Draw2();
 	for (size_t i = 0; i < enemys_.size(); i++)
-		enemys_[i]->TexDraw();
+		//enemys_[i]->TexDraw();
 	player_->Draw();
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
