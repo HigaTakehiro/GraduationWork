@@ -31,6 +31,11 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 		std::string word;
 		getline(line_stream, word, ' ');
 
+		if (word.find("ENEMY1") == 0) {
+			getline(line_stream, word, ',');
+			int ENEMYCOUNT = (int)std::atof(word.c_str());
+			enemyscount_ = ENEMYCOUNT;
+		}
 
 		if (word.find("MAP") == 0) {
 			getline(line_stream, word, ',');
@@ -241,7 +246,6 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 	deposit_2->SetMapNum(MapNum);
 	deposits_.push_back(std::move(deposit));
 	deposits_.push_back(std::move(deposit_2));
-
 	
 }
 
@@ -261,7 +265,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 {
 	for (int32_t i = 0; i < deposits_.size(); i++) {
 		if (deposits_[i]->GetHP() <= 0) {
-			deposits_[i]->~Deposit();
+			deposits_.erase(deposits_.begin()+i);
 		}
 	}
 	CheckHitTest(player);
@@ -281,9 +285,10 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	for (int32_t i = 0; i < deposits_.size(); i++) {
+
+	/*for (int32_t i = 0; i < deposits_.size(); i++) {
 		deposits_[i]->Update(player->GetPos());
-	}
+	}*/
 
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
@@ -315,10 +320,10 @@ void GameMap::MapDraw()
 		deposit_->Draw();
 	}*/
 
-	for (int32_t i = 0; i < deposits_.size(); i++) {
-		if(count_==deposits_[i]->GetMapNum())
-		deposits_[i]->Draw();
-	}
+	//for (int32_t i = 0; i < deposits_.size(); i++) {
+	//	if(count_==deposits_[i]->GetMapNum())
+	//	deposits_[i]->Draw();
+	//}
 }
 
 void GameMap::BridgeDraw(bool flag )
