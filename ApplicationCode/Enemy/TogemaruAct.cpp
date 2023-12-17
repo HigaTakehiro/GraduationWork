@@ -44,6 +44,9 @@ void TogemaruAct::ResetParam_Spear()
 
 void TogemaruAct::Move()
 {
+	anime_name_ = AnimeName::WALK;
+	animationWaitTime = 0;
+
 	movSpeed = 0.1f;
 	//向いた方に移動する
 	move = { 0.f,0.f, 0.1f, 0.0f };
@@ -71,6 +74,7 @@ void TogemaruAct::Move()
 	{
 		RushStartPos = Pos_;
 		spearsAlpha = 1.f;
+		anime_name_ = AnimeName::ROLE;
 		act_ = Act::ATTACK_SHOTSPEAR;
 	}
 
@@ -80,6 +84,8 @@ void TogemaruAct::Move()
 		//逃げ惑う
 		act_ = Act::RUNAWAY;
 	}
+
+	//
 }
 
 float TogemaruAct::Walk()
@@ -113,6 +119,8 @@ void TogemaruAct::Attack_Rush()
 
 void TogemaruAct::Attack_ShotSpear()
 {
+	if (++animationWaitTime < 60)return;
+
 	constexpr float maxRushEaseT = 30.f;
 
 	if (++rushEaseT >= maxRushEaseT) {
@@ -131,6 +139,7 @@ void TogemaruAct::Attack_ShotSpear()
 	bool endShot =ShotRange>20.f;
 
 	if (isShot) {
+		anime_name_ = AnimeName::IdlE;
 		if (canShot) {
 			spearsAlpha -= 0.02f;//だんだん薄く
 			ShotRange += 0.2f;//範囲広げてく
@@ -153,6 +162,7 @@ void TogemaruAct::Attack_ShotSpear()
 
 	//アクションのインターバルリセット
 	actionCount = 1;
+
 }
 
 bool TogemaruAct::CrushSpear()
