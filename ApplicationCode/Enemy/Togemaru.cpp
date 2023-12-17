@@ -15,6 +15,7 @@ void Togemaru::Init()
 		m_Spears[i]->SetScale({0.0f, 0.0f, 0.0f});
 	}
 
+	InitAnimatin();
 	m_Body = Object3d::UniquePtrCreate(m_Model_Idle[0]);
 	m_Body->SetColType(Object3d::CollisionType::Obb);
 	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
