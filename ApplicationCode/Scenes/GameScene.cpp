@@ -54,15 +54,18 @@ void GameScene::Initialize()
 	vec.resize(EnemySize);
 
 	for (size_t i = 0; i < enemys_.size(); i++) {
-		enemys_[i] = new NormalEnemyA();
+		enemys_[i] = new NormalEnemyB();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 
 		enemys_[i]->SetOverPos(XMFLOAT3(39.f, -100.f, 5.f), XMFLOAT3(23.f, 100.f, -5.f));
 	}
-	enemys_[0]->SetPos(Vector3(30, -30, -4));
-	enemys_[2]->SetPos(Vector3(25, -30, 2));
-	enemys_[2]->SetPos(Vector3(35, -30, 5));
+	enemys_[0]->SetPos2(Vector3(30, 0, -4));
+	enemys_[1]->SetPos2(Vector3(25, 0, 2));
+	enemys_[2]->SetPos2(Vector3(35, 0, 5));
+
+	for (size_t i = 0; i < enemys_.size(); i++)
+		enemys_[i]->SetPosDeb(enemys_[i]->GetPos2());
 
 	int Num=StageCount::GetIns()->Up();
 
@@ -160,7 +163,7 @@ void GameScene::Draw()
 	//boss_->Draw();
 	//boss_->Draw2();
 	for (size_t i = 0; i < enemys_.size(); i++)
-		enemys_[i]->TexDraw();
+		//enemys_[i]->TexDraw();
 	player_->Draw();
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
