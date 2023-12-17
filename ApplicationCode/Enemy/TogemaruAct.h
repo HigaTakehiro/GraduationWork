@@ -23,6 +23,17 @@ private:
 	//
 	void ResetParam_Spear();
 
+public:
+	//アニメーション名前
+	enum AnimeName
+	{
+		IdlE,
+		WALK,
+		ROLE,
+		CRUSH
+	}anime_name_;
+
+	AnimeName GetName()const { return anime_name_; }
 private:
 	//通常パラメータ
 	Vector3 Pos_,Rot_,Scl_={};
@@ -70,7 +81,8 @@ private:
 	float rotEaseT = 0.f;
 	//追跡するか
 	bool isFollow = FALSE;
-
+	//
+	int32_t animationWaitTime = 0;
 	//突進用変数
 	float rushEaseT=0.f;
 	//突進終わって針出すまでの待ち時間
