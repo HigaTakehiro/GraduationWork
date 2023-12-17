@@ -58,7 +58,7 @@ void TutorialScene::Initialize()
 	sleep_->SetHitRadius(0.5f);
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
 	sleep_->SetPosition(sleepPos_);
-	
+
 
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
@@ -99,7 +99,7 @@ void TutorialScene::Initialize()
 
 	enemys_[0]->SetPos(startenemypos_[0]);
 	enemys_[1]->SetPos(startenemypos_[1]);
-	
+
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
 
@@ -130,7 +130,7 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
-	int32_t Max=player_->GetMaxHP();
+	int32_t Max = player_->GetMaxHP();
 	player_->SetHP(Max);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -144,7 +144,7 @@ void TutorialScene::Update()
 			ore->Update();
 		}
 	}
-	
+
 	for (int32_t i = 0; i < map_->GetDepositsSize(); i++) {
 		std::unique_ptr<Deposit>& deposit = map_->GetDeposit(i);
 		if (deposit != nullptr) {
@@ -186,12 +186,12 @@ void TutorialScene::Update()
 
 	schange->Change(0);
 
-	
+
 
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
-	
+
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
 	}
@@ -236,8 +236,8 @@ void TutorialScene::Draw()
 	}
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->TutorialTexDraw();
-	if (phase_ == Phase::Title) {sleep_->Draw();}
-	else {player_->Draw();}
+	if (phase_ == Phase::Title) { sleep_->Draw(); }
+	else { player_->Draw(); }
 
 	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
@@ -263,7 +263,7 @@ void TutorialScene::Draw()
 	//text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
 	std::wstring MoveTimer = std::to_wstring((int32_t)movetimer_);
 	if (phase_ == Phase::Move) {
-		movetextui_->Draw("meiryo", "white", L"Lスティックで動いてみよう\n10/"+MoveTimer, textDrawRange);
+		movetextui_->Draw("meiryo", "white", L"Lスティックで動いてみよう\n10/" + MoveTimer, textDrawRange);
 	}
 
 	if (phase_ == Phase::Fight) {
@@ -273,7 +273,7 @@ void TutorialScene::Draw()
 	if (phase_ == Phase::Defeat) {
 		fighttextui_->Draw("meiryo", "white", L"洞窟を進んで階段へ向かおう\n", textDrawRange);
 	}
-	
+
 	if (phase_ != Phase::Title) {
 		player_->TextUIDraw();
 		textWindow_->TextMessageDraw();
@@ -385,7 +385,7 @@ void TutorialScene::EnemyProcess()
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i]/2.f);
+			player_->HitHammerToEnemy(vec[i] / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
 	}
@@ -445,8 +445,8 @@ void TutorialScene::SleepShale()
 
 	if (pushCount_ > oldpushCount_) {
 		shaketimer_ += 1;
-		if (shaketimer_ % 2==0) {
-			startpos_.x +=shakeval_;
+		if (shaketimer_ % 2 == 0) {
+			startpos_.x += shakeval_;
 		}
 		else {
 			startpos_.x -= shakeval_;
@@ -493,8 +493,8 @@ void TutorialScene::TitlePhase()
 		player_->SetPos(startpos_);
 		titlepos_ = false;
 	}
-	
-	if(action_&&shaketimer_>=10) {
+
+	if (action_ && shaketimer_ >= 10) {
 		timer_ += 0.1f;
 		size_.x += 500.f;
 		size_.y += 500.f;
@@ -555,15 +555,15 @@ void TutorialScene::SpownPhase()
 	fighttextwindow_->Update();
 
 	if (startenemypos_[0].y >= -2.5f) {
-	startenemypos_[0].y -= 1.f;
-	enemys_[0]->SetPos(startenemypos_[0]);
+		startenemypos_[0].y -= 1.f;
+		enemys_[0]->SetPos(startenemypos_[0]);
 	}
 	if (startenemypos_[1].y >= -2.5f) {
 		startenemypos_[1].y -= 1.f;
-	enemys_[1]->SetPos(startenemypos_[1]);
+		enemys_[1]->SetPos(startenemypos_[1]);
 	}
 
-	
+
 	if (!fighttextwindow_->GetCloseWindow()) {
 		description_ = 0;
 		phase_ = Phase::Fight;
@@ -575,7 +575,7 @@ void TutorialScene::FightPhase()
 	notjump_ = false;
 	notattack_ = false;
 	stop_ = false;
-	
+
 	if (enemys_.size() == 0) {
 		phase_ = Phase::Defeat;
 	}
