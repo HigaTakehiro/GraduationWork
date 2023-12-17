@@ -77,6 +77,16 @@ private:
 	int32_t waitShotCount = 0;
 	Vector3 RushStartPos = {};
 
+//ダメージくらったとき
+private:
+	bool isSpearCrush=FALSE;
+	//破壊した棘の数
+	int32_t crushSpearNum = 0;
+	//棘の再生時間
+	int32_t reproductionTime = 0;
+	//RunAway()条件
+	bool CrushSpear();
+
 
 public:
 	//行動遷移

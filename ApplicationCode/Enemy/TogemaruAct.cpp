@@ -35,6 +35,7 @@ void TogemaruAct::ResetParam_Spear()
 	ShotRange = 0.f;
 	spearsAlpha = 0.f;
 	waitShotCount = 0;
+	reproductionTime = 0;
 	//座標リセット
 	for (size_t i = 0; i < spearSize; i++) {
 		SpearPos_[i] = Pos_;
@@ -64,13 +65,20 @@ void TogemaruAct::Move()
 
 	ResetParam_Spear();
 
-	actionCount++;
-
-	if(actionCount%60==0)
+	constexpr uint32_t ActionInter = 60;
+	//攻撃に移行
+	if(++actionCount%ActionInter==0)
 	{
 		RushStartPos = Pos_;
 		spearsAlpha = 1.f;
 		act_ = Act::ATTACK_SHOTSPEAR;
+	}
+
+	//棘が3つ壊れたら
+	if(CrushSpear()==TRUE)
+	{
+		//逃げ惑う
+		act_ = Act::RUNAWAY;
 	}
 }
 
@@ -147,9 +155,52 @@ void TogemaruAct::Attack_ShotSpear()
 	actionCount = 1;
 }
 
+bool TogemaruAct::CrushSpear()
+{
+	//プレイヤー座標
+	XMVECTOR posP = { Player_->GetPos().x,Player_->GetPos().y,Player_->GetPos().z };
+	//敵座標
+	XMVECTOR posE = { Pos_.x,Pos_.y,Pos_.z };
+	//敵からプレイヤーへのベクトル
+	XMVECTOR Vec = XMVectorSubtract(posE, posP);
+	//上のベクトルから回転角求める
+	float angle = atan2f(Vec.m128_f32[0], Vec.m128_f32[2]);
+
+	if(crushSpearNum>=3){
+		//プレイヤーの逆向く
+		Rot_.y=angle * 70.f;
+
+		return true;
+	}
+
+	return false;
+}
+
 void TogemaruAct::RunAway()
 {
-	
+	//棘回復する時間
+	constexpr int32_t reproductionMaxTime = 180;
+
+	//向いた方に移動する
+	move = { 0.f,0.f, 0.1f, 0.0f };
+	matRot = XMMatrixRotationY(XMConvertToRadians(Rot_.y));
+
+	move = XMVector3TransformNormal(move, matRot);
+
+	//座標反映(向いた方に)
+	Pos_ = {
+		Pos_.x += move.m128_f32[0] * movSpeed,
+		Pos_.y,
+		Pos_.z += move.m128_f32[2] * movSpeed,
+	};
+
+	actionCount = 0;
+	//棘復活しきったら移動開始
+	if(++reproductionTime>reproductionMaxTime)
+	{
+		crushSpearNum = 0;
+		act_ = Act::MOVE;
+	}
 }
 
 
