@@ -2,6 +2,7 @@
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
 #include "Easing.h"
+#include "NormalEnemyA.h"
 #include "SoundManager.h"
 #include "SafeDelete.h"
 #include <random>
@@ -166,6 +167,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			CreateDeposits(Pos, COUNT);
+			//CreateEnemy(player, Pos, 2);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -249,6 +251,19 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 	
 }
 
+void GameMap::CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy)
+{
+	for (int i = 0; i < Enemy; i++) {
+		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
+		Enemy1->Init();
+		Enemy1->SetPlayerIns(player);
+		Enemy1->SetOverPos(XMFLOAT3(13.f, -100.f, 37.f), XMFLOAT3(-11.f, 100.f, 14.f));
+		Enemy1->SetCount(count_);
+		Enemy1->SetPos(MapPos);
+		enemys_.push_back(move(Enemy1));
+	}
+}
+
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
 {
 	LoadCsv(player, CameraPos, TargetPos, StageNum);
@@ -268,6 +283,13 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 			deposits_.erase(deposits_.begin()+i);
 		}
 	}
+
+	for (int32_t i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i]->GetHP() <= 0) {
+			enemys_.erase(enemys_.begin());
+		}
+	}
+
 	CheckHitTest(player);
 
 	if (time_ < 1&&flag == true) {
@@ -314,16 +336,6 @@ void GameMap::MapDraw()
 			GrassLand->grass_->Draw();
 		}
 	}
-
-	
-	/*if (deposit_ != nullptr) {
-		deposit_->Draw();
-	}*/
-
-	//for (int32_t i = 0; i < deposits_.size(); i++) {
-	//	if(count_==deposits_[i]->GetMapNum())
-	//	deposits_[i]->Draw();
-	//}
 }
 
 void GameMap::BridgeDraw(bool flag )
@@ -347,6 +359,9 @@ void GameMap::Finalize()
 	bridge.clear();
 	stairs_.release();
 	grass_.clear();
+	for (int32_t i = 0; i < enemys_.size(); i++) {
+		enemys_.erase(enemys_.begin());
+	}
 }
 
 void GameMap::CheckHitTest(Player* player)
@@ -591,6 +606,7 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 
 	return false;
 }
+
 
 Deposit* GameMap::GetDePosit()
 {

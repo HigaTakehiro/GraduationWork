@@ -87,13 +87,17 @@ void NormalEnemyA::Upda(Camera* camera)
 void NormalEnemyA::Draw()
 {
 	constexpr float MinDis = 15.f;
-	if (_player->GetPos().z > 7)return;
+	//if (_player->GetPos().z > 7)return;
 	if (Collision::GetLength(_status.Pos, _player->GetPos()) > 17.f)return;
 	if (_status.HP <= 0)return;
 	if (_status.Tex == nullptr)return;
 	Texture::PreDraw();
 	_status.Tex->Draw();
 	Texture::PostDraw();
+
+	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+		TexDraw();
+	Object3d::PostDraw();
 
 	//TexDraw();
 }
@@ -326,10 +330,19 @@ void NormalEnemyA::TutorialDraw(float Mindis)
 	Texture::PreDraw();
 	_status.Tex->Draw();
 	Texture::PostDraw();
+
+	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	TexDraw();
+	Object3d::PostDraw();
 }
 
 void NormalEnemyA::ClampMap()
 {
 	_status.Pos.x = std::clamp(_status.Pos.x, OverPosMin.x, OverPosMax.x);
 	_status.Pos.z = std::clamp(_status.Pos.z, OverPosMin.z, OverPosMax.z);
+}
+
+void NormalEnemyA::SetPosDeb(Vector3 pos)
+{
+	
 }
