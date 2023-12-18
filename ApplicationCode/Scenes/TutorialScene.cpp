@@ -322,7 +322,11 @@ void TutorialScene::SceneChange()
 	if (Change || player_->GetHP() <= 0) {
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
-	//SceneManager::SceneChange(SceneManager::SceneName::Boss2);
+
+	//これいつか消すように
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Boss2);
+	}
 }
 
 void TutorialScene::CameraSetting()
