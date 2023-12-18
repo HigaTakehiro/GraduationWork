@@ -10,12 +10,15 @@
 #define PI_360 360
 
 Vector3 TogemaruAct::depositPos = { 10, -2.5f, 0.f };
+Vector3 TogemaruAct::cameraPos = {};
+Vector3 TogemaruAct::oldCameraPos = {};
+Vector3 TogemaruAct::DefaultPos= {};
 bool TogemaruAct::depositDelF = false;
 
 void TogemaruAct::Transition()
 {
 	constexpr float inBossroomZ = 12.f;
-	if (Player_->GetPos().z < inBossroomZ){
+	if (Player_->GetPos().z < inBossroomZ) {
 		beginBattle = TRUE;
 	}
 
@@ -25,26 +28,28 @@ void TogemaruAct::Transition()
 	}
 
 	//針とプレイヤー衝突
-	if(CollideSpear()){
+	if (CollideSpear()) {
 		Player_->SubHP(1);
 	}
 
 	CollideDeposit();
 	//棘が3つ壊れたら
-	if (CrushSpear() == TRUE){
+	if (CrushSpear() == TRUE) {
 		//逃げ惑う
 		act_ = Act::RUNAWAY;
 	}
+	//鉱石衝突時の画面の揺れ
+	ViewShake();
 
 	//衝突半径
 	constexpr float pr = 1.f, er = 1.5f;
 	//衝突時のプレイヤーのけぞり
-	bool AccelJudg =(rushEaseT >= 0.2f&& rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
+	bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
 	float KnockDis = AccelJudg ? 0.3f : 1.f;//のけぞり値
 
 	//判定
-	bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr,er);
-	Helper::ColKnock(Player_->GetPos(), Pos_,Player_,isCollide,KnockDis);
+	bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr, er);
+	Helper::ColKnock(Player_->GetPos(), Pos_, Player_, isCollide, KnockDis);
 
 	//座標の範囲指定
 	Pos_.x = std::clamp(Pos_.x, -10.f, 10.f);
@@ -57,7 +62,7 @@ void TogemaruAct::Transition()
 void TogemaruAct::ResetParam_Spear()
 {
 	//
-	rushEaseT =0.f;
+	rushEaseT = 0.f;
 	ShotRange = 0.f;
 	spearsAlpha = { 0.f };
 	waitShotCount = 0;
@@ -96,7 +101,7 @@ void TogemaruAct::Move()
 
 	constexpr uint32_t ActionInter = 60;
 	//攻撃に移行
-	if(++actionCount%ActionInter==0)
+	if (++actionCount % ActionInter == 0)
 	{
 		RushStartPos = Pos_;
 		for (size_t i = 0; i < spearSize; i++) {
@@ -118,8 +123,8 @@ float TogemaruAct::Follow()
 {
 	float pi_180 = 180.f;
 	//
-	constexpr float AngleCorrVal = PI_180/PI;
-	
+	constexpr float AngleCorrVal = PI_180 / PI;
+
 	//プレイヤー座標
 	XMVECTOR posP = { Player_->GetPos().x,Player_->GetPos().y,Player_->GetPos().z };
 	//敵座標
@@ -130,12 +135,12 @@ float TogemaruAct::Follow()
 	float angle = atan2f(Vec.m128_f32[0], Vec.m128_f32[2]);
 
 	//追従角度返す
-	return angle *AngleCorrVal;
+	return angle * AngleCorrVal;
 }
 
 void TogemaruAct::Attack_Rush()
 {
-	
+
 }
 
 void TogemaruAct::Attack_ShotSpear()
@@ -147,8 +152,7 @@ void TogemaruAct::Attack_ShotSpear()
 	if (++rushEaseT >= maxRushEaseT) {
 		depositCollideF = FALSE;
 		isShot = TRUE;//突進終わったら針飛ばす
-	}
-	else {
+	} else {
 		//突進
 		Pos_.x = Easing::easeIn(rushEaseT, maxRushEaseT, RushStartPos.x, RushStartPos.x + move.m128_f32[0] * 100.f);
 		Pos_.z = Easing::easeIn(rushEaseT, maxRushEaseT, RushStartPos.z, RushStartPos.z + move.m128_f32[2] * 100.f);
@@ -161,7 +165,7 @@ void TogemaruAct::Attack_ShotSpear()
 	//待ち時間経過したら
 	bool canShot = ++waitShotCount > 90;
 	//発射終了
-	bool endShot =ShotRange>20.f;
+	bool endShot = ShotRange > 20.f;
 
 	if (isShot) {
 		anime_name_ = AnimeName::IdlE;
@@ -203,9 +207,9 @@ bool TogemaruAct::CrushSpear()
 	//上のベクトルから回転角求める
 	float angle = atan2f(Vec.m128_f32[0], Vec.m128_f32[2]);
 
-	if(crushSpearNum>=3){
+	if (crushSpearNum >= 3) {
 		//プレイヤーの逆向く
-		Rot_.y=angle * 60.f+180.f;
+		Rot_.y = angle * 60.f + 180.f;
 
 		return true;
 	}
@@ -235,7 +239,7 @@ void TogemaruAct::RunAway()
 
 	actionCount = 0;
 	//棘復活しきったら移動開始
-	if(++reproductionTime>reproductionMaxTime)
+	if (++reproductionTime > reproductionMaxTime)
 	{
 		crushSpearNum = 0;
 		act_ = Act::MOVE;
@@ -249,20 +253,20 @@ void TogemaruAct::CollideDeposit()
 
 	//鉱石復活するまでは3秒
 	constexpr int32_t ReproductionTimeMax = 180;
-	if(depositDelF)
+	if (depositDelF)
 	{
-		if(++depositDelTime>ReproductionTimeMax)
+		if (++depositDelTime > ReproductionTimeMax)
 		{
 			//出現
 			depositPos = DepositReproduction();
 			depositDelF = FALSE;
 		}
-	}
-	else
+	} else
 	{
 		bool col = Helper::GetCircleCollide({ depositPos.x,depositPos.y,depositPos.z + 3.f }, { Pos_.x,Pos_.y,Pos_.z + 3.f }, r1, r2);
 		//鉱石と衝突したら
-		if (depositCollideF&&col) {
+		if (depositCollideF && col) {
+			shakeF = TRUE;//画面揺らす
 			++crushSpearNum;//針の数1減らす(壊れた針の数＋１)
 			anime_name_ = AnimeName::CRUSH;
 			depositDelF = TRUE;
@@ -276,11 +280,11 @@ bool TogemaruAct::CollideSpear()
 	//発射時以外判定取らない
 	if (ShotRange <= 0)return false;
 
-	for(size_t i=0;i<spearSize;i++)
+	for (size_t i = 0; i < spearSize; i++)
 	{
 		if (spearsAlpha[i] <= 0.f)continue;
 		if (Helper::GetCircleCollide(Player_->GetPos(), { SpearPos_[i].x,SpearPos_[i].y,SpearPos_[i].z + 3.f }
-			,1.f, 1.f))
+			, 1.f, 1.f))
 		{
 			spearsAlpha[i] = 0.f;//当たったら描画消す
 			return true;
@@ -296,19 +300,47 @@ Vector3 TogemaruAct::DepositReproduction()
 
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
-	std::uniform_int_distribution<> rand(0,3);
+	std::uniform_int_distribution<> rand(0, 3);
 
 	//出現する座標はPosListの中からランダム
 	return posList[rand(mt)];
 }
 
+void TogemaruAct::ViewShake()
+{
+	//シェイク周期
+	constexpr float movInter = 2.f;
+	//シェイク幅
+	constexpr float shakeVibration = 10.f;
+
+	if (shakeF) {
+		shakeT++;
+		shakeXVal = sinf(PI * 2 / movInter * shakeT) * shakeVibration;
+		shakeYVal = sinf(PI * 2 / movInter * shakeT) * shakeVibration;
+		if(shakeT>20.f){
+			shakeXVal = DefaultPos.x - oldCameraPos.x;
+			shakeYVal = DefaultPos.y - oldCameraPos.y;
+			shakeF = FALSE;
+		}
+		//シェイク値を加算
+		//o12  d14 -2  //n10 d15  +5
+	}
+	else{
+		shakeT = 0.f;
+		shakeXVal = shakeYVal = 0.f;
+	}
+	cameraPos.x = shakeXVal;
+	cameraPos.y = shakeYVal;
+}
+
+
 
 void TogemaruAct::Death()
 {
-	
+
 }
 
-void (TogemaruAct::*TogemaruAct::ActionList[])() =
+void (TogemaruAct::* TogemaruAct::ActionList[])() =
 {
 	&TogemaruAct::Move,
 	&TogemaruAct::Attack_Rush,
