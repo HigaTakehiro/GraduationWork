@@ -309,9 +309,7 @@ void GameScene::EnemyProcess()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
 		if (aeFlag == true) {
-			
-				aEffect_->Update(enemyPos[i], enemys_[i]->GetFlash());
-
+			aEffect_->Update(enemyPos[i], enemys_[i]->GetFlash());
 		}
 	}
 	if (aeFlag == true) {
