@@ -163,11 +163,13 @@ void GameScene::Draw()
 	}
 	//boss_->Draw();
 	//boss_->Draw2();
-	for (size_t i = 0; i < enemys_.size(); i++)
-		enemys_[i]->TexDraw();
+
 	player_->Draw();
-	if (aeFlag == true) {
-		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	for (size_t i = 0; i < enemys_.size(); i++) {
+		enemys_[i]->TexDraw();
+		if (enemys_[i]->GetFlash()) {
+			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+		}
 	}
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
@@ -303,7 +305,9 @@ void GameScene::EnemyProcess()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
 		if (aeFlag == true) {
-			aEffect_->Update(enemyPos[0]);
+			
+				aEffect_->Update(enemyPos[i], enemys_[i]->GetFlash());
+
 		}
 	}
 	if (aeFlag == true) {
@@ -314,7 +318,6 @@ void GameScene::EnemyProcess()
 			aeCount = 0;
 			aeFlag = false;
 		}
-
 	}
 
 	//ÉvÉåÉCÉÑÅ[ÇÃOBBê›íË
