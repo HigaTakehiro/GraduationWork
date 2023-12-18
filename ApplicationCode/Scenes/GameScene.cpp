@@ -208,7 +208,7 @@ void GameScene::Finalize()
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
-	map_->Finalize();
+	//map_->Finalize();
 }
 
 void GameScene::SceneChange()
