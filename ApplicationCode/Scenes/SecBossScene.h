@@ -88,5 +88,8 @@ private:
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
 	SceneChangeEffect* schange;
+
+	//ƒ}ƒbƒv‚ÌzÎ
+	std::unique_ptr<Deposit>Deposit_;
 };
 
