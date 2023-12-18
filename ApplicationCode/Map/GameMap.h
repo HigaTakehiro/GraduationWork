@@ -99,11 +99,16 @@ public:
 
 	XMFLOAT3 GetNowMapPos();
 
+	Deposit* GetDePosit();
+	bool DepositIsHit(bool flag) { return deposit_->GetIsHit(flag); }
+
 	int GetCount() { return count_; }
 
 	void NextMap(Player* player,XMFLOAT3& CameraPos,XMFLOAT3& TargetPos,float OldCameraPos);
 
 	void DrawingMap(int StageNum,std::stringstream& stream);
+
+	bool EnemyAllKill();
 
 	void CreateRock();
 
@@ -149,6 +154,7 @@ private:
 	//çzêŒÉAÉCÉeÉÄ
 	std::list<std::unique_ptr<Ore>> oreItems_;
 
+	Deposit* deposit_;
 	std::vector<std::unique_ptr<Deposit>> deposits_;
 
 	vector<unique_ptr<BaseEnemy>> enemys_;
@@ -159,8 +165,6 @@ private:
 	int oldcount_ = 0;
 	
 	int enemyscount_ = 0;
-
-
 
 	//
 	bool stopCount_ = false;

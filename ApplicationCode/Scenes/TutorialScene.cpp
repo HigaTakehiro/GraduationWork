@@ -58,7 +58,7 @@ void TutorialScene::Initialize()
 	sleep_->SetHitRadius(0.5f);
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
 	sleep_->SetPosition(sleepPos_);
-	
+
 
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
@@ -85,23 +85,28 @@ void TutorialScene::Initialize()
 	//後でcsvから
 	unsigned int EnemySize = 2;
 
-	enemys_.resize(EnemySize);
-	vec.resize(EnemySize);
+	//enemys_.resize(EnemySize);
+	//vec.resize(EnemySize);
 
-	for (size_t i = 0; i < enemys_.size(); i++) {
+	/*for (size_t i = 0; i < enemys_.size(); i++) {
 		enemys_[i] = new NormalEnemyA();
 		enemys_[i]->Init();
 		enemys_[i]->SetPlayerIns(player_);
 		enemys_[i]->SetOverPos(XMFLOAT3(13.f, -100.f, 37.f), XMFLOAT3(-11.f, 100.f, 14.f));
-	}
+	}*/
 	startenemypos_[0] = { 5, 12.5, 18 };
 	startenemypos_[1] = { -5, 12.5, 18 };
 
-	enemys_[0]->SetPos(startenemypos_[0]);
-	enemys_[1]->SetPos(startenemypos_[1]);
-	
+	/*enemys_[0]->SetPos(startenemypos_[0]);
+	enemys_[1]->SetPos(startenemypos_[1]);*/
+
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
+
+	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		Enemy->SetPos(startenemypos_[i]);
+	}
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -130,7 +135,7 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
-	int32_t Max=player_->GetMaxHP();
+	int32_t Max = player_->GetMaxHP();
 	player_->SetHP(Max);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -144,11 +149,11 @@ void TutorialScene::Update()
 			ore->Update();
 		}
 	}
-	
+
 	for (int32_t i = 0; i < map_->GetDepositsSize(); i++) {
 		std::unique_ptr<Deposit>& deposit = map_->GetDeposit(i);
 		if (deposit != nullptr) {
-			Helper::ColKnock(player_->GetPos(), deposit->GetPos(), player_, Collision::GetLength(player_->GetPos(), deposit->GetPos()) < 3.f, 1.5f);
+			Helper::ColKnock(player_->GetPos(), deposit->GetPos(), player_, Collision::GetLength(player_->GetPos(), deposit->GetPos()) < 2.f, 1.5f);
 		}
 	}
 
@@ -164,7 +169,7 @@ void TutorialScene::Update()
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
 		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
 		if (Dep != nullptr && Dep->GetHP() > 0) {
-			if (Dep->GetIsHit(true)) {
+			if (Dep->GetIsHit(player_->GetIsHammerSwing())) {
 				unique_ptr<Ore> ore = make_unique<Ore>();
 				ore->Initialize(Dep->GetPos(), Dep->OreDropVec());
 				oreItems_.push_back(std::move(ore));
@@ -186,12 +191,12 @@ void TutorialScene::Update()
 
 	schange->Change(0);
 
-	
+
 
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
-	
+
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
 	}
@@ -223,21 +228,36 @@ void TutorialScene::Draw()
 	}
 
 	Object3d::PostDraw();
-	for (auto i = 0; i < enemys_.size(); i++) {
+	/*for (auto i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] != nullptr) {
 			enemys_[i]->TutorialDraw(25.f);
 		}
-	}	//3Dオブジェクト描画処理
+	}	*/
+
+	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr) { continue; }
+		Enemy->TutorialDraw(25.f);
+	}
+	
+	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			ore->Draw();
 		}
 	}
-	for (size_t i = 0; i < enemys_.size(); i++)
-		enemys_[i]->TutorialTexDraw();
-	if (phase_ == Phase::Title) {sleep_->Draw();}
-	else {player_->Draw();}
+	/*for (size_t i = 0; i < enemys_.size(); i++)
+		enemys_[i]->TutorialTexDraw();*/
+
+	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr) { continue; }
+		Enemy->TutorialTexDraw();
+	}
+
+	if (phase_ == Phase::Title) { sleep_->Draw(); }
+	else { player_->Draw(); }
 
 	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
@@ -263,7 +283,7 @@ void TutorialScene::Draw()
 	//text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
 	std::wstring MoveTimer = std::to_wstring((int32_t)movetimer_);
 	if (phase_ == Phase::Move) {
-		movetextui_->Draw("meiryo", "white", L"Lスティックで動いてみよう\n10/"+MoveTimer, textDrawRange);
+		movetextui_->Draw("meiryo", "white", L"Lスティックで動いてみよう\n10/" + MoveTimer, textDrawRange);
 	}
 
 	if (phase_ == Phase::Fight) {
@@ -273,7 +293,7 @@ void TutorialScene::Draw()
 	if (phase_ == Phase::Defeat) {
 		fighttextui_->Draw("meiryo", "white", L"洞窟を進んで階段へ向かおう\n", textDrawRange);
 	}
-	
+
 	if (phase_ != Phase::Title) {
 		player_->TextUIDraw();
 		textWindow_->TextMessageDraw();
@@ -323,6 +343,10 @@ void TutorialScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::Game);
 	}
 
+	//これいつか消すように
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Boss2);
+	}
 }
 
 void TutorialScene::CameraSetting()
@@ -367,7 +391,32 @@ void TutorialScene::EnemyProcess()
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
 
-	for (size_t i = 0; i < enemys_.size(); i++)
+	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr) { continue; }
+		if (Enemy->GetHP() <= 0) {
+			player_->AddEP(1);
+			continue;
+		}
+	}
+
+	for (auto i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr||Enemy->GetHP()<=0) { continue; }
+		enemyPos[i] = Enemy->GetPos();
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+			Vector3 playerPos = player_->GetPos();
+			Enemy->GetDamage();
+			Vector3 vec{};
+			vec = playerPos - enemyPos[i];
+			vec.normalize();
+			vec.y = 0.0f;
+			player_->HitHammerToEnemy(vec / 2.f);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+		}
+	}
+
+	/*for (size_t i = 0; i < enemys_.size(); i++)
 	{
 		if (enemys_[i]->GetHP() <= 0)
 		{
@@ -375,8 +424,8 @@ void TutorialScene::EnemyProcess()
 			enemys_.erase(enemys_.begin() + i);
 			continue;
 		}
-	}
-	for (auto i = 0; i < enemys_.size(); i++) {
+	}*/
+	/*for (auto i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i]->GetHP() <= 0)continue;
 		enemyPos[i] = enemys_[i]->GetPos();
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
@@ -385,10 +434,10 @@ void TutorialScene::EnemyProcess()
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i]/2.f);
+			player_->HitHammerToEnemy(vec[i] / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
-	}
+	}*/
 
 
 	//プレイヤーのOBB設定
@@ -403,7 +452,33 @@ void TutorialScene::EnemyProcess()
 
 	_hummmerObb = &l_obb;
 
-	for (size_t j = 0; j < enemys_.size(); j++)
+	for (size_t j = 0; j < map_->GetEnemySize(); j++) {
+		unique_ptr<BaseEnemy>& Ene1 = map_->GetEnemy(j);
+		for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+			unique_ptr<BaseEnemy>& Ene2 = map_->GetEnemy(i);
+			if (i == j||Ene1==nullptr||Ene2==nullptr)continue;
+			if (Collision::HitCircle(XMFLOAT2(Ene2->GetPos().x, Ene2->GetPos().z), 1.f,
+				XMFLOAT2(Ene1->GetPos().x, Ene1->GetPos().z), 1.f))
+			{
+				XMFLOAT3 pos = Ene1->GetPos();
+
+				pos.x += sin(atan2f((Ene1->GetPos().x - Ene2->GetPos().x), (Ene1->GetPos().z - Ene2->GetPos().z))) * 0.3f;
+				pos.z += cos(atan2f((Ene1->GetPos().x - Ene2->GetPos().x), (Ene1->GetPos().z - Ene2->GetPos().z))) * 0.3f;
+
+				Ene1->SetPos(pos);
+			}
+		}
+	}
+
+	for (auto i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Ene = map_->GetEnemy(i);
+		if (Ene == nullptr) { continue; }
+		if (Ene->GetHP() <= 0 ) { continue; }
+		Ene->SetHammerObb(*_hummmerObb);
+		Ene->TutorialUpda(camera_.get(), notjump_);
+	}
+
+	/*for (size_t j = 0; j < enemys_.size(); j++)
 	{
 		for (size_t i = 0; i < enemys_.size(); i++)
 		{
@@ -419,15 +494,15 @@ void TutorialScene::EnemyProcess()
 				enemys_[j]->SetPos(pos);
 			}
 		}
-	}
-	for (auto i = 0; i < enemys_.size(); i++)
+	}*/
+	/*for (auto i = 0; i < enemys_.size(); i++)
 	{
 		if (enemys_[i]->GetHP() <= 0) { continue; }
 		if (enemys_[i] != nullptr) {
 			enemys_[i]->SetHammerObb(*_hummmerObb);
 			enemys_[i]->TutorialUpda(camera_.get(), notjump_);
 		}
-	}
+	}*/
 }
 
 void TutorialScene::SleepShale()
@@ -445,8 +520,8 @@ void TutorialScene::SleepShale()
 
 	if (pushCount_ > oldpushCount_) {
 		shaketimer_ += 1;
-		if (shaketimer_ % 2==0) {
-			startpos_.x +=shakeval_;
+		if (shaketimer_ % 2 == 0) {
+			startpos_.x += shakeval_;
 		}
 		else {
 			startpos_.x -= shakeval_;
@@ -493,8 +568,8 @@ void TutorialScene::TitlePhase()
 		player_->SetPos(startpos_);
 		titlepos_ = false;
 	}
-	
-	if(action_&&shaketimer_>=10) {
+
+	if (action_ && shaketimer_ >= 10) {
 		timer_ += 0.1f;
 		size_.x += 500.f;
 		size_.y += 500.f;
@@ -554,16 +629,24 @@ void TutorialScene::SpownPhase()
 
 	fighttextwindow_->Update();
 
-	if (startenemypos_[0].y >= -2.5f) {
-	startenemypos_[0].y -= 1.f;
-	enemys_[0]->SetPos(startenemypos_[0]);
+	/*if (startenemypos_[0].y >= -2.5f) {
+		startenemypos_[0].y -= 1.f;
+		enemys_[0]->SetPos(startenemypos_[0]);
 	}
 	if (startenemypos_[1].y >= -2.5f) {
 		startenemypos_[1].y -= 1.f;
-	enemys_[1]->SetPos(startenemypos_[1]);
+		enemys_[1]->SetPos(startenemypos_[1]);
+	}*/
+
+	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr) { continue; }
+		if (startenemypos_[i].y >= -2.5f) {
+			startenemypos_[i].y -= 1.f;
+			Enemy->SetPos(startenemypos_[i]);
+		}
 	}
 
-	
 	if (!fighttextwindow_->GetCloseWindow()) {
 		description_ = 0;
 		phase_ = Phase::Fight;
@@ -575,11 +658,13 @@ void TutorialScene::FightPhase()
 	notjump_ = false;
 	notattack_ = false;
 	stop_ = false;
-	
-	if (enemys_.size() == 0) {
-		phase_ = Phase::Defeat;
-	}
 
+	if (map_->EnemyAllKill()) {
+		phase_ = Phase::Defeat;
+	}	
+	/*if (enemys_.size() == 0) {
+		phase_ = Phase::Defeat;
+	}*/
 }
 
 void TutorialScene::DefeatPhase()

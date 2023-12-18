@@ -24,6 +24,31 @@ private:
 	void ResetParam_Spear();
 
 private:
+	//当たり判定周り
+	void CollideDeposit();
+	//
+	bool depositCollideF = FALSE;
+	//
+	int32_t depositDelTime = 0;
+	//
+	Vector3 DepositReproduction();
+public:
+	//鉱石座標
+	static Vector3 depositPos;
+	//
+	static bool depositDelF;
+public:
+	//アニメーション名前
+	enum AnimeName
+	{
+		IdlE,
+		WALK,
+		ROLE,
+		CRUSH
+	}anime_name_;
+
+	AnimeName GetName()const { return anime_name_; }
+private:
 	//通常パラメータ
 	Vector3 Pos_,Rot_,Scl_={};
 	//戦闘開始
@@ -70,12 +95,23 @@ private:
 	float rotEaseT = 0.f;
 	//追跡するか
 	bool isFollow = FALSE;
-
+	//
+	int32_t animationWaitTime = 0;
 	//突進用変数
 	float rushEaseT=0.f;
 	//突進終わって針出すまでの待ち時間
 	int32_t waitShotCount = 0;
 	Vector3 RushStartPos = {};
+
+//ダメージくらったとき
+private:
+	bool isSpearCrush=FALSE;
+	//破壊した棘の数
+	int32_t crushSpearNum = 0;
+	//棘の再生時間
+	int32_t reproductionTime = 0;
+	//RunAway()条件
+	bool CrushSpear();
 
 
 public:
@@ -91,8 +127,15 @@ public:
 
 	float GetSpearAlpha()const { return spearsAlpha; }
 
+	//鉱石座標
+	Vector3 GetDepositPos()const { return depositPos; }
+	//
+	bool GetDepositDelF()const { return depositDelF; }
+
 	// セッター //
 	void SetPlayerIns(Player* player) { Player_ = player; }
+
+	void SetDepositPos(Vector3 pos) { depositPos = pos; }
 
 };
 

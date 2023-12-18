@@ -15,6 +15,10 @@ private:
     void SpriteDraw()override;
     bool Appear()override;
 
+    //アニメーション関連
+    void InitAnimatin();
+    void AnimationSett();
+    void AddIndex(Model**model,int size);
 private:
     //針の数
 	static constexpr UINT m_SpearArray = 8;
@@ -26,8 +30,14 @@ private:
 private:
     //本体
     std::unique_ptr<Object3d>m_Body=nullptr;
-    std::array<Model*, m_TexArray>m_Model = {};
-    //アニメーションカウンタ
+
+    //constexpr int32_t m_ModelSize = 3;
+
+   Model*m_Model_Idle[4] = {};
+   Model*m_Model_Walk[4] = {};
+    Model*m_Model_Role[2] = {};
+    Model* m_Model_Crush[4] = {};
+	//アニメーションカウンタ
 	int animeIndex = 0;
 
     //針OBJ

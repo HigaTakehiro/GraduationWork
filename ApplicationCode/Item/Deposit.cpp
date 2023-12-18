@@ -24,7 +24,7 @@ void Deposit::Initialize(Vector3 pos)
 
 void Deposit::Update(const Vector3& playerPos)
 {
-	AlphaTest(playerPos);
+	//AlphaTest(playerPos);
 
 	//無敵時間更新
 	if (hitCoolTime_ > hitCoolTimer_) {
@@ -44,7 +44,7 @@ Vector3 Deposit::OreDropVec()
 {
 	//鉱石ドロップベクトル
 	Vector3 vec = { 0.f, 0.f, 0.f };
-
+	//
 	//乱数生成
 	std::random_device rnd;
 	std::mt19937 mt(rnd());

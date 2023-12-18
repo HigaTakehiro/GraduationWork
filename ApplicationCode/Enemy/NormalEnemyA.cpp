@@ -330,6 +330,10 @@ void NormalEnemyA::TutorialDraw(float Mindis)
 	Texture::PreDraw();
 	_status.Tex->Draw();
 	Texture::PostDraw();
+
+	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	TexDraw();
+	Object3d::PostDraw();
 }
 
 void NormalEnemyA::ClampMap()
