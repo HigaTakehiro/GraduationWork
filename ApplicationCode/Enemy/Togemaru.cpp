@@ -29,8 +29,53 @@ void Togemaru::Init()
 	m_Body->SetHitRadius(0.5f);
 	m_Body->SetScale({ 0.040f, 0.040f, 0.040f });
 
+	UI_Init();
+
+	m_HP = 10;
+	BossMaxHP = m_HP;
+
 	Action = new TogemaruAct();
 }
+
+void Togemaru::UI_Init()
+{ 
+	for (size_t i = 0; i < m_ScaleArray; i++) {
+		m_ScaleSizeUI[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {64.0f, 64.0f}, "white1x1.png", {64.0f, 64.0f}, {0.f, 0.f}, {64.0f, 0.0f}, {64.0f, 64.0f}));
+
+		ScaleColor[i] = { 1,0,1,1 };
+	}
+	HPUiInit();
+}
+
+void Togemaru::UI_Upda()
+{
+	//
+	Pos_ = Action->GetPos();
+	//画像サイズ
+	constexpr float sizeX = 0.015f,sizeY=0.005f;
+	//UI座標X
+	float uiposX[] = { Pos_.x + 1.f,Pos_.x,Pos_.x -1.f };
+	//補正値
+	float corrValX = +0.3f;
+
+	for(size_t i=0;i<m_ScaleArray;i++){
+		ScaleUI_Pos[i] = { uiposX[i]+corrValX,Pos_.y + 2.5f,Pos_.z };
+		ScaleUI_Scl[i] = { sizeX,sizeY,0.1f };
+
+		m_ScaleSizeUI[i]->SetColor(ScaleColor[i]);
+		m_ScaleSizeUI[i]->SetPosition(ScaleUI_Pos[i]);
+		m_ScaleSizeUI[i]->SetScale(ScaleUI_Scl[i]);
+		m_ScaleSizeUI[i]->Update();
+	}
+}
+
+void Togemaru::UI_Draw()
+{
+	for (size_t i = 0; i < m_ScaleArray; i++) {
+		m_ScaleSizeUI[i]->Draw();
+	}
+}
+
 
 void Togemaru::Upda()
 {
@@ -54,6 +99,9 @@ void Togemaru::Upda()
 	m_Body->SetPosition(Action->GetPos());
 	m_Body->SetRotation(Vector3(0, 0, 0));
 	m_Body->Update();
+
+	UI_Upda();
+	HPUiUpda();
 }
 
 
@@ -68,6 +116,8 @@ void Togemaru::Draw()
 		}
 	}
 	m_Body->Draw();
+
+	UI_Draw();
 }
 
 void Togemaru::Draw2()
@@ -77,7 +127,7 @@ void Togemaru::Draw2()
 
 void Togemaru::SpriteDraw()
 {
-	
+	HPUiDraw();
 }
 
 void Togemaru::Attack()

@@ -183,17 +183,25 @@ void SecBossScene::Update()
 
 	//Õ“ËŽžˆê’U”jŠü
 	if(TogemaruAct::depositDelF&&!m_DepositCreate){
-		Deposit_->SetDestroyF(true);
-	}
-	if (Deposit_->GetDepositAlpha() <= 0.f) {
 		m_DepositCreate = TRUE;
-		Deposit_.reset(nullptr);
+		Deposit_->SetDestroyF(true);//ƒGƒtƒFƒNƒg¶¬—p
 	}
-	if(!TogemaruAct::depositDelF&&m_DepositCreate){
-		Deposit_.reset(new Deposit());
-		Deposit_->Initialize(TogemaruAct::depositPos,true,camera_.get());
-		m_DepositCreate = FALSE;
+	
+	if(m_DepositCreate)
+	{
+		//Š®‘S‚É“§–¾‚É‚È‚Á‚½‚ç”jŠü
+		if (Deposit_->GetDepositAlpha() <= 0.f) {
+			Deposit_.reset(nullptr);
+		}
+		//ˆê’èŽžŠÔ‚½‚Á‚”‚çzÎ•œŠˆ
+		if(!TogemaruAct::depositDelF){
+			Deposit_.reset(new Deposit());
+			Deposit_->Initialize(TogemaruAct::depositPos, true, camera_.get());
+			m_DepositCreate = FALSE;
+		}
 	}
+
+
 	if (Deposit_ != nullptr) {
 		Deposit_->Update(player_->Get());
 	}

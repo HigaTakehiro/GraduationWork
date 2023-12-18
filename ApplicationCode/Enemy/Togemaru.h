@@ -31,11 +31,9 @@ private:
     //本体
     std::unique_ptr<Object3d>m_Body=nullptr;
 
-    //constexpr int32_t m_ModelSize = 3;
-
    Model*m_Model_Idle[4] = {};
    Model*m_Model_Walk[4] = {};
-    Model*m_Model_Role[2] = {};
+	Model*m_Model_Role[2] = {};
     Model* m_Model_Crush[4] = {};
 	//アニメーションカウンタ
 	int animeIndex = 0;
@@ -51,6 +49,19 @@ private:
     //各種パラメータ
     Vector3 Pos_, Rot_, Scl_;
 
+    //ボスの行動パターン
     TogemaruAct* Action=nullptr;
+
+private:
+    //UI
+	//鱗の数
+    std::array<std::unique_ptr<Object3d>,m_ScaleArray>m_ScaleSizeUI = {};
+    std::array < Vector3, m_ScaleArray> ScaleUI_Pos = {};
+    std::array < Vector3, m_ScaleArray> ScaleUI_Scl = {};
+    std::array < XMFLOAT4, m_ScaleArray> ScaleColor = {};
+    //
+	void UI_Init();
+    void UI_Upda();
+    void UI_Draw();
 };
 

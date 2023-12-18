@@ -26,13 +26,7 @@ void Dogom::Init()
 	for (int32_t i = 0; i < 8; i++) {
 		BodyModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_face.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
-	m_HpTex=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-	m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-	m_HpTex_Inner = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-
-	m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));
-	m_HpTex_Inner->SetColor(XMFLOAT3(1, 1, 0));
-
+	
 	m_FeedTex = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
 	m_FeedTex->SetSize(XMFLOAT2(1280, 720));
 	m_FeedTex->SetColor(XMFLOAT3(0, 0, 0));
@@ -69,6 +63,7 @@ void Dogom::Init()
 
 		m_ArmHpTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {128.0f, 128.0f}, "white1x1.png", {128.0f, 64.0f}, {0.f, 0.f}, {128.0f * (float)i, 0.0f}, {128.0f, 128.0f}));
 	}
+	HPUiInit();
 
 	CrossAreaTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "CrossArea.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 }));
 	CrossAreaTex->SetRotation(Vector3(90, 0, 0));
@@ -1006,49 +1001,7 @@ void Dogom::WinceIdle()
 
 void Dogom::SpriteDraw()
 {
-	if (m_BodyAlpha <= 0.f)return;
-	float px = 880.f, py = 30.f;
-	float sx,sy;
-	//0~400‚ÌŠÔ‚Å‚Ì•âŠ®Žæ‚é
-	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 400.f;
-	sy = 50.f;
-
-	NowHP = sx;
-	if(BodyRecvDam)
-		bravegaugeF = TRUE;
-
-	if(bravegaugeF)
-	{
-		if (++InnerSclingT <= 60.f)
-			m_hpInnerSizeX = Easing::easeIn(InnerSclingT, 60.f, BeforeHP, NowHP-1.f);
-			else {
-				bravegaugeF = FALSE;
-			}
-	}
-	else
-	{
-		InnerSclingT = 0.f;
-		BeforeHP = sx;
-		m_hpInnerSizeX = sx;
-	}
-
-	InnerSclingT = std::clamp(InnerSclingT, 0.f, 60.f);
-
-	m_HpTex_Frame->SetPosition(XMFLOAT2(px - 10.f, py - 20.f));
-	m_HpTex_Frame->SetSize(XMFLOAT2(430.f, 70.f));
-
-	m_HpTex_Inner->SetPosition(XMFLOAT2(px, py));
-	m_HpTex_Inner->SetSize(XMFLOAT2(m_hpInnerSizeX, sy));
-
-	m_HpTex->SetColor(XMFLOAT3(1, 0, 0));
-	m_HpTex->SetPosition(XMFLOAT2(px,py));
-	m_HpTex->SetSize(XMFLOAT2(sx, sy));
-
-	m_HpTex_Frame->Draw();
-	m_HpTex_Inner->Draw();
-	m_HpTex->Draw();
-
-
+	HPUiDraw();
 	m_FeedTex->Draw();
 }
 
