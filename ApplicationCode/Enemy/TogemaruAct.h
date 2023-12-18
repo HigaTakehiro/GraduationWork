@@ -125,10 +125,14 @@ public:
 
 	Vector3 GetSpearPos(int index)const { return SpearPos_[index]; }
 
-	float GetSpearAlpha()const { return spearsAlpha; }
-
 	//çzêŒç¿ïW
 	Vector3 GetDepositPos()const { return depositPos; }
+
+	int32_t GetCrushSpearNum()const { return crushSpearNum; }
+
+	float GetSpearAlpha()const { return spearsAlpha; }
+
+	
 	//
 	bool GetDepositDelF()const { return depositDelF; }
 
