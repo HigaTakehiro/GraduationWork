@@ -125,7 +125,7 @@ public:
 	/// <returns>鉱脈リストサイズ</returns>
 	int32_t GetDepositsSize() { return deposits_.size(); }
 
-	/*/// <summary>
+	/// <summary>
 	/// 敵リストを取得
 	/// </summary>
 	/// <returns>鉱脈</returns>
@@ -135,7 +135,7 @@ public:
 	/// 敵リストサイズを取得
 	/// </summary>
 	/// <returns>鉱脈リストサイズ</returns>
-	int32_t GetEnemySize() { return enemys_.size(); }*/
+	int32_t GetEnemySize() { return enemys_.size(); }
 
 private:
 
@@ -155,7 +155,7 @@ private:
 	Deposit* deposit_;
 	std::vector<std::unique_ptr<Deposit>> deposits_;
 
-	//vector<unique_ptr<BaseEnemy>> enemys_;
+	vector<unique_ptr<BaseEnemy>> enemys_;
 
 	//マップの番号
 	int count_ = 0;

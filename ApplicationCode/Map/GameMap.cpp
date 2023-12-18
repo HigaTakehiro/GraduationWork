@@ -167,7 +167,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			CreateDeposits(Pos, COUNT);
-			CreateEnemy(player, Pos, 2);
+			//CreateEnemy(player, Pos, 2);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -253,7 +253,7 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 
 void GameMap::CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy)
 {
-	/*for (int i = 0; i < Enemy; i++) {
+	for (int i = 0; i < Enemy; i++) {
 		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
 		Enemy1->Init();
 		Enemy1->SetPlayerIns(player);
@@ -261,7 +261,7 @@ void GameMap::CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy)
 		Enemy1->SetCount(count_);
 		Enemy1->SetPos(MapPos);
 		enemys_.push_back(move(Enemy1));
-	}*/
+	}
 }
 
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
@@ -284,11 +284,11 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		}
 	}
 
-	/*for (int32_t i = 0; i < enemys_.size(); i++) {
+	for (int32_t i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i]->GetHP() <= 0) {
 			enemys_.erase(enemys_.begin());
 		}
-	}*/
+	}
 
 	CheckHitTest(player);
 
@@ -359,6 +359,9 @@ void GameMap::Finalize()
 	bridge.clear();
 	stairs_.release();
 	grass_.clear();
+	for (int32_t i = 0; i < enemys_.size(); i++) {
+		enemys_.erase(enemys_.begin());
+	}
 }
 
 void GameMap::CheckHitTest(Player* player)
