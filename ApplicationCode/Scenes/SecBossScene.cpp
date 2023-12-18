@@ -71,7 +71,8 @@ void SecBossScene::Initialize()
 	m_Stairs.reset(new Stairs());
 	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
-//	Deposit_->Initialize(Vector3(10, -2.5f, 0.f));
+	Deposit_.reset(new Deposit());
+	Deposit_->Initialize(Vector3(10, -2.5f, 0.f));
 
 
 	SoundManager::GetIns()->StopAllBGM();
@@ -180,7 +181,7 @@ void SecBossScene::Update()
 
 	m_ClearTex->SetSize(m_ClearTexScl);
 
-//	Deposit_->Update(player_->Get());
+	Deposit_->Update(player_->Get());
 	schange->Change(0);
 
 	//ƒV[ƒ“Ø‚è‘Ö‚¦mmm
@@ -220,7 +221,7 @@ void SecBossScene::Draw()
 	boss_->Draw();
 	player_->Draw();
 	map_->BridgeDraw();
-	//Deposit_->Draw();
+	Deposit_->Draw();
 	boss_->Draw2();
 	Object3d::PostDraw();
 	//shake_->Draw(DirectXSetting::GetIns()->GetCmdList());

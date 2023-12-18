@@ -23,6 +23,17 @@ private:
 	//
 	void ResetParam_Spear();
 
+private:
+	//当たり判定周り
+	void CollideDeposit();
+
+	//鉱石座標
+	static Vector3 depositPos;
+	//
+	bool depositDelF = FALSE;
+	int32_t depositDelTime = 0;
+	//
+	Vector3 DepositReproduction();
 public:
 	//アニメーション名前
 	enum AnimeName
@@ -113,8 +124,13 @@ public:
 
 	float GetSpearAlpha()const { return spearsAlpha; }
 
+	//鉱石座標
+	Vector3 GetDepositPos()const { return depositPos; }
+
 	// セッター //
 	void SetPlayerIns(Player* player) { Player_ = player; }
+
+	void SetDepositPos(Vector3 pos) { depositPos = pos; }
 
 };
 
