@@ -2,6 +2,12 @@
 
 #include "Shapes.h"
 
+#define MapX_Mx 10.f
+#define MapX_Mn -10.f
+
+#define MapZ_Mx 8.8f
+#define MapZ_Mn -12.f
+
 void Togemaru::Init()
 {
 	m_SpearsModel = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "impact.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f });
@@ -54,9 +60,12 @@ void Togemaru::Upda()
 void Togemaru::Draw()
 {
 	//êjï`âÊ
-	for(size_t i=0;i<m_SpearArray;i++)
+	for (size_t i = 0; i < m_SpearArray; i++)
 	{
-		m_Spears[i]->Draw();
+		if (Action->GetSpearPos(i).x<MapX_Mx && Action->GetSpearPos(i).x > MapX_Mn &&
+			Action->GetSpearPos(i).z < MapZ_Mx && Action->GetSpearPos(i).z > MapZ_Mn) {
+			m_Spears[i]->Draw();
+		}
 	}
 	m_Body->Draw();
 }
