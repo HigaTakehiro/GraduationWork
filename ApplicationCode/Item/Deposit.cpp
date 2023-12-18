@@ -44,7 +44,7 @@ Vector3 Deposit::OreDropVec()
 {
 	//鉱石ドロップベクトル
 	Vector3 vec = { 0.f, 0.f, 0.f };
-
+	//
 	//乱数生成
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
