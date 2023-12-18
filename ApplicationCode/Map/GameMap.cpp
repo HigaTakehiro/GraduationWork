@@ -2,6 +2,7 @@
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
 #include "Easing.h"
+#include "NormalEnemyA.h"
 #include "SoundManager.h"
 #include "SafeDelete.h"
 #include <random>
@@ -31,6 +32,11 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 		std::string word;
 		getline(line_stream, word, ' ');
 
+		if (word.find("ENEMY1") == 0) {
+			getline(line_stream, word, ',');
+			int ENEMYCOUNT = (int)std::atof(word.c_str());
+			enemyscount_ = ENEMYCOUNT;
+		}
 
 		if (word.find("MAP") == 0) {
 			getline(line_stream, word, ',');
@@ -161,6 +167,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			CreateDeposits(Pos, COUNT);
+			CreateEnemy(player, Pos, 2);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -241,8 +248,20 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 	deposit_2->SetMapNum(MapNum);
 	deposits_.push_back(std::move(deposit));
 	deposits_.push_back(std::move(deposit_2));
-
 	
+}
+
+void GameMap::CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy)
+{
+	for (int i = 0; i < Enemy; i++) {
+		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
+		Enemy1->Init();
+		Enemy1->SetPlayerIns(player);
+		Enemy1->SetOverPos(XMFLOAT3(13.f, -100.f, 37.f), XMFLOAT3(-11.f, 100.f, 14.f));
+		Enemy1->SetCount(count_);
+		Enemy1->SetPos(MapPos);
+		enemys_.push_back(move(Enemy1));
+	}
 }
 
 void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, int StageNum)
@@ -261,9 +280,16 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 {
 	for (int32_t i = 0; i < deposits_.size(); i++) {
 		if (deposits_[i]->GetHP() <= 0) {
-			deposits_[i]->~Deposit();
+			deposits_.erase(deposits_.begin()+i);
 		}
 	}
+
+	for (int32_t i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i]->GetHP() <= 0) {
+			enemys_.erase(enemys_.begin());
+		}
+	}
+
 	CheckHitTest(player);
 
 	if (time_ < 1&&flag == true) {
@@ -281,9 +307,10 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	for (int32_t i = 0; i < deposits_.size(); i++) {
+
+	/*for (int32_t i = 0; i < deposits_.size(); i++) {
 		deposits_[i]->Update(player->GetPos());
-	}
+	}*/
 
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
@@ -308,16 +335,6 @@ void GameMap::MapDraw()
 		if(count_ == GrassLand->num) {
 			GrassLand->grass_->Draw();
 		}
-	}
-
-	
-	/*if (deposit_ != nullptr) {
-		deposit_->Draw();
-	}*/
-
-	for (int32_t i = 0; i < deposits_.size(); i++) {
-		if(count_==deposits_[i]->GetMapNum())
-		deposits_[i]->Draw();
 	}
 }
 
@@ -587,12 +604,5 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 	return false;
 }
 
-Deposit* GameMap::GetDePosit()
-{
-	if (deposit_ != nullptr) {
-		return deposit_;
-	}
-	return nullptr;
-}
 
 

@@ -22,35 +22,20 @@
 #include"BossBase.h"
 #include"BaseEnemy.h"
 #include"Shake.h"
-#include"IntermediateBase.h"
-#include "Grass.h"
-
-class StageTwoFloor :public BaseScene
+#include "SceneChange.h"
+class SecBossScene :
+	public BaseScene
 {
-public: //メンバ関数
-	/// <summary>
-	/// 初期化関数
-	/// </summary>
+public:
 	void Initialize();
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
 	void Update();
 
-	/// <summary>
-	/// 描画処理
-	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 終了処理
-	/// </summary>
 	void Finalize();
 
-protected: //静的メンバ関数
-
-private: //メンバ関数
+private:
 	/// <summary>
 	/// シーン切り替え処理
 	/// </summary>
@@ -61,11 +46,7 @@ private: //メンバ関数
 	/// </summary>
 	void CameraSetting();
 
-	/// <summary>
-	/// 敵に関係する処理
-	/// </summary>
-	void EnemyProcess();
-private: //メンバ変数
+private:
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
 	//ポストエフェクト番号
@@ -74,8 +55,11 @@ private: //メンバ変数
 	std::unique_ptr<LightGroup> light_;
 	//カメラ
 	std::unique_ptr<Camera> camera_;
+	//
+	std::unique_ptr<Stairs>m_Stairs;
 	//プレイヤー
 	Player* player_;
+
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
 
@@ -96,10 +80,13 @@ private: //メンバ変数
 	Vector3 targetPos_;
 
 	Shake* shake_;
+	std::unique_ptr<Sprite>m_ClearTex = nullptr;
+	XMFLOAT2 m_ClearTexScl;
+	float ClearTexEaseT;
+	bool NextClearF;
+	bool touchFlor;
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
-	Vector3 pos{};
-	Vector3 target{};
 	SceneChangeEffect* schange;
 };
 

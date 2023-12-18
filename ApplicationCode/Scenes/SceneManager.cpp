@@ -1,5 +1,7 @@
 #include "SceneManager.h"
 
+#include "SecBossScene.h"
+
 BaseScene* SceneManager::nowScene = nullptr;
 int32_t SceneManager::stageNo_ = 1;
 int32_t SceneManager::score = 0;
@@ -71,16 +73,6 @@ void SceneManager::SceneChange(SceneName scene) {
 		nowScene->Initialize();
 		nowScene->SetCollisionManager(colManager_);
 		break;
-	case SceneName::Floor1:
-		nowScene = new StageOneFloor();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
-		break;
-	case SceneName::Floor2:
-		nowScene = new StageTwoFloor();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
-		break;
 	case SceneName::IB:
 		nowScene = new IBScene();
 		nowScene->Initialize();
@@ -93,6 +85,11 @@ void SceneManager::SceneChange(SceneName scene) {
 		break;
 	case SceneName::Boss:
 		nowScene = new BossScene();
+		nowScene->Initialize();
+		nowScene->SetCollisionManager(colManager_);
+		break;
+	case SceneName::Boss2:
+		nowScene = new SecBossScene();
 		nowScene->Initialize();
 		nowScene->SetCollisionManager(colManager_);
 		break;

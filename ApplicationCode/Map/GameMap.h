@@ -5,7 +5,7 @@
 #include"Grass.h"
 #include "Deposit.h"
 #include "Ore.h"
-
+#include"BaseEnemy.h"
 #include<memory.h>
 #include<DirectXMath.h>
 using namespace std;
@@ -63,6 +63,8 @@ public:
 
 	void CreateDeposits(const XMFLOAT3& MapPos, int MapNum);
 
+	void CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy);
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -109,19 +111,28 @@ public:
 
 	bool ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease);
 
-	Deposit* GetDePosit();
-	bool DepositIsHit(bool flag) { return deposit_->GetIsHit(flag); }
-
 	/// <summary>
 	/// 鉱脈リストを取得
 	/// </summary>
 	/// <returns>鉱脈</returns>
-	std::unique_ptr<Deposit>& GetDeposit(int32_t number) { return deposits_[number]; }
+	unique_ptr<Deposit>& GetDeposit(int32_t number) { return deposits_[number]; }
 	/// <summary>
 	/// 鉱脈リストサイズを取得
 	/// </summary>
 	/// <returns>鉱脈リストサイズ</returns>
 	int32_t GetDepositsSize() { return deposits_.size(); }
+
+	/// <summary>
+	/// 敵リストを取得
+	/// </summary>
+	/// <returns>鉱脈</returns>
+	unique_ptr<BaseEnemy>& GetEnemy(int32_t number) { return enemys_[number]; }
+
+	/// <summary>
+	/// 敵リストサイズを取得
+	/// </summary>
+	/// <returns>鉱脈リストサイズ</returns>
+	int32_t GetEnemySize() { return enemys_.size(); }
 
 private:
 
@@ -138,13 +149,19 @@ private:
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
 
-	Deposit* deposit_;
 	std::vector<std::unique_ptr<Deposit>> deposits_;
+
+	vector<unique_ptr<BaseEnemy>> enemys_;
 
 	//マップの番号
 	int count_ = 0;
 	//古い状態のマプ番号
 	int oldcount_ = 0;
+	
+	int enemyscount_ = 0;
+
+
+
 	//
 	bool stopCount_ = false;
 

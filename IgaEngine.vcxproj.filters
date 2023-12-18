@@ -272,9 +272,6 @@
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Scenes\StageOneFloor.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Scenes\BossScene.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
@@ -305,13 +302,19 @@
     <ClCompile Include="ApplicationCode\Map\Grass.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Scenes\StageTwoFloor.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Enemy\MunniAction.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyB.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\Togemaru.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\TogemaruAct.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\SecBossScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp">
@@ -506,9 +509,6 @@
     <ClInclude Include="ApplicationCode\Map\Stairs.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Scenes\StageOneFloor.h">
-      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
@@ -534,12 +534,14 @@
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Map\Grass.h" />
-    <ClInclude Include="ApplicationCode\Scenes\StageTwoFloor.h" />
     <ClInclude Include="ApplicationCode\Enemy\MunniAction.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h" />
     <ClInclude Include="ApplicationCode\Map\StageCount.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\Togemaru.h" />
+    <ClInclude Include="ApplicationCode\Enemy\TogemaruAct.h" />
+    <ClInclude Include="ApplicationCode\Scenes\SecBossScene.h" />
     <ClInclude Include="ApplicationCode\Players\AttackEffect.h">
       <Filter>ソース ファイル\ApplicationCode\Players</Filter>
     </ClInclude>

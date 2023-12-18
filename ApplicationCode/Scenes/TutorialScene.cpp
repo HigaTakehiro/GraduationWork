@@ -103,8 +103,6 @@ void TutorialScene::Initialize()
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
 
-	deposit_ = map_->GetDePosit();
-
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
@@ -162,11 +160,23 @@ void TutorialScene::Update()
 	else {
 		targetPos_.y = 0;
 	}
+
+	for (int i = 0; i < map_->GetDepositsSize(); i++) {
+		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
+		if (Dep != nullptr && Dep->GetHP() > 0) {
+			if (Dep->GetIsHit(true)) {
+				unique_ptr<Ore> ore = make_unique<Ore>();
+				ore->Initialize(Dep->GetPos(), Dep->OreDropVec());
+				oreItems_.push_back(std::move(ore));
+			}
+			Dep->Update(player_->GetPos());
+		}
+	}
+
 	cameraPos_.y = 12;
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	player_->TutorialUpdate(stop_, notattack_);
-
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_, notlook_);
 
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
@@ -176,21 +186,11 @@ void TutorialScene::Update()
 
 	schange->Change(0);
 
+	
+
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
-	
-	
-
-	if (deposit_ != nullptr&& deposit_->GetHP() > 0) {
-		
-		if (deposit_->GetIsHit(true)) {
-			unique_ptr<Ore> ore = make_unique<Ore>();
-			ore->Initialize(deposit_->GetPos(), deposit_->OreDropVec());
-			oreItems_.push_back(std::move(ore));
-		}
-		
-	}
 	
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
@@ -215,6 +215,13 @@ void TutorialScene::Draw()
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->MapDraw();
+	for (int i = 0; i < map_->GetDepositsSize(); i++) {
+		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
+		if (Dep != nullptr) {
+			Dep->Draw();
+		}
+	}
+
 	Object3d::PostDraw();
 	for (auto i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] != nullptr) {
