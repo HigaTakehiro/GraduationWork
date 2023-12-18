@@ -108,6 +108,8 @@ public:
 
 	void DrawingMap(int StageNum,std::stringstream& stream);
 
+	bool EnemyAllKill();
+
 	void CreateRock();
 
 	bool CheckRockToMap(const XMFLOAT3& RockPos);
@@ -163,8 +165,6 @@ private:
 	int oldcount_ = 0;
 	
 	int enemyscount_ = 0;
-
-
 
 	//
 	bool stopCount_ = false;
