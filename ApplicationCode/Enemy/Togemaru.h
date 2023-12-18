@@ -36,7 +36,7 @@ private:
    Model*m_Model_Idle[4] = {};
    Model*m_Model_Walk[4] = {};
     Model*m_Model_Role[2] = {};
-
+    Model* m_Model_Crush[4] = {};
 	//アニメーションカウンタ
 	int animeIndex = 0;
 

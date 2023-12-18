@@ -9,7 +9,8 @@
 #define PI_180 180
 #define PI_360 360
 
-Vector3 TogemaruAct::depositPos = {};
+Vector3 TogemaruAct::depositPos = { 10, -2.5f, 0.f };
+bool TogemaruAct::depositDelF = false;
 
 void TogemaruAct::Transition()
 {
@@ -22,6 +23,13 @@ void TogemaruAct::Transition()
 	//í“¬ŠJn‚µ‚½‚ç“®‚­‚æ‚¤‚É
 	if (beginBattle) {
 		(this->*ActionList[act_])();
+	}
+
+	CollideDeposit();
+	//™‚ª3‚Â‰ó‚ê‚½‚ç
+	if (CrushSpear() == TRUE){
+		//“¦‚°˜f‚¤
+		act_ = Act::RUNAWAY;
 	}
 
 	//À•W‚Ì”ÍˆÍw’è
@@ -82,14 +90,7 @@ void TogemaruAct::Move()
 		act_ = Act::ATTACK_SHOTSPEAR;
 	}
 
-	//™‚ª3‚Â‰ó‚ê‚½‚ç
-	if(CrushSpear()==TRUE)
-	{
-		//“¦‚°˜f‚¤
-		act_ = Act::RUNAWAY;
-	}
 
-	//
 }
 
 float TogemaruAct::Walk()
@@ -128,12 +129,16 @@ void TogemaruAct::Attack_ShotSpear()
 	constexpr float maxRushEaseT = 30.f;
 
 	if (++rushEaseT >= maxRushEaseT) {
+		depositCollideF = FALSE;
 		isShot = TRUE;//“ËiI‚í‚Á‚½‚çj”ò‚Î‚·
 	}
 	else {
-			//“Ëi
-			Pos_.x = Easing::easeIn(rushEaseT, maxRushEaseT, RushStartPos.x, RushStartPos.x + move.m128_f32[0] * 100.f);
-			Pos_.z = Easing::easeIn(rushEaseT, maxRushEaseT, RushStartPos.z, RushStartPos.z + move.m128_f32[2] * 100.f);
+		//“Ëi
+		Pos_.x = Easing::easeIn(rushEaseT, maxRushEaseT, RushStartPos.x, RushStartPos.x + move.m128_f32[0] * 100.f);
+		Pos_.z = Easing::easeIn(rushEaseT, maxRushEaseT, RushStartPos.z, RushStartPos.z + move.m128_f32[2] * 100.f);
+
+		//ˆÚ“®’†‚ÉzÎ‚É“–‚½‚Á‚½‚ç
+		depositCollideF = TRUE;
 	}
 
 	//j”ò‚Î‚·
@@ -192,8 +197,10 @@ bool TogemaruAct::CrushSpear()
 
 void TogemaruAct::RunAway()
 {
+	anime_name_ = AnimeName::CRUSH;
+
 	//™‰ñ•œ‚·‚éŠÔ
-	constexpr int32_t reproductionMaxTime = 180;
+	constexpr int32_t reproductionMaxTime = 240;
 
 	//Œü‚¢‚½•û‚ÉˆÚ“®‚·‚é
 	move = { 0.f,0.f, 0.1f, 0.0f };
@@ -219,7 +226,7 @@ void TogemaruAct::RunAway()
 
 void TogemaruAct::CollideDeposit()
 {
-	//”»’è—p‚Ì”¼Œa
+	//”»’è—p‚Ì”¼Œa player - boss
 	constexpr float r1 = 1.f, r2 = 2.f;
 
 	//zÎ•œŠˆ‚·‚é‚Ü‚Å‚Í3•b
@@ -236,8 +243,9 @@ void TogemaruAct::CollideDeposit()
 	else
 	{
 		//zÎ‚ÆÕ“Ë‚µ‚½‚ç
-		if (Helper::GetCircleCollide(depositPos, Pos_, r1, r2)) {
-			crushSpearNum++;//j‚Ì”1Œ¸‚ç‚·(‰ó‚ê‚½j‚Ì”{‚P)
+		if (depositCollideF&&Helper::GetCircleCollide(depositPos, Pos_, r1, r2)) {
+			crushSpearNum=3;//j‚Ì”1Œ¸‚ç‚·(‰ó‚ê‚½j‚Ì”{‚P)
+			anime_name_ = AnimeName::CRUSH;
 			depositDelF = TRUE;
 		}
 		depositDelTime = 0;

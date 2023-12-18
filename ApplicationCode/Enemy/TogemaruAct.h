@@ -26,14 +26,17 @@ private:
 private:
 	//当たり判定周り
 	void CollideDeposit();
-
-	//鉱石座標
-	static Vector3 depositPos;
 	//
-	bool depositDelF = FALSE;
+	bool depositCollideF = FALSE;
+	//
 	int32_t depositDelTime = 0;
 	//
 	Vector3 DepositReproduction();
+public:
+	//鉱石座標
+	static Vector3 depositPos;
+	//
+	static bool depositDelF;
 public:
 	//アニメーション名前
 	enum AnimeName
@@ -126,6 +129,8 @@ public:
 
 	//鉱石座標
 	Vector3 GetDepositPos()const { return depositPos; }
+	//
+	bool GetDepositDelF()const { return depositDelF; }
 
 	// セッター //
 	void SetPlayerIns(Player* player) { Player_ = player; }

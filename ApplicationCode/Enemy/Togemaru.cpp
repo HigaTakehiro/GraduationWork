@@ -108,6 +108,11 @@ void Togemaru::AnimationSett()
 	case TogemaruAct::AnimeName::ROLE:
 		AddIndex(m_Model_Role, 2);
 		break;
+
+	case TogemaruAct::AnimeName::CRUSH:
+		AddIndex(m_Model_Crush, 4);
+		break;
+
 	}
 }
 
@@ -124,6 +129,9 @@ void Togemaru::InitAnimatin()
 	//ìÀêi
 	for (size_t i = 0; i < 2; i++) {
 		m_Model_Role[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_rot.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+	}
+	for(size_t i=0;i<4;i++){
+		m_Model_Crush[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
 }
 
