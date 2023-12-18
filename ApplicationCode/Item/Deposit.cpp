@@ -8,7 +8,7 @@ Deposit::~Deposit()
 	safe_delete(model_);
 }
 
-void Deposit::Initialize(Vector3 pos)
+void Deposit::Initialize(Vector3 pos,bool isDestroy,Camera*camera)
 {
 	model_ = Shapes::CreateSquare({ 0.0f, 0.0f }, { 64.0f, 64.0f }, "ironOre.png", { 2.0f, 2.0f }, { 0.5f, 0.5f }, {0.0f, 2.0f}, {64.0f, 64.0f});
 	deposit_ = Object3d::UniquePtrCreate(model_);
@@ -20,6 +20,12 @@ void Deposit::Initialize(Vector3 pos)
 	hp_ = 5;
 	hitCoolTimer_ = hitCoolTime_ = 30;
 
+	if (isDestroy) {
+		this->isDestroy = isDestroy;
+		color_ = { 1,1,1,1 };
+		parPos_ = pos;//生成座標
+		desParticle_ = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera);
+	}
 }
 
 void Deposit::Update(const Vector3& playerPos)
@@ -31,8 +37,57 @@ void Deposit::Update(const Vector3& playerPos)
 		hitCoolTimer_++;
 	}
 
+
+	if(this->isDestroy)
+	{
+		//エフェクト生成
+		if (destroyF_) {
+			DestroyEffect();
+			//鉱石透明に
+			color_.z -= 0.02f;
+		}
+		
+		desParticle_->Update();
+
+		deposit_->SetColor(color_);
+	}
+
 	deposit_->Update();
 
+}
+
+void Deposit::ParticleDraw()
+{
+	if (!this->isDestroy)return;
+
+	desParticle_->Draw(DirectXSetting::GetIns()->GetCmdList());
+}
+
+
+void Deposit::DestroyEffect()
+{
+	for (size_t i=0;i<1; i++) {
+
+		if (color_.z <= 0.8f)break;
+		const float rnd_pos = 0.01f;
+		Vector3 ppos = parPos_;
+		ppos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		ppos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		ppos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+		const float rnd_vel = 0.06f;
+		Vector3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+		Vector3 acc{};
+		const float rnd_acc = 0.001f;
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		// 追加
+		desParticle_->Add(60, ppos, vel, acc, 0.6f, 0.2f, { 0,0.f,0 }, { 0.2f,0.2f,0.2f }, 1, 0);
+	}
 }
 
 void Deposit::Draw()

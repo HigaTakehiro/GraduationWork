@@ -72,7 +72,7 @@ void SecBossScene::Initialize()
 	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
 	Deposit_.reset(new Deposit());
-	Deposit_->Initialize(Vector3(10, -2.5f, 0.f));
+	Deposit_->Initialize(Vector3(10, -2.5f, 0.f),true,camera_.get());
 
 
 	SoundManager::GetIns()->StopAllBGM();
@@ -183,15 +183,16 @@ void SecBossScene::Update()
 
 	//Õ“ËŽžˆê’U”jŠü
 	if(TogemaruAct::depositDelF&&!m_DepositCreate){
+		Deposit_->SetDestroyF(true);
+	}
+	if (Deposit_->GetDepositAlpha() <= 0.f) {
 		m_DepositCreate = TRUE;
 		Deposit_.reset(nullptr);
 	}
-	else{
-		if(m_DepositCreate){
-			Deposit_.reset(new Deposit());
-			Deposit_->Initialize(TogemaruAct::depositPos);
-			m_DepositCreate = FALSE;
-		}
+	if(!TogemaruAct::depositDelF&&m_DepositCreate){
+		Deposit_.reset(new Deposit());
+		Deposit_->Initialize(TogemaruAct::depositPos,true,camera_.get());
+		m_DepositCreate = FALSE;
 	}
 	if (Deposit_ != nullptr) {
 		Deposit_->Update(player_->Get());
@@ -238,8 +239,10 @@ void SecBossScene::Draw()
 	map_->BridgeDraw();
 	if (!TogemaruAct::depositDelF) {
 		Deposit_->Draw();
+		
 	}
 	boss_->Draw2();
+	Deposit_->ParticleDraw();
 	Object3d::PostDraw();
 	//shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 

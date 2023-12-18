@@ -50,7 +50,7 @@ void Togemaru::Upda()
 	}
 
 	//–{‘Ì
-	m_Body->SetScale({ 0.040f, 0.040f, 0.040f });
+	m_Body->SetScale({ 0.030f, 0.040f, 0.040f });
 	m_Body->SetPosition(Action->GetPos());
 	m_Body->SetRotation(Vector3(0, 0, 0));
 	m_Body->Update();

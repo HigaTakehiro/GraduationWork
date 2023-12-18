@@ -15,8 +15,7 @@ bool TogemaruAct::depositDelF = false;
 void TogemaruAct::Transition()
 {
 	constexpr float inBossroomZ = 12.f;
-	if (Player_->GetPos().z < inBossroomZ)
-	{
+	if (Player_->GetPos().z < inBossroomZ){
 		beginBattle = TRUE;
 	}
 
@@ -31,6 +30,16 @@ void TogemaruAct::Transition()
 		//逃げ惑う
 		act_ = Act::RUNAWAY;
 	}
+
+	//衝突半径
+	constexpr float pr = 1.f, er = 1.5f;
+	//衝突時のプレイヤーのけぞり
+	bool AccelJudg =(rushEaseT >= 0.2f&& rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
+	float KnockDis = AccelJudg ? 0.3f : 1.f;//のけぞり値
+
+	//判定
+	bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr,er);
+	Helper::ColKnock(Player_->GetPos(), Pos_,Player_,isCollide,KnockDis);
 
 	//座標の範囲指定
 	Pos_.x = std::clamp(Pos_.x, -10.f, 10.f);
@@ -59,7 +68,7 @@ void TogemaruAct::Move()
 	anime_name_ = AnimeName::WALK;
 	animationWaitTime = 0;
 
-	movSpeed = 0.1f;
+	movSpeed = 0.3f;
 	//向いた方に移動する
 	move = { 0.f,0.f, 0.1f, 0.0f };
 	matRot = XMMatrixRotationY(XMConvertToRadians(Rot_.y));
@@ -100,21 +109,21 @@ float TogemaruAct::Walk()
 
 float TogemaruAct::Follow()
 {
-	//
-	constexpr float AngleCorrVal = 70.f;
 	float pi_180 = 180.f;
-
+	//
+	constexpr float AngleCorrVal = PI_180/PI;
+	
 	//プレイヤー座標
 	XMVECTOR posP = { Player_->GetPos().x,Player_->GetPos().y,Player_->GetPos().z };
 	//敵座標
 	XMVECTOR posE = { Pos_.x,Pos_.y,Pos_.z };
 	//敵からプレイヤーへのベクトル
-	XMVECTOR Vec = XMVectorSubtract(posE, posP);
+	XMVECTOR Vec = XMVectorSubtract(posP, posE);
 	//上のベクトルから回転角求める
 	float angle = atan2f(Vec.m128_f32[0], Vec.m128_f32[2]);
 
 	//追従角度返す
-	return angle * AngleCorrVal + pi_180;
+	return angle *AngleCorrVal;
 }
 
 void TogemaruAct::Attack_Rush()
@@ -181,13 +190,13 @@ bool TogemaruAct::CrushSpear()
 	//敵座標
 	XMVECTOR posE = { Pos_.x,Pos_.y,Pos_.z };
 	//敵からプレイヤーへのベクトル
-	XMVECTOR Vec = XMVectorSubtract(posE, posP);
+	XMVECTOR Vec = XMVectorSubtract(posP, posE);
 	//上のベクトルから回転角求める
 	float angle = atan2f(Vec.m128_f32[0], Vec.m128_f32[2]);
 
 	if(crushSpearNum>=3){
 		//プレイヤーの逆向く
-		Rot_.y=angle * 70.f;
+		Rot_.y=angle * 60.f+180.f;
 
 		return true;
 	}
@@ -242,8 +251,9 @@ void TogemaruAct::CollideDeposit()
 	}
 	else
 	{
+		bool col = Helper::GetCircleCollide(depositPos, Pos_, r1, r2);
 		//鉱石と衝突したら
-		if (depositCollideF&&Helper::GetCircleCollide(depositPos, Pos_, r1, r2)) {
+		if (depositCollideF&&col) {
 			crushSpearNum=3;//針の数1減らす(壊れた針の数＋１)
 			anime_name_ = AnimeName::CRUSH;
 			depositDelF = TRUE;
