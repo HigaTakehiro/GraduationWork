@@ -9,7 +9,7 @@ public: //メンバ関数
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="listName">リスト名</param>
-	SkillList(std::string listName) : listName_(listName) {};
+	SkillList(std::string listName);
 
 	/// <summary>
 	/// デストラクタ
@@ -20,7 +20,13 @@ public: //メンバ関数
 	/// 全スキル使用
 	/// </summary>
 	/// <param name="depth">階層</param>
-	void Use(const int32_t depth) override;
+	void AllUse() override;
+
+	/// <summary>
+	/// スキル使用
+	/// </summary>
+	/// <param name="name">スキル名</param>
+	void Use(const std::string& name);
 
 	/// <summary>
 	/// スキルを追加
@@ -29,10 +35,6 @@ public: //メンバ関数
 	void AddSkill(ISkill* skill);
 
 private: //メンバ変数
-	/// <summary>
-	/// スキルリスト名
-	/// </summary>
-	std::string listName_;
 	/// <summary>
 	/// スキルリスト
 	/// </summary>

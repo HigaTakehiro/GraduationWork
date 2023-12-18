@@ -1,14 +1,28 @@
 #include "SkillList.h"
 
-void SkillList::Use(const int32_t depth)
+SkillList::SkillList(std::string listName)
 {
-	std::string message = this->listName_;
+	name_ = listName;
+}
+
+void SkillList::AllUse()
+{
+	std::string message = name_;
 	message += "\n";
 
 	printf_s(message.c_str());
 
 	for (ISkill* skill : mList_) {
-		skill->Use(depth + 1);
+		skill->AllUse();
+	}
+}
+
+void SkillList::Use(const std::string& name)
+{
+	for (ISkill* skill : mList_) {
+		if (skill->GetName() == name) {
+			skill->AllUse();
+		}
 	}
 }
 

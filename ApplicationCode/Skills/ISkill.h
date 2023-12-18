@@ -9,8 +9,18 @@ public: //メンバ関数
 	/// </summary>
 	virtual ~ISkill() {}
 	/// <summary>
-	/// スキル使用
+	/// 全スキル使用
 	/// </summary>
 	/// <param name="depth"></param>
-	virtual void Use(const int32_t depth) = 0;
+	virtual void AllUse() = 0;
+	/// <summary>
+	/// 名前を取得
+	/// </summary>
+	/// <returns>名前</returns>
+	std::string GetName() { return name_; }
+protected: //メンバ変数
+	/// <summary>
+	/// 名前
+	/// </summary>
+	std::string name_;
 };

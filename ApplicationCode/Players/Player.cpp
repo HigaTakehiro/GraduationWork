@@ -5,6 +5,8 @@
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
 #include "SoundManager.h"
+#include "SkillList.h"
+#include "StatusUpSkill.h"
 
 void Player::Initialize()
 {
@@ -91,6 +93,19 @@ void Player::Initialize()
 
 	PlayerStatusSetting();
 
+	SkillList* skillList = new SkillList("list");
+	StatusUpSkill* hpUP = new StatusUpSkill("hpUP");
+	StatusUpSkill* hpDown = new StatusUpSkill("hpDown");
+	StatusUpSkill* speedUp = new StatusUpSkill("speedUp");
+	skillList->AddSkill(hpUP);
+	skillList->AddSkill(hpDown);
+	skillList->AddSkill(speedUp);
+	skillList->AllUse();
+	skillList->Use("hpUP");
+	skillList->Use("hpDown");
+
+	safe_delete(skillList);
+	safe_delete(hpUP);
 }
 
 void Player::Update()

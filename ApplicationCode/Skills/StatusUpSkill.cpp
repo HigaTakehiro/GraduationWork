@@ -1,6 +1,11 @@
 #include "StatusUpSkill.h"
 
-void StatusUpSkill::Use(const int32_t depth)
+StatusUpSkill::StatusUpSkill(std::string skillName)
 {
-	printf(this->skillName_.c_str());
+	name_ = skillName;
+}
+
+void StatusUpSkill::AllUse()
+{
+	printf(this->name_.c_str());
 }
