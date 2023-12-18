@@ -1,11 +1,15 @@
 #include "TogemaruAct.h"
 
 #include <algorithm>
+#include <random>
 
 #include "Easing.h"
+#include "Helper.h"
 #define PI 3.14
 #define PI_180 180
 #define PI_360 360
+
+Vector3 TogemaruAct::depositPos = {};
 
 void TogemaruAct::Transition()
 {
@@ -211,6 +215,46 @@ void TogemaruAct::RunAway()
 		crushSpearNum = 0;
 		act_ = Act::MOVE;
 	}
+}
+
+void TogemaruAct::CollideDeposit()
+{
+	//判定用の半径
+	constexpr float r1 = 1.f, r2 = 2.f;
+
+	//鉱石復活するまでは3秒
+	constexpr int32_t ReproductionTimeMax = 180;
+	if(depositDelF)
+	{
+		if(++depositDelTime>ReproductionTimeMax)
+		{
+			//出現
+			depositPos = DepositReproduction();
+			depositDelF = FALSE;
+		}
+	}
+	else
+	{
+		//鉱石と衝突したら
+		if (Helper::GetCircleCollide(depositPos, Pos_, r1, r2)) {
+			crushSpearNum++;//針の数1減らす(壊れた針の数＋１)
+			depositDelF = TRUE;
+		}
+		depositDelTime = 0;
+	}
+}
+
+Vector3 TogemaruAct::DepositReproduction()
+{
+	//出す座標は4点 上・下・右・左
+	Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,10) ,Vector3(10,-2.5f,0) ,Vector3(-10,-2.5f,0) };
+
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
+	std::uniform_int_distribution<> rand(0,3);
+
+	//出現する座標はPosListの中からランダム
+	return posList[rand(mt)];
 }
 
 
