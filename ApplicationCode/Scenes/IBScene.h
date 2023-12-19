@@ -49,8 +49,6 @@ public: //メンバ関数
 	/// </summary>
 	void Finalize();
 
-protected: //静的メンバ関数
-
 private: //メンバ関数
 	/// <summary>
 	/// シーン切り替え処理
@@ -70,6 +68,11 @@ private: //メンバ関数
 	/// UI更新処理
 	/// </summary>
 	void UIUpdate();
+
+	/// <summary>
+	/// スキル画面更新処理
+	/// </summary>
+	void SkillUIUpdate();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -129,5 +132,11 @@ private: //メンバ変数
 	bool skillFlag = false;
 	int32_t skillCount = 0;
 	int32_t skillCount2 = 0;
+
+	//スキル画面スプライト
+	//ウィンドウUIスプライト
+	std::unique_ptr<Sprite> window_[3];
+	//スキル画面プレイヤースプライト
+	std::unique_ptr<Sprite> skillPlayer_[4];
 };
 

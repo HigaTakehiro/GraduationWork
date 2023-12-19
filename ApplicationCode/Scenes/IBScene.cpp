@@ -37,6 +37,9 @@ void IBScene::Initialize()
 	//3dオブジェクト初期化
 	for (int32_t i = 0; i < 4; i++) {
 		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 128.0f }, true);
+		skillPlayer_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::Image2DName::IdlePlayer, { 150.f, 600.f }, { 1.f, 1.f, 1.f, 1.f }, { 0.5f, 0.5f });
+		skillPlayer_[i]->SetTextureRect({ (float)i * 128.f, 2.f }, {128.f, 128.f});
+		skillPlayer_[i]->SetSize({ 128.f, 128.f });
 	}
 	fireModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "fire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * 0, 1.0f }, { 128.0f, 128.0f }, true);
 	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
@@ -58,6 +61,17 @@ void IBScene::Initialize()
 	ib_ = new IntermediateBase();
 	ib_->Initialize();
 	ib_->LoadFloor();
+
+	//スキル画面
+	for (int32_t i = 0; i < 3; i++) {
+		window_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::TextWindow, { 0.f, 0.f }, { 1.f, 1.f, 1.f, 1.f }, { 0.5f, 0.5f });
+	}
+	window_[0]->SetPosition({ 280.f, 250.f });
+	window_[0]->SetSize({ 450.f, 450.f });
+	window_[1]->SetPosition({ 400.f, 600.f });
+	window_[1]->SetSize({ 200.f, 200.f });
+	window_[2]->SetPosition({ 900.f, 300.f });
+	window_[2]->SetSize({ 650.f, 550.f });
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();
@@ -193,6 +207,10 @@ void IBScene::Draw()
 	}
 	else if (skillFlag == true) {
 		skillSprite_->Draw();
+		for (int32_t i = 0; i < 3; i++) {
+			window_[i]->Draw();
+		}
+		skillPlayer_[animeCount_]->Draw();
 	}
 	schange->Draw();
 	Sprite::PostDraw();
@@ -204,7 +222,9 @@ void IBScene::Draw()
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	//std::wstring hx = std::to_wstring(SceneManager::GetHP());
 	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
-	playerUI_->TextUIDraw();
+	if (skillFlag != true) {
+		playerUI_->TextUIDraw();
+	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -213,7 +233,9 @@ void IBScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	playerUI_->SpriteDraw();
+	if (skillFlag != true) {
+		playerUI_->SpriteDraw();
+	}
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -397,5 +419,9 @@ void IBScene::Animation()
 void IBScene::UIUpdate()
 {
 
+}
+
+void IBScene::SkillUIUpdate()
+{
 }
 

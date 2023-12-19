@@ -327,6 +327,10 @@ void TutorialScene::SceneChange()
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
 		SceneManager::SceneChange(SceneManager::SceneName::Boss2);
 	}
+
+	if (PadInput::GetIns()->PushButton(PadInput::Button_A) && PadInput::GetIns()->PushButton(PadInput::Button_RB) && PadInput::GetIns()->PushButton(PadInput::Button_LB)) {
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
+	}
 }
 
 void TutorialScene::CameraSetting()

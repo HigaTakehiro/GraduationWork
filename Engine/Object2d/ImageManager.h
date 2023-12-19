@@ -50,7 +50,8 @@ public: //‰æ‘œ–¼
 		LUSA3,
 		//
 		STONE,
-		TestPlay
+		TestPlay,
+		IdlePlayer,
 	};
 public: //ƒƒ“ƒoŠÖ”
 	/// <summary>

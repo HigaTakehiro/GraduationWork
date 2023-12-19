@@ -23,6 +23,7 @@ void ImageManager::Initialize() {
 	Texture::LoadTexture(Image2DName::USA_1, L"Engine/Resources/Images/usa/usa_idle1.png");
 	Texture::LoadTexture(Image2DName::USA_2, L"Engine/Resources/Images/usa/usa_idle2.png");
 	Texture::LoadTexture(Image2DName::USA_3, L"Engine/Resources/Images/usa/usa_idle3.png");
+	Sprite::LoadTexture(Image2DName::IdlePlayer, L"Engine/Resources/Images/tuyu_idle.png");
 
 	Texture::LoadTexture(Image2DName::BUSA1, L"Engine/Resources/Images/usa_back/usa_back1.png");
 	Texture::LoadTexture(Image2DName::BUSA2, L"Engine/Resources/Images/usa_back/usa_back2.png");
