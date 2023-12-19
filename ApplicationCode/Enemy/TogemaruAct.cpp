@@ -24,6 +24,11 @@ void TogemaruAct::Transition()
 		(this->*ActionList[act_])();
 	}
 
+	//針とプレイヤー衝突
+	if(CollideSpear()){
+		Player_->SubHP(1);
+	}
+
 	CollideDeposit();
 	//棘が3つ壊れたら
 	if (CrushSpear() == TRUE){
@@ -54,7 +59,7 @@ void TogemaruAct::ResetParam_Spear()
 	//
 	rushEaseT =0.f;
 	ShotRange = 0.f;
-	spearsAlpha = 0.f;
+	spearsAlpha = { 0.f };
 	waitShotCount = 0;
 	reproductionTime = 0;
 	//座標リセット
@@ -94,7 +99,9 @@ void TogemaruAct::Move()
 	if(++actionCount%ActionInter==0)
 	{
 		RushStartPos = Pos_;
-		spearsAlpha = 1.f;
+		for (size_t i = 0; i < spearSize; i++) {
+			spearsAlpha[i] = 1.f;
+		}
 		anime_name_ = AnimeName::ROLE;
 		act_ = Act::ATTACK_SHOTSPEAR;
 	}
@@ -159,7 +166,9 @@ void TogemaruAct::Attack_ShotSpear()
 	if (isShot) {
 		anime_name_ = AnimeName::IdlE;
 		if (canShot) {
-			spearsAlpha -= 0.02f;//だんだん薄く
+			for (size_t i = 0; i < spearSize; i++) {
+				spearsAlpha[i] -= 0.02f;//だんだん薄く
+			}
 			ShotRange += 0.2f;//範囲広げてく
 		}
 		//発射終了
@@ -260,6 +269,24 @@ void TogemaruAct::CollideDeposit()
 		}
 		depositDelTime = 0;
 	}
+}
+
+bool TogemaruAct::CollideSpear()
+{
+	//発射時以外判定取らない
+	if (ShotRange <= 0)return false;
+
+	for(size_t i=0;i<spearSize;i++)
+	{
+		if (spearsAlpha[i] <= 0.f)continue;
+		if (Helper::GetCircleCollide(Player_->GetPos(), { SpearPos_[i].x,SpearPos_[i].y,SpearPos_[i].z + 3.f }
+			,1.f, 1.f))
+		{
+			spearsAlpha[i] = 0.f;//当たったら描画消す
+			return true;
+		}
+	}
+	return false;
 }
 
 Vector3 TogemaruAct::DepositReproduction()

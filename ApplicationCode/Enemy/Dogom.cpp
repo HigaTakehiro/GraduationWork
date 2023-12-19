@@ -859,17 +859,14 @@ void Dogom::CoollisionFace()
 
 void Dogom::CoollisionArm()
 {
-
 	bool canCol = arm_move_ == DEFAULT&& m_player->getisHammerActive();
 
 	if (canCol) {
-	
-
 		for (size_t i = 0; i < 2; i++) {
 		 	//
 			if (m_ArmHp[i] <= 0)continue;
 			constexpr int damval = 1;
-			if (m_Arm[i]->GetIsHit() &&m_ArmDamCool[i]<2) {
+			if (Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f) &&m_ArmDamCool[i]<2) {
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::firstBossHitAttack, 0.2f);
 			}
 			if (Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z+3.f),2.f,XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z),1.f)) {

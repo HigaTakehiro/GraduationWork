@@ -111,7 +111,7 @@ void Togemaru::Upda()
 		m_Spears[i]->SetRotation(Vector3(90, 0, 0));
 		m_Spears[i]->SetScale(Vector3(0.02f, 0.02f, 1.f));
 		m_Spears[i]->SetPosition(Action->GetSpearPos(i));//ActƒNƒ‰ƒX‚©‚çˆø‚Á’£‚é
-		m_Spears[i]->SetColor(XMFLOAT4(1, 1, 1, Action->GetSpearAlpha()));
+		m_Spears[i]->SetColor(XMFLOAT4(1, 1, 1, Action->GetSpearAlpha(i)));
 		m_Spears[i]->Update();
 	}
 

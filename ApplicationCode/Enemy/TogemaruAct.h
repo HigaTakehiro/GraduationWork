@@ -15,7 +15,7 @@ private:
 	std::array<Vector3, spearSize>SpearPos_ = {};
 	std::array<float, spearSize>SpearAngle_ = {};
 	//針のアルファ値
-	float spearsAlpha = 0.f;
+	std::array<float,spearSize>spearsAlpha ={};
 	//棘の発射範囲
 	float ShotRange = 0.f;
 	//発射フラグ
@@ -113,7 +113,7 @@ private:
 	//RunAway()条件
 	bool CrushSpear();
 
-
+	bool CollideSpear();
 public:
 	//行動遷移
 	void Transition();
@@ -130,7 +130,7 @@ public:
 
 	int32_t GetCrushSpearNum()const { return crushSpearNum; }
 
-	float GetSpearAlpha()const { return spearsAlpha; }
+	float GetSpearAlpha(int index)const { return spearsAlpha[index]; }
 
 	
 	//
