@@ -77,6 +77,8 @@ void SecBossScene::Initialize()
 
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss, TRUE, 0.4f);
+	cameraPos_.y = 12;
+	targetPos_.y = 0;
 
 }
 
@@ -120,14 +122,8 @@ void SecBossScene::Update()
 		cameraPos_.y += shake_->GetShakePos();
 		targetPos_.y += shake_->GetShakePos();
 	}*/
-	else {
-		cameraPos_.y = 12;
-		targetPos_.y = 0;
 
-	}
-	//if (boss_->GetAppearFlag() == FALSE) {
-	camera_->SetEye(cameraPos_);
-	camera_->SetTarget(targetPos_);
+
 	//}//
 		//boss_->SetCamera(camera_.get());
 	light_->Update();
@@ -145,6 +141,19 @@ void SecBossScene::Update()
 	_hummmerObb = &l_obb;
 
 	boss_->Upda();
+
+
+	TogemaruAct::DefaultPos = cameraPos_;
+	if (!TogemaruAct::depositDelF) {
+		TogemaruAct::oldCameraPos = cameraPos_;
+	}
+	cameraPos_.x += TogemaruAct::cameraPos.x;
+	cameraPos_.y += TogemaruAct::cameraPos.y;
+
+	
+	//if (boss_->GetAppearFlag() == FALSE) {
+	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
 
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
