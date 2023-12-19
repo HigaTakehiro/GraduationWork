@@ -1,5 +1,7 @@
 #include "Togemaru.h"
 
+#include <algorithm>
+
 #include "Shapes.h"
 
 #define MapX_Mx 10.f
@@ -58,6 +60,23 @@ void Togemaru::UI_Upda()
 	//補正値
 	float corrValX = +0.3f;
 
+	//鉱石の色消すときの画像番号指定用
+	int index = m_ScaleArray-Action->GetCrushSpearNum();
+
+	if(Action->GetCrushSpearNum()==0)
+	{
+		for (size_t i = 0; i < m_ScaleArray; i++) {
+			ScaleColor[i].w += 0.05f;
+		}
+	}
+	else
+	{
+		for (size_t i = index; i < m_ScaleArray; i++) {
+			if (Action->GetCrushSpearNum() == 0)break;
+			ScaleColor[i].w -= 0.02f;
+		}
+	}
+
 	for(size_t i=0;i<m_ScaleArray;i++){
 		ScaleUI_Pos[i] = { uiposX[i]+corrValX,Pos_.y + 2.5f,Pos_.z };
 		ScaleUI_Scl[i] = { sizeX,sizeY,0.1f };
@@ -66,6 +85,8 @@ void Togemaru::UI_Upda()
 		m_ScaleSizeUI[i]->SetPosition(ScaleUI_Pos[i]);
 		m_ScaleSizeUI[i]->SetScale(ScaleUI_Scl[i]);
 		m_ScaleSizeUI[i]->Update();
+
+		ScaleColor[i].w = std::clamp(ScaleColor[i].w, 0.f, 1.f);
 	}
 }
 
@@ -171,7 +192,6 @@ void Togemaru::AnimationSett()
 	case TogemaruAct::AnimeName::CRUSH:
 		AddIndex(m_Model_Crush, 4);
 		break;
-
 	}
 }
 

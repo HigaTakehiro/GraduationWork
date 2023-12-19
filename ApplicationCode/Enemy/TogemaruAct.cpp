@@ -251,10 +251,10 @@ void TogemaruAct::CollideDeposit()
 	}
 	else
 	{
-		bool col = Helper::GetCircleCollide(depositPos, Pos_, r1, r2);
+		bool col = Helper::GetCircleCollide({ depositPos.x,depositPos.y,depositPos.z + 3.f }, { Pos_.x,Pos_.y,Pos_.z + 3.f }, r1, r2);
 		//zÎ‚ÆÕ“Ë‚µ‚½‚ç
 		if (depositCollideF&&col) {
-			crushSpearNum=3;//j‚Ì”1Œ¸‚ç‚·(‰ó‚ê‚½j‚Ì”{‚P)
+			++crushSpearNum;//j‚Ì”1Œ¸‚ç‚·(‰ó‚ê‚½j‚Ì”{‚P)
 			anime_name_ = AnimeName::CRUSH;
 			depositDelF = TRUE;
 		}
