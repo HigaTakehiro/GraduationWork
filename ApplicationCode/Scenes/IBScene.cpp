@@ -219,11 +219,26 @@ void IBScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//ƒeƒLƒXƒg•`‰æ”ÍˆÍ
 
-	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
+	D2D1_RECT_F textDrawRange = { 350, 550, 700, 750 };
 	//std::wstring hx = std::to_wstring(SceneManager::GetHP());
 	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
-	if (skillFlag != true) {
+	std::wstring indent = L"\n";
+	std::wstring statusMessage = L"HP : ";
+	statusMessage += std::to_wstring(playerUI_->GetMaxHP());
+	statusMessage += indent;
+	statusMessage += L"UŒ‚—Í : ";
+	statusMessage += std::to_wstring(playerUI_->GetATK());
+	statusMessage += indent;
+	statusMessage += L"–hŒä—Í : ";
+	statusMessage += std::to_wstring(playerUI_->GetDef());
+	statusMessage += indent;
+	statusMessage += L"‘f‘‚³ : ";
+	statusMessage += std::to_wstring(playerUI_->GetSPD());
+	if (!skillFlag) {
 		playerUI_->TextUIDraw();
+	}
+	else {
+		text_->Draw("meiryo_16", "white", statusMessage, textDrawRange);
 	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 

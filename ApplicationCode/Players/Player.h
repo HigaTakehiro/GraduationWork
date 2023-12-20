@@ -181,6 +181,24 @@ public: //ƒƒ“ƒoŠÖ”
 	/// <returns>€–Sƒtƒ‰ƒO</returns>
 	bool GetIsDead() { return isDead_; }
 
+	/// <summary>
+	/// UŒ‚—Í‚ğæ“¾
+	/// </summary>
+	/// <returns>UŒ‚—Í</returns>
+	int32_t GetATK() { return atk_; }
+
+	/// <summary>
+	/// –hŒä—Í‚ğæ“¾
+	/// </summary>
+	/// <returns>–hŒä—Í</returns>
+	int32_t GetDef() { return def_; }
+
+	/// <summary>
+	/// ‘f‘‚³‚ğæ“¾
+	/// </summary>
+	/// <returns>‘f‘‚³</returns>
+	int32_t GetSPD() { return spd_; }
+
 private: //ƒƒ“ƒoŠÖ”
 
 	/// <summary>
@@ -259,6 +277,16 @@ private: //ƒƒ“ƒo•Ï”
 	int32_t hp_;
 	int32_t maxHp_;
 	int32_t initHP_;
+	//UŒ‚—Í
+	int32_t atk_ = 1;
+	int32_t initAtk_;
+	//–hŒä—Í
+	int32_t def_ = 1;
+	int32_t initDef_;
+	//‘f‘‚³
+	int32_t spd_ = 1;
+	int32_t initSpd_;
+
 	//ƒŒƒxƒ‹
 	int32_t level_ = 0;
 	//ŒoŒ±’l
