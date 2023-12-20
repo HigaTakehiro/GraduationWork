@@ -47,13 +47,17 @@ void MunniAction::ImpTexInit()
 void MunniAction::Move()
 {
 	XMFLOAT2 Pos_P = { m_Player_->GetPos().x,m_Player_->GetPos().z };//Player
-	XMFLOAT2 Pos_E = { Pos_.x,Pos_.z };//Enemy
+	XMFLOAT2 Pos_E = { Pos_.x,Pos_.z+3.f };//Enemy
 
-	if(Collision::HitCircle(Pos_E,1.f,Pos_P,2.f)&&!isSearch)
+	if(Collision::HitCircle(Pos_E,1.f,Pos_P,3.f)&&!isSearch)
 	{
 		isFollow = !isFollow;//ƒtƒ‰ƒOØ‚è‘Ö‚¦
 		isSearch = TRUE;//’ÇÕ‚µ‚Ü
 	}
+
+	constexpr float pr = 1.f, er = 1.f;
+	bool isCollide = Helper::GetCircleCollide(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z}, pr, er);
+	Helper::ColKnock(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z}, m_Player_, isCollide, 1.f);
 
 	//’ÇÕŽžŠÔ
 	FollowCount = isSearch ? ++FollowCount : 0;
@@ -241,6 +245,14 @@ void MunniAction::ImpTexUpda()
 
 	if (isTexScling)
 	{
+		constexpr float pr = 1.f, er = 2.5f;
+
+		bool isCollide = Helper::GetCircleCollide(m_Player_->GetPos(), Pos_, pr, er);
+
+		Helper::ColKnock(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z +0.f}, m_Player_, isCollide, 1.f);
+		if (isCollide) {
+			m_Player_->SubHP(1);
+		}
 		// Šg‘å
 		impTexScl = Vector3(impTexScl.x + AddTexScl,
 			impTexScl.y + AddTexScl,
