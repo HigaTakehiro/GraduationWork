@@ -175,6 +175,7 @@
     <ClCompile Include="ApplicationCode\Map\Grass.cpp" />
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp" />
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp" />
+    <ClCompile Include="ApplicationCode\Map\TreasureBox.cpp" />
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp" />
     <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp" />
     <ClCompile Include="ApplicationCode\Players\Player.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h" />
     <ClInclude Include="ApplicationCode\Map\StageCount.h" />
     <ClInclude Include="ApplicationCode\Map\Stairs.h" />
+    <ClInclude Include="ApplicationCode\Map\TreasureBox.h" />
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h" />
     <ClInclude Include="ApplicationCode\Players\AttackEffect.h" />
     <ClInclude Include="ApplicationCode\Players\Player.h" />
