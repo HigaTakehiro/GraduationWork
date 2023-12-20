@@ -231,6 +231,14 @@ void BaseEnemy::DamageFlash()
 	}
 }
 
+void BaseEnemy::PlayerHitBody(float dis, bool& f)
+{
+	Vector3 posp = {}, pose = {};
+
+	Helper::ColKnock(posp, pose, _player.get(),f,dis);
+}
+
+
 
 
 
