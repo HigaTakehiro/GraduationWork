@@ -317,12 +317,6 @@
     <ClCompile Include="ApplicationCode\Scenes\SecBossScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Skills\SkillList.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ApplicationCode\Skills\StatusUpSkill.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players</Filter>
     </ClCompile>
@@ -333,6 +327,12 @@
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\SkillList.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\StatusUpSkill.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClCompile>
   </ItemGroup>
@@ -556,9 +556,6 @@
     <ClInclude Include="ApplicationCode\Enemy\Togemaru.h" />
     <ClInclude Include="ApplicationCode\Enemy\TogemaruAct.h" />
     <ClInclude Include="ApplicationCode\Scenes\SecBossScene.h" />
-    <ClInclude Include="ApplicationCode\Skills\ISkill.h" />
-    <ClInclude Include="ApplicationCode\Skills\SkillList.h" />
-    <ClInclude Include="ApplicationCode\Skills\StatusUpSkill.h" />
     <ClInclude Include="ApplicationCode\Players\AttackEffect.h">
       <Filter>ソース ファイル\ApplicationCode\Players</Filter>
     </ClInclude>
@@ -572,6 +569,15 @@
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Skills\BaseSkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\ISkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\SkillList.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\StatusUpSkill.h">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
   </ItemGroup>
