@@ -216,6 +216,9 @@ void Togemaru::InitAnimatin()
 
 bool Togemaru::Appear()
 {
+	Pos_ = Vector3(0,0,-10);
+
+
 	return true;
 }
 
