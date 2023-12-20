@@ -1,6 +1,7 @@
 #pragma once
 #include "Object3d.h"
 #include "Model.h"
+#include "ParticleManager.h"
 #include "Vector3.h"
 
 class Deposit
@@ -14,7 +15,7 @@ public: //メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Vector3 pos);
+	void Initialize(Vector3 pos,bool isDetroy=FALSE,Camera*camera=nullptr);
 
 	/// <summary>
 	/// 更新処理
@@ -82,5 +83,26 @@ private: //メンバ変数
 	int32_t hitCoolTimer_;
 	//マップ番号
 	int mapnum_;
+
+private:
+	//
+	bool isDestroy = FALSE;
+	//破壊フラグ
+	bool destroyF_ = FALSE;
+	//破壊エフェクト
+	std::unique_ptr<ParticleManager>desParticle_;
+	//パーティクル用
+	int32_t particleCreateCool_;//ずる賢いがこうでもしないと参照あっちこっち行って複雑すぎる
+	Camera* camera_ = nullptr;
+	Vector3 parPos_ = {};
+	//鉱石の色
+	DirectX::XMFLOAT4 color_={1,1,1,1};
+public:
+	void SetCameraIns(Camera* ins) { camera_ = ins; }
+	void SetDestroyF(bool f) { /* if(particleCreateCool_ > 60)*/ { destroyF_ = f;/* particleCreateCool_ = 0;*/ } }
+
+	float GetDepositAlpha()const { return color_.w; }
+	void DestroyEffect();
+	void ParticleDraw();
 };
 

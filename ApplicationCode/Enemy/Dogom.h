@@ -18,13 +18,7 @@ private:
     float m_CrossAreaAlpha = 0.f;
     std::array<std::unique_ptr<Object3d>,2> m_Arm;
     std::array<std::unique_ptr<Object3d>, 2> m_ImpactTex;
-    std::unique_ptr<Sprite>m_HpTex=nullptr;
-    std::unique_ptr<Sprite>m_HpTex_Frame = nullptr;
-    std::unique_ptr<Sprite>m_HpTex_Inner = nullptr;
-   
-    float m_hpInnerSizeX=400.f, InnerSclingT;;
-    float NowHP, BeforeHP;
-    bool bravegaugeF;
+    
     std::array<std::unique_ptr<Object3d>,2>m_ArmHpTex{};
     //プレイヤーモデル
     Model* BodyModel_[8];
@@ -66,7 +60,6 @@ private:
     bool isLeaveBoss;
     float m_EaseRemBody;
     float nextAngle = 180.f;
-    float m_BodyAlpha = 1.f;
     int randAct = 0;
 
     UINT m_ImpactCout=0;
@@ -74,7 +67,7 @@ private:
     UINT ActionRandom=1;
     UINT BossBodyMovingT=1;
     UINT m_KnockInterTime=0;
-    UINT BossMaxHP;
+    
     BOOL m_Knock=FALSE;
     BOOL isAttack;
     BOOL ShadowHpTexisDraw;

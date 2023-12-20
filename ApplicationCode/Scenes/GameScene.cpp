@@ -67,11 +67,12 @@ void GameScene::Initialize()
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->SetPosDeb(enemys_[i]->GetPos2());
 
-	int Num=StageCount::GetIns()->Up();
+	int Num = StageCount::GetIns()->Up();
 
 	map_ = make_unique<GameMap>();
+
 	map_->Initalize(player_, cameraPos_, targetPos_, Num);
-	
+
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
@@ -80,7 +81,10 @@ void GameScene::Initialize()
 	schange->Initialize();
 	schange->SetFadeNum(1);
 	schange->SetFEnd(true);
-
+	aEffect_ = new AttackEffect();
+	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+	aeFlag = false;
+	aeCount = 0;
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
 }
@@ -92,7 +96,7 @@ void GameScene::Update()
 	if (player_->GetHP() <= 0) {
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 	}
-	
+
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			if (ore->GetIsHit() && player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
@@ -162,9 +166,15 @@ void GameScene::Draw()
 	}
 	//boss_->Draw();
 	//boss_->Draw2();
+
 	for (size_t i = 0; i < enemys_.size(); i++)
 		//enemys_[i]->TexDraw();
 	player_->Draw();
+	for (size_t i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i]->GetFlash()) {
+			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+		}
+	}
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
 	}*/
@@ -182,7 +192,7 @@ void GameScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 	//
-	D2D1_RECT_F textDrawRange = {600, 0, 1280, 1280 };
+	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
 	//std::wstring hx = std::to_wstring(player_->GetPos().z);
 	//text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
 	player_->TextUIDraw();
@@ -208,7 +218,7 @@ void GameScene::Finalize()
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
-	//map_->Finalize();
+	map_->Finalize();
 }
 
 void GameScene::SceneChange()
@@ -218,7 +228,7 @@ void GameScene::SceneChange()
 	SceneManager::SetHP(player_->GetHP());
 
 	bool Change = player_->GetNext();
-	if (Change||player_->GetIsDead()) {
+	if (Change || player_->GetIsDead()) {
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
 	}
@@ -294,11 +304,23 @@ void GameScene::EnemyProcess()
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
+			aeFlag = true;
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
+		if (aeFlag == true) {
+			aEffect_->Update(enemyPos[i], enemys_[i]->GetFlash());
+		}
 	}
-
+	if (aeFlag == true) {
+		if (aeCount < 30) {
+			aeCount++;
+		}
+		else {
+			aeCount = 0;
+			aeFlag = false;
+		}
+	}
 
 	//プレイヤーのOBB設定
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],

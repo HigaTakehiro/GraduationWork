@@ -26,13 +26,7 @@ void Dogom::Init()
 	for (int32_t i = 0; i < 8; i++) {
 		BodyModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_face.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
-	m_HpTex=Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-	m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-	m_HpTex_Inner = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-
-	m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));
-	m_HpTex_Inner->SetColor(XMFLOAT3(1, 1, 0));
-
+	
 	m_FeedTex = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
 	m_FeedTex->SetSize(XMFLOAT2(1280, 720));
 	m_FeedTex->SetColor(XMFLOAT3(0, 0, 0));
@@ -69,6 +63,7 @@ void Dogom::Init()
 
 		m_ArmHpTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {128.0f, 128.0f}, "white1x1.png", {128.0f, 64.0f}, {0.f, 0.f}, {128.0f * (float)i, 0.0f}, {128.0f, 128.0f}));
 	}
+	HPUiInit();
 
 	CrossAreaTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "CrossArea.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 }));
 	CrossAreaTex->SetRotation(Vector3(90, 0, 0));
@@ -734,7 +729,7 @@ void Dogom::Wince()
 			{
 				m_BodyPos.x = Easing::easeIn(WinceEaseT, 50.f, ppos.x, oldBodyPos.x);
 				m_BodyPos.z = Easing::easeIn(WinceEaseT, 50.f, ppos.z,oldBodyPos.z);
-				m_BodyPos.y = Easing::easeIn(WinceEaseT, 50.f, -2.f ,2.f);
+				m_BodyPos.y = Easing::easeIn(WinceEaseT, 50.f, -2.f, 2.f);
 				m_BodyRot.x = Easing::easeIn(WinceEaseT, 50.f, 90.f, 00.f);
 			}
 		}
@@ -864,17 +859,14 @@ void Dogom::CoollisionFace()
 
 void Dogom::CoollisionArm()
 {
-
 	bool canCol = arm_move_ == DEFAULT&& m_player->getisHammerActive();
 
 	if (canCol) {
-	
-
 		for (size_t i = 0; i < 2; i++) {
 		 	//
 			if (m_ArmHp[i] <= 0)continue;
 			constexpr int damval = 1;
-			if (m_Arm[i]->GetIsHit() &&m_ArmDamCool[i]<2) {
+			if (Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f) &&m_ArmDamCool[i]<2) {
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::firstBossHitAttack, 0.2f);
 			}
 			if (Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z+3.f),2.f,XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z),1.f)) {
@@ -1006,49 +998,7 @@ void Dogom::WinceIdle()
 
 void Dogom::SpriteDraw()
 {
-	if (m_BodyAlpha <= 0.f)return;
-	float px = 880.f, py = 30.f;
-	float sx,sy;
-	//0~400‚ÌŠÔ‚Å‚Ì•âŠ®Žæ‚é
-	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 400.f;
-	sy = 50.f;
-
-	NowHP = sx;
-	if(BodyRecvDam)
-		bravegaugeF = TRUE;
-
-	if(bravegaugeF)
-	{
-		if (++InnerSclingT <= 60.f)
-			m_hpInnerSizeX = Easing::easeIn(InnerSclingT, 60.f, BeforeHP, NowHP-1.f);
-			else {
-				bravegaugeF = FALSE;
-			}
-	}
-	else
-	{
-		InnerSclingT = 0.f;
-		BeforeHP = sx;
-		m_hpInnerSizeX = sx;
-	}
-
-	InnerSclingT = std::clamp(InnerSclingT, 0.f, 60.f);
-
-	m_HpTex_Frame->SetPosition(XMFLOAT2(px - 10.f, py - 20.f));
-	m_HpTex_Frame->SetSize(XMFLOAT2(430.f, 70.f));
-
-	m_HpTex_Inner->SetPosition(XMFLOAT2(px, py));
-	m_HpTex_Inner->SetSize(XMFLOAT2(m_hpInnerSizeX, sy));
-
-	m_HpTex->SetColor(XMFLOAT3(1, 0, 0));
-	m_HpTex->SetPosition(XMFLOAT2(px,py));
-	m_HpTex->SetSize(XMFLOAT2(sx, sy));
-
-	m_HpTex_Frame->Draw();
-	m_HpTex_Inner->Draw();
-	m_HpTex->Draw();
-
-
+	HPUiDraw();
 	m_FeedTex->Draw();
 }
 

@@ -5,10 +5,12 @@ void AttackEffect::Initialize(ID3D12Device* device, Camera* camera)
 	particle = ParticleManager::UniquePtrCreate(device, camera, true);
 }
 
-void AttackEffect::Update(Vector3 Pos)
+void AttackEffect::Update(Vector3 Pos,bool flag)
 {
 	particlePos = Pos;
-	particleCreate();
+	if (flag == true) {
+		particleCreate();
+	}
 	particle->Update();
 }
 

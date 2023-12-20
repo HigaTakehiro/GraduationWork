@@ -128,7 +128,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			COUNT += 1;
 		}
 		else if (NUMBER == 5) {
-		unique_ptr<Stage> Map = make_unique<Stage>();
+			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
 			Map->state_ = Map::Kaidan;
@@ -167,7 +167,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			CreateDeposits(Pos, COUNT);
-			//CreateEnemy(player, Pos, 2);
+			CreateEnemy(player, Pos, 2);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -211,7 +211,7 @@ void GameMap::CreateBridge()
 	}
 }
 
-void GameMap::CreateGrass(const XMFLOAT3& MapPos,int Count)
+void GameMap::CreateGrass(const XMFLOAT3& MapPos, int Count)
 {
 	//鉱石ドロップベクトル
 	int Value = 0;
@@ -230,7 +230,7 @@ void GameMap::CreateGrass(const XMFLOAT3& MapPos,int Count)
 		float posX = MapPos.x + (float)randX(mt2);
 		float posZ = MapPos.z + (float)randZ(mt2);
 		unique_ptr<Grassland>GrassLand = make_unique<Grassland>();
-		GrassLand->grass_= std::make_unique<Grass>();
+		GrassLand->grass_ = std::make_unique<Grass>();
 		GrassLand->grass_->Initialize({ posX, 0, posZ });
 		GrassLand->num = Count;
 		grass_.push_back(move(GrassLand));
@@ -248,12 +248,12 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 	deposit_2->SetMapNum(MapNum);
 	deposits_.push_back(std::move(deposit));
 	deposits_.push_back(std::move(deposit_2));
-	
+
 }
 
-void GameMap::CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy)
+void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
 {
-	for (int i = 0; i < Enemy; i++) {
+	for (size_t i = 0; i < Enemy; i++) {
 		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
 		Enemy1->Init();
 		Enemy1->SetPlayerIns(player);
@@ -261,6 +261,7 @@ void GameMap::CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy)
 		Enemy1->SetCount(count_);
 		Enemy1->SetPos(MapPos);
 		enemys_.push_back(move(Enemy1));
+		enemyscount_ += 1;
 	}
 }
 
@@ -271,28 +272,21 @@ void GameMap::Initalize(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos
 	CreateBridge();
 
 	Vector3 Pos = player->GetPos();
-	//CreateRock();
 
 	oldcount_ = count_;
 }
 
-void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos,bool flag)
+void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos, bool flag)
 {
 	for (int32_t i = 0; i < deposits_.size(); i++) {
 		if (deposits_[i]->GetHP() <= 0) {
-			deposits_.erase(deposits_.begin()+i);
-		}
-	}
-
-	for (int32_t i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetHP() <= 0) {
-			enemys_.erase(enemys_.begin());
+			deposits_.erase(deposits_.begin() + i);
 		}
 	}
 
 	CheckHitTest(player);
 
-	if (time_ < 1&&flag == true) {
+	if (time_ < 1 && flag == true) {
 		NextMap(player, CameraPos, TargetPos, OldCameraPos);
 	}
 	for (unique_ptr<Stage>& Map : maps_) {
@@ -307,16 +301,16 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-
-	/*for (int32_t i = 0; i < deposits_.size(); i++) {
-		deposits_[i]->Update(player->GetPos());
-	}*/
-
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
-	/*for (unique_ptr<Object3d>& Rock : rock_) {
-		Rock->Update();
-	}*/
+
+	for (int32_t i = 0; i < enemys_.size(); i++) {
+		if (enemys_[i] == nullptr) { continue; }
+		if (enemys_[i]->GetHP() <= 0) {
+			enemys_[i].release();
+			enemyscount_ -= 1;
+		}
+	}
 }
 
 void GameMap::MapDraw()
@@ -332,13 +326,13 @@ void GameMap::MapDraw()
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
 	for (unique_ptr<Grassland>& GrassLand : grass_) {
-		if(count_ == GrassLand->num) {
+		if (count_ == GrassLand->num) {
 			GrassLand->grass_->Draw();
 		}
 	}
 }
 
-void GameMap::BridgeDraw(bool flag )
+void GameMap::BridgeDraw(bool flag)
 {
 	if (flag == false) { return; }
 	for (unique_ptr<Bridge>& Bridge : bridge) {
@@ -359,8 +353,9 @@ void GameMap::Finalize()
 	bridge.clear();
 	stairs_.release();
 	grass_.clear();
+	deposits_.clear();
 	for (int32_t i = 0; i < enemys_.size(); i++) {
-		enemys_.erase(enemys_.begin());
+		enemys_[i].release();
 	}
 }
 
@@ -413,7 +408,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						return;
 					}
 					//右に向かう
-					else if (pos.x < Pos.x && Pos.x  - 7.f< pos.x) {
+					else if (pos.x < Pos.x && Pos.x - 7.f < pos.x) {
 						nothit_ = true;
 						count_ = Bridge->num + 1;
 						direction_ = 2;
@@ -433,7 +428,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						nowstate_ = Map->state_;
 						return;
 					}
-					else if (pos.z < Pos.z + 3.f  && Pos.z < pos.z) {
+					else if (pos.z < Pos.z + 3.f && Pos.z < pos.z) {
 						nothit_ = true;
 						count_ = Bridge->num;
 						direction_ = 4;
@@ -523,12 +518,22 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 
 void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 {
-	if (StageNum == 0) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv");}
-	else if (StageNum == 1) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv");}
+	if (StageNum == 0) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv"); }
+	else if (StageNum == 1) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv"); }
 	else if (StageNum == 2) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map3.csv"); }
 	else if (StageNum == 3) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map4.csv"); }
-	else if (StageNum == 100) {stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv");}
-	
+	else if (StageNum == 100) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv"); }
+
+}
+
+bool GameMap::EnemyAllKill()
+{
+	if(enemyscount_<=0){
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 //void GameMap::CreateRock()
@@ -583,11 +588,11 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 
 		if (count_ != Map->num) { continue; }
 		//左
-		if (pos.x >= Map->stagePos_.x + limit_.x+1 && isHammerRelease) {
+		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
-		if (pos.x <= Map->stagePos_.x - limit_.y-1 && isHammerRelease) {
+		if (pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
@@ -597,7 +602,7 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 			return true;
 		}
 
-		if (pos.z <= Map->stagePos_.z - limit_.w-3 && isHammerRelease) {
+		if (pos.z <= Map->stagePos_.z - limit_.w - 3 && isHammerRelease) {
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}

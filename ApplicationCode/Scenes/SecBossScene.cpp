@@ -72,11 +72,13 @@ void SecBossScene::Initialize()
 	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
 	Deposit_.reset(new Deposit());
-	Deposit_->Initialize(Vector3(10, -2.5f, 0.f));
+	Deposit_->Initialize(Vector3(10, -2.5f, 0.f),true,camera_.get());
 
 
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss, TRUE, 0.4f);
+	cameraPos_.y = 12;
+	targetPos_.y = 0;
 
 }
 
@@ -120,14 +122,8 @@ void SecBossScene::Update()
 		cameraPos_.y += shake_->GetShakePos();
 		targetPos_.y += shake_->GetShakePos();
 	}*/
-	else {
-		cameraPos_.y = 12;
-		targetPos_.y = 0;
 
-	}
-	//if (boss_->GetAppearFlag() == FALSE) {
-	camera_->SetEye(cameraPos_);
-	camera_->SetTarget(targetPos_);
+
 	//}//
 		//boss_->SetCamera(camera_.get());
 	light_->Update();
@@ -145,6 +141,19 @@ void SecBossScene::Update()
 	_hummmerObb = &l_obb;
 
 	boss_->Upda();
+
+
+	TogemaruAct::DefaultPos = cameraPos_;
+	if (!TogemaruAct::depositDelF) {
+		TogemaruAct::oldCameraPos = cameraPos_;
+	}
+	cameraPos_.x += TogemaruAct::cameraPos.x;
+	cameraPos_.y += TogemaruAct::cameraPos.y;
+
+	
+	//if (boss_->GetAppearFlag() == FALSE) {
+	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
 
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
@@ -181,7 +190,31 @@ void SecBossScene::Update()
 
 	m_ClearTex->SetSize(m_ClearTexScl);
 
-	Deposit_->Update(player_->Get());
+	//衝突時一旦破棄
+	if(TogemaruAct::depositDelF&&!m_DepositCreate){
+		m_DepositCreate = TRUE;
+		Deposit_->SetDestroyF(true);//エフェクト生成用
+	}
+	
+	if(m_DepositCreate)
+	{
+		//完全に透明になったら破棄
+		if (Deposit_->GetDepositAlpha() <= 0.f) {
+			Deposit_.reset(nullptr);
+		}
+		//一定時間たっｔら鉱石復活
+		if(!TogemaruAct::depositDelF){
+			Deposit_.reset(new Deposit());
+			Deposit_->Initialize(TogemaruAct::depositPos, true, camera_.get());
+			m_DepositCreate = FALSE;
+		}
+	}
+
+
+	if (Deposit_ != nullptr) {
+		Deposit_->Update(player_->Get());
+	}
+
 	schange->Change(0);
 
 	//シーン切り替えmmm
@@ -221,8 +254,12 @@ void SecBossScene::Draw()
 	boss_->Draw();
 	player_->Draw();
 	map_->BridgeDraw();
-	Deposit_->Draw();
+	if (!TogemaruAct::depositDelF) {
+		Deposit_->Draw();
+		
+	}
 	boss_->Draw2();
+	Deposit_->ParticleDraw();
 	Object3d::PostDraw();
 	//shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 

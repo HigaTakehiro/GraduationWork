@@ -318,6 +318,15 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Skills\SkillList.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\StatusUpSkill.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\SkillList.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Skills\StatusUpSkill.cpp">
@@ -547,6 +556,12 @@
     <ClInclude Include="ApplicationCode\Enemy\Togemaru.h" />
     <ClInclude Include="ApplicationCode\Enemy\TogemaruAct.h" />
     <ClInclude Include="ApplicationCode\Scenes\SecBossScene.h" />
+    <ClInclude Include="ApplicationCode\Skills\ISkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\SkillList.h" />
+    <ClInclude Include="ApplicationCode\Skills\StatusUpSkill.h" />
+    <ClInclude Include="ApplicationCode\Players\AttackEffect.h">
+      <Filter>ソース ファイル\ApplicationCode\Players</Filter>
+    </ClInclude>
     <ClInclude Include="ApplicationCode\Skills\StatusUpSkill.h">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>

@@ -24,7 +24,7 @@
 #include"Shake.h"
 #include"IntermediateBase.h"
 #include "Grass.h"
-
+#include"AttackEffect.h"
 class GameScene : public BaseScene
 {
 public: //メンバ関数
@@ -61,9 +61,9 @@ private: //メンバ関数
 	/// </summary>
 	void CameraSetting();
 
-/// <summary>
-/// 敵に関係する処理
-/// </summary>
+	/// <summary>
+	/// 敵に関係する処理
+	/// </summary>
 	void EnemyProcess();
 private: //メンバ変数
 	//ポストエフェクト
@@ -101,4 +101,7 @@ private: //メンバ変数
 	Vector3 pos{};
 	Vector3 target{};
 	SceneChangeEffect* schange;
+	AttackEffect* aEffect_;
+	bool aeFlag = false;
+	int aeCount = 0;
 };

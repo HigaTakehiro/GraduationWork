@@ -1,6 +1,14 @@
 #include "Togemaru.h"
 
+#include <algorithm>
+
 #include "Shapes.h"
+
+#define MapX_Mx 10.f
+#define MapX_Mn -10.f
+
+#define MapZ_Mx 8.8f
+#define MapZ_Mn -12.f
 
 void Togemaru::Init()
 {
@@ -23,8 +31,72 @@ void Togemaru::Init()
 	m_Body->SetHitRadius(0.5f);
 	m_Body->SetScale({ 0.040f, 0.040f, 0.040f });
 
+	UI_Init();
+
+	m_HP = 10;
+	BossMaxHP = m_HP;
+
 	Action = new TogemaruAct();
 }
+
+void Togemaru::UI_Init()
+{ 
+	for (size_t i = 0; i < m_ScaleArray; i++) {
+		m_ScaleSizeUI[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {64.0f, 64.0f}, "white1x1.png", {64.0f, 64.0f}, {0.f, 0.f}, {64.0f, 0.0f}, {64.0f, 64.0f}));
+
+		ScaleColor[i] = { 1,0,1,1 };
+	}
+	HPUiInit();
+}
+
+void Togemaru::UI_Upda()
+{
+	//
+	Pos_ = Action->GetPos();
+	//画像サイズ
+	constexpr float sizeX = 0.015f,sizeY=0.005f;
+	//UI座標X
+	float uiposX[] = { Pos_.x + 1.f,Pos_.x,Pos_.x -1.f };
+	//補正値
+	float corrValX = +0.3f;
+
+	//鉱石の色消すときの画像番号指定用
+	int index = m_ScaleArray-Action->GetCrushSpearNum();
+
+	if(Action->GetCrushSpearNum()==0)
+	{
+		for (size_t i = 0; i < m_ScaleArray; i++) {
+			ScaleColor[i].w += 0.05f;
+		}
+	}
+	else
+	{
+		for (size_t i = index; i < m_ScaleArray; i++) {
+			if (Action->GetCrushSpearNum() == 0)break;
+			ScaleColor[i].w -= 0.02f;
+		}
+	}
+
+	for(size_t i=0;i<m_ScaleArray;i++){
+		ScaleUI_Pos[i] = { uiposX[i]+corrValX,Pos_.y + 2.5f,Pos_.z };
+		ScaleUI_Scl[i] = { sizeX,sizeY,0.1f };
+
+		m_ScaleSizeUI[i]->SetColor(ScaleColor[i]);
+		m_ScaleSizeUI[i]->SetPosition(ScaleUI_Pos[i]);
+		m_ScaleSizeUI[i]->SetScale(ScaleUI_Scl[i]);
+		m_ScaleSizeUI[i]->Update();
+
+		ScaleColor[i].w = std::clamp(ScaleColor[i].w, 0.f, 1.f);
+	}
+}
+
+void Togemaru::UI_Draw()
+{
+	for (size_t i = 0; i < m_ScaleArray; i++) {
+		m_ScaleSizeUI[i]->Draw();
+	}
+}
+
 
 void Togemaru::Upda()
 {
@@ -39,26 +111,34 @@ void Togemaru::Upda()
 		m_Spears[i]->SetRotation(Vector3(90, 0, 0));
 		m_Spears[i]->SetScale(Vector3(0.02f, 0.02f, 1.f));
 		m_Spears[i]->SetPosition(Action->GetSpearPos(i));//Actクラスから引っ張る
-		m_Spears[i]->SetColor(XMFLOAT4(1, 1, 1, Action->GetSpearAlpha()));
+		m_Spears[i]->SetColor(XMFLOAT4(1, 1, 1, Action->GetSpearAlpha(i)));
 		m_Spears[i]->Update();
 	}
 
 	//本体
-	m_Body->SetScale({ 0.040f, 0.040f, 0.040f });
+	m_Body->SetScale({ 0.030f, 0.040f, 0.040f });
 	m_Body->SetPosition(Action->GetPos());
 	m_Body->SetRotation(Vector3(0, 0, 0));
 	m_Body->Update();
+
+	UI_Upda();
+	HPUiUpda();
 }
 
 
 void Togemaru::Draw()
 {
 	//針描画
-	for(size_t i=0;i<m_SpearArray;i++)
+	for (size_t i = 0; i < m_SpearArray; i++)
 	{
-		m_Spears[i]->Draw();
+		if (Action->GetSpearPos(i).x<MapX_Mx && Action->GetSpearPos(i).x > MapX_Mn &&
+			Action->GetSpearPos(i).z < MapZ_Mx && Action->GetSpearPos(i).z > MapZ_Mn) {
+			m_Spears[i]->Draw();
+		}
 	}
 	m_Body->Draw();
+
+	UI_Draw();
 }
 
 void Togemaru::Draw2()
@@ -68,7 +148,7 @@ void Togemaru::Draw2()
 
 void Togemaru::SpriteDraw()
 {
-	
+	HPUiDraw();
 }
 
 void Togemaru::Attack()
@@ -108,6 +188,10 @@ void Togemaru::AnimationSett()
 	case TogemaruAct::AnimeName::ROLE:
 		AddIndex(m_Model_Role, 2);
 		break;
+
+	case TogemaruAct::AnimeName::CRUSH:
+		AddIndex(m_Model_Crush, 4);
+		break;
 	}
 }
 
@@ -124,6 +208,9 @@ void Togemaru::InitAnimatin()
 	//突進
 	for (size_t i = 0; i < 2; i++) {
 		m_Model_Role[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_rot.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+	}
+	for(size_t i=0;i<4;i++){
+		m_Model_Crush[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
 }
 

@@ -15,7 +15,7 @@ private:
 	std::array<Vector3, spearSize>SpearPos_ = {};
 	std::array<float, spearSize>SpearAngle_ = {};
 	//針のアルファ値
-	float spearsAlpha = 0.f;
+	std::array<float,spearSize>spearsAlpha ={};
 	//棘の発射範囲
 	float ShotRange = 0.f;
 	//発射フラグ
@@ -26,14 +26,17 @@ private:
 private:
 	//当たり判定周り
 	void CollideDeposit();
-
-	//鉱石座標
-	static Vector3 depositPos;
 	//
-	bool depositDelF = FALSE;
+	bool depositCollideF = FALSE;
+	//
 	int32_t depositDelTime = 0;
 	//
 	Vector3 DepositReproduction();
+public:
+	//鉱石座標
+	static Vector3 depositPos;
+	//
+	static bool depositDelF;
 public:
 	//アニメーション名前
 	enum AnimeName
@@ -110,10 +113,21 @@ private:
 	//RunAway()条件
 	bool CrushSpear();
 
+	bool CollideSpear();
 
+//シェイク
+private:
+	bool shakeF = FALSE;
+	float shakeXVal=0.f, shakeYVal=0.f;
+	float shakeT = 0.f;
 public:
 	//行動遷移
 	void Transition();
+	//画面振動(鉱石にぶつかった時)
+	static Vector3 cameraPos;//カメラ座標
+	static Vector3 oldCameraPos;
+	static Vector3 DefaultPos;
+	void ViewShake();
 public:
 	// ゲッター //
 	Vector3 GetPos()const { return Pos_; }
@@ -122,10 +136,15 @@ public:
 
 	Vector3 GetSpearPos(int index)const { return SpearPos_[index]; }
 
-	float GetSpearAlpha()const { return spearsAlpha; }
-
 	//鉱石座標
 	Vector3 GetDepositPos()const { return depositPos; }
+
+	int32_t GetCrushSpearNum()const { return crushSpearNum; }
+
+	float GetSpearAlpha(int index)const { return spearsAlpha[index]; }
+	
+	//
+	bool GetDepositDelF()const { return depositDelF; }
 
 	// セッター //
 	void SetPlayerIns(Player* player) { Player_ = player; }

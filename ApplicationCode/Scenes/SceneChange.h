@@ -11,6 +11,7 @@ public:
 	bool GetEnd() { return EndFlag_; }
 	void SetEnd(bool endFlag) { EndFlag_ = endFlag; }
 	bool GetFEnd(){return fadeEndFlag_;}
+	bool GetFStart() { return fadeStartFlag_; }
 	float GetFadeNum() { return fadeNum; }
 	void SetFadeNum(float fadeNum) { this->fadeNum = fadeNum; }
 private:

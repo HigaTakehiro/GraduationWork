@@ -29,8 +29,10 @@ protected:
 
 	Player* m_player = nullptr;
 	Camera* m_Camera = nullptr;
+
 	Vector3 m_Hummmer;
 	Vector3 m_CameraPos = {0,12,20}, m_Target,m_CameraStartPos;
+
 	int m_HP=6;
 	Name m_Name;
 	std::wstring str;
@@ -38,8 +40,23 @@ protected:
 	int BodyDamCool = 0;
 	BOOL BodyRecvDam=FALSE;
 	bool AppearFlag;
-
 	bool m_ClearF=FALSE;
+
+protected://UI
+	std::unique_ptr<Sprite>m_HpTex = nullptr;
+	std::unique_ptr<Sprite>m_HpTex_Frame = nullptr;
+	std::unique_ptr<Sprite>m_HpTex_Inner = nullptr;
+
+	float m_hpInnerSizeX = 400.f, InnerSclingT;;
+	float NowHP, BeforeHP;
+	bool bravegaugeF;
+
+	int BossMaxHP;
+	float m_BodyAlpha = 1.f;
+
+	void HPUiInit();
+	void HPUiUpda();
+	void HPUiDraw();
 public:
 	void SetPlayerIns(Player* player) { m_player = player; }
 	void SetCamera(Camera* cam) { m_Camera = cam; }
