@@ -5,6 +5,7 @@
 #include "ExternalFileLoader.h"
 #include<SafeDelete.h>
 
+
 Stairs::~Stairs()
 {
 	safe_delete(stairsModel_);
@@ -115,9 +116,9 @@ void Stairs::Draw()
 
 void Stairs::CheckHit()
 {
-	XMFLOAT3 Pos = player_->Get();
+	XMFLOAT3 Pos = player_->GetPos();
 
-	if ((Pos.x >= pos_.x - 1.f && Pos.x <= pos_.x + 1.f) &&
+	if ((Pos.x >= pos_.x - 1.f && Pos.x <= pos_.x + 1.4f) &&
 		(Pos.z >= pos_.z + 1.f  && Pos.z <= pos_.z + 4.f)) {
 		player_->SetNextFlor(true);
 		f = true;
