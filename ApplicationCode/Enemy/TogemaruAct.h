@@ -67,6 +67,37 @@ private:
 		DEATH
 	}act_;
 
+
+	bool Appear();
+	//-----------------
+	/* 関数テーブル */
+	typedef struct
+	{
+		//状態番号
+		int state=0;
+		//各状態の関数
+		void(*func)();
+	}AppearState;
+
+	//番号用
+	enum StateName
+	{
+		P1,
+		P2,
+		P3,
+		P_Num
+	};
+
+	static void StateExecute(int state);
+	static void Phase1();
+	static void Phase2();
+	static void Phase3();
+
+	static AppearState StateArray[StateName::P_Num];
+
+	void Camerawork();
+	//-----------------
+
 	void Move();
 	void Attack_Rush();
 	void Attack_ShotSpear();

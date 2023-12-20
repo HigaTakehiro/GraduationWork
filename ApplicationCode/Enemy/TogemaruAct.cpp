@@ -1,4 +1,5 @@
 #include "TogemaruAct.h"
+#include "TogemaruAct.h"
 
 #include <algorithm>
 #include <random>
@@ -15,9 +16,51 @@ Vector3 TogemaruAct::oldCameraPos = {};
 Vector3 TogemaruAct::DefaultPos= {};
 bool TogemaruAct::depositDelF = false;
 
+TogemaruAct::AppearState TogemaruAct::StateArray[TogemaruAct::StateName::P_Num] =
+{
+	{TogemaruAct::P1,(*Phase1)},
+	{TogemaruAct::P2,(*Phase2)},
+	{TogemaruAct::P3,(*Phase3)}
+};
+
+void TogemaruAct::StateExecute(int state)
+{
+	int index = 0;
+
+	//state‚É‰‚¶‚½ŠÖ”‚ÌÀs
+	for(int i=0;i<StateName::P_Num;i++){
+		if(StateArray[i].state==state)
+		{
+			StateArray[i].func();
+			return;
+		}
+	}
+}
+
+void TogemaruAct::Phase1()
+{
+	//Pos_ = { 10,0,-10 };
+}
+
+void TogemaruAct::Phase2()
+{
+
+}
+
+void TogemaruAct::Phase3()
+{
+
+}
+
 void TogemaruAct::Transition()
 {
 	constexpr float inBossroomZ = 12.f;
+
+	if(Appear()==FALSE)
+	{
+		return;
+	}
+		
 	if (Player_->GetPos().z < inBossroomZ) {
 		beginBattle = TRUE;
 	}
@@ -331,6 +374,13 @@ void TogemaruAct::ViewShake()
 	}
 	cameraPos.x = shakeXVal;
 	cameraPos.y = shakeYVal;
+}
+
+bool TogemaruAct::Appear()
+{
+	StateExecute(0);
+	//Pos_ = Vector3(0, 0, -10);
+	return true;
 }
 
 
