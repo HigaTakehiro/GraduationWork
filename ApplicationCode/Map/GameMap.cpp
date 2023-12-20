@@ -20,6 +20,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 	int NEXTHORY = 0;
 	int COUNT = 0;
 	bool NEXTCOUNT = false;
+	int ENEMYCOUNT = 0;
 	XMFLOAT3 Pos = { startX ,0.f,startZ };
 
 	std::stringstream stream;
@@ -34,8 +35,9 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 
 		if (word.find("ENEMY1") == 0) {
 			getline(line_stream, word, ',');
-			int ENEMYCOUNT = (int)std::atof(word.c_str());
+			ENEMYCOUNT = (int)std::atof(word.c_str());
 			enemyscount_ = ENEMYCOUNT;
+			continue;
 		}
 
 		if (word.find("MAP") == 0) {
@@ -110,6 +112,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
+			CreateEnemy(player, Pos, ENEMYCOUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -257,9 +260,16 @@ void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
 		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
 		Enemy1->Init();
 		Enemy1->SetPlayerIns(player);
-		Enemy1->SetOverPos(XMFLOAT3(13.f, -100.f, 37.f), XMFLOAT3(-11.f, 100.f, 14.f));
+		XMFLOAT3 MapMaxPos = { MapPos.x + limit_.x,100.f,MapPos.z + limit_.z };
+		XMFLOAT3 MapMinPos = { MapPos.x - limit_.y,100.f,MapPos.z - limit_.w };
+		Enemy1->SetOverPos(MapMaxPos,MapMinPos);
 		Enemy1->SetCount(count_);
-		Enemy1->SetPos(MapPos);
+		//óêêîê∂ê¨
+		std::random_device rnd;
+		std::mt19937 mt(rnd());
+		std::uniform_int_distribution<> randX(-9, 9);
+		std::uniform_int_distribution<> randZ(-8, 8);
+		Enemy1->SetPos({ MapPos.x+(float)randX(mt),MapPos.y,MapPos.z + (float)randZ(mt)});
 		enemys_.push_back(move(Enemy1));
 		enemyscount_ += 1;
 	}
