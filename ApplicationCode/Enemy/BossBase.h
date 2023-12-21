@@ -57,6 +57,12 @@ protected://UI
 	void HPUiInit();
 	void HPUiUpda();
 	void HPUiDraw();
+
+protected:
+	//各種パラメータ
+	Vector3 Pos_, Rot_, Scl_;
+public:
+	Vector3 GetPos()const { return Pos_; }
 public:
 	void SetPlayerIns(Player* player) { m_player = player; }
 	void SetCamera(Camera* cam) { m_Camera = cam; }

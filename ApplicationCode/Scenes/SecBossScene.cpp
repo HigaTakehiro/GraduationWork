@@ -72,7 +72,7 @@ void SecBossScene::Initialize()
 	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
 	Deposit_.reset(new Deposit());
-	Deposit_->Initialize(Vector3(10, -2.5f, 0.f),true,camera_.get());
+	Deposit_->Initialize(Vector3(0, -2.5f, -8.f),true,camera_.get());
 
 
 	SoundManager::GetIns()->StopAllBGM();
@@ -149,8 +149,10 @@ void SecBossScene::Update()
 	}
 	cameraPos_.x += TogemaruAct::cameraPos.x;
 	cameraPos_.y += TogemaruAct::cameraPos.y;
+	//cameraPos_.z = 0;
 
-	
+	//cameraPos_ = { boss_->GetPos().x,boss_->GetPos().y + 2.5f,boss_->GetPos().z+8.f };
+	//targetPos_ = boss_->GetPos();
 	//if (boss_->GetAppearFlag() == FALSE) {
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);

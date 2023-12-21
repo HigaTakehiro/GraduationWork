@@ -76,25 +76,27 @@ private:
 		//ó‘Ô”Ô†
 		int state=0;
 		//Šeó‘Ô‚ÌŠÖ”
-		void(*func)();
+		void(TogemaruAct::*func)();
 	}AppearState;
 
 	//”Ô†—p
 	enum StateName
 	{
-		P1,
-		P2,
-		P3,
-		P_Num
+		P1=0,
+		P2=1,
+		P3=2,
+		P_Num=3
 	};
 
-	static void StateExecute(int state);
-	static void Phase1();
-	static void Phase2();
-	static void Phase3();
-
+	void StateExecute(int state);
+	float CameraEaseT, PosEaseT;
+	void Phase1();
+	void Phase2();
+	void Phase3();
+	bool beforeBattle = FALSE;
 	static AppearState StateArray[StateName::P_Num];
 
+	StateName cameraStateIndex;
 	void Camerawork();
 	//-----------------
 
