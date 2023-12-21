@@ -40,7 +40,7 @@ void TogemaruAct::StateExecute(int state)
 void TogemaruAct::Phase1()
 {
 	//イージング用{カウンタ上限,Y座標(上),Y座標(下)}
-	float EaseState_Pos[3] = {30.f, 10.f, -2.5f};
+	float EaseState_Pos[3] = {40.f, 20.f, -2.5f};
 
 	anime_name_ = AnimeName::ROLE;
 	depositCollideF = TRUE;
@@ -60,14 +60,23 @@ void TogemaruAct::Phase1()
 
 void TogemaruAct::Phase2()
 {
+	constexpr float MaxWaitTime = 90.f;
 	//
+	PosEaseT++;
+	if(PosEaseT>MaxWaitTime)
+	{
+		PosEaseT = 0.f;
+		anime_name_ = AnimeName::IdlE;
+		cameraStateIndex = StateName::P3;
+	}
 
 	//anime_name_ = AnimeName::IdlE;
 }
 
 void TogemaruAct::Phase3()
 {
-	Pos_ = {};
+	//anime_name_ = AnimeName::IdlE;
+	//Pos_ = {};
 }
 
 void TogemaruAct::Transition()
@@ -86,15 +95,22 @@ void TogemaruAct::Transition()
 		//StateExecute(cameraStateIndex);
 		(this->*StateArray[cameraStateIndex].func)();
 
-		if(cameraStateIndex==StateName::P3){
+		if( cameraStateIndex==StateName::P3){
 			//動けるように　戦闘開始
 			Player_->SetStop(false);
 			beginBattle = TRUE;
 		}
 	}
+	else
+	{
+		if(!beginBattle)
+		Pos_.y = 20.f;
+	}
+
 
 	//戦闘開始したら動くように
 	if (beginBattle) {//戦闘
+		beforeBattle = FALSE;
 		(this->*ActionList[act_])();
 		//針とプレイヤー衝突
 		if (CollideSpear()) {
@@ -337,12 +353,13 @@ void TogemaruAct::CollideDeposit()
 		}
 	} else
 	{
+		constexpr float GroundY = 2.f;
 		bool col = Helper::GetCircleCollide({ depositPos.x,depositPos.y,depositPos.z + 3.f }, { Pos_.x,Pos_.y,Pos_.z + 3.f }, r1, r2);
 		//鉱石と衝突したら
-		if (depositCollideF && col) {
+		if (depositCollideF &&(Pos_.y<GroundY&&col)) {
 			shakeF = TRUE;//画面揺らす
 			//針の数1減らす(壊れた針の数＋１)
-			if (!beginBattle) {
+			if (beginBattle) {
 				++crushSpearNum;
 			}
 			anime_name_ = AnimeName::CRUSH;
