@@ -10,7 +10,7 @@
 #define PI_180 180
 #define PI_360 360
 
-Vector3 TogemaruAct::depositPos = { 10, -2.5f, 0.f };
+Vector3 TogemaruAct::depositPos = { 0, -2.5f, -8.f };
 Vector3 TogemaruAct::cameraPos = {};
 Vector3 TogemaruAct::oldCameraPos = {};
 Vector3 TogemaruAct::DefaultPos= {};
@@ -18,9 +18,9 @@ bool TogemaruAct::depositDelF = false;
 
 TogemaruAct::AppearState TogemaruAct::StateArray[TogemaruAct::StateName::P_Num] =
 {
-	{TogemaruAct::P1,(*Phase1)},
-	{TogemaruAct::P2,(*Phase2)},
-	{TogemaruAct::P3,(*Phase3)}
+	{TogemaruAct::P1,&TogemaruAct::Phase1},
+	{TogemaruAct::P2,&TogemaruAct::Phase2},
+	{TogemaruAct::P3,&TogemaruAct::Phase3}
 };
 
 void TogemaruAct::StateExecute(int state)
@@ -31,7 +31,7 @@ void TogemaruAct::StateExecute(int state)
 	for(int i=0;i<StateName::P_Num;i++){
 		if(StateArray[i].state==state)
 		{
-			StateArray[i].func();
+			(this->*StateArray[i].func)();
 			return;
 		}
 	}
@@ -39,60 +39,107 @@ void TogemaruAct::StateExecute(int state)
 
 void TogemaruAct::Phase1()
 {
-	//Pos_ = { 10,0,-10 };
+	//イージング用{カウンタ上限,Y座標(上),Y座標(下)}
+	float EaseState_Pos[3] = {40.f, 20.f, -2.5f};
+
+	anime_name_ = AnimeName::ROLE;
+	depositCollideF = TRUE;
+	//落ちてくる
+	PosEaseT++;
+	Pos_.y=Easing::easeIn(PosEaseT, EaseState_Pos[0], EaseState_Pos[1], EaseState_Pos[2]);
+
+	Pos_.x = 0.f;
+	Pos_.z = -8.f;
+
+	//地面ついたら次のフェーズ
+	if(PosEaseT>=EaseState_Pos[0]){
+		PosEaseT = 0.f;
+		cameraStateIndex = StateName::P2;
+	}
 }
 
 void TogemaruAct::Phase2()
 {
+	constexpr float MaxWaitTime = 90.f;
+	//
+	PosEaseT++;
+	if(PosEaseT>MaxWaitTime)
+	{
+		PosEaseT = 0.f;
+		anime_name_ = AnimeName::IdlE;
+		cameraStateIndex = StateName::P3;
+	}
 
+	//anime_name_ = AnimeName::IdlE;
 }
 
 void TogemaruAct::Phase3()
 {
-
+	//anime_name_ = AnimeName::IdlE;
+	//Pos_ = {};
 }
 
 void TogemaruAct::Transition()
 {
 	constexpr float inBossroomZ = 12.f;
 
-	if(Appear()==FALSE)
+	if (!beginBattle&&Player_->GetPos().z < inBossroomZ) {
+		beforeBattle = TRUE;
+	}
+
+	if(beforeBattle)
 	{
-		return;
+		//プレイヤーの動き止める
+		Player_->SetStop(true);
+		//待機モーション実行
+		//StateExecute(cameraStateIndex);
+		(this->*StateArray[cameraStateIndex].func)();
+
+		if( cameraStateIndex==StateName::P3){
+			//動けるように　戦闘開始
+			Player_->SetStop(false);
+			beginBattle = TRUE;
+		}
 	}
-		
-	if (Player_->GetPos().z < inBossroomZ) {
-		beginBattle = TRUE;
+	else
+	{
+		if(!beginBattle)
+		Pos_.y = 20.f;
 	}
+
 
 	//戦闘開始したら動くように
-	if (beginBattle) {
+	if (beginBattle) {//戦闘
+		beforeBattle = FALSE;
 		(this->*ActionList[act_])();
+		//針とプレイヤー衝突
+		if (CollideSpear()) {
+			Player_->SubHP(1);
+		}
+
+		//棘が3つ壊れたら
+		if (CrushSpear() == TRUE) {
+			//逃げ惑う
+			act_ = Act::RUNAWAY;
+		}
+
+		//衝突半径
+		constexpr float pr = 1.f, er = 1.5f;
+		//衝突時のプレイヤーのけぞり
+		bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
+		float KnockDis = AccelJudg ? 0.3f : 1.f;//のけぞり値
+
+		//判定
+		bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr, er);
+		Helper::ColKnock(Player_->GetPos(), Pos_, Player_, isCollide, KnockDis);
+
 	}
 
-	//針とプレイヤー衝突
-	if (CollideSpear()) {
-		Player_->SubHP(1);
-	}
-
+	//鉱石当たり判定
 	CollideDeposit();
-	//棘が3つ壊れたら
-	if (CrushSpear() == TRUE) {
-		//逃げ惑う
-		act_ = Act::RUNAWAY;
-	}
 	//鉱石衝突時の画面の揺れ
 	ViewShake();
 
-	//衝突半径
-	constexpr float pr = 1.f, er = 1.5f;
-	//衝突時のプレイヤーのけぞり
-	bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
-	float KnockDis = AccelJudg ? 0.3f : 1.f;//のけぞり値
-
-	//判定
-	bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr, er);
-	Helper::ColKnock(Player_->GetPos(), Pos_, Player_, isCollide, KnockDis);
 
 	//座標の範囲指定
 	Pos_.x = std::clamp(Pos_.x, -10.f, 10.f);
@@ -306,11 +353,15 @@ void TogemaruAct::CollideDeposit()
 		}
 	} else
 	{
+		constexpr float GroundY = 2.f;
 		bool col = Helper::GetCircleCollide({ depositPos.x,depositPos.y,depositPos.z + 3.f }, { Pos_.x,Pos_.y,Pos_.z + 3.f }, r1, r2);
 		//鉱石と衝突したら
-		if (depositCollideF && col) {
+		if (depositCollideF &&(Pos_.y<GroundY&&col)) {
 			shakeF = TRUE;//画面揺らす
-			++crushSpearNum;//針の数1減らす(壊れた針の数＋１)
+			//針の数1減らす(壊れた針の数＋１)
+			if (beginBattle) {
+				++crushSpearNum;
+			}
 			anime_name_ = AnimeName::CRUSH;
 			depositDelF = TRUE;
 		}
@@ -378,7 +429,6 @@ void TogemaruAct::ViewShake()
 
 bool TogemaruAct::Appear()
 {
-	StateExecute(0);
 	//Pos_ = Vector3(0, 0, -10);
 	return true;
 }

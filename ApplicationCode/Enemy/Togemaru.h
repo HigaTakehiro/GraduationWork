@@ -46,9 +46,6 @@ private:
     //鱗耐久
     std::array<uint32_t, m_ScaleArray>m_ScaleHp = { 1,1,1 };
 
-    //各種パラメータ
-    Vector3 Pos_, Rot_, Scl_;
-
     //ボスの行動パターン
     TogemaruAct* Action=nullptr;
 
