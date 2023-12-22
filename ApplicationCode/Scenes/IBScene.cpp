@@ -63,6 +63,7 @@ void IBScene::Initialize()
 	ib_->LoadFloor();
 
 	//スキル画面
+	//ウィンドウUI
 	for (int32_t i = 0; i < 3; i++) {
 		window_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::TextWindow, { 0.f, 0.f }, { 1.f, 1.f, 1.f, 1.f }, { 0.5f, 0.5f });
 	}
@@ -71,7 +72,28 @@ void IBScene::Initialize()
 	window_[1]->SetPosition({ 400.f, 600.f });
 	window_[1]->SetSize({ 200.f, 200.f });
 	window_[2]->SetPosition({ 900.f, 300.f });
-	window_[2]->SetSize({ 650.f, 550.f });
+	window_[2]->SetSize({ 750.f, 550.f });
+	//スキルパネル
+	for (int32_t i = 0; i < 13; i++) {
+		skillPanel_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 900.f, 300.f }, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+		skillPanel_[i]->SetSize({ 96, 64 });
+		if (i >= 0 && i < 4) {
+			skillPanel_[i]->SetPosition({ 900.f + (96.f * (float)i + 10.f * (float)i), 300.f });
+		}
+		else if (i >= 4 && i < 7) {
+			skillPanel_[i]->SetPosition({ 900.f - (96.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f });
+		}
+		else if (i >= 7 && i < 10) {
+			skillPanel_[i]->SetPosition({ 900.f, 300.f + (64.f * ((float)i - 6.f) + 10.f * ((float)i - 6.f))});
+		}
+		else if (i >= 10 && i < 13) {
+			skillPanel_[i]->SetPosition({ 900.f, 300.f - (64.f * ((float)i - 9.f) + 10.f * ((float)i - 9.f)) });
+		}
+	}
+	skillPanel_[0]->SetColor({ 1.f, 1.f, 1.f });
+	//カーソルUI
+	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 900.f, 300.f }, { 0.6f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	skillCursor_->SetSize({ 100.f, 70.f });
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();
@@ -210,6 +232,10 @@ void IBScene::Draw()
 		for (int32_t i = 0; i < 3; i++) {
 			window_[i]->Draw();
 		}
+		skillCursor_->Draw();
+		for (int32_t i = 0; i < 13; i++) {
+			skillPanel_[i]->Draw();
+		}
 		skillPlayer_[animeCount_]->Draw();
 	}
 	schange->Draw();
@@ -220,10 +246,12 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 350, 550, 700, 750 };
+	D2D1_RECT_F skillPointDrawRange = { 550, 100, 700, 200 };
 	//std::wstring hx = std::to_wstring(SceneManager::GetHP());
 	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
 	std::wstring indent = L"\n";
 	std::wstring statusMessage = L"HP : ";
+	std::wstring skillPointMessage = L"スキルポイント : 0";
 	statusMessage += std::to_wstring(playerUI_->GetMaxHP());
 	statusMessage += indent;
 	statusMessage += L"攻撃力 : ";
@@ -238,6 +266,7 @@ void IBScene::Draw()
 		playerUI_->TextUIDraw();
 	}
 	else {
+		text_->Draw("meiryo_16", "white", skillPointMessage, skillPointDrawRange);
 		text_->Draw("meiryo_16", "white", statusMessage, textDrawRange);
 	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();

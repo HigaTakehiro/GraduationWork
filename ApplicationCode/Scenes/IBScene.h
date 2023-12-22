@@ -138,5 +138,9 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> window_[3];
 	//スキル画面プレイヤースプライト
 	std::unique_ptr<Sprite> skillPlayer_[4];
+	//スキルパネルスプライト
+	std::unique_ptr<Sprite> skillPanel_[13];
+	//スキル画面カーソルスプライト
+	std::unique_ptr<Sprite> skillCursor_;
 };
 
