@@ -23,6 +23,7 @@ private:
 		Kaidan,
 		Boss,
 		Start,
+		IfMap,
 	};
 
 	enum Direction {
@@ -37,6 +38,7 @@ private:
 		int num;
 		Map state_;
 		bool stop = false;
+		bool invisible_ = false;
 	};
 
 	struct Bridge
@@ -64,6 +66,8 @@ public:
 	void CreateDeposits(const XMFLOAT3& MapPos, int MapNum);
 
 	void CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy);
+
+	void CheckNextMap();
 
 	/// <summary>
 	/// ‰Šú‰»
@@ -143,7 +147,9 @@ private:
 
 	list<unique_ptr<Stage>> maps_;
 
-	list<unique_ptr<Bridge>> bridge;
+	list<unique_ptr<Bridge>> bridgeside;
+
+	list<unique_ptr<Bridge>> bridgevert;
 
 	unique_ptr<Stairs> stairs_;
 
