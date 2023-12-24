@@ -46,6 +46,7 @@ private:
 		unique_ptr<Object3d> bridge_;
 		int num;
 		Direction state_;
+		int invisible_ = false;
 	};
 
 	struct Grassland
@@ -114,6 +115,8 @@ public:
 
 	bool EnemyAllKill();
 
+	bool GameEnemyAllKill();
+
 	void CreateRock();
 
 	bool CheckRockToMap(const XMFLOAT3& RockPos);
@@ -171,6 +174,8 @@ private:
 	int oldcount_ = 0;
 	
 	int enemyscount_ = 0;
+
+	int gameenemyscount_ = 0;
 
 	//
 	bool stopCount_ = false;
