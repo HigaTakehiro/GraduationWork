@@ -128,6 +128,8 @@ public:
 	bool GetFlash() { return FlashF; }
 	bool GetRecv() { return _isFlash; }
 	void DamageFlash();
+
+	void PlayerHitBody(float dis,bool& f);
 protected:
 	void TexInit();
 	void TexUpda();

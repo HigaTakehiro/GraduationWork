@@ -5,6 +5,7 @@
 #include "NormalEnemyA.h"
 #include "SoundManager.h"
 #include "SafeDelete.h"
+#include"KeyInput.h"
 #include <random>
 
 int Count = 0;
@@ -20,6 +21,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 	int NEXTHORY = 0;
 	int COUNT = 0;
 	bool NEXTCOUNT = false;
+	int ENEMYCOUNT = 0;
 	XMFLOAT3 Pos = { startX ,0.f,startZ };
 
 	std::stringstream stream;
@@ -34,8 +36,10 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 
 		if (word.find("ENEMY1") == 0) {
 			getline(line_stream, word, ',');
-			int ENEMYCOUNT = (int)std::atof(word.c_str());
+			ENEMYCOUNT = (int)std::atof(word.c_str());
 			enemyscount_ = ENEMYCOUNT;
+			gameenemyscount_ = ENEMYCOUNT;
+			continue;
 		}
 
 		if (word.find("MAP") == 0) {
@@ -110,6 +114,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
+			CreateEnemy(player, Pos, ENEMYCOUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -171,6 +176,21 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
+		else if (NUMBER == 7) {
+		unique_ptr<Stage> Map = make_unique<Stage>();
+		Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+		Map->num = COUNT;
+		Map->state_ = Map::IfMap;
+		Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
+		Map->stagePos_ = Pos;
+		Map->stage_->SetPosition(Pos);
+		Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
+		Map->invisible_=true;
+		maps_.push_back(move(Map));
+		CreateGrass(Pos, COUNT);
+		NEXTVERT += 1;
+		COUNT += 1;
+		}
 	}
 }
 
@@ -190,7 +210,10 @@ void GameMap::CreateBridge()
 				Bridges->bridge_->SetRotation({ 0.f,0.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Beside;
-				bridge.push_back(move(Bridges));
+				if (Map2->state_ == Map::IfMap || Map->state_ == Map::IfMap) {
+					Bridges->invisible_ = true;
+				}
+				bridgeside.push_back(move(Bridges));
 			}
 
 			if (Map->stagePos_.z + 30 == Map2->stagePos_.z && Map->num + nextval_ == Map2->num) {
@@ -205,7 +228,10 @@ void GameMap::CreateBridge()
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;
-				bridge.push_back(move(Bridges));
+				if (Map2->state_ == Map::IfMap||Map->state_==Map::IfMap) {
+					Bridges->invisible_ = true;
+				}
+				bridgevert.push_back(move(Bridges));
 			}
 		}
 	}
@@ -257,9 +283,16 @@ void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
 		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
 		Enemy1->Init();
 		Enemy1->SetPlayerIns(player);
-		Enemy1->SetOverPos(XMFLOAT3(13.f, -100.f, 37.f), XMFLOAT3(-11.f, 100.f, 14.f));
+		XMFLOAT3 MapMaxPos = { MapPos.x + limit_.x,100.f,MapPos.z + limit_.z };
+		XMFLOAT3 MapMinPos = { MapPos.x - limit_.y,100.f,MapPos.z - limit_.w };
+		Enemy1->SetOverPos(MapMaxPos,MapMinPos);
 		Enemy1->SetCount(count_);
-		Enemy1->SetPos(MapPos);
+		//óêêîê∂ê¨
+		std::random_device rnd;
+		std::mt19937 mt(rnd());
+		std::uniform_int_distribution<> randX(-9, 9);
+		std::uniform_int_distribution<> randZ(-8, 8);
+		Enemy1->SetPos({ MapPos.x+(float)randX(mt),MapPos.y,MapPos.z + (float)randZ(mt)});
 		enemys_.push_back(move(Enemy1));
 		enemyscount_ += 1;
 	}
@@ -293,13 +326,28 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		Map->stage_->Update();
 	}
 
-	for (unique_ptr<Bridge>& Bridge : bridge) {
+	for (unique_ptr<Bridge>& Bridge : bridgeside) {
+		Bridge->bridge_->Update();
+	}
+
+	for (unique_ptr<Bridge>& Bridge : bridgevert) {
 		Bridge->bridge_->Update();
 	}
 
 	for (unique_ptr<Grassland>& GrassLand : grass_) {
 		GrassLand->grass_->Update(player->GetPos());
 	}
+
+	if (GameEnemyAllKill()) {
+		for (unique_ptr<Bridge>& Bridge : bridgeside) {
+			Bridge->invisible_ = false;
+		}
+
+		for (unique_ptr<Bridge>& Bridge : bridgevert) {
+			Bridge->invisible_ = false;
+		}
+	}
+
 
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
@@ -309,6 +357,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		if (enemys_[i]->GetHP() <= 0) {
 			enemys_[i].release();
 			enemyscount_ -= 1;
+			gameenemyscount_ -= 1;
 		}
 	}
 }
@@ -335,22 +384,29 @@ void GameMap::MapDraw()
 void GameMap::BridgeDraw(bool flag)
 {
 	if (flag == false) { return; }
-	for (unique_ptr<Bridge>& Bridge : bridge) {
+	for (unique_ptr<Bridge>& Bridge : bridgevert) {
+			if (nowstate_ == Map::Boss && time_ >= 1) { return; }
+			if ((Bridge->num == count_&&Bridge->invisible_==false )||
+				(Bridge->num == count_ - nextval_ && Bridge->state_ == Direction::Vertical&&Bridge->invisible_==false)) {
+				Bridge->bridge_->Draw();
+			}
+	}
+	for (unique_ptr<Bridge>& Bridge : bridgeside) {
 		if (nowstate_ == Map::Boss && time_ >= 1) { return; }
-		if (Bridge->num == count_ ||
-			(Bridge->num == count_ - nextval_ && Bridge->state_ == Direction::Vertical) ||
-			(Bridge->num == count_ - 1 && Bridge->state_ == Direction::Beside)
-			) {
+		if ((Bridge->num == count_ && Bridge->invisible_ == false) ||
+			(Bridge->num == count_ - 1 && Bridge->state_ == Direction::Beside && Bridge->invisible_ == false)) {
 			Bridge->bridge_->Draw();
 		}
 	}
+
 
 }
 
 void GameMap::Finalize()
 {
 	maps_.clear();
-	bridge.clear();
+	bridgeside.clear();
+	bridgevert.clear();
 	stairs_.release();
 	grass_.clear();
 	deposits_.clear();
@@ -393,10 +449,10 @@ void GameMap::CheckHitTest(Player* player)
 void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 {
 	for (unique_ptr<Stage>& Map : maps_) {
-		for (unique_ptr<Bridge>& Bridge : bridge) {
+		for (unique_ptr<Bridge>& Bridge : bridgeside) {
 			if (Map->num != Bridge->num) { continue; }
 			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
-			if (Bridge->state_ == Direction::Beside) {
+			if (Bridge->state_ == Direction::Beside&&Bridge->invisible_==false) {
 				if ((pos.z<Pos.z + 2 && pos.z>Pos.z - 2.f)) {
 					//ç∂Ç…å¸Ç©Ç§
 					if (pos.x > Pos.x && Pos.x + 3.f > pos.x) {
@@ -418,7 +474,11 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 					}
 				}
 			}
-			else if (Bridge->state_ == Direction::Vertical) {
+		}
+		for (unique_ptr<Bridge>& Bridge : bridgevert) {
+			if (Map->num != Bridge->num) { continue; }
+			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
+			if (Bridge->state_ == Direction::Vertical && Bridge->invisible_ == false) {
 				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 2)) {
 					if (pos.z > Pos.z - 6.1f && Pos.z > pos.z) {
 						nothit_ = true;
@@ -529,6 +589,16 @@ void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 bool GameMap::EnemyAllKill()
 {
 	if(enemyscount_<=0){
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool GameMap::GameEnemyAllKill()
+{
+	if (gameenemyscount_ <= 0) {
 		return true;
 	}
 	else {

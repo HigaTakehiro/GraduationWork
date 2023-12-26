@@ -67,6 +67,39 @@ private:
 		DEATH
 	}act_;
 
+
+	bool Appear();
+	//-----------------
+	/* 関数テーブル */
+	typedef struct
+	{
+		//状態番号
+		int state=0;
+		//各状態の関数
+		void(TogemaruAct::*func)();
+	}AppearState;
+
+	//番号用
+	enum StateName
+	{
+		P1=0,
+		P2=1,
+		P3=2,
+		P_Num=3
+	};
+
+	void StateExecute(int state);
+	float CameraEaseT, PosEaseT;
+	void Phase1();
+	void Phase2();
+	void Phase3();
+	bool beforeBattle = FALSE;
+	static AppearState StateArray[StateName::P_Num];
+
+	StateName cameraStateIndex;
+	void Camerawork();
+	//-----------------
+
 	void Move();
 	void Attack_Rush();
 	void Attack_ShotSpear();

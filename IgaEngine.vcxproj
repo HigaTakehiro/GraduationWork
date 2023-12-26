@@ -163,6 +163,7 @@
     <ClCompile Include="ApplicationCode\Collision\SphereAndSphere.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\BossBase.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\BossCamerawork.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\Dogom.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\MunniAction.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="ApplicationCode\Map\Grass.cpp" />
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp" />
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp" />
+    <ClCompile Include="ApplicationCode\Map\TreasureBox.cpp" />
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp" />
     <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp" />
     <ClCompile Include="ApplicationCode\Players\Player.cpp" />
@@ -239,6 +241,7 @@
     <ClInclude Include="ApplicationCode\Collision\SphereAndSphere.h" />
     <ClInclude Include="ApplicationCode\Enemy\BaseEnemy.h" />
     <ClInclude Include="ApplicationCode\Enemy\BossBase.h" />
+    <ClInclude Include="ApplicationCode\Enemy\BossCamerawork.h" />
     <ClInclude Include="ApplicationCode\Enemy\Dogom.h" />
     <ClInclude Include="ApplicationCode\Enemy\MunniAction.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h" />
@@ -252,6 +255,7 @@
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h" />
     <ClInclude Include="ApplicationCode\Map\StageCount.h" />
     <ClInclude Include="ApplicationCode\Map\Stairs.h" />
+    <ClInclude Include="ApplicationCode\Map\TreasureBox.h" />
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h" />
     <ClInclude Include="ApplicationCode\Players\AttackEffect.h" />
     <ClInclude Include="ApplicationCode\Players\Player.h" />

@@ -23,6 +23,7 @@ private:
 		Kaidan,
 		Boss,
 		Start,
+		IfMap,
 	};
 
 	enum Direction {
@@ -37,6 +38,7 @@ private:
 		int num;
 		Map state_;
 		bool stop = false;
+		bool invisible_ = false;
 	};
 
 	struct Bridge
@@ -44,6 +46,7 @@ private:
 		unique_ptr<Object3d> bridge_;
 		int num;
 		Direction state_;
+		int invisible_ = false;
 	};
 
 	struct Grassland
@@ -64,6 +67,8 @@ public:
 	void CreateDeposits(const XMFLOAT3& MapPos, int MapNum);
 
 	void CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy);
+
+	void CheckNextMap();
 
 	/// <summary>
 	/// èâä˙âª
@@ -110,6 +115,8 @@ public:
 
 	bool EnemyAllKill();
 
+	bool GameEnemyAllKill();
+
 	void CreateRock();
 
 	bool CheckRockToMap(const XMFLOAT3& RockPos);
@@ -143,7 +150,9 @@ private:
 
 	list<unique_ptr<Stage>> maps_;
 
-	list<unique_ptr<Bridge>> bridge;
+	list<unique_ptr<Bridge>> bridgeside;
+
+	list<unique_ptr<Bridge>> bridgevert;
 
 	unique_ptr<Stairs> stairs_;
 
@@ -165,6 +174,8 @@ private:
 	int oldcount_ = 0;
 	
 	int enemyscount_ = 0;
+
+	int gameenemyscount_ = 0;
 
 	//
 	bool stopCount_ = false;

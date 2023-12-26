@@ -52,7 +52,6 @@ void Togemaru::UI_Init()
 void Togemaru::UI_Upda()
 {
 	//
-	Pos_ = Action->GetPos();
 	//画像サイズ
 	constexpr float sizeX = 0.015f,sizeY=0.005f;
 	//UI座標X
@@ -104,6 +103,8 @@ void Togemaru::Upda()
 	Action->SetPlayerIns(m_player);
 	//行動遷移
 	Action->Transition();
+
+	Pos_ = Action->GetPos();
 	//
 	AnimationSett();
 	//各種パラメータセット
@@ -216,6 +217,9 @@ void Togemaru::InitAnimatin()
 
 bool Togemaru::Appear()
 {
+	Pos_ = Vector3(0,0,-10);
+
+
 	return true;
 }
 

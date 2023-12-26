@@ -44,7 +44,7 @@ void Deposit::Update(const Vector3& playerPos)
 		if (destroyF_) {
 			DestroyEffect();
 			//zÎ“§–¾‚É
-			color_.z -= 0.02f;
+			color_.z -= 0.01f;
 		}
 		
 		desParticle_->Update();
@@ -75,7 +75,7 @@ void Deposit::DestroyEffect()
 		ppos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		ppos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 
-		const float rnd_vel = 0.06f;
+		const float rnd_vel = 0.09f;
 		Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
@@ -86,7 +86,7 @@ void Deposit::DestroyEffect()
 		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
 		// ’Ç‰Á
-		desParticle_->Add(60, ppos, vel, acc, 0.6f, 0.2f, { 0,0.f,0 }, { 0.2f,0.2f,0.2f }, 1, 0);
+		desParticle_->Add(60, ppos, vel, acc, 1.5f, 0.2f, { 0,0.f,0 }, { 0.2f,0.2f,0.2f }, 1, 0);
 	}
 }
 

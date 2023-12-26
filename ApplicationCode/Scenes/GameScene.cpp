@@ -70,8 +70,9 @@ void GameScene::Initialize()
 	int Num = StageCount::GetIns()->Up();
 
 	map_ = make_unique<GameMap>();
-
 	map_->Initalize(player_, cameraPos_, targetPos_, Num);
+
+	
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -157,6 +158,13 @@ void GameScene::Draw()
 			enemys_[i]->Draw();
 		}
 	}
+	
+	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr) { continue; }
+		Enemy->Draw();
+	}
+
 	//3DƒIƒuƒWƒFƒNƒg•`‰æˆ—
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -166,6 +174,12 @@ void GameScene::Draw()
 	}
 	//boss_->Draw();
 	//boss_->Draw2();
+
+	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr) { continue; }
+		Enemy->TexDraw();
+	}
 
 	for (size_t i = 0; i < enemys_.size(); i++)
 		//enemys_[i]->TexDraw();
@@ -285,7 +299,32 @@ void GameScene::EnemyProcess()
 {
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
+#pragma region “e
+	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr) { continue; }
+		if (Enemy->GetHP() <= 0) {
+			player_->AddEP(1);
+			continue;
+		}
+	}
 
+	for (auto i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
+		if (Enemy == nullptr || Enemy->GetHP() <= 0) { continue; }
+		Vector3 EnemyPos = Enemy->GetPos();
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+			Vector3 playerPos = player_->GetPos();
+			Enemy->GetDamage();
+			Vector3 Vec{};
+			Vec = playerPos - EnemyPos;
+			Vec.normalize();
+			Vec.y = 0.0f;
+			player_->HitHammerToEnemy(Vec / 2.f);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+		}
+	}
+#pragma endregion
 	for (size_t i = 0; i < enemys_.size(); i++)
 	{
 		if (enemys_[i]->GetHP() <= 0)
@@ -359,5 +398,31 @@ void GameScene::EnemyProcess()
 			enemys_[i]->Upda(camera_.get());
 		}
 	}
+#pragma region “e
+	for (size_t j = 0; j < map_->GetEnemySize(); j++) {
+		unique_ptr<BaseEnemy>& Ene1 = map_->GetEnemy(j);
+		for (size_t i = 0; i < map_->GetEnemySize(); i++) {
+			unique_ptr<BaseEnemy>& Ene2 = map_->GetEnemy(i);
+			if (i == j || Ene1 == nullptr || Ene2 == nullptr)continue;
+			if (Collision::HitCircle(XMFLOAT2(Ene2->GetPos().x, Ene2->GetPos().z), 1.f,
+				XMFLOAT2(Ene1->GetPos().x, Ene1->GetPos().z), 1.f))
+			{
+				XMFLOAT3 pos = Ene1->GetPos();
+
+				pos.x += sin(atan2f((Ene1->GetPos().x - Ene2->GetPos().x), (Ene1->GetPos().z - Ene2->GetPos().z))) * 0.3f;
+				pos.z += cos(atan2f((Ene1->GetPos().x - Ene2->GetPos().x), (Ene1->GetPos().z - Ene2->GetPos().z))) * 0.3f;
+
+				Ene1->SetPos(pos);
+			}
+		}
+	}
+	for (auto i = 0; i < map_->GetEnemySize(); i++) {
+		unique_ptr<BaseEnemy>& Ene = map_->GetEnemy(i);
+		if (Ene == nullptr) { continue; }
+		if (Ene->GetHP() <= 0) { continue; }
+		Ene->SetHammerObb(*_hummmerObb);
+		Ene->Upda(camera_.get());
+	}
+#pragma endregion
 }
 
