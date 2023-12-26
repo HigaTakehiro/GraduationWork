@@ -380,6 +380,42 @@ void DirectXSetting::UpdateFixFPS() {
 	reference = std::chrono::steady_clock::now();
 }
 
+void DirectXSetting::registerFontFormat(const std::string& key, const std::wstring& fontName, const std::wstring& fontPath, const float fontSize)
+{
+	//テキストフォーマット
+	ComPtr<IDWriteTextFormat> textFormat = nullptr;
+	//フォントファイル
+	ComPtr<IDWriteFontFile> fontFile = nullptr;
+	//フォントコレクション
+	ComPtr<IDWriteFontCollection1> fontCollection = nullptr;
+	//フォントセットビルダー
+	ComPtr<IDWriteFontSetBuilder1> fontSetBuilder = nullptr;
+
+	//フォントセットビルダーの生成
+	directWriteFactory->CreateFontSetBuilder(fontSetBuilder.GetAddressOf());
+
+	//外部フォントファイル読み込み
+	directWriteFactory->CreateFontFileReference(fontPath.c_str(), nullptr, fontFile.GetAddressOf());
+
+	//フォントコレクションの生成
+	ComPtr<IDWriteFontSet> fontSet = nullptr;
+
+	fontSetBuilder->AddFontFile(fontFile.Get());
+	fontSetBuilder->CreateFontSet(fontSet.GetAddressOf());
+	directWriteFactory->CreateFontCollectionFromFontSet(fontSet.Get(), fontCollection.GetAddressOf());
+
+	//テキストフォーマットの作成
+	directWriteFactory->CreateTextFormat(
+		fontName.c_str(),
+		fontCollection.Get(),
+		DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		fontSize, L"ja-JP", textFormat.GetAddressOf());
+
+	textFormats[key] = textFormat;
+}
+
 void DirectXSetting::beginDrawWithDirect2D()
 {
 	const auto backBufferIndex = swapchain->GetCurrentBackBufferIndex();

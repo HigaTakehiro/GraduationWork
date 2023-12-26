@@ -156,5 +156,5 @@ void MessageWindow::TextMessageDraw()
 		}
 	}
 	//Œ»Ý’Ç‰Á‚³‚ê‚Ä‚¢‚é•¶Žš‚ð‘S‚Ä•`‰æ‚·‚é
-	textDraw_->Draw("meiryo", "white", drawMessage_, textDrawPos);
+	textDraw_->Draw("bestTen", "white", drawMessage_, textDrawPos);
 }

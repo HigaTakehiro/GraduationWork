@@ -5,7 +5,7 @@
 #include <d3d11.h>
 #include <d3d11on12.h>
 #include <dxgi1_6.h>
-#include <dwrite.h>
+#include <dwrite_3.h>
 #include <d2d1_1.h>
 #include <d2d1_3.h>
 #include <wrl.h>
@@ -110,6 +110,14 @@ public: //メンバ関数
 	/// <param name="fontSize">フォントサイズ</param>
 	void registerTextFormat(const std::string& key, const std::wstring& fontName, const float fontSize);
 	/// <summary>
+	/// 外部フォントファイルを登録する
+	/// </summary>
+	/// <param name="key">連想配列のキー</param>
+	/// <param name="fontName">フォント名</param>
+	/// <param name="fontPath">フォントのファイルパス</param>
+	/// <param name="fontSize">フォントサイズ</param>
+	void registerFontFormat(const std::string& key, const std::wstring& fontName, const std::wstring& fontPath, const float fontSize);
+	/// <summary>
 	/// Direct2D描画開始
 	/// </summary>
 	void beginDrawWithDirect2D();
@@ -132,7 +140,7 @@ private: //メンバ変数
 	ComPtr<ID3D12CommandAllocator> cmdAllocator;
 	ComPtr<ID3D12CommandQueue> cmdQueue;
 	ComPtr<ID3D12DescriptorHeap> rtvHeaps;
-	ComPtr<IDWriteFactory> directWriteFactory;
+	ComPtr<IDWriteFactory5> directWriteFactory;
 	std::vector<ComPtr<ID3D12Resource>> backBuffers;
 	std::vector<ComPtr<ID3D11Resource>> wrappedBackBuffers;
 	std::vector<ComPtr<ID2D1Bitmap1>> d2dRenderTargets;
