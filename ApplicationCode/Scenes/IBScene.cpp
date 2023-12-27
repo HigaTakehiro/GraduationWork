@@ -247,6 +247,7 @@ void IBScene::Draw()
 
 	D2D1_RECT_F textDrawRange = { 350, 550, 700, 750 };
 	D2D1_RECT_F skillPointDrawRange = { 550, 100, 700, 200 };
+	D2D1_RECT_F skillPanelMessageRange = { 850, 300, 950, 400 };
 	//std::wstring hx = std::to_wstring(SceneManager::GetHP());
 	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
 	std::wstring indent = L"\n";
@@ -266,8 +267,9 @@ void IBScene::Draw()
 		playerUI_->TextUIDraw();
 	}
 	else {
-		text_->Draw("meiryo_16", "white", skillPointMessage, skillPointDrawRange);
-		text_->Draw("meiryo_16", "white", statusMessage, textDrawRange);
+		text_->Draw("bestTen_16", "white", skillPointMessage, skillPointDrawRange);
+		text_->Draw("bestTen_16", "white", statusMessage, textDrawRange);
+		text_->Draw("bestTen_16", "black", L"ƒnƒ“ƒ}[‰ñŽû", skillPanelMessageRange);
 	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 

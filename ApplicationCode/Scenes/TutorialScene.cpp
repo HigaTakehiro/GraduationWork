@@ -191,8 +191,6 @@ void TutorialScene::Update()
 
 	schange->Change(0);
 
-
-
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
