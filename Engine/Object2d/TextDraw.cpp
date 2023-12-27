@@ -6,6 +6,13 @@ void TextDraw::Initialize() {
 	DirectXSetting::GetIns()->registerSolidColorBrush("white", D2D1::ColorF::White);
 	DirectXSetting::GetIns()->registerSolidColorBrush("orange", D2D1::ColorF::Orange);
 	DirectXSetting::GetIns()->registerSolidColorBrush("black", D2D1::ColorF::Black);
+	DirectXSetting::GetIns()->registerSolidColorBrush("red", D2D1::ColorF::Red);
+	DirectXSetting::GetIns()->registerSolidColorBrush("green", D2D1::ColorF::Green);
+	DirectXSetting::GetIns()->registerSolidColorBrush("blue", D2D1::ColorF::Blue);
+	DirectXSetting::GetIns()->registerSolidColorBrush("cyan", D2D1::ColorF::Cyan);
+	DirectXSetting::GetIns()->registerSolidColorBrush("magenta", D2D1::ColorF::Magenta);
+	DirectXSetting::GetIns()->registerSolidColorBrush("yellow", D2D1::ColorF::Yellow);
+	DirectXSetting::GetIns()->registerSolidColorBrush("purple", D2D1::ColorF::Purple);
 	DirectXSetting::GetIns()->registerTextFormat("meiryo", defaultFont, defaultFontSize);
 	DirectXSetting::GetIns()->registerTextFormat("meiryo_16", defaultFont, 16);
 	DirectXSetting::GetIns()->registerFontFormat("bestTen", L"ベストテン-CRT", L"Engine/Resources/fonts/BestTen-CRT.otf", defaultFontSize);
