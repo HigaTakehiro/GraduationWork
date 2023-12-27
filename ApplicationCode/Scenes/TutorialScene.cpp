@@ -283,15 +283,15 @@ void TutorialScene::Draw()
 	//text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
 	std::wstring MoveTimer = std::to_wstring((int32_t)movetimer_);
 	if (phase_ == Phase::Move) {
-		movetextui_->Draw("meiryo", "white", L"Lスティックで動いてみよう\n10/" + MoveTimer, textDrawRange);
+		movetextui_->Draw("bestTen", "white", L"Lスティックで動いてみよう\n10/" + MoveTimer, textDrawRange);
 	}
 
 	if (phase_ == Phase::Fight) {
-		fighttextui_->Draw("meiryo", "white", L"敵を全て倒そう\nBボタンでハンマーを振り回し体当たり\n", textDrawRange);
+		fighttextui_->Draw("bestTen", "white", L"敵を全て倒そう\nBボタンでハンマーを振り回し体当たり\n", textDrawRange);
 	}
 
 	if (phase_ == Phase::Defeat) {
-		fighttextui_->Draw("meiryo", "white", L"洞窟を進んで階段へ向かおう\n", textDrawRange);
+		fighttextui_->Draw("bestTen", "white", L"洞窟を進んで階段へ向かおう\n", textDrawRange);
 	}
 
 	if (phase_ != Phase::Title) {

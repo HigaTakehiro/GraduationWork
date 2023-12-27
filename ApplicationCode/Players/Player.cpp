@@ -526,7 +526,7 @@ void Player::HammerReturn()
 		rot.y = 0.0f;
 	}
 
-	Vector3 hammerToPlayerVec = pos_ - hammerPos_;
+	Vector3 hammerToPlayerVec = player_->GetMatWorld().r[3] - hammerPos_;
 	hammerToPlayerVec.normalize();
 	hammerPos_ += hammerToPlayerVec * throwSpeed_;
 	hammerPos_.y = -2.0f;
@@ -733,12 +733,12 @@ void Player::TextUIDraw()
 	D2D1_RECT_F HPTextDrawRange = { 30, 48, 158, 176 };
 	D2D1_RECT_F EPTextDrawRange = { 30, 68, 158, 176 };
 	D2D1_RECT_F LevelTextDrawRange = { 30, 28, 158, 176 };
-	std::wstring hp = std::to_wstring(pos_.x);
-	std::wstring maxHP = std::to_wstring(pos_.z);
+	std::wstring hp = std::to_wstring(hp_);
+	std::wstring maxHP = std::to_wstring(maxHp_);
 	std::wstring ep = std::to_wstring(ep_);
 	std::wstring maxEP = std::to_wstring(levelUpEp_);
-	text_->Draw("meiryo_16", "white", hp+ L"/" + maxHP, HPTextDrawRange);
-	text_->Draw("meiryo_16", "white", ep + L"/" + maxEP, EPTextDrawRange);
+	text_->Draw("bestTen_16", "white", hp+ L"/" + maxHP, HPTextDrawRange);
+	text_->Draw("bestTen_16", "white", ep + L"/" + maxEP, EPTextDrawRange);
 	std::wstring level = std::to_wstring(level_);
-	text_->Draw("meiryo_16", "white", L"LV : " + level, LevelTextDrawRange);
+	text_->Draw("bestTen_16", "white", L"LV : " + level, LevelTextDrawRange);
 }
