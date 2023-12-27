@@ -42,6 +42,13 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			continue;
 		}
 
+		if (word.find("BOX") == 0) {
+			getline(line_stream, word, ',');
+			box_ = make_unique<TreasureBox>();
+			box_->Initialize(false, Pos, player, COUNT);
+			continue;
+		}
+
 		if (word.find("MAP") == 0) {
 			getline(line_stream, word, ',');
 			float x = (float)std::atof(word.c_str());
@@ -352,6 +359,10 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
 
+	if (box_ != nullptr) {
+		box_->Update();
+	}
+
 	for (int32_t i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] == nullptr) { continue; }
 		if (enemys_[i]->GetHP() <= 0) {
@@ -378,6 +389,10 @@ void GameMap::MapDraw()
 		if (count_ == GrassLand->num) {
 			GrassLand->grass_->Draw();
 		}
+	}
+
+	if (box_ != nullptr) {
+		box_->Draw();
 	}
 }
 
@@ -413,6 +428,7 @@ void GameMap::Finalize()
 	for (int32_t i = 0; i < enemys_.size(); i++) {
 		enemys_[i].release();
 	}
+	box_.release();
 }
 
 void GameMap::CheckHitTest(Player* player)

@@ -5,7 +5,7 @@
 #include "ExternalFileLoader.h"
 #include<SafeDelete.h>
 
-void TreasureBox::Initialize(bool& empmty, const XMFLOAT3& MapPos, Player* player, int Count)
+void TreasureBox::Initialize(bool empmty, const XMFLOAT3& MapPos, Player* player, int Count)
 {
 	player_ = player;
 	uipos_ = MapPos;
