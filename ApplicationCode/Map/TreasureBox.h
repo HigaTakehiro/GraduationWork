@@ -10,7 +10,7 @@ class TreasureBox
 {
 public:
 
-	void Initialize(bool& empmty, const XMFLOAT3& MapPos,Player* player,int Count);
+	void Initialize(bool empmty, const XMFLOAT3& MapPos,Player* player,int Count);
 
 	void Update();
 
