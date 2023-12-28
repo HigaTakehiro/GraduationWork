@@ -3,6 +3,7 @@
 #include"Player.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
+#include"PadInput.h"
 #include<SafeDelete.h>
 
 void TreasureBox::Initialize(bool empmty, const XMFLOAT3& MapPos, Player* player, int Count)
@@ -38,6 +39,7 @@ void TreasureBox::Update()
 
 void TreasureBox::Draw()
 {
+	if (lock_) { return; }
 	treasurebox_->Draw();
 	if (!f) { return; }
 	ui_->Draw();
@@ -50,7 +52,9 @@ void TreasureBox::CheckHit()
 	if ((Pos.x >= pos_.x - 1.f && Pos.x <= pos_.x + 1.4f) &&
 		(Pos.z >= pos_.z + 1.f && Pos.z <= pos_.z + 4.f)) {
 		f = true;
-		lock_ = true;
+		if (PadInput::GetIns()->PushButton(PadInput::Button_A)) {
+			lock_ = true;
+		}
 	}
 	else {
 		
