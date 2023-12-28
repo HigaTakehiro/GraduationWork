@@ -346,7 +346,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	if (GameEnemyAllKill()) {
+	if (GameEnemyAllKill()||box_->GetLock() == true) {
 		for (unique_ptr<Bridge>& Bridge : bridgeside) {
 			Bridge->invisible_ = false;
 		}
