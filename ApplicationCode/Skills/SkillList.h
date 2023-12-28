@@ -19,7 +19,6 @@ public: //メンバ関数
 	/// <summary>
 	/// 全スキル使用
 	/// </summary>
-	/// <param name="depth">階層</param>
 	void AllUse() override;
 
 	/// <summary>
