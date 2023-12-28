@@ -8,10 +8,12 @@
 void TreasureBox::Initialize(bool empmty, const XMFLOAT3& MapPos, Player* player, int Count)
 {
 	player_ = player;
+	pos_ = MapPos;
+	pos_.y = -2.5f;
 	uipos_ = MapPos;
+	uipos_.y = -2.5f;
 	uipos_.y += 2;
 	count_ = Count;
-	pos_ = MapPos;
 
 	stairsModel_ = Shapes::CreateSquare({ 0,0 }, { 64, 64 }, "steps.png", { 2, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
 	uiModel_ = Shapes::CreateSquare({ 0,0 }, { 192, 64 }, "susumuA.png", { 6, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { -192, 64 });
