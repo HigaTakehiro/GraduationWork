@@ -22,6 +22,8 @@ public:
 
 	void SetLock(bool Lock) { this->lock_ = Lock; }
 
+	int GetCont() { return count_; }
+
 private:
 
 	void CheckHit();

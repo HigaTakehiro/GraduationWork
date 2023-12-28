@@ -45,6 +45,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 		if (word.find("BOX") == 0) {
 			getline(line_stream, word, ',');
 			box_ = make_unique<TreasureBox>();
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			box_->Initialize(false, Pos, player, COUNT);
 			continue;
 		}
@@ -392,6 +393,7 @@ void GameMap::MapDraw()
 	}
 
 	if (box_ != nullptr) {
+		if (box_->GetCont() != count_) { return; }
 		box_->Draw();
 	}
 }
