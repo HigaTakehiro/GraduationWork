@@ -130,6 +130,10 @@ public:
 	void DamageFlash();
 
 	void PlayerHitBody(float dis,bool& f);
+	void DestryAct(float&alpha,int hp);
+	float aTime;
+	int32_t RefTime;
+
 protected:
 	void TexInit();
 	void TexUpda();

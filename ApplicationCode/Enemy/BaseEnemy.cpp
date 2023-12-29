@@ -240,6 +240,27 @@ void BaseEnemy::PlayerHitBody(float dis, bool& f)
 
 
 
+void BaseEnemy::DestryAct(float&alpha,int hp)
+{
+	XMFLOAT3 pos{};
+	if (hp > 0)pos=state_obj_.Pos_;
+
+	else {
+		alpha -= 0.02f;
+		state_obj_.Pos_ = pos;
+		if (alpha < 0.f)
+		{
+			RefTime++;
+
+		}
+	}
+	if(RefTime>120)
+	{
+		state_obj_.Pos_ = { pos.x + rand() % 10 - 5,pos.y,pos.z + rand() % 10 - 5 };
+		RefTime = 0;
+		alpha = 1.f;
+	}
+}
 
 
 void BaseEnemy::RecvFlashColor()

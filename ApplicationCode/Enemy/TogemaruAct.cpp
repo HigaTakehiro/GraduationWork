@@ -237,6 +237,8 @@ void TogemaruAct::Attack_ShotSpear()
 {
 	if (++animationWaitTime < 60)return;
 
+	RoleF = true;
+
 	constexpr float maxRushEaseT = 30.f;
 
 	if (++rushEaseT >= maxRushEaseT) {
@@ -268,6 +270,7 @@ void TogemaruAct::Attack_ShotSpear()
 		//”­ËI—¹
 		if (endShot) {
 			isShot = FALSE;//
+			RoleF = false;
 			act_ = MOVE;//ó‘Ô‚ğˆÚ“®‚É
 		}
 	}
