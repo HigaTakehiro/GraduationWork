@@ -10,7 +10,7 @@ class TreasureBox
 {
 public:
 
-	void Initialize(bool& empmty, const XMFLOAT3& MapPos,Player* player,int Count);
+	void Initialize(bool empmty, const XMFLOAT3& MapPos,Player* player,int Count);
 
 	void Update();
 
@@ -21,6 +21,8 @@ public:
 	bool GetLock() { return lock_; }
 
 	void SetLock(bool Lock) { this->lock_ = Lock; }
+
+	int GetCont() { return count_; }
 
 private:
 

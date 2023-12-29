@@ -3,15 +3,18 @@
 #include"Player.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
+#include"PadInput.h"
 #include<SafeDelete.h>
 
-void TreasureBox::Initialize(bool& empmty, const XMFLOAT3& MapPos, Player* player, int Count)
+void TreasureBox::Initialize(bool empmty, const XMFLOAT3& MapPos, Player* player, int Count)
 {
 	player_ = player;
+	pos_ = MapPos;
+	pos_.y = -2.5f;
 	uipos_ = MapPos;
+	uipos_.y = -2.5f;
 	uipos_.y += 2;
 	count_ = Count;
-	pos_ = MapPos;
 
 	stairsModel_ = Shapes::CreateSquare({ 0,0 }, { 64, 64 }, "steps.png", { 2, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
 	uiModel_ = Shapes::CreateSquare({ 0,0 }, { 192, 64 }, "susumuA.png", { 6, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { -192, 64 });
@@ -36,6 +39,7 @@ void TreasureBox::Update()
 
 void TreasureBox::Draw()
 {
+	if (lock_) { return; }
 	treasurebox_->Draw();
 	if (!f) { return; }
 	ui_->Draw();
@@ -48,7 +52,9 @@ void TreasureBox::CheckHit()
 	if ((Pos.x >= pos_.x - 1.f && Pos.x <= pos_.x + 1.4f) &&
 		(Pos.z >= pos_.z + 1.f && Pos.z <= pos_.z + 4.f)) {
 		f = true;
-		lock_ = true;
+		if (PadInput::GetIns()->PushButton(PadInput::Button_A)) {
+			lock_ = true;
+		}
 	}
 	else {
 		

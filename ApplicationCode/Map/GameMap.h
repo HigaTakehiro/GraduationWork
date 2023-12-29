@@ -4,6 +4,7 @@
 #include"Stairs.h"
 #include"Grass.h"
 #include "Deposit.h"
+#include"TreasureBox.h"
 #include "Ore.h"
 #include"BaseEnemy.h"
 #include<memory.h>
@@ -159,6 +160,8 @@ private:
 	list<unique_ptr<Object3d>> rock_;
 	
 	list<unique_ptr<Grassland>> grass_;
+
+	unique_ptr<TreasureBox> box_;
 
 	//zÎƒAƒCƒeƒ€
 	std::list<std::unique_ptr<Ore>> oreItems_;
