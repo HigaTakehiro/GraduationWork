@@ -74,23 +74,8 @@ void IBScene::Initialize()
 	window_[2]->SetPosition({ 900.f, 300.f });
 	window_[2]->SetSize({ 750.f, 550.f });
 	//スキルパネル
-	for (int32_t i = 0; i < 13; i++) {
-		skillPanel_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 900.f, 300.f }, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
-		skillPanel_[i]->SetSize({ 96, 64 });
-		if (i >= 0 && i < 4) {
-			skillPanel_[i]->SetPosition({ 900.f + (96.f * (float)i + 10.f * (float)i), 300.f });
-		}
-		else if (i >= 4 && i < 7) {
-			skillPanel_[i]->SetPosition({ 900.f - (96.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f });
-		}
-		else if (i >= 7 && i < 10) {
-			skillPanel_[i]->SetPosition({ 900.f, 300.f + (64.f * ((float)i - 6.f) + 10.f * ((float)i - 6.f))});
-		}
-		else if (i >= 10 && i < 13) {
-			skillPanel_[i]->SetPosition({ 900.f, 300.f - (64.f * ((float)i - 9.f) + 10.f * ((float)i - 9.f)) });
-		}
-	}
-	skillPanel_[0]->SetColor({ 1.f, 1.f, 1.f });
+	SkillPanelInitialize();
+	
 	//カーソルUI
 	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 900.f, 300.f }, { 0.6f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
 	skillCursor_->SetSize({ 100.f, 70.f });
@@ -121,6 +106,23 @@ void IBScene::Initialize()
 void IBScene::Update()
 {
 	Animation();
+
+	//スキルパネル更新
+	for (int32_t i = 0; i < 7; i++) {
+		panelStatus_[i][3].skillPanel_->Update();
+		panelStatus_[3][i].skillPanel_->Update();
+	}
+	if (KeyInput::GetIns()->TriggerKey(DIK_P)) {
+		panelStatus_[3][3].skillPanel_->SetIsSkillGet(true);
+		if (panelStatus_[2][3].skillPanel_->GetIsActive()) {
+			panelStatus_[2][3].skillPanel_->SetIsSkillGet(true);
+		}
+		if (panelStatus_[1][3].skillPanel_->GetIsActive()) {
+			panelStatus_[1][3].skillPanel_->SetIsSkillGet(true);
+		}
+	}
+	SkillUIUpdate();
+
 	player_->SetPosition({ -8.0f,2.5f, 8.0f });
 	player_->Update();
 	fire_->SetPosition({ 0.0f,2.5f, 8.0f });
@@ -233,8 +235,12 @@ void IBScene::Draw()
 			window_[i]->Draw();
 		}
 		skillCursor_->Draw();
-		for (int32_t i = 0; i < 13; i++) {
-			skillPanel_[i]->Draw();
+		for (int32_t i = 0; i < 7; i++) {
+			for (int32_t j = 0; j < 7; j++) {
+				if (panelStatus_[i][j].panelStatus_ != 0) {
+					panelStatus_[i][j].skillPanel_->SpriteDraw();
+				}
+			}
 		}
 		skillPlayer_[animeCount_]->Draw();
 	}
@@ -269,7 +275,13 @@ void IBScene::Draw()
 	else {
 		text_->Draw("bestTen_16", "white", skillPointMessage, skillPointDrawRange);
 		text_->Draw("bestTen_16", "white", statusMessage, textDrawRange);
-		text_->Draw("bestTen_16", "black", L"ハンマー回収", skillPanelMessageRange);
+		for (int32_t i = 0; i < 7; i++) {
+			for (int32_t j = 0; j < 7; j++) {
+				if (panelStatus_[i][j].panelStatus_ != 0) {
+					panelStatus_[i][j].skillPanel_->TextMessageDraw();
+				}
+			}
+		}
 	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -475,5 +487,83 @@ void IBScene::UIUpdate()
 
 void IBScene::SkillUIUpdate()
 {
+	//スキルパネル有効化処理
+	for (int32_t i = 0; i < 7; i++) {
+		for (int32_t j = 0; j < 7; j++) {
+			if (panelStatus_[i][j].panelStatus_ == 0) continue;
+
+			bool isActive = panelStatus_[i][j].skillPanel_->GetIsActive();
+
+			if (i == 0 && panelStatus_[i + 1][j].skillPanel_->GetIsSkillGet()) {
+				panelStatus_[i][j].skillPanel_->SetIsActive(true);
+			}
+			if (j && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
+				panelStatus_[i][j].skillPanel_->SetIsActive(true);
+			}
+
+			if (i == 0 || j == 0) continue;
+			if (!isActive && panelStatus_[i - 1][j].skillPanel_->GetIsSkillGet()) {
+				panelStatus_[i][j].skillPanel_->SetIsActive(true);
+			}
+			if (!isActive && panelStatus_[i][j - 1].skillPanel_->GetIsSkillGet()) {
+				panelStatus_[i][j].skillPanel_->SetIsActive(true);
+			}
+
+			if (i + 1 == 7 || j + 1 == 7) continue;
+			if (!isActive && panelStatus_[i + 1][j].skillPanel_->GetIsSkillGet()) {
+				panelStatus_[i][j].skillPanel_->SetIsActive(true);
+			}
+			if (!isActive && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
+				panelStatus_[i][j].skillPanel_->SetIsActive(true);
+			}
+
+		}
+	}
+}
+
+void IBScene::SkillPanelInitialize()
+{
+
+	for (int32_t i = 0; i < 7; i++) {
+		panelStatus_[3][i].panelStatus_ = 1;
+		panelStatus_[i][3].panelStatus_ = 1;
+	}
+	panelStatus_[3][3].panelStatus_ = 2;
+
+	Vector2 pos = { 0.f, 0.f };
+
+	for (int32_t i = 0; i < 7; i++) {
+		for (int32_t j = 0; j < 7; j++) {
+			if (panelStatus_[i][j].panelStatus_ == 1) {
+				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
+				panelStatus_[i][j].skillPanel_->Initialize(L"ステータスアップ", pos);
+			}
+			else if (panelStatus_[i][j].panelStatus_ == 2) {
+				pos = { 900.f, 300.f };
+				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
+				panelStatus_[i][j].skillPanel_->Initialize(L"ハンマー\n回収", pos);
+				panelStatus_[i][j].skillPanel_->SetIsActive(true);
+			}
+			else {
+				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
+				panelStatus_[i][j].skillPanel_->Initialize(L"empty", pos);
+			}
+		}
+	}
+
+	for (int32_t i = 0; i < 7; i++) {
+		if (i < 3) {
+			pos = { 900.f, 300.f + (64.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f)))};
+			panelStatus_[i][3].skillPanel_->SetPos(pos);
+			pos = { 900.f + (96.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))), 300.f };
+			panelStatus_[3][i].skillPanel_->SetPos(pos);
+		}
+		else if (i > 3){
+			pos = { 900.f, 300.f - (64.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)) };
+			panelStatus_[i][3].skillPanel_->SetPos(pos);
+			pos = { 900.f - (96.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f };
+			panelStatus_[3][i].skillPanel_->SetPos(pos);
+		}
+	}
 }
 

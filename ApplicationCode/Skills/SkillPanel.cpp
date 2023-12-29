@@ -26,7 +26,7 @@ void SkillPanel::Update()
 {
 	const Vector3 gray = { 0.2f, 0.2f, 0.2f };
 	const Vector3 white = { 1.f, 1.f, 1.f };
-	const Vector3 blue = { 0.2f, 0.6f, 0.2f };
+	const Vector3 green = { 0.2f, 0.6f, 0.2f };
 
 	if (!isActive_) {
 		skillPanel_->SetColor(gray);
@@ -35,8 +35,10 @@ void SkillPanel::Update()
 		skillPanel_->SetColor(white);
 	}
 	else {
-		skillPanel_->SetColor(blue);
+		skillPanel_->SetColor(green);
 	}
+
+	skillPanel_->SetPosition(pos_);
 }
 
 void SkillPanel::SpriteDraw()
@@ -46,7 +48,7 @@ void SkillPanel::SpriteDraw()
 
 void SkillPanel::TextMessageDraw()
 {
-	D2D1_RECT_F drawRange = { pos_.x - 50.f, pos_.y, pos_.x + 50.f, pos_.y + 100.f };
+	D2D1_RECT_F drawRange = { pos_.x - 40.f, pos_.y - 15.f, pos_.x + 50.f, pos_.y + 100.f };
 	std::string textColor = "black";
 	if (!isActive_) {
 		textColor = "white";

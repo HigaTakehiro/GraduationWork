@@ -25,9 +25,16 @@
 #include"IntermediateBase.h"
 #include "SceneChange.h"
 #include "Player.h"
+#include "SkillPanel.h"
 
 class IBScene :public BaseScene
 {
+public: //構造体
+	struct SkillPanelStatus {
+		int32_t panelStatus_;
+		std::unique_ptr<SkillPanel> skillPanel_;
+	};
+
 public: //メンバ関数
 	/// <summary>
 	/// 初期化関数
@@ -73,6 +80,11 @@ private: //メンバ関数
 	/// スキル画面更新処理
 	/// </summary>
 	void SkillUIUpdate();
+
+	/// <summary>
+	/// スキルパネル
+	/// </summary>
+	void SkillPanelInitialize();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -138,8 +150,8 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> window_[3];
 	//スキル画面プレイヤースプライト
 	std::unique_ptr<Sprite> skillPlayer_[4];
-	//スキルパネルスプライト
-	std::unique_ptr<Sprite> skillPanel_[13];
+	//スキルパネル
+	SkillPanelStatus panelStatus_[7][7];
 	//スキル画面カーソルスプライト
 	std::unique_ptr<Sprite> skillCursor_;
 };
