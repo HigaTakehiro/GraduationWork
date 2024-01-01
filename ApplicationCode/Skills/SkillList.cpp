@@ -5,7 +5,7 @@ SkillList::SkillList(std::string listName)
 	name_ = listName;
 }
 
-void SkillList::AllUse()
+void SkillList::AllUse(Player* player)
 {
 	std::string message = name_;
 	message += "\n";
@@ -13,15 +13,15 @@ void SkillList::AllUse()
 	printf_s(message.c_str());
 
 	for (ISkill* skill : mList_) {
-		skill->AllUse();
+		skill->AllUse(player);
 	}
 }
 
-void SkillList::Use(const std::string& name)
+void SkillList::Use(const std::string& name, Player* player)
 {
 	for (ISkill* skill : mList_) {
 		if (skill->GetName() == name) {
-			skill->AllUse();
+			skill->AllUse(player);
 		}
 	}
 }

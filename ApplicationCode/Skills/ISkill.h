@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <string>
+#include "Player.h"
 
 class ISkill {
 public: //メンバ関数
@@ -12,7 +13,7 @@ public: //メンバ関数
 	/// 全スキル使用
 	/// </summary>
 	/// <param name="depth"></param>
-	virtual void AllUse() = 0;
+	virtual void AllUse(Player* player) = 0;
 	/// <summary>
 	/// 名前を取得
 	/// </summary>

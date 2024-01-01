@@ -19,13 +19,13 @@ public: //メンバ関数
 	/// <summary>
 	/// 全スキル使用
 	/// </summary>
-	void AllUse() override;
+	void AllUse(Player* player) override;
 
 	/// <summary>
 	/// スキル使用
 	/// </summary>
 	/// <param name="name">スキル名</param>
-	void Use(const std::string& name);
+	void Use(const std::string& name, Player* player);
 
 	/// <summary>
 	/// スキルを追加
