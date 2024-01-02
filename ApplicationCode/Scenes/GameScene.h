@@ -25,6 +25,7 @@
 #include"IntermediateBase.h"
 #include "Grass.h"
 #include"AttackEffect.h"
+
 class GameScene : public BaseScene
 {
 public: //ƒƒ“ƒoŠÖ”

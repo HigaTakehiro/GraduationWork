@@ -9,6 +9,8 @@
 #include "Dogom.h"
 #include "SoundManager.h"
 #include "Helper.h"
+#include"StageCount.h"
+
 #pragma warning(disable:4996)
 
 void (TutorialScene::* TutorialScene::FuncTable[])() {

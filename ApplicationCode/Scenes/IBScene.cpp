@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
+#include"StageCount.h"
 
 void IBScene::Initialize()
 {
@@ -100,7 +101,7 @@ void IBScene::Initialize()
 	playerUI_->SetStop(true);
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
-
+	int Num = StageCount::GetIns()->Up();
 }
 
 void IBScene::Update()
