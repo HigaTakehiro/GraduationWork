@@ -185,19 +185,19 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			COUNT += 1;
 		}
 		else if (NUMBER == 7) {
-		unique_ptr<Stage> Map = make_unique<Stage>();
-		Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-		Map->num = COUNT;
-		Map->state_ = Map::IfMap;
-		Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-		Map->stagePos_ = Pos;
-		Map->stage_->SetPosition(Pos);
-		Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
-		Map->invisible_=true;
-		maps_.push_back(move(Map));
-		CreateGrass(Pos, COUNT);
-		NEXTVERT += 1;
-		COUNT += 1;
+			unique_ptr<Stage> Map = make_unique<Stage>();
+			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
+			Map->num = COUNT;
+			Map->state_ = Map::IfMap;
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Map->stagePos_ = Pos;
+			Map->stage_->SetPosition(Pos);
+			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
+			Map->invisible_ = true;
+			maps_.push_back(move(Map));
+			CreateGrass(Pos, COUNT);
+			NEXTVERT += 1;
+			COUNT += 1;
 		}
 	}
 }
@@ -236,7 +236,7 @@ void GameMap::CreateBridge()
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;
-				if (Map2->state_ == Map::IfMap||Map->state_==Map::IfMap) {
+				if (Map2->state_ == Map::IfMap || Map->state_ == Map::IfMap) {
 					Bridges->invisible_ = true;
 				}
 				bridgevert.push_back(move(Bridges));
@@ -293,14 +293,14 @@ void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
 		Enemy1->SetPlayerIns(player);
 		XMFLOAT3 MapMaxPos = { MapPos.x + limit_.x,100.f,MapPos.z + limit_.z };
 		XMFLOAT3 MapMinPos = { MapPos.x - limit_.y,100.f,MapPos.z - limit_.w };
-		Enemy1->SetOverPos(MapMaxPos,MapMinPos);
+		Enemy1->SetOverPos(MapMaxPos, MapMinPos);
 		Enemy1->SetCount(count_);
 		//óêêîê∂ê¨
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
 		std::uniform_int_distribution<> randX(-9, 9);
 		std::uniform_int_distribution<> randZ(-8, 8);
-		Enemy1->SetPos({ MapPos.x+(float)randX(mt),MapPos.y,MapPos.z + (float)randZ(mt)});
+		Enemy1->SetPos({ MapPos.x + (float)randX(mt),MapPos.y,MapPos.z + (float)randZ(mt) });
 		enemys_.push_back(move(Enemy1));
 		enemyscount_ += 1;
 	}
@@ -346,7 +346,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	if (GameEnemyAllKill()||box_->GetLock() == true) {
+	if (GameEnemyAllKill() || box_->GetLock() == true) {
 		for (unique_ptr<Bridge>& Bridge : bridgeside) {
 			Bridge->invisible_ = false;
 		}
@@ -402,11 +402,11 @@ void GameMap::BridgeDraw(bool flag)
 {
 	if (flag == false) { return; }
 	for (unique_ptr<Bridge>& Bridge : bridgevert) {
-			if (nowstate_ == Map::Boss && time_ >= 1) { return; }
-			if ((Bridge->num == count_&&Bridge->invisible_==false )||
-				(Bridge->num == count_ - nextval_ && Bridge->state_ == Direction::Vertical&&Bridge->invisible_==false)) {
-				Bridge->bridge_->Draw();
-			}
+		if (nowstate_ == Map::Boss && time_ >= 1) { return; }
+		if ((Bridge->num == count_ && Bridge->invisible_ == false) ||
+			(Bridge->num == count_ - nextval_ && Bridge->state_ == Direction::Vertical && Bridge->invisible_ == false)) {
+			Bridge->bridge_->Draw();
+		}
 	}
 	for (unique_ptr<Bridge>& Bridge : bridgeside) {
 		if (nowstate_ == Map::Boss && time_ >= 1) { return; }
@@ -470,7 +470,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 		for (unique_ptr<Bridge>& Bridge : bridgeside) {
 			if (Map->num != Bridge->num) { continue; }
 			XMFLOAT3 Pos = Bridge->bridge_->GetPosition();
-			if (Bridge->state_ == Direction::Beside&&Bridge->invisible_==false) {
+			if (Bridge->state_ == Direction::Beside && Bridge->invisible_ == false) {
 				if ((pos.z<Pos.z + 2 && pos.z>Pos.z - 2.f)) {
 					//ç∂Ç…å¸Ç©Ç§
 					if (pos.x > Pos.x && Pos.x + 3.f > pos.x) {
@@ -597,16 +597,16 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 {
 	if (StageNum == 0) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv"); }
-	else if (StageNum == 1) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv"); }
-	else if (StageNum == 2) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map3.csv"); }
-	else if (StageNum == 3) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map4.csv"); }
-	else if (StageNum == 100) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv"); }
+	else if (StageNum == 1 || StageNum == 6 || StageNum == 11) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv"); }
+	else if (StageNum == 2 || StageNum == 7 || StageNum == 12) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map3.csv"); }
+	else if (StageNum == 3 || StageNum == 8 || StageNum == 13) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map4.csv"); }
+	else if (StageNum == 5 || StageNum == 10 || StageNum == 15) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv"); }
 
 }
 
 bool GameMap::EnemyAllKill()
 {
-	if(enemyscount_<=0){
+	if (enemyscount_ <= 0) {
 		return true;
 	}
 	else {
