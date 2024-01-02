@@ -192,6 +192,7 @@
     <ClCompile Include="ApplicationCode\Scenes\TutorialScene.cpp" />
     <ClCompile Include="ApplicationCode\Shake\IwaEffect.cpp" />
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\SkillList.cpp" />
     <ClCompile Include="ApplicationCode\Skills\SkillPanel.cpp" />
     <ClCompile Include="ApplicationCode\UI\Button.cpp" />
     <ClCompile Include="ApplicationCode\UI\MessageWindow.cpp" />
@@ -270,6 +271,8 @@
     <ClInclude Include="ApplicationCode\Scenes\TutorialScene.h" />
     <ClInclude Include="ApplicationCode\Shake\IwaEffect.h" />
     <ClInclude Include="ApplicationCode\Shake\Shake.h" />
+    <ClInclude Include="ApplicationCode\Skills\ISkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\SkillList.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillPanel.h" />
     <ClInclude Include="ApplicationCode\UI\Button.h" />
     <ClInclude Include="ApplicationCode\UI\MessageWindow.h" />

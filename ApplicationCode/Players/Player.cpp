@@ -5,8 +5,6 @@
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
 #include "SoundManager.h"
-#include "SkillList.h"
-#include "StatusUpSkill.h"
 
 void Player::Initialize()
 {
