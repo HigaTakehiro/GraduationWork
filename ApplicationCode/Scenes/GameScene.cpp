@@ -72,7 +72,7 @@ void GameScene::Initialize()
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, Num);
 
-	
+
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -158,7 +158,7 @@ void GameScene::Draw()
 			enemys_[i]->Draw();
 		}
 	}
-	
+
 	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
@@ -183,7 +183,7 @@ void GameScene::Draw()
 
 	for (size_t i = 0; i < enemys_.size(); i++)
 		//enemys_[i]->TexDraw();
-	player_->Draw();
+		player_->Draw();
 	for (size_t i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i]->GetFlash()) {
 			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
@@ -247,13 +247,16 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
-		if (StageCount::GetIns()->Now() < 3) {
+		if (StageCount::GetIns()->Now() == 3||
+			StageCount::GetIns()->Now() == 8||
+			StageCount::GetIns()->Now() == 13) {
+			SceneManager::SceneChange(SceneManager::SceneName::IB);
+		}
+		else{
 			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 			SceneManager::SceneChange(SceneManager::SceneName::Game);
 		}
-		else {
-			SceneManager::SceneChange(SceneManager::SceneName::IB);
-		}
+
 	}
 
 }

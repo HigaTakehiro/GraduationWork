@@ -4,8 +4,7 @@
 class StageCount
 {
 public:
-	StageCount();
-	~StageCount();
+	
 
 	void Initi();
 
@@ -16,19 +15,10 @@ public:
 	static StageCount* GetIns();
 
 private:
-	static int stagenum;
+	int stagenum = 0;
 };
 
-int StageCount::stagenum = 0;
-
-StageCount::StageCount()
-{
-	
-}
-
-StageCount::~StageCount()
-{
-}
+//int StageCount::stagenum = 0;
 
 inline void StageCount::Initi()
 {

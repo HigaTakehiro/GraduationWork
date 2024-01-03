@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "Helper.h"
 #include "Shapes.h"
 
 #define MapX_Mx 10.f
@@ -104,7 +105,16 @@ void Togemaru::Upda()
 	//行動遷移
 	Action->Transition();
 
+	
+
 	Pos_ = Action->GetPos();
+	if (m_player->getisHammerActive() && !Action->GetRole())
+	{
+		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f));
+	}
+	if(DamF)FlashF = true;
+
+	RecvDamageFlash();
 	//
 	AnimationSett();
 	//各種パラメータセット
@@ -120,6 +130,7 @@ void Togemaru::Upda()
 	m_Body->SetScale({ 0.030f, 0.040f, 0.040f });
 	m_Body->SetPosition(Action->GetPos());
 	m_Body->SetRotation(Vector3(0, 0, 0));
+	m_Body->SetColor(color_rgb);
 	m_Body->Update();
 
 	UI_Upda();

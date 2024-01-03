@@ -49,6 +49,8 @@ private:
     //ボスの行動パターン
     TogemaruAct* Action=nullptr;
 
+    BOOL DamF;
+    int DamCoolTime;
 private:
     //UI
 	//鱗の数

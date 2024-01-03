@@ -1,6 +1,8 @@
 #include "NormalEnemyB.h"
 
 #include <algorithm>
+
+#include "Collision.h"
 #include "Shapes.h"
 
 void NormalEnemyB::Init()
@@ -66,6 +68,9 @@ void NormalEnemyB::Upda(Camera* camera)
 #include "DirectXSetting.h"
 void NormalEnemyB::Draw()
 {
+	float Mindis = 12.f;
+	if (Collision::GetLength(state_obj_.Pos_, _player->GetPos()) > Mindis)return;
+
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	action_->ImpTexDraw();
 	state_obj_.obj_->Draw();

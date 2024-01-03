@@ -8,6 +8,8 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
+#include"StageCount.h"
+
 void BossScene::Initialize()
 {
 	ShowCursor(true);
@@ -46,10 +48,10 @@ void BossScene::Initialize()
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
 
-
+	int Num = StageCount::GetIns()->Up();
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_, cameraPos_, targetPos_,100);
-	
+	map_->Initalize(player_, cameraPos_, targetPos_, Num);
+
 	schange = new SceneChangeEffect();
 	schange->Initialize();
 	schange->SetFEnd(true);
@@ -84,7 +86,7 @@ void BossScene::Update()
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	//Vector3 //enemyPos[3] = {};
 
-	
+
 	//デバッグカメラ移動処理
 	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
 		cameraPos_.z += 1.0f;
@@ -120,8 +122,8 @@ void BossScene::Update()
 
 	}
 	//if (boss_->GetAppearFlag() == FALSE) {
-		camera_->SetEye(cameraPos_);
-		camera_->SetTarget(targetPos_);
+	camera_->SetEye(cameraPos_);
+	camera_->SetTarget(targetPos_);
 	//}//
 		//boss_->SetCamera(camera_.get());
 	light_->Update();
@@ -146,13 +148,13 @@ void BossScene::Update()
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
 
-		boss_->SetHummerPos(player_->GetHammer()->GetPosition());
+	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
-		
-		//shake_->Update();
+
+	//shake_->Update();
 	colManager_->Update();
-		//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-	
+	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
+
 	m_Stairs->Update();
 	if (boss_->GetClearF() && player_->GetNextFlor())
 	{
@@ -168,25 +170,30 @@ void BossScene::Update()
 		m_ClearTexScl.x = Easing::easeIn(ClearTexEaseT, 60.f, 0, 1280.f);
 		m_ClearTexScl.y = Easing::easeIn(ClearTexEaseT, 60.f, 0, 720.f);
 	}
-	if(NextClearF)
+	if (NextClearF)
 	{
 		ClearTexEaseT = std::clamp(ClearTexEaseT, 0.f, 60.f);
 	}
-	
+
 	m_ClearTex->SetSize(m_ClearTexScl);
 
 	schange->Change(0);
 
 	//シーン切り替えmmm
 	SceneChange();
-	if(NextClearF)
+	if (NextClearF)
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+			if (StageCount::GetIns()->Now() <= 15) {
+				SceneManager::SceneChange(SceneManager::SceneName::Game);
+			}
+			else {
+				SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+			}
 		}
 	}
 
-	
+
 }
 
 void BossScene::Draw()
@@ -202,8 +209,8 @@ void BossScene::Draw()
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	map_->MapDraw();
-	if(boss_->GetClearF())
-	m_Stairs->Draw();
+	if (boss_->GetClearF())
+		m_Stairs->Draw();
 
 	Object3d::PostDraw();
 
@@ -248,7 +255,7 @@ void BossScene::Draw()
 	}
 	boss_->SpriteDraw();
 	if (boss_->GetClearF())
-	m_ClearTex->Draw();
+		m_ClearTex->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }

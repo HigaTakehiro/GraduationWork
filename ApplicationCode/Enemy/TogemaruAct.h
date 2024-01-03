@@ -136,6 +136,7 @@ private:
 	int32_t waitShotCount = 0;
 	Vector3 RushStartPos = {};
 
+	bool RoleF;
 //ダメージくらったとき
 private:
 	bool isSpearCrush=FALSE;
@@ -161,6 +162,8 @@ public:
 	static Vector3 oldCameraPos;
 	static Vector3 DefaultPos;
 	void ViewShake();
+
+	bool GetRole()const { return RoleF; }
 public:
 	// ゲッター //
 	Vector3 GetPos()const { return Pos_; }
