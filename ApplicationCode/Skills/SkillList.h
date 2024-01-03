@@ -13,26 +13,26 @@ public: //メンバ関数
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~SkillList();
+	~SkillList() override;
 
 	/// <summary>
 	/// スキル使用
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
-	void Use(Player* player) override;
+	void Use(class Player* player) override;
 
 	/// <summary>
 	/// 指定スキル使用
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
 	/// <param name="name">使用したいスキル名</param>
-	void SingleUse(Player* player, std::string& name);
+	void SingleUse(class Player* player, std::string& name);
 
 	/// <summary>
 	/// スキル追加
 	/// </summary>
 	/// <param name="skill">追加スキル</param>
-	void AddSkill(ISkill* skill);
+	void AddSkill(class ISkill* skill);
 
 private: //メンバ変数
 	//スキルリスト

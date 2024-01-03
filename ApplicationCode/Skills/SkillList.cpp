@@ -8,8 +8,8 @@ SkillList::SkillList(const std::string& name)
 
 SkillList::~SkillList()
 {
-	for (auto itr = skillList_.begin(); itr == skillList_.end(); itr++) {
-		safe_delete(*itr);
+	for (auto skill : skillList_) {
+		safe_delete(skill);
 	}
 	skillList_.clear();
 }

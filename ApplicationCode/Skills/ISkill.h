@@ -13,13 +13,13 @@ public: //メンバ関数
 	/// スキル使用
 	/// </summary>
 	/// <param name="player">プレイヤー</param>
-	virtual void Use(Player* player) = 0;
+	virtual void Use(class Player* player) = 0;
 
 	/// <summary>
 	/// 名前取得
 	/// </summary>
 	/// <returns>名前</returns>
-	std::string GetName() { return name_; }
+	std::string GetName() const { return name_; }
 
 protected: //メンバ変数
 	//名前
