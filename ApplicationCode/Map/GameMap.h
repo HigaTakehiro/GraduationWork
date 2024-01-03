@@ -148,21 +148,20 @@ public:
 	int32_t GetEnemySize() { return enemys_.size(); }
 
 private:
-
+	//ƒ}ƒbƒv
 	list<unique_ptr<Stage>> maps_;
-
+	//‹´‰¡
 	list<unique_ptr<Bridge>> bridgeside;
-
+	//‹´c
 	list<unique_ptr<Bridge>> bridgevert;
-
+	//ŠK’i
 	unique_ptr<Stairs> stairs_;
-
+	//”wŒiŠâ
 	list<unique_ptr<Object3d>> rock_;
-	
+	//‘
 	list<unique_ptr<Grassland>> grass_;
-
+	//Œã‚Ì•ó” 
 	unique_ptr<TreasureBox> box_;
-
 	//zÎƒAƒCƒeƒ€
 	std::list<std::unique_ptr<Ore>> oreItems_;
 

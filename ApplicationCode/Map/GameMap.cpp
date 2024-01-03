@@ -265,7 +265,7 @@ void GameMap::CreateGrass(const XMFLOAT3& MapPos, int Count)
 		float posZ = MapPos.z + (float)randZ(mt2);
 		unique_ptr<Grassland>GrassLand = make_unique<Grassland>();
 		GrassLand->grass_ = std::make_unique<Grass>();
-		GrassLand->grass_->Initialize({ posX, 0, posZ });
+		GrassLand->grass_->Initialize({ posX, 0, posZ },i);
 		GrassLand->num = Count;
 		grass_.push_back(move(GrassLand));
 	}

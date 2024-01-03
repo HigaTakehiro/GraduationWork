@@ -14,7 +14,7 @@ public: //ƒƒ“ƒoŠÖ”
 	/// <summary>
 	/// ‰Šú‰»
 	/// </summary>
-	void Initialize(const Vector3& pos);
+	void Initialize(const Vector3& pos,int I);
 
 	/// <summary>
 	/// XVˆ—
