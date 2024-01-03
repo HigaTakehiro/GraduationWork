@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Vector3.h"
 #include "TextDraw.h"
+#include "ISkill.h"
 
 class Player
 {
