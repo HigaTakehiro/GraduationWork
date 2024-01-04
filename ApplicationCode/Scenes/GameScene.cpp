@@ -164,7 +164,9 @@ void GameScene::Draw()
 		if (Enemy == nullptr) { continue; }
 		Enemy->Draw();
 	}
-
+	if (aeFlag == true) {
+		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	}
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -184,11 +186,7 @@ void GameScene::Draw()
 	for (size_t i = 0; i < enemys_.size(); i++)
 		//enemys_[i]->TexDraw();
 		player_->Draw();
-	for (size_t i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetFlash()) {
-			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-		}
-	}
+
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
 	}*/
@@ -323,8 +321,19 @@ void GameScene::EnemyProcess()
 			Vec = playerPos - EnemyPos;
 			Vec.normalize();
 			Vec.y = 0.0f;
+			aeFlag = true;
 			player_->HitHammerToEnemy(Vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+		}
+		if (aeFlag == true) {
+			aEffect_->Update(EnemyPos);
+			if (aeCount < 30) {
+				aeCount++;
+			}
+			else {
+				aeCount = 0;
+				aeFlag = false;
+			}
 		}
 	}
 #pragma endregion
@@ -346,23 +355,12 @@ void GameScene::EnemyProcess()
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
-			aeFlag = true;
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
-		if (aeFlag == true) {
-			aEffect_->Update(enemyPos[i], enemys_[i]->GetFlash());
-		}
+			
 	}
-	if (aeFlag == true) {
-		if (aeCount < 30) {
-			aeCount++;
-		}
-		else {
-			aeCount = 0;
-			aeFlag = false;
-		}
-	}
+
 
 	//プレイヤーのOBB設定
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],

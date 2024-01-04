@@ -17,7 +17,7 @@ void SceneManager::Initialize() {
 	textDraw = std::make_unique<TextDraw>();
 	textDraw->Initialize();
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
-	SceneChange(SceneName::Tutorial);
+	SceneChange(SceneName::Game);
 }
 
 void SceneManager::Update() {
