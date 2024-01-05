@@ -194,6 +194,7 @@
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp" />
     <ClCompile Include="ApplicationCode\Skills\HPUpSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\SkillList.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\SkillManager.cpp" />
     <ClCompile Include="ApplicationCode\Skills\SkillPanel.cpp" />
     <ClCompile Include="ApplicationCode\UI\Button.cpp" />
     <ClCompile Include="ApplicationCode\UI\MessageWindow.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="ApplicationCode\Skills\HPUpSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\ISkill.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillList.h" />
+    <ClInclude Include="ApplicationCode\Skills\SkillManager.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillPanel.h" />
     <ClInclude Include="ApplicationCode\UI\Button.h" />
     <ClInclude Include="ApplicationCode\UI\MessageWindow.h" />
