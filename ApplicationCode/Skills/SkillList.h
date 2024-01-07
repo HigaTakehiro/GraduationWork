@@ -34,6 +34,13 @@ public: //メンバ関数
 	/// <param name="skill">追加スキル</param>
 	void AddSkill(class ISkill* skill);
 
+	/// <summary>
+	/// スキルが入手状態かどうかを取得
+	/// </summary>
+	/// <param name="name">確認するスキル名</param>
+	/// <returns>入手しているかどうか</returns>
+	bool GetSkill(const std::string& name);
+
 private: //メンバ変数
 	//スキルリスト
 	std::list<ISkill*> skillList_;

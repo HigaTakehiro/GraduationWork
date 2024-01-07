@@ -28,10 +28,16 @@ public: //メンバ関数
 	void SetPlayer(Player* player) { player_ = player; }
 
 	/// <summary>
-	/// プレイヤーのスキルを追加
+	/// プレイヤーのスキルを追加(パッシブスキル)
 	/// </summary>
-	/// <param name="skill">プレイヤースキル</param>
-	void AddPlayerSkill(ISkill* skill);
+	/// <param name="skill">プレイヤーパッシブスキル</param>
+	void AddPlayerPassiveSkill(ISkill* skill);
+
+	/// <summary>
+	/// プレイヤーのスキルを追加(アクティブスキル)
+	/// </summary>
+	/// <param name="skill">プレイヤーアクティブスキル</param>
+	void AddPlayerActiveSkill(ISkill* skill);
 
 	/// <summary>
 	/// スキルが入手状態かどうかを取得
@@ -49,6 +55,7 @@ private: //メンバ変数
 	//プレイヤー
 	Player* player_;
 	//プレイヤースキルリスト
-	SkillList* skillList_;
+	SkillList* activeSkillList_;
+	SkillList* passiveSkillList_;
 };
 

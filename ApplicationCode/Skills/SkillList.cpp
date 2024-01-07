@@ -42,3 +42,14 @@ void SkillList::AddSkill(ISkill* skill)
 {
 	skillList_.emplace_back(skill);
 }
+
+bool SkillList::GetSkill(const std::string& name)
+{
+	for (ISkill* skill : skillList_) {
+		if (skill->GetName() == name) {
+			return true;
+		}
+	}
+
+	return false;
+}
