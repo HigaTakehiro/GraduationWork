@@ -12,13 +12,17 @@ public:
 
 	int Up();
 
+	int FloorFour();
+
+	int FloorEight();
+
+	int FloorFourTeen();
+
 	static StageCount* GetIns();
 
 private:
 	int stagenum = 0;
 };
-
-//int StageCount::stagenum = 0;
 
 inline void StageCount::Initi()
 {
@@ -34,6 +38,21 @@ inline int StageCount::Up()
 {
 	return stagenum += 1;
 
+}
+inline int StageCount::FloorFour()
+{
+	stagenum = 4;
+	return stagenum;
+}
+inline int StageCount::FloorEight()
+{
+	stagenum = 8;
+	return stagenum;
+}
+inline int StageCount::FloorFourTeen()
+{
+	stagenum = 14;
+	return stagenum;
 }
 inline StageCount* StageCount::GetIns()
 {
