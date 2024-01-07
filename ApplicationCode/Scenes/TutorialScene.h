@@ -159,7 +159,7 @@ private:
 	XMFLOAT2 asistPos_{ WinApp::window_width-250 ,WinApp::window_height - 100 };
 	XMFLOAT3 sleepPos_ = { 0.f,-2.5f,50.f };
 	SceneChangeEffect* schange;
-
+	
 
 	//アニメーションカウント
 	int32_t animeCount_;

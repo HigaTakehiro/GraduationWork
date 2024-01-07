@@ -96,6 +96,12 @@ public: //メンバ関数
 	int32_t GetMaxHP() { return maxHp_; }
 
 	/// <summary>
+	/// HPの最大値を加算
+	/// </summary>
+	/// <param name="addNum">加算する数値</param>
+	void AddMaxHP(int32_t addNum) { maxHp_ += addNum; }
+
+	/// <summary>
 	/// レベルを取得
 	/// </summary>
 	/// <returns>レベル</returns>

@@ -13,6 +13,7 @@
 #include "SafeDelete.h"
 #include "TextDraw.h"
 #include "CollisionManager.h"
+#include "SkillManager.h"
 
 class SceneManager
 {
@@ -132,11 +133,18 @@ public: //静的メンバ関数
 	/// <returns>スコア</returns>
 	static int32_t GetScore() { return score; }
 
+private: //静的メンバ関数
+	/// <summary>
+	/// シーン初期化処理
+	/// </summary>
+	static void NowSceneInitialize();
+
 private: //静的メンバ変数
 	static BaseScene* nowScene;
 	static int32_t stageNo_;
 	static int32_t score;
 	static CollisionManager* colManager_;
+	static SkillManager* skillManager_;
 	//プレイヤーレベル
 	static int32_t level_;
 	//経験値

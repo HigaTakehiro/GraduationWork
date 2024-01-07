@@ -10,6 +10,7 @@
 #include "SoundManager.h"
 #include "Helper.h"
 #include"StageCount.h"
+#include "HPUpSkill.h"
 
 #pragma warning(disable:4996)
 
@@ -130,6 +131,10 @@ void TutorialScene::Initialize()
 	phase_ = Phase::Title;
 	oldpushCount_ = pushCount_;
 
+	HPUpSkill* hpUp = new HPUpSkill("hpUp_Test", 5);
+	skillManager_->AddPlayerPassiveSkill(hpUp);
+	skillManager_->SetPlayer(player_);
+
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 
@@ -205,7 +210,9 @@ void TutorialScene::Update()
 	fprintf(fp, "floor %d", 0);
 	fclose(fp);
 	SceneChange();
-
+	if (KeyInput::GetIns()->HoldKey(DIK_T)) {
+		skillManager_->Update();
+	}
 
 }
 
