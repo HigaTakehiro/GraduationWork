@@ -102,6 +102,12 @@ public: //メンバ関数
 	void AddMaxHP(int32_t addNum) { maxHp_ += addNum; }
 
 	/// <summary>
+	/// HPの最大値をセット
+	/// </summary>
+	/// <param name="maxHp">最大HP</param>
+	void SetMaxHP(int32_t maxHp) { maxHp_ = maxHp; }
+
+	/// <summary>
 	/// レベルを取得
 	/// </summary>
 	/// <returns>レベル</returns>
@@ -205,6 +211,24 @@ public: //メンバ関数
 	/// </summary>
 	/// <returns>素早さ</returns>
 	int32_t GetSPD() { return spd_; }
+
+	/// <summary>
+	/// 攻撃力をセット
+	/// </summary>
+	/// <param name="atk">攻撃力</param>
+	void SetATK(int32_t atk) { atk_ = atk; }
+
+	/// <summary>
+	/// 防御力をセット
+	/// </summary>
+	/// <param name="def">防御力</param>
+	void SetDEF(int32_t def) { def_ = def; }
+
+	/// <summary>
+	/// 素早さをセット
+	/// </summary>
+	/// <param name="spd">素早さ</param>
+	void SetSPD(int32_t spd) { spd_ = spd; }
 
 private: //メンバ関数
 
