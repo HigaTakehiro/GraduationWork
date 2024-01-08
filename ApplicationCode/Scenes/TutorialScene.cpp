@@ -344,6 +344,10 @@ void TutorialScene::SceneChange()
 	SceneManager::SetLevel(player_->GetLevel());
 	SceneManager::SetEP(player_->GetEP());
 	SceneManager::SetHP(player_->GetHP());
+	SceneManager::SetMaxHP(player_->GetMaxHP());
+	SceneManager::SetATK(player_->GetATK());
+	SceneManager::SetDEF(player_->GetDef());
+	SceneManager::SetSPD(player_->GetSPD());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {

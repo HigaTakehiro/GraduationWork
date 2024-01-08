@@ -41,6 +41,10 @@ void BossScene::Initialize()
 	player_->SetLevel(SceneManager::GetLevel());
 	player_->SetEP(SceneManager::GetEP());
 	player_->SetHP(SceneManager::GetHP());
+	player_->SetMaxHP(SceneManager::GetMaxHP());
+	player_->SetATK(SceneManager::GetATK());
+	player_->SetDEF(SceneManager::GetDEF());
+	player_->SetSPD(SceneManager::GetSPD());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -283,6 +287,10 @@ void BossScene::SceneChange()
 		SceneManager::SetLevel(player_->GetLevel());
 		SceneManager::SetEP(player_->GetEP());
 		SceneManager::SetHP(player_->GetHP());
+		SceneManager::SetMaxHP(player_->GetMaxHP());
+		SceneManager::SetATK(player_->GetATK());
+		SceneManager::SetDEF(player_->GetDef());
+		SceneManager::SetSPD(player_->GetSPD());
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);

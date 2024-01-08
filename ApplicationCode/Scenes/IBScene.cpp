@@ -94,9 +94,13 @@ void IBScene::Initialize()
 	baseCount = 0;
 	playerUI_ = new Player();
 	playerUI_->Initialize();
+	playerUI_->SetLevel(SceneManager::GetLevel());
 	playerUI_->SetEP(SceneManager::GetEP());
 	playerUI_->SetHP(SceneManager::GetHP());
-	playerUI_->SetLevel(SceneManager::GetLevel());
+	playerUI_->SetMaxHP(SceneManager::GetMaxHP());
+	playerUI_->SetATK(SceneManager::GetATK());
+	playerUI_->SetDEF(SceneManager::GetDEF());
+	playerUI_->SetSPD(SceneManager::GetSPD());
 	hp_ = playerUI_->GetHP();
 	playerUI_->SetStop(true);
 	SoundManager::GetIns()->StopAllBGM();
@@ -361,7 +365,11 @@ void IBScene::SceneChange()
 				else {
 					SceneManager::SetHP(playerUI_->GetHP());
 				}
-					SceneManager::SceneChange(SceneManager::SceneName::Game);
+				SceneManager::SetMaxHP(playerUI_->GetMaxHP());
+				SceneManager::SetATK(playerUI_->GetATK());
+				SceneManager::SetDEF(playerUI_->GetDef());
+				SceneManager::SetSPD(playerUI_->GetSPD());
+				SceneManager::SceneChange(SceneManager::SceneName::Game);
 			}
 			else {
 				//’ÊíƒGƒŠƒA‚©‚ç—ˆ‚½ê‡
@@ -375,6 +383,10 @@ void IBScene::SceneChange()
 				else {
 					SceneManager::SetHP(playerUI_->GetHP());
 				}
+				SceneManager::SetMaxHP(playerUI_->GetMaxHP());
+				SceneManager::SetATK(playerUI_->GetATK());
+				SceneManager::SetDEF(playerUI_->GetDef());
+				SceneManager::SetSPD(playerUI_->GetSPD());
 				SceneManager::SceneChange(SceneManager::SceneName::Boss);
 			}
 		}
