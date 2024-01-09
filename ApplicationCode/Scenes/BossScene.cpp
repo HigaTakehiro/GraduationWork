@@ -52,6 +52,8 @@ void BossScene::Initialize()
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
 
+	skillManager_->SetPlayer(player_);
+
 	int Num = StageCount::GetIns()->Up();
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, Num);
@@ -182,6 +184,7 @@ void BossScene::Update()
 	m_ClearTex->SetSize(m_ClearTexScl);
 
 	schange->Change(0);
+	skillManager_->Update();
 
 	//シーン切り替えmmm
 	SceneChange();
@@ -275,6 +278,7 @@ void BossScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
+	skillManager_->Finalize();
 }
 
 void BossScene::SceneChange()

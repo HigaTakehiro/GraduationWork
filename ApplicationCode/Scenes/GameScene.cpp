@@ -76,7 +76,7 @@ void GameScene::Initialize()
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, Num);
 
-
+	skillManager_->SetPlayer(player_);
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -136,6 +136,7 @@ void GameScene::Update()
 
 	shake_->Update();
 	colManager_->Update();
+	skillManager_->Update();
 
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
 	schange->Change(0);
@@ -237,6 +238,7 @@ void GameScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
+	skillManager_->Finalize();
 }
 
 void GameScene::SceneChange()

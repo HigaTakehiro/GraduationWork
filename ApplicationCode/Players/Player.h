@@ -230,6 +230,29 @@ public: //メンバ関数
 	/// <param name="spd">素早さ</param>
 	void SetSPD(int32_t spd) { spd_ = spd; }
 
+	/// <summary>
+	/// 攻撃力を加算
+	/// </summary>
+	/// <param name="num">上昇数値</param>
+	void AddATK(int32_t num) { atk_ += num; }
+
+	/// <summary>
+	/// 守備力を加算
+	/// </summary>
+	/// <param name="num">上昇数値</param>
+	void AddDEF(int32_t num) { def_ += num; }
+
+	/// <summary>
+	/// 素早さを加算
+	/// </summary>
+	/// <param name="num">上昇数値</param>
+	void AddSPD(int32_t num) { spd_ += num; }
+
+	/// <summary>
+	/// ハンマー戻り処理
+	/// </summary>
+	void HammerReturn();
+
 private: //メンバ関数
 
 	/// <summary>
@@ -256,11 +279,6 @@ private: //メンバ関数
 	/// ハンマー入手
 	/// </summary>
 	void HammerGet();
-
-	/// <summary>
-	/// ハンマー戻り処理
-	/// </summary>
-	void HammerReturn();
 
 	/// <summary>
 	/// ハンマー強化処理

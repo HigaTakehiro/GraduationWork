@@ -307,6 +307,7 @@ void IBScene::Draw()
 void IBScene::Finalize()
 {
 	safe_delete(text_);
+	skillManager_->Finalize();
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
 	//colManager_->Finalize();

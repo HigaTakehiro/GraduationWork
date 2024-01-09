@@ -499,7 +499,7 @@ void Player::HammerThrow() {
 void Player::HammerGet()
 {
 	if (isHammerReflect_) {
-		HammerReturn();
+		//HammerReturn();
 		if (player_->GetIsHit() && hammer_->GetIsHit()) {
 			hammer_->SetParent(player_.get());
 			hammer_->SetPosition(initHammerPos_);
