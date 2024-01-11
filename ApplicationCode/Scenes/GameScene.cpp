@@ -111,14 +111,17 @@ void GameScene::Update()
 	}
 
 	EnemyProcess();
+	if (map_->GetHit() == true) {
+		shake_->SetIwaFlag(true);
+	}
 	if (shake_->GetShakeFlag() == true) {
 		cameraPos_.y += shake_->GetShakePos();
 		targetPos_.y += shake_->GetShakePos();
 	}
 	else {
+		cameraPos_.y = 12;
 		targetPos_.y = 0;
 	}
-	cameraPos_.y = 12;
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	light_->Update();
@@ -205,8 +208,8 @@ void GameScene::Draw()
 	//テキスト描画範囲
 	//
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	//std::wstring hx = std::to_wstring(player_->GetPos().z);
-	//text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
+	std::wstring hx = std::to_wstring(shake_->GetShakeFlag());
+	text_->Draw("meiryo", "white", L"ゲームシーン\n" + hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -245,12 +248,12 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
-		if (StageCount::GetIns()->Now() == 3||
-			StageCount::GetIns()->Now() == 8||
+		if (StageCount::GetIns()->Now() == 3 ||
+			StageCount::GetIns()->Now() == 8 ||
 			StageCount::GetIns()->Now() == 13) {
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
-		else{
+		else {
 			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 			SceneManager::SceneChange(SceneManager::SceneName::Game);
 		}
@@ -326,7 +329,12 @@ void GameScene::EnemyProcess()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
 		if (aeFlag == true) {
-			aEffect_->Update(EnemyPos);
+			if (Enemy->GetHP() > 0) {
+				aEffect_->Update(EnemyPos);
+			}
+			else {
+				aeFlag = false;
+			}
 			if (aeCount < 30) {
 				aeCount++;
 			}
@@ -358,7 +366,7 @@ void GameScene::EnemyProcess()
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
-			
+
 	}
 
 

@@ -6,6 +6,7 @@
 void Shake::Initialize(ID3D12Device* device, Camera* camera)
 {
 	shakeTimer = 0;
+	shakeMaxTimer = 30;
 	shakeFlag = false;
 	ShakeSet();
 	iwaFlag = false;
@@ -23,12 +24,12 @@ void Shake::Update()
 {
 	//今はエンターキーを押したらシェイクするようになってい
 	//壁ができたら壁に当たったらシェイクする処理に変更する
-	if (KeyInput::GetIns()->TriggerKey(DIK_RETURN)) {
-		iwaCount = 0;
+	//if (KeyInput::GetIns()->TriggerKey(DIK_RETURN)) {
+		//iwaCount = 0;
 		shakeFlag = true;
-		iwaFlag = true;
-		fade = 1;
-	}
+		//iwaFlag = true;
+		//fade = 1;
+	//}
 	if (shakeFlag == true) {
 		if (shakeTimer < shakeMaxTimer) {
 			shakeTimer++;
@@ -51,6 +52,8 @@ void Shake::Update()
 			}
 		}
 		else {
+			iwaCount = 0;
+			fade = 1;
 			iwaFlag = false;
 		}
 

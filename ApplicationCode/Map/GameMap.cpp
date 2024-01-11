@@ -448,18 +448,21 @@ void GameMap::CheckHitTest(Player* player)
 		//¶
 		if (PlayerPos.x >= Map->stagePos_.x + limit_.x) {
 			PlayerPos.x = Map->stagePos_.x + limit_.x;
+			wallHit_ = true;
 		}
-		if (PlayerPos.x <= Map->stagePos_.x - limit_.y) {
+		else  if (PlayerPos.x <= Map->stagePos_.x - limit_.y) {
 			PlayerPos.x = Map->stagePos_.x - limit_.y;
+			wallHit_ = true;
 		}
-
-		if (PlayerPos.z >= Map->stagePos_.z + limit_.z) {
+		else if (PlayerPos.z >= Map->stagePos_.z + limit_.z) {
 			PlayerPos.z = Map->stagePos_.z + limit_.z;
+			wallHit_ = true;
 		}
-
-		if (PlayerPos.z <= Map->stagePos_.z - limit_.w) {
+		else if (PlayerPos.z <= Map->stagePos_.z - limit_.w) {
 			PlayerPos.z = Map->stagePos_.z - limit_.w;
+			wallHit_ = true;
 		}
+		else { wallHit_ = false; }
 	}
 	player->SetPos(PlayerPos);
 }
