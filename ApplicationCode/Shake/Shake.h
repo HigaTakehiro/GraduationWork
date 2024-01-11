@@ -27,8 +27,8 @@ public:
 	Vector3 GetParticlePos();
 private:
 	//シェイク時の最大時間
-	float shakeMaxTimer;
-	float shakeTimer;
+	float shakeMaxTimer = 30;
+	float shakeTimer=0;
 	bool shakeFlag;
 	//シェイクの揺れる数値(カメラのeyeに代入する)
 	float shakePos;

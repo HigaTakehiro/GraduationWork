@@ -6,7 +6,6 @@
 void Shake::Initialize(ID3D12Device* device, Camera* camera)
 {
 	shakeTimer = 0;
-	shakeMaxTimer = 30;
 	shakeFlag = false;
 	ShakeSet();
 	iwaFlag = false;
@@ -26,7 +25,6 @@ void Shake::Update()
 	//壁ができたら壁に当たったらシェイクする処理に変更する
 	//if (KeyInput::GetIns()->TriggerKey(DIK_RETURN)) {
 		//iwaCount = 0;
-		shakeFlag = true;
 		//iwaFlag = true;
 		//fade = 1;
 	//}
@@ -45,17 +43,19 @@ void Shake::Update()
 
 	if (iwaFlag == true) {
 		iwaCount++;
-		if (iwaCount < 100) {
+		if (iwaCount < 10) {
+			shakeFlag = true;
 			fade -= 0.01f;
 			for (int i = 0; i < 2; i++) {
 				iwa[i]->Update(iwaPos[i], fade);
 			}
 		}
-		else {
-			iwaCount = 0;
-			fade = 1;
-			iwaFlag = false;
-		}
+
+	}
+	if (iwaCount > 10) {
+		iwaCount = 0;
+		fade = 1;
+		iwaFlag = false;
 
 	}
 }

@@ -105,4 +105,5 @@ private: //ƒƒ“ƒo•Ï”
 	AttackEffect* aEffect_;
 	bool aeFlag = false;
 	int aeCount = 0;
+	int ShakeCount = 0;
 };

@@ -112,15 +112,25 @@ void GameScene::Update()
 
 	EnemyProcess();
 	if (map_->GetHit() == true) {
-		shake_->SetIwaFlag(true);
+		ShakeCount++;
+		if (ShakeCount < 30) {
+			shake_->SetIwaFlag(true);
+		}
+	}
+	else {
+		ShakeCount = 0;
 	}
 	if (shake_->GetShakeFlag() == true) {
 		cameraPos_.y += shake_->GetShakePos();
 		targetPos_.y += shake_->GetShakePos();
+		//cameraPos_.x += shake_->GetShakePos();
+		//targetPos_.x += shake_->GetShakePos();
 	}
 	else {
 		cameraPos_.y = 12;
-		targetPos_.y = 0;
+		//cameraPos_.x = 0;
+		targetPos_.y = 3;
+		//targetPos_.x = 0;
 	}
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
