@@ -9,6 +9,8 @@
 #include "Dogom.h"
 #include "SoundManager.h"
 #include"StageCount.h"
+#include "ATKUpSkill.h"
+#include "HammerReturnSkill.h"
 
 void IBScene::Initialize()
 {
@@ -39,7 +41,7 @@ void IBScene::Initialize()
 	for (int32_t i = 0; i < 4; i++) {
 		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 128.0f }, true);
 		skillPlayer_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::Image2DName::IdlePlayer, { 150.f, 600.f }, { 1.f, 1.f, 1.f, 1.f }, { 0.5f, 0.5f });
-		skillPlayer_[i]->SetTextureRect({ (float)i * 128.f, 2.f }, {128.f, 128.f});
+		skillPlayer_[i]->SetTextureRect({ (float)i * 128.f, 2.f }, { 128.f, 128.f });
 		skillPlayer_[i]->SetSize({ 128.f, 128.f });
 	}
 	fireModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "fire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * 0, 1.0f }, { 128.0f, 128.0f }, true);
@@ -76,7 +78,7 @@ void IBScene::Initialize()
 	window_[2]->SetSize({ 750.f, 550.f });
 	//スキルパネル
 	SkillPanelInitialize();
-	
+
 	//カーソルUI
 	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 900.f, 300.f }, { 0.6f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
 	skillCursor_->SetSize({ 100.f, 70.f });
@@ -106,6 +108,8 @@ void IBScene::Initialize()
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 	int Num = StageCount::GetIns()->Up();
+
+	skillManager_->SetPlayer(playerUI_);
 }
 
 void IBScene::Update()
@@ -117,14 +121,28 @@ void IBScene::Update()
 		panelStatus_[i][3].skillPanel_->Update();
 		panelStatus_[3][i].skillPanel_->Update();
 	}
-	if (KeyInput::GetIns()->TriggerKey(DIK_P)) {
-		panelStatus_[3][3].skillPanel_->SetIsSkillGet(true);
-		if (panelStatus_[2][3].skillPanel_->GetIsActive()) {
+	if (KeyInput::GetIns()->TriggerKey(DIK_P) && playerUI_->GetSkillPoint() > 0) {
+		playerUI_->SubSkillPoint(1);
+		if (!panelStatus_[3][3].skillPanel_->GetIsSkillGet()) {
+			panelStatus_[3][3].skillPanel_->SetIsSkillGet(true);
+			if (!skillManager_->GetSkill("HammerReturn")) {
+				HammerReturnSkill* returnSkill = new HammerReturnSkill("HammerReturn");
+				skillManager_->AddPlayerPassiveSkill(returnSkill);
+			}
+		}
+		if (panelStatus_[2][3].skillPanel_->GetIsActive() && !panelStatus_[2][3].skillPanel_->GetIsSkillGet()) {
 			panelStatus_[2][3].skillPanel_->SetIsSkillGet(true);
+			ATKUpSkill* atkUp = new ATKUpSkill("atkUP", 5);
+			skillManager_->AddPlayerPassiveSkill(atkUp);
 		}
-		if (panelStatus_[1][3].skillPanel_->GetIsActive()) {
+		if (panelStatus_[1][3].skillPanel_->GetIsActive() && !panelStatus_[1][3].skillPanel_->GetIsSkillGet()) {
 			panelStatus_[1][3].skillPanel_->SetIsSkillGet(true);
+			ATKUpSkill* atkUp = new ATKUpSkill("atkUP", 5);
+			skillManager_->AddPlayerPassiveSkill(atkUp);
 		}
+	}
+	if (KeyInput::GetIns()->TriggerKey(DIK_U) && KeyInput::GetIns()->TriggerKey(DIK_I)) {
+		playerUI_->AddSkillPoint(99);
 	}
 	SkillUIUpdate();
 
@@ -166,7 +184,7 @@ void IBScene::Update()
 	playerUI_->Update();
 	playerUI_->SetHP(playerUI_->GetMaxHP());
 
-	if (hp_!=0) {
+	if (hp_ != 0) {
 		if (baseCount < 2) {
 			baseCount++;
 		}
@@ -197,6 +215,7 @@ void IBScene::Update()
 		count2 = 0;
 	}
 	schange->Change(0);
+	skillManager_->Update();
 
 	arrow->SetTextureRect({ 0 + 64 * count,0 }, { 64,64 });
 	arrow->SetSize({ 64,64 });
@@ -257,13 +276,14 @@ void IBScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 350, 550, 700, 750 };
-	D2D1_RECT_F skillPointDrawRange = { 550, 100, 700, 200 };
+	D2D1_RECT_F skillPointDrawRange = { 550, 100, 900, 200 };
 	D2D1_RECT_F skillPanelMessageRange = { 850, 300, 950, 400 };
 	//std::wstring hx = std::to_wstring(SceneManager::GetHP());
 	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
 	std::wstring indent = L"\n";
 	std::wstring statusMessage = L"HP : ";
-	std::wstring skillPointMessage = L"スキルポイント : 0";
+	std::wstring skillPointMessage = L"スキルポイント : ";
+	skillPointMessage += std::to_wstring(playerUI_->GetSkillPoint());
 	statusMessage += std::to_wstring(playerUI_->GetMaxHP());
 	statusMessage += indent;
 	statusMessage += L"攻撃力 : ";
@@ -395,7 +415,7 @@ void IBScene::SceneChange()
 	else if (arrow->GetPosition().y == 50) {
 		//スキルエリアに行く
 		if (skillFlag == true) {
-		
+
 			if (schange->GetEnd() == false) {
 				if (schange->GetFStart() == false) {
 					if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
@@ -539,10 +559,17 @@ void IBScene::SkillPanelInitialize()
 {
 
 	for (int32_t i = 0; i < 7; i++) {
-		panelStatus_[3][i].panelStatus_ = 1;
-		panelStatus_[i][3].panelStatus_ = 1;
+		if (i < 3) {
+			panelStatus_[3][i].panelStatus_ = 1;
+			panelStatus_[i][3].panelStatus_ = 2;
+		}
+		else {
+			panelStatus_[3][i].panelStatus_ = 3;
+			panelStatus_[i][3].panelStatus_ = 4;
+		}
+
 	}
-	panelStatus_[3][3].panelStatus_ = 2;
+	panelStatus_[3][3].panelStatus_ = 5;
 
 	Vector2 pos = { 0.f, 0.f };
 
@@ -550,9 +577,21 @@ void IBScene::SkillPanelInitialize()
 		for (int32_t j = 0; j < 7; j++) {
 			if (panelStatus_[i][j].panelStatus_ == 1) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"ステータスアップ", pos);
+				panelStatus_[i][j].skillPanel_->Initialize(L"HPアップ+5", pos);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 2) {
+				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
+				panelStatus_[i][j].skillPanel_->Initialize(L"ATKアップ+5", pos);
+			}
+			else if (panelStatus_[i][j].panelStatus_ == 3) {
+				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
+				panelStatus_[i][j].skillPanel_->Initialize(L"DEFアップ+5", pos);
+			}
+			else if (panelStatus_[i][j].panelStatus_ == 4) {
+				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
+				panelStatus_[i][j].skillPanel_->Initialize(L"SPDアップ+1", pos);
+			}
+			else if (panelStatus_[i][j].panelStatus_ == 5) {
 				pos = { 900.f, 300.f };
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
 				panelStatus_[i][j].skillPanel_->Initialize(L"ハンマー\n回収", pos);
@@ -567,12 +606,12 @@ void IBScene::SkillPanelInitialize()
 
 	for (int32_t i = 0; i < 7; i++) {
 		if (i < 3) {
-			pos = { 900.f, 300.f + (64.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f)))};
+			pos = { 900.f, 300.f + (64.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))) };
 			panelStatus_[i][3].skillPanel_->SetPos(pos);
 			pos = { 900.f + (96.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))), 300.f };
 			panelStatus_[3][i].skillPanel_->SetPos(pos);
 		}
-		else if (i > 3){
+		else if (i > 3) {
 			pos = { 900.f, 300.f - (64.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)) };
 			panelStatus_[i][3].skillPanel_->SetPos(pos);
 			pos = { 900.f - (96.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f };

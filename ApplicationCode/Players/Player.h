@@ -253,6 +253,24 @@ public: //メンバ関数
 	/// </summary>
 	void HammerReturn();
 
+	/// <summary>
+	/// スキルポイントを取得
+	/// </summary>
+	/// <returns>スキルポイント</returns>
+	int32_t GetSkillPoint() { return skillPoint_; }
+
+	/// <summary>
+	/// スキルポイントを減算
+	/// </summary>
+	/// <param name="num">減少数値</param>
+	void SubSkillPoint(int32_t num) { skillPoint_ -= num; }
+
+	/// <summary>
+	/// スキルポイントを加算
+	/// </summary>
+	/// <param name="num">上昇数値</param>
+	void AddSkillPoint(int32_t num) { skillPoint_ += num; }
+
 private: //メンバ関数
 
 	/// <summary>
@@ -328,13 +346,12 @@ private: //メンバ変数
 	int32_t initHP_;
 	//攻撃力
 	int32_t atk_ = 1;
-	int32_t initAtk_;
 	//防御力
 	int32_t def_ = 1;
-	int32_t initDef_;
 	//素早さ
 	int32_t spd_ = 1;
-	int32_t initSpd_;
+	//スキルポイント
+	int32_t skillPoint_;
 
 	//レベル
 	int32_t level_ = 0;

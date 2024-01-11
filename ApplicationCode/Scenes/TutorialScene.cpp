@@ -213,7 +213,7 @@ void TutorialScene::Update()
 	if (KeyInput::GetIns()->TriggerKey(DIK_T) && !isAddSkill) {
 		HPUpSkill* hpUp = new HPUpSkill("hpUp_Test", 5);
 		skillManager_->AddPlayerPassiveSkill(hpUp);
-		HammerReturnSkill* hammerReturn = new HammerReturnSkill("hammerReturn");
+		HammerReturnSkill* hammerReturn = new HammerReturnSkill("HammerReturn");
 		skillManager_->AddPlayerPassiveSkill(hammerReturn);
 		isAddSkill = true;
 	}

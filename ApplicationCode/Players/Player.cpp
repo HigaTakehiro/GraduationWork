@@ -290,6 +290,7 @@ void Player::PlayerStatusSetting() {
 	initRot_ = rot_ = rot;
 	scale_ = scale;
 	hp_ = maxHp_ = initHP_ = hp;
+	skillPoint_ = 0;
 
 	moveSpeed_ = moveSpeed;
 	rotSpeed_ = initRotSpeed_ = rotSpeed;
@@ -650,6 +651,7 @@ void Player::LevelUp()
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerLevelUp, 0.3f);
 		level_++;
 		ep_ = 0;
+		skillPoint_++;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
 		maxHp_ += 2;
 		hp_ = maxHp_;

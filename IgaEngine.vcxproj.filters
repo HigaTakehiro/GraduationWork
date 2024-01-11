@@ -338,6 +338,18 @@
     <ClCompile Include="ApplicationCode\Skills\SkillManager.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\ATKUpSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\DEFUpSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\HammerReturnSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\SPDUpSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -577,6 +589,18 @@
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Skills\SkillManager.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\ATKUpSkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\DEFUpSkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\HammerReturnSkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\SPDUpSkill.h">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
   </ItemGroup>

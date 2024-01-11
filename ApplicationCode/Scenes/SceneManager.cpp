@@ -41,6 +41,8 @@ void SceneManager::Finalize() {
 	nowScene->Finalize();
 	//ベースシーン解放
 	safe_delete(nowScene);
+	//スキルマネージャ解放
+	safe_delete(skillManager_);
 	//カーソル可視化
 	ShowCursor(true);
 }
