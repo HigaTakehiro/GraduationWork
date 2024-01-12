@@ -189,7 +189,7 @@ void TogemaruAct::Move()
 
 	ResetParam_Spear();
 
-	constexpr uint32_t ActionInter = 60;
+	constexpr uint32_t ActionInter = 160;
 	//çUåÇÇ…à⁄çs
 	if (++actionCount % ActionInter == 0)
 	{
@@ -197,9 +197,26 @@ void TogemaruAct::Move()
 		for (size_t i = 0; i < spearSize; i++) {
 			spearsAlpha[i] = 1.f;
 		}
+
 		anime_name_ = AnimeName::ROLE;
-		act_ = Act::ATTACK_SHOTSPEAR;
+		//act_ = Act::ATTACK_SHOTSPEAR;
+
+		Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(4,-2.5f,10) ,Vector3(6,-2.5f,0) ,Vector3(-10,-2.5f,-10) };
+
+		if (spline == nullptr) {
+			SplinePosList.emplace_back(posList[0]);
+			SplinePosList.emplace_back(posList[1]);
+			SplinePosList.emplace_back(posList[2]);
+			SplinePosList.emplace_back(posList[3]);
+			spline = new Spline();
+			spline->Init(SplinePosList, static_cast<int>(SplinePosList.size()));
+		}
+		
+		act_ = Act::ATTACK_RUSH;
 	}
+	splineT = 0;
+	BefoSplinePos = Pos_;
+	SplineAfterPos = {};
 
 
 }
@@ -231,6 +248,31 @@ float TogemaruAct::Follow()
 void TogemaruAct::Attack_Rush()
 {
 
+	Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,10) ,Vector3(10,-2.5f,0) ,Vector3(-10,-2.5f,0) };
+splineT++;
+	
+	if (splineT > 60) {
+		if (spline->GetIndex() >= 4)
+		{
+			anime_name_ = AnimeName::IdlE;
+			act_ = Act::MOVE;
+			if (spline)
+				delete spline;
+			spline = nullptr;
+			SplinePosList.clear();
+		} else
+		{
+			anime_name_ = AnimeName::ROLE;
+			spline->Upda(Pos_);
+		}
+	}
+	else
+	{
+		spline->Upda(SplineAfterPos);
+		Pos_.x = Easing::easeIn(splineT, 60, BefoSplinePos.x, SplineAfterPos.x);
+		Pos_.z = Easing::easeIn(splineT, 60, BefoSplinePos.z, SplineAfterPos.z);
+		
+	}
 }
 
 void TogemaruAct::Attack_ShotSpear()
@@ -456,3 +498,15 @@ void (TogemaruAct::* TogemaruAct::ActionList[])() =
 
 
 
+
+void TogemaruAct::RushGround360()
+{
+	spline->Upda(Pos_);
+	
+	anime_name_ = AnimeName::ROLE;
+	if(spline->GetIndex()>=4)
+	{
+		spline->Init(SplinePosList, SplinePosList.size());
+		act_ = Act::MOVE;
+	}
+}
