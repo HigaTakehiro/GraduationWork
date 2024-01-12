@@ -33,7 +33,7 @@ void SceneChangeEffect::Change(int num)
 				EndFlag_ = false;
 				fadeTime++;
 				fadeNum = //fadeNum -= 0.1f;
-					Easing::easeInOut(fadeTime, 30, 1, 0);
+				Easing::easeInOut(fadeTime, 30, 1, 0);
 			}
 			if (fadeNum <= 0.0f) {
 				fadeEndFlag_ = false;

@@ -115,6 +115,7 @@ void GameScene::Update()
 	}
 
 	EnemyProcess();
+	//当たったらシェイク
 	if (map_->GetHit() == true) {
 		ShakeCount++;
 		if (ShakeCount < 30) {
@@ -225,8 +226,8 @@ void GameScene::Draw()
 	//テキスト描画範囲
 	//
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	std::wstring hx = std::to_wstring(cameraPos_.y);
-	text_->Draw("meiryo", "white", L"ゲームシーン\n" + hx, textDrawRange);
+	//std::wstring hx = std::to_wstring(cameraPos_.y);
+	//text_->Draw("meiryo", "white", L"ゲームシーン\n" + hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -352,12 +353,12 @@ void GameScene::EnemyProcess()
 		}
 		if (aeFlag == true) {
 			if (Enemy->GetHP() > 0) {
-				aEffect_->Update(EnemyPos);
+				aEffect_->Update(map_->GetEnemy(i)->GetPos());
 			}
 			else {
 				aeFlag = false;
 			}
-			if (aeCount < 30) {
+			if (aeCount < 100) {
 				aeCount++;
 			}
 			else {
