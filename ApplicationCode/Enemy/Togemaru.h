@@ -1,7 +1,6 @@
 #pragma once
 #include "BossBase.h"
 #include<array>
-#include"TogemaruAct.h"
 class Togemaru :
     public BossBase
 {
@@ -33,6 +32,9 @@ private:
 
    Model*m_Model_Idle[4] = {};
    Model*m_Model_Walk[4] = {};
+   Model* m_Model_Walk_Left[4] = {};
+   Model* m_Model_Walk_Right[4] = {};
+   Model* m_Model_Walk_Back[4] = {};
 	Model*m_Model_Role[2] = {};
     Model* m_Model_Crush[4] = {};
 	//アニメーションカウンタ
@@ -46,9 +48,7 @@ private:
     //鱗耐久
     std::array<uint32_t, m_ScaleArray>m_ScaleHp = { 1,1,1 };
 
-    //ボスの行動パターン
-    TogemaruAct* Action=nullptr;
-
+    
     BOOL DamF;
     int DamCoolTime;
 private:

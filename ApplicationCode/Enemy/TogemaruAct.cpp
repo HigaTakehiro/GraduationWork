@@ -82,6 +82,7 @@ void TogemaruAct::Phase3()
 void TogemaruAct::Transition()
 {
 	constexpr float inBossroomZ = 12.f;
+	if (Rot_.y >= 360.f || Rot_.y <= -360.f)Rot_.y = 0.f;
 
 	if (!beginBattle&&Player_->GetPos().z < inBossroomZ) {
 		beforeBattle = TRUE;
@@ -162,9 +163,35 @@ void TogemaruAct::ResetParam_Spear()
 	}
 }
 
+void TogemaruAct::WalkAnimation()
+{
+	float NowRotAnime = (Rot_.y);
+
+	if(NowRotAnime<-35)
+	{
+		anime_name_ = AnimeName::WALK_LEFT;
+	}
+	else if (NowRotAnime < 45)
+	{
+		anime_name_ = AnimeName::WALK_FRONT;
+	} else if (NowRotAnime < 135)
+	{
+		anime_name_ = AnimeName::WALK_RIGHT;
+	} else if (NowRotAnime < 225)
+	{
+		anime_name_ = AnimeName::WALK_BACK;
+	} else if (NowRotAnime < 315)
+	{
+		anime_name_ = AnimeName::WALK_LEFT;
+	} else
+	{
+		anime_name_ = AnimeName::WALK_FRONT;
+	}
+}
+
 void TogemaruAct::Move()
 {
-	anime_name_ = AnimeName::WALK;
+	
 	animationWaitTime = 0;
 
 	movSpeed = 0.3f;
@@ -179,6 +206,7 @@ void TogemaruAct::Move()
 
 	Rot_.y = isFollow ? Follow() : Walk();
 
+	WalkAnimation();
 	//À•W”½‰f(Œü‚¢‚½•û‚É)
 	Pos_ = {
 		Pos_.x += move.m128_f32[0] * movSpeed,
@@ -190,9 +218,9 @@ void TogemaruAct::Move()
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 
-	constexpr uint32_t ActionInter = 160;
+	constexpr uint32_t ActionInter = 21;
 	//UŒ‚‚ÉˆÚs
-	if (++actionCount % ActionInter == 0)
+	if (actionCount % ActionInter == 0)
 	{
 		RushStartPos = Pos_;
 		for (size_t i = 0; i < spearSize; i++) {
@@ -236,7 +264,6 @@ void TogemaruAct::Move()
 				spline = new Spline();
 				spline->Init(SplinePosList, static_cast<int>(SplinePosList.size()));
 			}
-
 			act_ = Act::ATTACK_RUSH;
 		}
 
@@ -252,7 +279,7 @@ void TogemaruAct::Move()
 
 float TogemaruAct::Walk()
 {
-	return 0;
+	return Rot_.y;
 }
 
 float TogemaruAct::Follow()
@@ -296,6 +323,7 @@ void TogemaruAct::Attack_Rush()
 	}
 	else
 	{
+		
 		spline->Upda(SplineAfterPos);
 		Pos_.x = Easing::easeIn(splineT, 60, BefoSplinePos.x, SplineAfterPos.x);
 		Pos_.z = Easing::easeIn(splineT, 60, BefoSplinePos.z, SplineAfterPos.z);
