@@ -360,7 +360,7 @@ void TutorialScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 
 	//これいつか消すように
