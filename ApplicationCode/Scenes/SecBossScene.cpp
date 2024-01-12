@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "Dogom.h"
 #include "SoundManager.h"
+#include "StageCount.h"
 #include "Togemaru.h"
 
 void SecBossScene::Initialize()
@@ -48,9 +49,9 @@ void SecBossScene::Initialize()
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
 
-
+	int Num = StageCount::GetIns()->Now();
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_, cameraPos_, targetPos_, 100);
+	map_->Initalize(player_, cameraPos_, targetPos_, 5);
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();

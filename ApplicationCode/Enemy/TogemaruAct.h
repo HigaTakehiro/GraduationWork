@@ -5,6 +5,7 @@
 #include<DirectXMath.h>
 #include "BaseCollision.h"
 #include"Vector3.h"
+#include"Spline.h"
 using namespace DirectX;
 class TogemaruAct
 {
@@ -44,6 +45,7 @@ public:
 		IdlE,
 		WALK,
 		ROLE,
+		ROLESPLINE,
 		CRUSH
 	}anime_name_;
 
@@ -149,6 +151,12 @@ private:
 
 	bool CollideSpear();
 
+	void RushGround360();
+	Spline* spline;
+	std::vector<XMFLOAT3>SplinePosList;
+	float splineT;
+	XMFLOAT3 BefoSplinePos;
+	XMFLOAT3 SplineAfterPos;
 //シェイク
 private:
 	bool shakeF = FALSE;

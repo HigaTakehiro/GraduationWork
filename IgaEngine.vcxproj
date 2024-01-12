@@ -168,6 +168,7 @@
     <ClCompile Include="ApplicationCode\Enemy\MunniAction.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyB.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\Spline.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\Togemaru.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\TogemaruAct.cpp" />
     <ClCompile Include="ApplicationCode\Item\Deposit.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="ApplicationCode\Enemy\MunniAction.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h" />
+    <ClInclude Include="ApplicationCode\Enemy\Spline.h" />
     <ClInclude Include="ApplicationCode\Enemy\Togemaru.h" />
     <ClInclude Include="ApplicationCode\Enemy\TogemaruAct.h" />
     <ClInclude Include="ApplicationCode\Item\Deposit.h" />

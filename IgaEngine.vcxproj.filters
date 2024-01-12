@@ -344,6 +344,9 @@
     <ClCompile Include="ApplicationCode\Skills\SkillPanel.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\Spline.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -592,6 +595,9 @@
     <ClInclude Include="ApplicationCode\Map\TreasureBox.h" />
     <ClInclude Include="ApplicationCode\Enemy\BossCamerawork.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillPanel.h" />
+    <ClInclude Include="ApplicationCode\Enemy\Spline.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
