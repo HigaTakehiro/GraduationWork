@@ -4,10 +4,10 @@
 #include "Vector3.h"
 
 class Player;
-class Heart
+class Key
 {
 public:
-	~Heart();
+	~Key();
 
 	/// <summary>
 	/// 初期化処理
@@ -18,19 +18,17 @@ public:
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update(Player* player, bool& Display);
+	void Update(Player* player,bool& lock,bool Display);
 
 	/// <summary>
 	/// 描画処理
 	/// </summary>
 	void Draw(bool Display);
 
-	void Spown();
-
-	void HitPlayer(bool& Display);
+	void HitPlayer(bool& lock);
 private:
 	//オブジェクト
-	Object3d* heart_;
+	Object3d* key_;
 	//モデル
 	Model* model;
 
@@ -45,8 +43,5 @@ private:
 	//アニメカウント
 	int32_t animeCount_;
 
-	Vector3 pos_;
-
-	bool spown_ = true;
 };
 

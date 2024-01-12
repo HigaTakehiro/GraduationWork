@@ -6,7 +6,7 @@
 #include"PadInput.h"
 #include<SafeDelete.h>
 
-void TreasureBox::Initialize(bool empmty, const XMFLOAT3& MapPos, Player* player, int Count)
+void TreasureBox::Initialize(int num, const XMFLOAT3& MapPos, Player* player, int Count)
 {
 	player_ = player;
 	pos_ = MapPos;
@@ -27,6 +27,15 @@ void TreasureBox::Initialize(bool empmty, const XMFLOAT3& MapPos, Player* player
 	ui_ = Object3d::UniquePtrCreate(uiModel_);
 	ui_->SetIsBillboardY(true);
 	ui_->SetPosition(uipos_);
+
+	if (num == 1) {
+		key_= make_unique<Key>();
+		key_->Initialize(pos_);
+	}
+	else {
+		heart_ = make_unique<Heart>();
+		heart_->Initialize(pos_);
+	}
 }
 
 void TreasureBox::Update()
@@ -35,14 +44,25 @@ void TreasureBox::Update()
 
 	treasurebox_->Update();
 	ui_->Update();
+	if (key_ != nullptr ) {
+		key_->Update(player_, lock_, display_);
+	}
+	if (heart_ != nullptr && display_ == true) {
+		heart_->Update(player_, display_);
+	}
 }
 
 void TreasureBox::Draw()
 {
-	if (lock_) { return; }
-	treasurebox_->Draw();
-	if (!f) { return; }
-	ui_->Draw();
+	if (boxdisplay_) {
+		treasurebox_->Draw();
+		if (f) {
+			ui_->Draw();
+		}
+	}
+
+	if (key_ != nullptr ) { key_->Draw(display_); }
+	if (heart_ != nullptr ) { heart_->Draw(display_); }
 }
 
 void TreasureBox::CheckHit()
@@ -53,11 +73,11 @@ void TreasureBox::CheckHit()
 		(Pos.z >= pos_.z + 1.f && Pos.z <= pos_.z + 4.f)) {
 		f = true;
 		if (PadInput::GetIns()->PushButton(PadInput::Button_A)) {
-			lock_ = true;
+			boxdisplay_ = false;
+			display_ = true;
 		}
 	}
 	else {
-		
 		f = false;
 	}
 }
