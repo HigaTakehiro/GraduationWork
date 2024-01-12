@@ -24,8 +24,8 @@ void SceneManager::Initialize() {
 	//スキル管理クラス初期化
 	skillManager_ = new SkillManager;
 	//シーン切り替え
-	SceneChange(SceneName::Game);
-	//SceneChange(SceneName::Tutorial);
+	//SceneChange(SceneName::Game);
+	SceneChange(SceneName::Tutorial);
 
 }
 
