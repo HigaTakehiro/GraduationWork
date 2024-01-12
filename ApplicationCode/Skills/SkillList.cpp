@@ -1,33 +1,55 @@
 #include "SkillList.h"
+#include "SafeDelete.h"
 
-SkillList::SkillList(std::string listName)
+SkillList::SkillList(const std::string& name)
 {
-	name_ = listName;
+	name_ = name;
 }
 
-void SkillList::AllUse()
+SkillList::~SkillList()
 {
-	std::string message = name_;
-	message += "\n";
+	for (auto skill : skillList_) {
+		safe_delete(skill);
+	}
+	skillList_.clear();
+}
 
-	printf_s(message.c_str());
+void SkillList::Use(Player* player)
+{
+	if (player == nullptr) {
+		return;
+	}
 
-	for (ISkill* skill : mList_) {
-		skill->AllUse();
+	for (ISkill* skill : skillList_) {
+		skill->Use(player);
 	}
 }
 
-void SkillList::Use(const std::string& name)
+void SkillList::SingleUse(Player* player, std::string& name)
 {
-	for (ISkill* skill : mList_) {
+	if (player == nullptr) {
+		return;
+	}
+
+	for (ISkill* skill : skillList_) {
 		if (skill->GetName() == name) {
-			skill->AllUse();
+			skill->Use(player);
 		}
 	}
 }
 
 void SkillList::AddSkill(ISkill* skill)
 {
-	//ƒXƒLƒ‹‚ğ’Ç‰Á
-	this->mList_.emplace_back(skill);
+	skillList_.emplace_back(skill);
+}
+
+bool SkillList::GetSkill(const std::string& name)
+{
+	for (ISkill* skill : skillList_) {
+		if (skill->GetName() == name) {
+			return true;
+		}
+	}
+
+	return false;
 }

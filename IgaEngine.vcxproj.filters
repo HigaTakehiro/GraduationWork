@@ -323,25 +323,34 @@
     <ClCompile Include="ApplicationCode\Skills\SkillList.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Skills\StatusUpSkill.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClCompile>
-    <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClCompile>
-    <ClCompile Include="ApplicationCode\Skills\SkillList.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClCompile>
-    <ClCompile Include="ApplicationCode\Skills\StatusUpSkill.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationCode\Map\TreasureBox.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Enemy\BossCamerawork.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\HPUpSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
     <ClCompile Include="ApplicationCode\Skills\SkillPanel.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\SkillManager.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\ATKUpSkill.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\DEFUpSkill.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\HammerReturnSkill.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\SPDUpSkill.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Map\Heart.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ApplicationCode\Enemy\Spline.cpp">
@@ -571,33 +580,37 @@
     <ClInclude Include="ApplicationCode\Players\AttackEffect.h">
       <Filter>ソース ファイル\ApplicationCode\Players</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Skills\StatusUpSkill.h">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationCode\Skills\SkillList.h">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationCode\Skills\ISkill.h">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationCode\Skills\BaseSkill.h">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClInclude>
     <ClInclude Include="ApplicationCode\Skills\ISkill.h">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Skills\SkillList.h">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Skills\StatusUpSkill.h">
+    <ClInclude Include="ApplicationCode\Map\TreasureBox.h" />
+    <ClInclude Include="ApplicationCode\Enemy\BossCamerawork.h" />
+    <ClInclude Include="ApplicationCode\Skills\HPUpSkill.h">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\SkillPanel.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\SkillManager.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="ApplicationCode\Map\TreasureBox.h" />
     <ClInclude Include="ApplicationCode\Enemy\BossCamerawork.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillPanel.h" />
     <ClInclude Include="ApplicationCode\Enemy\Spline.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="ApplicationCode\Skills\ATKUpSkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\DEFUpSkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\HammerReturnSkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\SPDUpSkill.h" />
+    <ClInclude Include="ApplicationCode\Map\Heart.h" />
+>>>>>>> a21096ca92f1b4ef141248f9eb16256a152bd1d2
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="IgaEngine.rc">
@@ -1012,9 +1025,6 @@
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyB.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationCode\Skills\BaseSkill.cpp">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -1232,9 +1242,6 @@
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h" />
     <ClInclude Include="ApplicationCode\Map\StageCount.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationCode\Skills\BaseSkill.h">
-      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include "Player.h"
 #include <string>
 
 class ISkill {
@@ -8,19 +8,20 @@ public: //メンバ関数
 	/// デストラクタ
 	/// </summary>
 	virtual ~ISkill() {}
+
 	/// <summary>
-	/// 全スキル使用
+	/// スキル使用
 	/// </summary>
-	/// <param name="depth"></param>
-	virtual void AllUse() = 0;
+	/// <param name="player">プレイヤー</param>
+	virtual void Use(class Player* player) = 0;
+
 	/// <summary>
-	/// 名前を取得
+	/// 名前取得
 	/// </summary>
 	/// <returns>名前</returns>
-	std::string GetName() { return name_; }
+	std::string GetName() const { return name_; }
+
 protected: //メンバ変数
-	/// <summary>
-	/// 名前
-	/// </summary>
+	//名前
 	std::string name_;
 };

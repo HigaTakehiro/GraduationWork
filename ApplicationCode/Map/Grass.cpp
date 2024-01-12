@@ -10,15 +10,19 @@ Grass::~Grass()
 	safe_delete(grass_);
 }
 
-void Grass::Initialize(const Vector3& pos)
+void Grass::Initialize(const Vector3& pos, int I)
 {
 	for (int32_t i = 0; i < 3; i++) {
-		model_[i] = Shapes::CreateSquare({0.f, 0.f}, {64.f, 32.f}, "grass.png", {1.8f, 0.9f}, {0.5f, 0.5f}, {64.f * (float)i, 2.f}, {64.f, 32.f});
+		if (I % 2 == 0) {
+			model_[i] = Shapes::CreateSquare({ 0.f, 0.f }, { 64.f, 32.f }, "grass.png", { 1.8f, 0.9f }, { 0.5f, 0.5f }, { 64.f * (float)i, 2.f }, { 64.f, 32.f });
+		}
+		else {
+			model_[i] = Shapes::CreateSquare({ 0.f, 0.f }, { 64.f, 64.f }, "herb.png", { 1.8f, 0.9f }, { 0.5f, 0.5f }, { 64.f * (float)i, 2.f }, { 64.f, 64.f });
+		}
 	}
 	grass_ = Object3d::Create(model_[0]);
 	grass_->Initialize();
 	grass_->SetPosition(pos);
-
 	animeTimer_ = 0;
 	animeTime_ = 30;
 	animeCount_ = 0;

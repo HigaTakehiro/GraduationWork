@@ -5,8 +5,6 @@
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
 #include "SoundManager.h"
-#include "SkillList.h"
-#include "StatusUpSkill.h"
 
 void Player::Initialize()
 {
@@ -292,6 +290,7 @@ void Player::PlayerStatusSetting() {
 	initRot_ = rot_ = rot;
 	scale_ = scale;
 	hp_ = maxHp_ = initHP_ = hp;
+	skillPoint_ = 0;
 
 	moveSpeed_ = moveSpeed;
 	rotSpeed_ = initRotSpeed_ = rotSpeed;
@@ -501,7 +500,7 @@ void Player::HammerThrow() {
 void Player::HammerGet()
 {
 	if (isHammerReflect_) {
-		HammerReturn();
+		//HammerReturn();
 		if (player_->GetIsHit() && hammer_->GetIsHit()) {
 			hammer_->SetParent(player_.get());
 			hammer_->SetPosition(initHammerPos_);
@@ -645,7 +644,6 @@ void Player::UIUpdate()
 void Player::LevelUp()
 {
 	const int32_t maxLevel = 99;
-	maxHp_ = initHP_ + 2 * (level_ - 1);
 
 	if (level_ >= maxLevel) return;
 
@@ -653,8 +651,9 @@ void Player::LevelUp()
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerLevelUp, 0.3f);
 		level_++;
 		ep_ = 0;
+		skillPoint_++;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
-		maxHp_ = initHP_ + 2 * (level_ - 1);
+		maxHp_ += 2;
 		hp_ = maxHp_;
 	}
 }

@@ -8,6 +8,7 @@
 #include "Easing.h"
 #include "SafeDelete.h"
 #include "CollisionManager.h"
+#include "SkillManager.h"
 
 class BaseScene
 {
@@ -45,8 +46,15 @@ public: //メンバ関数
 	/// </summary>
 	/// <param name="colManager">当たり判定クラス</param>
 	void SetCollisionManager(CollisionManager* colManager) { colManager_ = colManager; }
+	/// <summary>
+	/// スキル管理クラスをセット
+	/// </summary>
+	/// <param name="skillManager">スキル管理クラス</param>
+	void SetSkillManager(SkillManager* skillManager) { skillManager_ = skillManager; }
 
 protected: //メンバ変数
 	//当たり判定クラス
 	CollisionManager* colManager_;
+	//スキル管理クラス
+	SkillManager* skillManager_;
 };

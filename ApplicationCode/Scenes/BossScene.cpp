@@ -41,12 +41,18 @@ void BossScene::Initialize()
 	player_->SetLevel(SceneManager::GetLevel());
 	player_->SetEP(SceneManager::GetEP());
 	player_->SetHP(SceneManager::GetHP());
+	player_->SetMaxHP(SceneManager::GetMaxHP());
+	player_->SetATK(SceneManager::GetATK());
+	player_->SetDEF(SceneManager::GetDEF());
+	player_->SetSPD(SceneManager::GetSPD());
 
 	postEffectNo_ = PostEffect::NONE;
 
 	boss_.reset(new Dogom());
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
+
+	skillManager_->SetPlayer(player_);
 
 	int Num = StageCount::GetIns()->Up();
 	map_ = make_unique<GameMap>();
@@ -178,6 +184,7 @@ void BossScene::Update()
 	m_ClearTex->SetSize(m_ClearTexScl);
 
 	schange->Change(0);
+	skillManager_->Update();
 
 	//シーン切り替えmmm
 	SceneChange();
@@ -271,6 +278,7 @@ void BossScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
+	skillManager_->Finalize();
 }
 
 void BossScene::SceneChange()
@@ -283,6 +291,10 @@ void BossScene::SceneChange()
 		SceneManager::SetLevel(player_->GetLevel());
 		SceneManager::SetEP(player_->GetEP());
 		SceneManager::SetHP(player_->GetHP());
+		SceneManager::SetMaxHP(player_->GetMaxHP());
+		SceneManager::SetATK(player_->GetATK());
+		SceneManager::SetDEF(player_->GetDef());
+		SceneManager::SetSPD(player_->GetSPD());
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);

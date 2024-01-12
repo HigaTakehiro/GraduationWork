@@ -43,6 +43,10 @@ void GameScene::Initialize()
 	player_->SetLevel(SceneManager::GetLevel());
 	player_->SetEP(SceneManager::GetEP());
 	player_->SetHP(SceneManager::GetHP());
+	player_->SetMaxHP(SceneManager::GetMaxHP());
+	player_->SetATK(SceneManager::GetATK());
+	player_->SetDEF(SceneManager::GetDEF());
+	player_->SetSPD(SceneManager::GetSPD());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -72,7 +76,7 @@ void GameScene::Initialize()
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, Num);
 
-
+	skillManager_->SetPlayer(player_);
 
 	shake_ = new Shake();
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
@@ -132,6 +136,7 @@ void GameScene::Update()
 
 	shake_->Update();
 	colManager_->Update();
+	skillManager_->Update();
 
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
 	schange->Change(0);
@@ -233,6 +238,7 @@ void GameScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
+	skillManager_->Finalize();
 }
 
 void GameScene::SceneChange()
@@ -240,6 +246,10 @@ void GameScene::SceneChange()
 	SceneManager::SetLevel(player_->GetLevel());
 	SceneManager::SetEP(player_->GetEP());
 	SceneManager::SetHP(player_->GetHP());
+	SceneManager::SetMaxHP(player_->GetMaxHP());
+	SceneManager::SetATK(player_->GetATK());
+	SceneManager::SetDEF(player_->GetDef());
+	SceneManager::SetSPD(player_->GetSPD());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetIsDead()) {
