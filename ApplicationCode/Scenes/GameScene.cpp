@@ -125,8 +125,10 @@ void GameScene::Update()
 		ShakeCount = 0;
 	}
 	if (shake_->GetShakeFlag() == true) {
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
+		if (cameraPos_.y < 13 || cameraPos_.y > 12) {
+			cameraPos_.y += shake_->GetShakePos();
+			targetPos_.y += shake_->GetShakePos();
+		}
 		//cameraPos_.x += shake_->GetShakePos();
 		//targetPos_.x += shake_->GetShakePos();
 	}
@@ -223,7 +225,7 @@ void GameScene::Draw()
 	//テキスト描画範囲
 	//
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	std::wstring hx = std::to_wstring(shake_->GetShakeFlag());
+	std::wstring hx = std::to_wstring(cameraPos_.y);
 	text_->Draw("meiryo", "white", L"ゲームシーン\n" + hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();

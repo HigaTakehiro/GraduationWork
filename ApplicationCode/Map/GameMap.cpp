@@ -450,16 +450,21 @@ void GameMap::CheckHitTest(Player* player)
 			PlayerPos.x = Map->stagePos_.x + limit_.x;
 			wallHit_ = true;
 		}
-		else  if (PlayerPos.x <= Map->stagePos_.x - limit_.y) {
+		if (PlayerPos.x <= Map->stagePos_.x - limit_.y) {
 			PlayerPos.x = Map->stagePos_.x - limit_.y;
 			wallHit_ = true;
 		}
-		else if (PlayerPos.z >= Map->stagePos_.z + limit_.z) {
+		if (PlayerPos.z >= Map->stagePos_.z + limit_.z) {
 			PlayerPos.z = Map->stagePos_.z + limit_.z;
-			wallHit_ = true;
 		}
-		else if (PlayerPos.z <= Map->stagePos_.z - limit_.w) {
+		if (PlayerPos.z <= Map->stagePos_.z - limit_.w) {
 			PlayerPos.z = Map->stagePos_.z - limit_.w;
+		}
+		if (PlayerPos.x >= Map->stagePos_.x + limit_.x|| 
+			PlayerPos.x <= Map->stagePos_.x - limit_.y||
+			PlayerPos.z >= Map->stagePos_.z + limit_.z||
+			PlayerPos.z <= Map->stagePos_.z - limit_.w)
+		{
 			wallHit_ = true;
 		}
 		else { wallHit_ = false; }
@@ -478,6 +483,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 					//¶‚ÉŒü‚©‚¤
 					if (pos.x > Pos.x && Pos.x + 3.f > pos.x) {
 						nothit_ = true;
+						wallHit_ = false;
 						count_ = Bridge->num;
 						direction_ = 1;
 						stopCount_ = true;
@@ -487,6 +493,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 					//‰E‚ÉŒü‚©‚¤
 					else if (pos.x < Pos.x && Pos.x - 7.f < pos.x) {
 						nothit_ = true;
+						wallHit_ = false;
 						count_ = Bridge->num + 1;
 						direction_ = 2;
 						stopCount_ = true;
@@ -503,6 +510,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 				if ((pos.x<Pos.x + 2 && pos.x>Pos.x - 2)) {
 					if (pos.z > Pos.z - 6.1f && Pos.z > pos.z) {
 						nothit_ = true;
+						wallHit_ = false;
 						count_ = Bridge->num + nextval_;
 						direction_ = 3;
 						stopCount_ = true;
@@ -511,6 +519,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 					}
 					else if (pos.z < Pos.z + 3.f && Pos.z < pos.z) {
 						nothit_ = true;
+						wallHit_ = false;
 						count_ = Bridge->num;
 						direction_ = 4;
 						stopCount_ = true;

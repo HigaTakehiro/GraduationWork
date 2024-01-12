@@ -33,6 +33,7 @@ void Shake::Update()
 			shakeTimer++;
 			//-10~10‚Ì”ÍˆÍ‚Åƒ‰ƒ“ƒ_ƒ€
 			shakePos = rand() % (int)pos.x - (int)pos.y;
+			shakePos /= 10.0f;
 		}
 		else {
 			shakeTimer = 0;
