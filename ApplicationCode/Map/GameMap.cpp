@@ -367,6 +367,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	for (int32_t i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] == nullptr) { continue; }
 		if (enemys_[i]->GetHP() <= 0) {
+			player->AddEP(1);
 			enemys_[i].release();
 			enemyscount_ -= 1;
 			gameenemyscount_ -= 1;
@@ -597,10 +598,10 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 void GameMap::DrawingMap(int StageNum, std::stringstream& stream)
 {
 	if (StageNum == 0) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("TutorialMap.csv"); }
-	else if (StageNum == 1 || StageNum == 6 || StageNum == 11) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv"); }
-	else if (StageNum == 2 || StageNum == 7 || StageNum == 12) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map3.csv"); }
-	else if (StageNum == 3 || StageNum == 8 || StageNum == 13) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map4.csv"); }
-	else if (StageNum == 5 || StageNum == 10 || StageNum == 15) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv"); }
+	else if (StageNum == 2 || StageNum == 8 || StageNum == 14) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map2.csv"); }
+	else if (StageNum == 3 || StageNum == 9 || StageNum == 15) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map3.csv"); }
+	else if (StageNum == 4 || StageNum == 10 || StageNum == 16) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Map4.csv"); }
+	else if (StageNum == 6 || StageNum == 12 || StageNum == 18) { stream = ExternalFileLoader::GetIns()->ExternalFileOpen("BossMap.csv"); }
 
 }
 

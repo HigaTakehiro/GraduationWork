@@ -257,9 +257,9 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
-		if (StageCount::GetIns()->Now() == 3||
-			StageCount::GetIns()->Now() == 8||
-			StageCount::GetIns()->Now() == 13) {
+		if (StageCount::GetIns()->Now() == 4||
+			StageCount::GetIns()->Now() == 10||
+			StageCount::GetIns()->Now() == 16) {
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
 		else{
