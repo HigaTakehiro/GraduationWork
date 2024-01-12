@@ -367,6 +367,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 	for (int32_t i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] == nullptr) { continue; }
 		if (enemys_[i]->GetHP() <= 0) {
+			player->AddEP(1);
 			enemys_[i].release();
 			enemyscount_ -= 1;
 			gameenemyscount_ -= 1;
