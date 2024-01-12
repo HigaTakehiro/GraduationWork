@@ -170,6 +170,18 @@ public: //静的メンバ関数
 	static int32_t GetEP() { return ep_; }
 
 	/// <summary>
+	/// スキルポイントをセット
+	/// </summary>
+	/// <param name="skillPoint">スキルポイント</param>
+	static void SetSkillPoint(int32_t skillPoint) { skillPoint_ = skillPoint; }
+
+	/// <summary>
+	/// スキルポイントを取得
+	/// </summary>
+	/// <returns>スキルポイント</returns>
+	static int32_t GetSkillPoint() { return skillPoint_; }
+
+	/// <summary>
 	/// ステージ番号取得
 	/// </summary>
 	/// <returns>ステージ番号</returns>
@@ -207,6 +219,8 @@ private: //静的メンバ変数
 	static int32_t def_;
 	//素早さ
 	static int32_t spd_;
+	//スキルポイント
+	static int32_t skillPoint_;
 
 private: //メンバ変数
 	std::unique_ptr<TextDraw> textDraw;

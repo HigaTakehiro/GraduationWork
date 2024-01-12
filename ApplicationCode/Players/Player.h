@@ -271,6 +271,12 @@ public: //メンバ関数
 	/// <param name="num">上昇数値</param>
 	void AddSkillPoint(int32_t num) { skillPoint_ += num; }
 
+	/// <summary>
+	/// スキルポイントをセット
+	/// </summary>
+	/// <param name="skillPoint">スキルポイント</param>
+	void SetSkillPoint(int32_t skillPoint) { skillPoint_ = skillPoint; }
+
 private: //メンバ関数
 
 	/// <summary>
