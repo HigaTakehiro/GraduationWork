@@ -364,6 +364,7 @@ void TutorialScene::SceneChange()
 	SceneManager::SetATK(player_->GetATK());
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
+	SceneManager::SetSkillPoint(player_->GetSkillPoint());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {

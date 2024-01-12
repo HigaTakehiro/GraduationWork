@@ -47,6 +47,7 @@ void GameScene::Initialize()
 	player_->SetATK(SceneManager::GetATK());
 	player_->SetDEF(SceneManager::GetDEF());
 	player_->SetSPD(SceneManager::GetSPD());
+	player_->SetSkillPoint(SceneManager::GetSkillPoint());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -264,6 +265,7 @@ void GameScene::SceneChange()
 	SceneManager::SetATK(player_->GetATK());
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
+	SceneManager::SetSkillPoint(player_->GetSkillPoint());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetIsDead()) {
