@@ -86,7 +86,6 @@ void SecBossScene::Initialize()
 void SecBossScene::Update()
 {
 	if (!boss_.get()) return;
-	player_->SetbossIns(boss_->GetBossRot());
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
 	player_->Update();
