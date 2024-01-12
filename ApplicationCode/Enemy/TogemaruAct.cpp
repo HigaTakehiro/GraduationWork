@@ -131,7 +131,7 @@ void TogemaruAct::Transition()
 
 		//”»’è
 		bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr, er);
-		Helper::ColKnock(Player_->GetPos(), Pos_, Player_, isCollide, KnockDis);
+		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z  3.f }, Player_, isCollide, KnockDis);
 
 	}
 
