@@ -189,7 +189,7 @@ void TogemaruAct::Move()
 
 	ResetParam_Spear();
 
-	constexpr uint32_t ActionInter = 60;
+	constexpr uint32_t ActionInter = 160;
 	//çUåÇÇ…à⁄çs
 	if (++actionCount % ActionInter == 0)
 	{
@@ -201,7 +201,7 @@ void TogemaruAct::Move()
 		anime_name_ = AnimeName::ROLE;
 		//act_ = Act::ATTACK_SHOTSPEAR;
 
-		Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,10) ,Vector3(10,-2.5f,0) ,Vector3(-10,-2.5f,0) };
+		Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(4,-2.5f,10) ,Vector3(6,-2.5f,0) ,Vector3(-10,-2.5f,-10) };
 
 		if (spline == nullptr) {
 			SplinePosList.emplace_back(posList[0]);
