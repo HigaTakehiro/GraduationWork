@@ -1,5 +1,7 @@
 #pragma once
 #include"Object3d.h"
+#include"Key.h"
+#include"Heart.h"
 #include<memory.h>
 #include<DirectXMath.h>
 using namespace std;
@@ -10,7 +12,7 @@ class TreasureBox
 {
 public:
 
-	void Initialize(bool empmty, const XMFLOAT3& MapPos,Player* player,int Count);
+	void Initialize(int num, const XMFLOAT3& MapPos,Player* player,int Count);
 
 	void Update();
 
@@ -31,7 +33,8 @@ private:
 private:
 	unique_ptr<Object3d> treasurebox_;
 	unique_ptr<Object3d> ui_;
-	unique_ptr<Object3d> key_;
+	unique_ptr<Key> key_;
+	unique_ptr<Heart> heart_;
 
 	Model* stairsModel_;
 
@@ -45,5 +48,7 @@ private:
 	int count_ = 0;
 	bool lock_ = false;
 	bool f = false;
+	bool display_ = false;
+	bool boxdisplay_ = true;
 };
 

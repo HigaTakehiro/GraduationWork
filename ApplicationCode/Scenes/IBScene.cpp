@@ -390,7 +390,14 @@ void IBScene::SceneChange()
 				SceneManager::SetATK(playerUI_->GetATK());
 				SceneManager::SetDEF(playerUI_->GetDef());
 				SceneManager::SetSPD(playerUI_->GetSPD());
-				SceneManager::SceneChange(SceneManager::SceneName::Game);
+				if (StageCount::GetIns()->Now() == 5 ||
+					StageCount::GetIns()->Now() == 11 ||
+					StageCount::GetIns()->Now() == 17) {
+					SceneManager::SceneChange(SceneManager::SceneName::Boss);
+				}
+				else {
+					SceneManager::SceneChange(SceneManager::SceneName::Game);
+				}
 			}
 			else {
 				//’ÊíƒGƒŠƒA‚©‚ç—ˆ‚½ê‡
@@ -408,7 +415,14 @@ void IBScene::SceneChange()
 				SceneManager::SetATK(playerUI_->GetATK());
 				SceneManager::SetDEF(playerUI_->GetDef());
 				SceneManager::SetSPD(playerUI_->GetSPD());
-				SceneManager::SceneChange(SceneManager::SceneName::Boss);
+				if (StageCount::GetIns()->Now() == 5||
+					StageCount::GetIns()->Now() == 11 || 
+					StageCount::GetIns()->Now() == 17 ) {
+					SceneManager::SceneChange(SceneManager::SceneName::Boss);
+				}
+				else {
+					SceneManager::SceneChange(SceneManager::SceneName::Game);
+				}
 			}
 		}
 	}

@@ -5,7 +5,9 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include"CollisionPrimitive.h"
-#include "Player.h"
+
+#include "TogemaruAct.h"
+
 class BossBase
 {
 public:
@@ -57,6 +59,8 @@ protected://UI
 	void HPUiInit();
 	void HPUiUpda();
 	void HPUiDraw();
+	//ボスの行動パターン
+	TogemaruAct* Action = nullptr;
 
 protected:
 	//各種パラメータ
@@ -84,5 +88,6 @@ public:
 	XMFLOAT4 color_rgb=XMFLOAT4(1,1,1,1);
 	void RecvDamageFlash();
 	//bool GetHp() { return m_ClearF; }
+	float GetBossRot()const { return Action->GetRotY(); }
 };
 

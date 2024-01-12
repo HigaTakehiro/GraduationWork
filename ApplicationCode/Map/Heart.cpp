@@ -15,29 +15,43 @@ void Heart::Initialize(const Vector3& pos)
 	heart_ = Object3d::Create(model);
 	heart_->Initialize();
 	heart_->SetPosition(pos);
+	pos_ = pos;
 }
 
-void Heart::Update(Player* player)
+void Heart::Update(Player* player, bool& Display)
 {
 	player_ = player;
-	if (!display_) { return; }
-	HitPlayer();
+	if (!Display) { return; }
+	HitPlayer(Display);
 	heart_->Update();
 }
 
-void Heart::Draw()
+void Heart::Draw(bool Display)
 {
-	if (!display_) { return; }
+	if (!Display) { return; }
 	heart_->Draw();
 }
 
-void Heart::HitPlayer()
+void Heart::Spown()
 {
+	if (!spown_) { return; }
+	animeTimer_ += 0.1f;
+	if (animeTimer_ >= 1) {
+		spown_ = true;
+		animeTimer_ = 0;
+	}
+}
+
+void Heart::HitPlayer(bool& Display)
+{
+	if (!spown_) { return; }
 	Vector3 PlayerPos = player_->GetPos();
 	Vector3 Pos = heart_->GetPosition();
 
 	if ((PlayerPos.x >= Pos.x - 1.f && PlayerPos.x <= Pos.x + 1.4f) &&
 		(PlayerPos.z >= Pos.z + 1.f && PlayerPos.z <= Pos.z + 4.f)) {
+		if(player_->GetMaxHP()>player_->GetHP())
 		player_->AddHP(1);
+		Display = false;
 	}
 }

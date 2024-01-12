@@ -121,6 +121,10 @@ private:
 
 	Model* titleModel_[9];
 
+	unique_ptr<Object3d> dome;
+
+	Model* sky;
+
 	//テキスト
 	TextDraw* movetextui_;
 	

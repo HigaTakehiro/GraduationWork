@@ -42,6 +42,10 @@ void TutorialScene::Initialize()
 		sleepModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_sleep.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
 
+	//sky = ModelManager::GetIns()->GetModel("skydome");
+	dome=Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
+	dome->Initialize();
+
 	for (int i = 0; i < 9; i++) {
 		title_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::title, { 0, 0 }, { 1.f, 1.f, 1.f, 1.f }, { 0.f, 0.f });
 		title_[i]->SetTextureRect({ 960.f * i,0.f }, { 960.f ,128.f });
@@ -142,6 +146,8 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
+	dome->Update();
+
 	int32_t Max = player_->GetMaxHP();
 	player_->SetHP(Max);
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
@@ -234,6 +240,7 @@ void TutorialScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	dome->Draw();
 	map_->MapDraw();
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
 		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
@@ -360,7 +367,7 @@ void TutorialScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
-		SceneManager::SceneChange(SceneManager::SceneName::Game);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 
 	//これいつか消すように

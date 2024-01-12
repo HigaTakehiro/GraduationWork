@@ -51,7 +51,7 @@ void SecBossScene::Initialize()
 
 	int Num = StageCount::GetIns()->Now();
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_, cameraPos_, targetPos_, 5);
+	map_->Initalize(player_, cameraPos_, targetPos_, 6);
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();
@@ -86,7 +86,6 @@ void SecBossScene::Initialize()
 void SecBossScene::Update()
 {
 	if (!boss_.get()) return;
-
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
 	player_->Update();

@@ -82,6 +82,7 @@ void TogemaruAct::Phase3()
 void TogemaruAct::Transition()
 {
 	constexpr float inBossroomZ = 12.f;
+	if (Rot_.y >= 360.f || Rot_.y <= -360.f)Rot_.y = 0.f;
 
 	if (!beginBattle&&Player_->GetPos().z < inBossroomZ) {
 		beforeBattle = TRUE;
@@ -90,14 +91,14 @@ void TogemaruAct::Transition()
 	if(beforeBattle)
 	{
 		//プレイヤーの動き止める
-		Player_->SetStop(true);
+		Player_->SetStopF(true);
 		//待機モーション実行
 		//StateExecute(cameraStateIndex);
 		(this->*StateArray[cameraStateIndex].func)();
 
 		if( cameraStateIndex==StateName::P3){
 			//動けるように　戦闘開始
-			Player_->SetStop(false);
+			Player_->SetStopF(false);
 			beginBattle = TRUE;
 		}
 	}
@@ -131,7 +132,7 @@ void TogemaruAct::Transition()
 
 		//判定
 		bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr, er);
-		Helper::ColKnock(Player_->GetPos(), Pos_, Player_, isCollide, KnockDis);
+		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
 
 	}
 
@@ -151,7 +152,6 @@ void TogemaruAct::Transition()
 //
 void TogemaruAct::ResetParam_Spear()
 {
-	//
 	rushEaseT = 0.f;
 	ShotRange = 0.f;
 	spearsAlpha = { 0.f };
@@ -163,9 +163,35 @@ void TogemaruAct::ResetParam_Spear()
 	}
 }
 
+void TogemaruAct::WalkAnimation()
+{
+	float NowRotAnime = (Rot_.y);
+
+	if(NowRotAnime<-35)
+	{
+		anime_name_ = AnimeName::WALK_LEFT;
+	}
+	else if (NowRotAnime < 45)
+	{
+		anime_name_ = AnimeName::WALK_FRONT;
+	} else if (NowRotAnime < 135)
+	{
+		anime_name_ = AnimeName::WALK_RIGHT;
+	} else if (NowRotAnime < 225)
+	{
+		anime_name_ = AnimeName::WALK_BACK;
+	} else if (NowRotAnime < 315)
+	{
+		anime_name_ = AnimeName::WALK_LEFT;
+	} else
+	{
+		anime_name_ = AnimeName::WALK_FRONT;
+	}
+}
+
 void TogemaruAct::Move()
 {
-	anime_name_ = AnimeName::WALK;
+	
 	animationWaitTime = 0;
 
 	movSpeed = 0.3f;
@@ -180,6 +206,7 @@ void TogemaruAct::Move()
 
 	Rot_.y = isFollow ? Follow() : Walk();
 
+	WalkAnimation();
 	//座標反映(向いた方に)
 	Pos_ = {
 		Pos_.x += move.m128_f32[0] * movSpeed,
@@ -188,31 +215,60 @@ void TogemaruAct::Move()
 	};
 
 	ResetParam_Spear();
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
 
-	constexpr uint32_t ActionInter = 160;
+	constexpr uint32_t ActionInter = 21;
 	//攻撃に移行
-	if (++actionCount % ActionInter == 0)
+	if (actionCount % ActionInter == 0)
 	{
 		RushStartPos = Pos_;
 		for (size_t i = 0; i < spearSize; i++) {
 			spearsAlpha[i] = 1.f;
 		}
 
-		anime_name_ = AnimeName::ROLE;
-		//act_ = Act::ATTACK_SHOTSPEAR;
-
-		Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(4,-2.5f,10) ,Vector3(6,-2.5f,0) ,Vector3(-10,-2.5f,-10) };
-
-		if (spline == nullptr) {
-			SplinePosList.emplace_back(posList[0]);
-			SplinePosList.emplace_back(posList[1]);
-			SplinePosList.emplace_back(posList[2]);
-			SplinePosList.emplace_back(posList[3]);
-			spline = new Spline();
-			spline->Init(SplinePosList, static_cast<int>(SplinePosList.size()));
+		std::uniform_int_distribution<> randact(0, 1);
+		if(randact(mt)==1)
+		{
+			act_ = Act::ATTACK_SHOTSPEAR;
 		}
+		else
+		{
+			std::uniform_int_distribution<> rand1(0, 20);
+			std::uniform_int_distribution<> rand2(0, 20);
+
+			constexpr int PosSize = 6;
+
+
+			for (size_t i = 0; i < PosSize; i++)
+			{
+				std::uniform_int_distribution<> randInt(1, 2);
+				if (randInt(mt) == 1)RandM_P = -1.f;
+				else RandM_P = 1.f;
+
+				CurreRandVal[i] = RandM_P;
+			}
+			Vector3 posList[] = {
+				Vector3((rand1(mt)) * CurreRandVal[0],-2.5f,rand2(mt) * CurreRandVal[0]),
+				Vector3(rand1(mt) * CurreRandVal[1],-2.5f,rand2(mt) * CurreRandVal[1]) ,
+				Vector3((rand1(mt)) * CurreRandVal[2],-2.5f,rand2(mt) * CurreRandVal[2]) ,
+				Vector3(rand1(mt) * CurreRandVal[3],-2.5f,rand2(mt) * CurreRandVal[3]),
+				Vector3((rand1(mt)) * CurreRandVal[4],-2.5f,rand2(mt) * CurreRandVal[4]),
+				Vector3(rand1(mt) * CurreRandVal[5],-2.5f,rand2(mt) * CurreRandVal[5])
+			};
+
+			if (spline == nullptr) {
+				for (size_t i = 0; i < _countof(posList); i++) {
+					SplinePosList.emplace_back(posList[i]);
+				}
+				spline = new Spline();
+				spline->Init(SplinePosList, static_cast<int>(SplinePosList.size()));
+			}
+			act_ = Act::ATTACK_RUSH;
+		}
+
+		anime_name_ = AnimeName::ROLE;
 		
-		act_ = Act::ATTACK_RUSH;
 	}
 	splineT = 0;
 	BefoSplinePos = Pos_;
@@ -223,7 +279,7 @@ void TogemaruAct::Move()
 
 float TogemaruAct::Walk()
 {
-	return 0;
+	return Rot_.y;
 }
 
 float TogemaruAct::Follow()
@@ -248,11 +304,10 @@ float TogemaruAct::Follow()
 void TogemaruAct::Attack_Rush()
 {
 
-	Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,10) ,Vector3(10,-2.5f,0) ,Vector3(-10,-2.5f,0) };
-splineT++;
+	splineT++;
 	
 	if (splineT > 60) {
-		if (spline->GetIndex() >= 4)
+		if (spline->GetIndex() >= SplinePosList.size()-1)
 		{
 			anime_name_ = AnimeName::IdlE;
 			act_ = Act::MOVE;
@@ -268,6 +323,7 @@ splineT++;
 	}
 	else
 	{
+		
 		spline->Upda(SplineAfterPos);
 		Pos_.x = Easing::easeIn(splineT, 60, BefoSplinePos.x, SplineAfterPos.x);
 		Pos_.z = Easing::easeIn(splineT, 60, BefoSplinePos.z, SplineAfterPos.z);
@@ -305,9 +361,9 @@ void TogemaruAct::Attack_ShotSpear()
 		anime_name_ = AnimeName::IdlE;
 		if (canShot) {
 			for (size_t i = 0; i < spearSize; i++) {
-				spearsAlpha[i] -= 0.02f;//だんだん薄く
+			//	spearsAlpha[i] -= 0.02f;//だんだん薄く
 			}
-			ShotRange += 0.2f;//範囲広げてく
+			ShotRange += 0.7f;//範囲広げてく
 		}
 		//発射終了
 		if (endShot) {

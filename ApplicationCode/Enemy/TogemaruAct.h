@@ -43,12 +43,15 @@ public:
 	enum AnimeName
 	{
 		IdlE,
-		WALK,
+		WALK_FRONT,
+		WALK_RIGHT,
+		WALK_LEFT,
+		WALK_BACK,
 		ROLE,
-		ROLESPLINE,
 		CRUSH
 	}anime_name_;
 
+	void WalkAnimation();
 	AnimeName GetName()const { return anime_name_; }
 private:
 	//通常パラメータ
@@ -157,6 +160,10 @@ private:
 	float splineT;
 	XMFLOAT3 BefoSplinePos;
 	XMFLOAT3 SplineAfterPos;
+	float RandM_P = 1;
+		float CurreRandVal[6] = {};
+
+		int ActionRandVal=0;
 //シェイク
 private:
 	bool shakeF = FALSE;
@@ -195,5 +202,6 @@ public:
 
 	void SetDepositPos(Vector3 pos) { depositPos = pos; }
 
+	float GetRotY()const { return Rot_.y; }
 };
 

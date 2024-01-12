@@ -193,11 +193,23 @@ void Togemaru::AnimationSett()
 		AddIndex(m_Model_Idle, 4);
 		break;
 
-	case TogemaruAct::AnimeName::WALK:
+	case TogemaruAct::AnimeName::WALK_FRONT:
 		AddIndex(m_Model_Walk, 4);
 		break;
 
-	case TogemaruAct::AnimeName::ROLE:
+	case TogemaruAct::AnimeName::WALK_RIGHT:
+		AddIndex(m_Model_Walk_Right, 4);
+		break;
+
+	case TogemaruAct::AnimeName::WALK_LEFT:
+		AddIndex(m_Model_Walk_Left, 4);
+		break;
+
+	case TogemaruAct::AnimeName::WALK_BACK:
+		AddIndex(m_Model_Walk_Back, 4);
+		break;
+
+		case TogemaruAct::AnimeName::ROLE:
 		AddIndex(m_Model_Role, 2);
 		break;
 
@@ -216,6 +228,10 @@ void Togemaru::InitAnimatin()
 	//•à‚«
 	for (size_t i = 0; i < 4; i++) {
 		m_Model_Walk[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		m_Model_Walk_Right[i]= Shapes::CreateSquare({ 0, 0 }, { 192.0f, 128.0f }, "togemaru_moveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
+		m_Model_Walk_Left[i]= Shapes::CreateSquare({ 0, 0 }, { 192.0f, 128.0f }, "togemaru_moveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
+		m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+
 	}
 	//“Ëi
 	for (size_t i = 0; i < 2; i++) {
