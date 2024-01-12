@@ -191,8 +191,8 @@ void BossScene::Update()
 	if (NextClearF)
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			if (StageCount::GetIns()->Now() <= 15) {
-				SceneManager::SceneChange(SceneManager::SceneName::Game);
+			if (StageCount::GetIns()->Now() <= 18) {
+				SceneManager::SceneChange(SceneManager::SceneName::IB);
 			}
 			else {
 				SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
