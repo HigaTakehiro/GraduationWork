@@ -157,6 +157,10 @@ private:
 	float splineT;
 	XMFLOAT3 BefoSplinePos;
 	XMFLOAT3 SplineAfterPos;
+	float RandM_P = 1;
+		float CurreRandVal[6] = {};
+
+		int ActionRandVal=0;
 //シェイク
 private:
 	bool shakeF = FALSE;
