@@ -177,6 +177,7 @@
     <ClCompile Include="ApplicationCode\Map\Grass.cpp" />
     <ClCompile Include="ApplicationCode\Map\Heart.cpp" />
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp" />
+    <ClCompile Include="ApplicationCode\Map\Key.cpp" />
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp" />
     <ClCompile Include="ApplicationCode\Map\TreasureBox.cpp" />
     <ClCompile Include="ApplicationCode\Maths\MotionMath.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="ApplicationCode\Map\Grass.h" />
     <ClInclude Include="ApplicationCode\Map\Heart.h" />
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h" />
+    <ClInclude Include="ApplicationCode\Map\Key.h" />
     <ClInclude Include="ApplicationCode\Map\StageCount.h" />
     <ClInclude Include="ApplicationCode\Map\Stairs.h" />
     <ClInclude Include="ApplicationCode\Map\TreasureBox.h" />

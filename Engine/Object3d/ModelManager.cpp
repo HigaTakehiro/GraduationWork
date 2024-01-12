@@ -28,6 +28,7 @@ void ModelManager::Initialize() {
 	LoadModel("rock3", "rock3");
 	LoadModel("rock4", "rock4");
 	LoadModel("rock5", "rock5");
+	LoadModel("skydome", "skydome");
 }
 
 void ModelManager::LoadModel(const std::string modelName, const std::string modelKey, bool isSmoothing) {
