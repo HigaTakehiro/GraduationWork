@@ -13,6 +13,7 @@
 #include "SafeDelete.h"
 #include "TextDraw.h"
 #include "CollisionManager.h"
+#include "SkillManager.h"
 
 class SceneManager
 {
@@ -97,6 +98,54 @@ public: //静的メンバ関数
 	static int32_t GetHP() { return hp_; }
 
 	/// <summary>
+	/// 最大HPをセット
+	/// </summary>
+	/// <param name="maxHp">最大HP</param>
+	static void SetMaxHP(int32_t maxHp) { maxHp_ = maxHp; }
+
+	/// <summary>
+	/// 最大HPを取得
+	/// </summary>
+	/// <returns>最大HP</returns>
+	static int32_t GetMaxHP() { return maxHp_; }
+
+	/// <summary>
+	/// 攻撃力をセット
+	/// </summary>
+	/// <param name="atk">攻撃力</param>
+	static void SetATK(int32_t atk) { atk_ = atk; }
+
+	/// <summary>
+	/// 攻撃力を取得
+	/// </summary>
+	/// <returns>攻撃力</returns>
+	static int32_t GetATK() { return atk_; }
+
+	/// <summary>
+	/// 守備力をセット
+	/// </summary>
+	/// <param name="def">守備力</param>
+	static void SetDEF(int32_t def) { def_ = def; }
+
+	/// <summary>
+	/// 守備力を取得
+	/// </summary>
+	/// <returns>守備力</returns>
+	static int32_t GetDEF() { return def_; }
+
+	/// <summary>
+	/// 素早さをセット
+	/// </summary>
+	/// <param name="spd">素早さ</param>
+	static void SetSPD(int32_t spd) { spd_ = spd; }
+
+	/// <summary>
+	/// 素早さを取得
+	/// </summary>
+	/// <returns>素早さ</returns>
+	static int32_t GetSPD() { return spd_; }
+
+	/// <summary>
 	/// レベルをセット
 	/// </summary>
 	/// <param name="level">レベル</param>
@@ -132,17 +181,32 @@ public: //静的メンバ関数
 	/// <returns>スコア</returns>
 	static int32_t GetScore() { return score; }
 
+private: //静的メンバ関数
+	/// <summary>
+	/// シーン初期化処理
+	/// </summary>
+	static void NowSceneInitialize();
+
 private: //静的メンバ変数
 	static BaseScene* nowScene;
 	static int32_t stageNo_;
 	static int32_t score;
 	static CollisionManager* colManager_;
+	static SkillManager* skillManager_;
 	//プレイヤーレベル
 	static int32_t level_;
 	//経験値
 	static int32_t ep_;
 	//HP
 	static int32_t hp_;
+	//最大HP
+	static int32_t maxHp_;
+	//攻撃力
+	static int32_t atk_;
+	//防御力
+	static int32_t def_;
+	//素早さ
+	static int32_t spd_;
 
 private: //メンバ変数
 	std::unique_ptr<TextDraw> textDraw;

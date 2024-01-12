@@ -174,6 +174,7 @@
     <ClCompile Include="ApplicationCode\Item\Ore.cpp" />
     <ClCompile Include="ApplicationCode\Map\GameMap.cpp" />
     <ClCompile Include="ApplicationCode\Map\Grass.cpp" />
+    <ClCompile Include="ApplicationCode\Map\Heart.cpp" />
     <ClCompile Include="ApplicationCode\Map\IntermediateBase.cpp" />
     <ClCompile Include="ApplicationCode\Map\Stairs.cpp" />
     <ClCompile Include="ApplicationCode\Map\TreasureBox.cpp" />
@@ -192,9 +193,14 @@
     <ClCompile Include="ApplicationCode\Scenes\TutorialScene.cpp" />
     <ClCompile Include="ApplicationCode\Shake\IwaEffect.cpp" />
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\ATKUpSkill.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\DEFUpSkill.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\HammerReturnSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\HPUpSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\SkillList.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\SkillManager.cpp" />
     <ClCompile Include="ApplicationCode\Skills\SkillPanel.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\SPDUpSkill.cpp" />
     <ClCompile Include="ApplicationCode\UI\Button.cpp" />
     <ClCompile Include="ApplicationCode\UI\MessageWindow.cpp" />
     <ClCompile Include="Engine\Audio\Sound.cpp" />
@@ -252,6 +258,7 @@
     <ClInclude Include="ApplicationCode\Item\Ore.h" />
     <ClInclude Include="ApplicationCode\Map\GameMap.h" />
     <ClInclude Include="ApplicationCode\Map\Grass.h" />
+    <ClInclude Include="ApplicationCode\Map\Heart.h" />
     <ClInclude Include="ApplicationCode\Map\IntermediateBase.h" />
     <ClInclude Include="ApplicationCode\Map\StageCount.h" />
     <ClInclude Include="ApplicationCode\Map\Stairs.h" />
@@ -272,10 +279,15 @@
     <ClInclude Include="ApplicationCode\Scenes\TutorialScene.h" />
     <ClInclude Include="ApplicationCode\Shake\IwaEffect.h" />
     <ClInclude Include="ApplicationCode\Shake\Shake.h" />
+    <ClInclude Include="ApplicationCode\Skills\ATKUpSkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\DEFUpSkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\HammerReturnSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\HPUpSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\ISkill.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillList.h" />
+    <ClInclude Include="ApplicationCode\Skills\SkillManager.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillPanel.h" />
+    <ClInclude Include="ApplicationCode\Skills\SPDUpSkill.h" />
     <ClInclude Include="ApplicationCode\UI\Button.h" />
     <ClInclude Include="ApplicationCode\UI\MessageWindow.h" />
     <ClInclude Include="Engine\Audio\Sound.h" />

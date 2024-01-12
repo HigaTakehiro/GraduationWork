@@ -96,6 +96,18 @@ public: //メンバ関数
 	int32_t GetMaxHP() { return maxHp_; }
 
 	/// <summary>
+	/// HPの最大値を加算
+	/// </summary>
+	/// <param name="addNum">加算する数値</param>
+	void AddMaxHP(int32_t addNum) { maxHp_ += addNum; }
+
+	/// <summary>
+	/// HPの最大値をセット
+	/// </summary>
+	/// <param name="maxHp">最大HP</param>
+	void SetMaxHP(int32_t maxHp) { maxHp_ = maxHp; }
+
+	/// <summary>
 	/// レベルを取得
 	/// </summary>
 	/// <returns>レベル</returns>
@@ -200,6 +212,65 @@ public: //メンバ関数
 	/// <returns>素早さ</returns>
 	int32_t GetSPD() { return spd_; }
 
+	/// <summary>
+	/// 攻撃力をセット
+	/// </summary>
+	/// <param name="atk">攻撃力</param>
+	void SetATK(int32_t atk) { atk_ = atk; }
+
+	/// <summary>
+	/// 防御力をセット
+	/// </summary>
+	/// <param name="def">防御力</param>
+	void SetDEF(int32_t def) { def_ = def; }
+
+	/// <summary>
+	/// 素早さをセット
+	/// </summary>
+	/// <param name="spd">素早さ</param>
+	void SetSPD(int32_t spd) { spd_ = spd; }
+
+	/// <summary>
+	/// 攻撃力を加算
+	/// </summary>
+	/// <param name="num">上昇数値</param>
+	void AddATK(int32_t num) { atk_ += num; }
+
+	/// <summary>
+	/// 守備力を加算
+	/// </summary>
+	/// <param name="num">上昇数値</param>
+	void AddDEF(int32_t num) { def_ += num; }
+
+	/// <summary>
+	/// 素早さを加算
+	/// </summary>
+	/// <param name="num">上昇数値</param>
+	void AddSPD(int32_t num) { spd_ += num; }
+
+	/// <summary>
+	/// ハンマー戻り処理
+	/// </summary>
+	void HammerReturn();
+
+	/// <summary>
+	/// スキルポイントを取得
+	/// </summary>
+	/// <returns>スキルポイント</returns>
+	int32_t GetSkillPoint() { return skillPoint_; }
+
+	/// <summary>
+	/// スキルポイントを減算
+	/// </summary>
+	/// <param name="num">減少数値</param>
+	void SubSkillPoint(int32_t num) { skillPoint_ -= num; }
+
+	/// <summary>
+	/// スキルポイントを加算
+	/// </summary>
+	/// <param name="num">上昇数値</param>
+	void AddSkillPoint(int32_t num) { skillPoint_ += num; }
+
 private: //メンバ関数
 
 	/// <summary>
@@ -226,11 +297,6 @@ private: //メンバ関数
 	/// ハンマー入手
 	/// </summary>
 	void HammerGet();
-
-	/// <summary>
-	/// ハンマー戻り処理
-	/// </summary>
-	void HammerReturn();
 
 	/// <summary>
 	/// ハンマー強化処理
@@ -280,13 +346,12 @@ private: //メンバ変数
 	int32_t initHP_;
 	//攻撃力
 	int32_t atk_ = 1;
-	int32_t initAtk_;
 	//防御力
 	int32_t def_ = 1;
-	int32_t initDef_;
 	//素早さ
 	int32_t spd_ = 1;
-	int32_t initSpd_;
+	//スキルポイント
+	int32_t skillPoint_;
 
 	//レベル
 	int32_t level_ = 0;

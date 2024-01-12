@@ -6,9 +6,14 @@ BaseScene* SceneManager::nowScene = nullptr;
 int32_t SceneManager::stageNo_ = 1;
 int32_t SceneManager::score = 0;
 CollisionManager* SceneManager::colManager_ = nullptr;
+SkillManager* SceneManager::skillManager_ = nullptr;
 int32_t SceneManager::level_ = 1;
 int32_t SceneManager::ep_ = 0;
 int32_t SceneManager::hp_ = 3;
+int32_t SceneManager::maxHp_ = 3;
+int32_t SceneManager::atk_ = 1;
+int32_t SceneManager::def_ = 1;
+int32_t SceneManager::spd_ = 1;
 
 void SceneManager::Initialize() {
 	//マウスカーソルを非表示にする
@@ -16,8 +21,12 @@ void SceneManager::Initialize() {
 	//DirectWrite初期化
 	textDraw = std::make_unique<TextDraw>();
 	textDraw->Initialize();
+	//スキル管理クラス初期化
+	skillManager_ = new SkillManager;
 	//シーン切り替え
 	SceneChange(SceneName::Game);
+	//SceneChange(SceneName::Tutorial);
+
 }
 
 void SceneManager::Update() {
@@ -33,6 +42,8 @@ void SceneManager::Finalize() {
 	nowScene->Finalize();
 	//ベースシーン解放
 	safe_delete(nowScene);
+	//スキルマネージャ解放
+	safe_delete(skillManager_);
 	//カーソル可視化
 	ShowCursor(true);
 }
@@ -51,6 +62,13 @@ void SceneManager::SetStageNo(const int32_t stageNo)
 	stageNo_ = stageNo;
 }
 
+void SceneManager::NowSceneInitialize()
+{
+	nowScene->SetSkillManager(skillManager_);
+	nowScene->Initialize();
+	nowScene->SetCollisionManager(colManager_);
+}
+
 void SceneManager::SceneChange(SceneName scene) {
 	if (nowScene != nullptr) {
 		nowScene->Finalize();
@@ -60,43 +78,35 @@ void SceneManager::SceneChange(SceneName scene) {
 	switch (scene) {
 	case SceneName::Title:
 		nowScene = new TitleScene();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
+		NowSceneInitialize();
 		break;
 	case SceneName::Tutorial:
 		nowScene = new TutorialScene();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
+		NowSceneInitialize();
 		break;
 	case SceneName::Game:
 		nowScene = new GameScene();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
+		NowSceneInitialize();
 		break;
 	case SceneName::IB:
 		nowScene = new IBScene();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
+		NowSceneInitialize();
 		break;
 	case SceneName::SKILL:
 		nowScene = new SkillScene();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
+		NowSceneInitialize();
 		break;
 	case SceneName::Boss:
 		nowScene = new BossScene();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
+		NowSceneInitialize();
 		break;
 	case SceneName::Boss2:
 		nowScene = new SecBossScene();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
+		NowSceneInitialize();
 		break;
 	case SceneName::Result:
 		nowScene = new ResultScene();
-		nowScene->Initialize();
-		nowScene->SetCollisionManager(colManager_);
+		NowSceneInitialize();
 		break;
 	default:
 		break;

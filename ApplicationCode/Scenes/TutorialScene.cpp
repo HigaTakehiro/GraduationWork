@@ -10,6 +10,9 @@
 #include "SoundManager.h"
 #include "Helper.h"
 #include"StageCount.h"
+#include "HPUpSkill.h"
+#include "SPDUpSkill.h"
+#include "HammerReturnSkill.h"
 
 #pragma warning(disable:4996)
 
@@ -130,6 +133,8 @@ void TutorialScene::Initialize()
 	phase_ = Phase::Title;
 	oldpushCount_ = pushCount_;
 
+	skillManager_->SetPlayer(player_);
+
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 
@@ -204,8 +209,18 @@ void TutorialScene::Update()
 	fp = fopen("Engine/Resources/GameData/floor.csv", "w");
 	fprintf(fp, "floor %d", 0);
 	fclose(fp);
-	SceneChange();
+	static bool isAddSkill = false;
+	if (KeyInput::GetIns()->TriggerKey(DIK_T) && !isAddSkill) {
+		HPUpSkill* hpUp = new HPUpSkill("hpUp_Test", 5);
+		skillManager_->AddPlayerPassiveSkill(hpUp);
+		HammerReturnSkill* hammerReturn = new HammerReturnSkill("HammerReturn");
+		skillManager_->AddPlayerPassiveSkill(hammerReturn);
+		isAddSkill = true;
+	}
 
+	skillManager_->Update();
+
+	SceneChange();
 
 }
 
@@ -330,6 +345,7 @@ void TutorialScene::Finalize()
 	wake_.release();
 	nextui_.release();
 	titlefilter_.release();
+	skillManager_->Finalize();
 }
 
 void TutorialScene::SceneChange()
@@ -337,6 +353,10 @@ void TutorialScene::SceneChange()
 	SceneManager::SetLevel(player_->GetLevel());
 	SceneManager::SetEP(player_->GetEP());
 	SceneManager::SetHP(player_->GetHP());
+	SceneManager::SetMaxHP(player_->GetMaxHP());
+	SceneManager::SetATK(player_->GetATK());
+	SceneManager::SetDEF(player_->GetDef());
+	SceneManager::SetSPD(player_->GetSPD());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
