@@ -35,12 +35,16 @@ void Heart::Draw(bool Display)
 void Heart::Spown()
 {
 	if (!spown_) { return; }
-
+	animeTimer_ += 0.1f;
+	if (animeTimer_ >= 1) {
+		spown_ = true;
+		animeTimer_ = 0;
+	}
 }
 
 void Heart::HitPlayer(bool& Display)
 {
-	if (spown_) { return; }
+	if (!spown_) { return; }
 	Vector3 PlayerPos = player_->GetPos();
 	Vector3 Pos = heart_->GetPosition();
 
