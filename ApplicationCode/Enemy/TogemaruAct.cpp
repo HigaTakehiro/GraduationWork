@@ -303,6 +303,7 @@ float TogemaruAct::Follow()
 
 void TogemaruAct::Attack_Rush()
 {
+	RoleF = true;
 
 	splineT++;
 	
