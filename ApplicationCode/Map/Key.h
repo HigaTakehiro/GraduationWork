@@ -30,7 +30,7 @@ private:
 	//オブジェクト
 	Object3d* key_;
 	//モデル
-	Model* model;
+	Model* model[2];
 
 	Player* player_;
 
