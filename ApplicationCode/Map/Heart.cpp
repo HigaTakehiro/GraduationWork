@@ -5,24 +5,37 @@
 
 Heart::~Heart()
 {
-	safe_delete(model);
+	for (int32_t i = 0; i < 2; i++) {
+		safe_delete(model_[i]);
+	}
 	safe_delete(heart_);
 }
 
 void Heart::Initialize(const Vector3& pos)
 {
-	model = Shapes::CreateSquare({ 0,0 }, { 64, 64 }, "steps.png", { 2, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
-	heart_ = Object3d::Create(model);
+	for (int32_t i = 0; i < 2; i++) {
+		model_[i] = Shapes::CreateSquare({ 0.f, 0.f }, { 64.f, 64.f }, "heart.png", { 1.8f, 1.8f }, { 0.5f, 0.5f }, { 64.f * (float)i, 1.f }, { 64.f, 64.f });
+	}
+	heart_ = Object3d::Create(model_[0]);
 	heart_->Initialize();
 	heart_->SetPosition(pos);
 	pos_ = pos;
+	animeTimer_ = 0;
+	animeTime_ = 20;
+	animeCount_ = 0;
 }
 
 void Heart::Update(Player* player, bool& Display)
 {
+	if (++animeTimer_ >= animeTime_) {
+		if (++animeCount_ >= 2) animeCount_ = 0;
+		animeTimer_ = 0;
+		heart_->SetModel(model_[animeCount_]);
+		heart_->Initialize();
+	}
 	player_ = player;
 	if (!Display) { return; }
-	HitPlayer(Display);
+	//HitPlayer(Display);
 	heart_->Update();
 }
 
@@ -34,12 +47,6 @@ void Heart::Draw(bool Display)
 
 void Heart::Spown()
 {
-	if (!spown_) { return; }
-	animeTimer_ += 0.1f;
-	if (animeTimer_ >= 1) {
-		spown_ = true;
-		animeTimer_ = 0;
-	}
 }
 
 void Heart::HitPlayer(bool& Display)

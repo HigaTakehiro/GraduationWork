@@ -46,7 +46,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			getline(line_stream, word, ',');
 			box_ = make_unique<TreasureBox>();
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			box_->Initialize(0, Pos, player, COUNT);
+			box_->Initialize(1, Pos, player, COUNT);
 			continue;
 		}
 
