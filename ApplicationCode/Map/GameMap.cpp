@@ -53,7 +53,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			getline(line_stream, word, ',');
 			ENEMYCOUNT = (int)std::atof(word.c_str());
 			enemyscount_ = ENEMYCOUNT;
-			gameenemyscount_ = ENEMYCOUNT;
+			gameenemyscount_ += ENEMYCOUNT;
 			continue;
 		}
 
@@ -362,7 +362,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	if (GameEnemyAllKill() || box_->GetLock() == true) {
+	if (GameEnemyAllKill() || (box_!=nullptr&&box_->GetLock() == true)) {
 		for (unique_ptr<Bridge>& Bridge : bridgeside) {
 			Bridge->invisible_ = false;
 		}
