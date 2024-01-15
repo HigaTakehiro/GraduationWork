@@ -12,9 +12,9 @@ public:
 	~Stairs();
 public:
 
-	void LoadCsv();
+	void LimiAddPos();
 
-	void Initialize(const XMFLOAT3& Pos, Player* player,int Count);
+	void Initialize(const XMFLOAT3& Pos,const Vector3& AddPos, Player* player,int Count);
 
 	void BossInitialize(const XMFLOAT3& Pos, Player* player);
 
@@ -38,6 +38,7 @@ private:
 
 	XMFLOAT3 pos_;
 	XMFLOAT3 uipos_;
+	Vector3 addpos_;
 
 	Player* player_;
 
