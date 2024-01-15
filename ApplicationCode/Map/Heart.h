@@ -32,7 +32,7 @@ private:
 	//オブジェクト
 	Object3d* heart_;
 	//モデル
-	Model* model;
+	Model* model_[2];
 
 	Player* player_;
 
