@@ -36,7 +36,7 @@ private:
 	unique_ptr<Key> key_;
 	unique_ptr<Heart> heart_;
 
-	Model* stairsModel_;
+	Model* stairsModel_[4];
 
 	Model* uiModel_;
 
@@ -50,5 +50,12 @@ private:
 	bool f = false;
 	bool display_ = false;
 	bool boxdisplay_ = true;
+
+	//アニメーションタイマー
+	int32_t animeTimer_;
+	//アニメ時間
+	int32_t animeTime_;
+	//アニメカウント
+	int32_t animeCount_;
 };
 
