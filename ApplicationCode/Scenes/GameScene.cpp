@@ -356,7 +356,9 @@ void GameScene::EnemyProcess()
 		}
 		if (aeFlag == true) {
 			if (Enemy->GetHP() > 0) {
-				aEffect_->Update(map_->GetEnemy(i)->GetPos());
+				if (Enemy->GetRecv() == true) {
+					aEffect_->Update(Enemy->GetPos());
+				}
 			}
 			else {
 				aeFlag = false;
