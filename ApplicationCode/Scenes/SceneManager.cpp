@@ -14,6 +14,7 @@ int32_t SceneManager::maxHp_ = 3;
 int32_t SceneManager::atk_ = 1;
 int32_t SceneManager::def_ = 1;
 int32_t SceneManager::spd_ = 1;
+int32_t SceneManager::skillPoint_ = 0;
 
 void SceneManager::Initialize() {
 	//マウスカーソルを非表示にする
@@ -24,6 +25,7 @@ void SceneManager::Initialize() {
 	//スキル管理クラス初期化
 	skillManager_ = new SkillManager;
 	//シーン切り替え
+	//SceneChange(SceneName::Game);
 	SceneChange(SceneName::Tutorial);
 
 }

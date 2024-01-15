@@ -16,10 +16,13 @@ void TreasureBox::Initialize(int num, const XMFLOAT3& MapPos, Player* player, in
 	uipos_.y += 2;
 	count_ = Count;
 
-	stairsModel_ = Shapes::CreateSquare({ 0,0 }, { 64, 64 }, "steps.png", { 2, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
+	for (int32_t i = 0; i < 4; i++) {
+		stairsModel_[i] = Shapes::CreateSquare({0.f, 0.f}, {64.f, 64.f}, "Tbox.png", {1.8f, 1.8f}, {0.5f, 0.5f}, {64.f * (float)i, 1.f}, {64.f, 64.f});
+	}
+	
 	uiModel_ = Shapes::CreateSquare({ 0,0 }, { 192, 64 }, "susumuA.png", { 6, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { -192, 64 });
 	treasurebox_ = make_unique<Object3d>();
-	treasurebox_ = Object3d::UniquePtrCreate(stairsModel_);
+	treasurebox_ = Object3d::UniquePtrCreate(stairsModel_[0]);
 	treasurebox_->SetIsBillboardY(true);
 	treasurebox_->SetPosition(pos_);
 
@@ -36,11 +39,21 @@ void TreasureBox::Initialize(int num, const XMFLOAT3& MapPos, Player* player, in
 		heart_ = make_unique<Heart>();
 		heart_->Initialize(pos_);
 	}
+	animeTimer_ = 0;
+	animeTime_ = 20;
+	animeCount_ = 0;
 }
 
 void TreasureBox::Update()
 {
 	CheckHit();
+
+	if (++animeTimer_ >= animeTime_) {
+		if (++animeCount_ >= 4) animeCount_ = 0;
+		animeTimer_ = 0;
+		treasurebox_->SetModel(stairsModel_[animeCount_]);
+		treasurebox_->Initialize();
+	}
 
 	treasurebox_->Update();
 	ui_->Update();

@@ -199,6 +199,6 @@ private:
 	int oldpushCount_ = 0;
 	int shaketimer_ = 0;
 	float shakeval_ = 0.5f;
-
+	int ShakeCount = 0;
 
 };

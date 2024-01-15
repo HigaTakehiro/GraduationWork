@@ -23,11 +23,12 @@ public:
 	float GetShakePos() { return shakePos; }
 	float GetShakeTimer() { return shakeTimer; }
 	bool GetShakeFlag() { return shakeFlag; }
+	bool SetIwaFlag(bool iwaFlag) { return this->iwaFlag = iwaFlag; }
 	Vector3 GetParticlePos();
 private:
 	//シェイク時の最大時間
-	float shakeMaxTimer;
-	float shakeTimer;
+	float shakeMaxTimer = 30;
+	float shakeTimer=0;
 	bool shakeFlag;
 	//シェイクの揺れる数値(カメラのeyeに代入する)
 	float shakePos;

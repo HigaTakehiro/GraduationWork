@@ -72,6 +72,6 @@ void IwaEffect::particleCreate(float fade)
 		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
 		// ’Ç‰Á
-		particle->Add(60, ppos, vel, acc, 0.002f, 0.0f, { 0,0,0 }, { 0,0,0 }, fade, 0);
+		particle->Add(60, ppos, vel, acc, 0.003f, 0.0f, { 135.0f / 255.0f, 92.0f / 255.0f,68.0f / 255.0f }, { 135.0f / 255.0f, 92.0f / 255.0f,68.0f / 255.0f }, fade, 0);
 	}
 }

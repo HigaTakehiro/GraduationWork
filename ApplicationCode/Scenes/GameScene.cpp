@@ -47,6 +47,7 @@ void GameScene::Initialize()
 	player_->SetATK(SceneManager::GetATK());
 	player_->SetDEF(SceneManager::GetDEF());
 	player_->SetSPD(SceneManager::GetSPD());
+	player_->SetSkillPoint(SceneManager::GetSkillPoint());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -115,14 +116,30 @@ void GameScene::Update()
 	}
 
 	EnemyProcess();
-	if (shake_->GetShakeFlag() == true) {
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
+	//当たったらシェイク
+	if (map_->GetHit() == true) {
+		ShakeCount++;
+		if (ShakeCount < 30) {
+			shake_->SetIwaFlag(true);
+		}
 	}
 	else {
-		targetPos_.y = 0;
+		ShakeCount = 0;
 	}
-	cameraPos_.y = 12;
+	if (shake_->GetShakeFlag() == true) {
+		if (cameraPos_.y < 13 || cameraPos_.y > 12) {
+			cameraPos_.y += shake_->GetShakePos();
+			targetPos_.y += shake_->GetShakePos();
+		}
+		//cameraPos_.x += shake_->GetShakePos();
+		//targetPos_.x += shake_->GetShakePos();
+	}
+	else {
+		cameraPos_.y = 12;
+		//cameraPos_.x = 0;
+		targetPos_.y = 3;
+		//targetPos_.x = 0;
+	}
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	light_->Update();
@@ -169,7 +186,9 @@ void GameScene::Draw()
 		if (Enemy == nullptr) { continue; }
 		Enemy->Draw();
 	}
-
+	if (aeFlag == true) {
+		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	}
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -189,11 +208,7 @@ void GameScene::Draw()
 	for (size_t i = 0; i < enemys_.size(); i++)
 		//enemys_[i]->TexDraw();
 		player_->Draw();
-	for (size_t i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetFlash()) {
-			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-		}
-	}
+
 	/*for (std::unique_ptr<Grass>& grass : grasses_) {
 		grass->Draw();
 	}*/
@@ -212,8 +227,8 @@ void GameScene::Draw()
 	//テキスト描画範囲
 	//
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	//std::wstring hx = std::to_wstring(player_->GetPos().z);
-	//text_->Draw("meiryo", "white", L"ゲームシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter"+hx, textDrawRange);
+	//std::wstring hx = std::to_wstring(cameraPos_.y);
+	//text_->Draw("meiryo", "white", L"ゲームシーン\n" + hx, textDrawRange);
 	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -250,6 +265,7 @@ void GameScene::SceneChange()
 	SceneManager::SetATK(player_->GetATK());
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
+	SceneManager::SetSkillPoint(player_->GetSkillPoint());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetIsDead()) {
@@ -257,12 +273,13 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
+
 		if (StageCount::GetIns()->Now() == 4||
 			StageCount::GetIns()->Now() == 10||
 			StageCount::GetIns()->Now() == 16) {
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
-		else{
+		else {
 			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::dungeon);
 			SceneManager::SceneChange(SceneManager::SceneName::Game);
 		}
@@ -333,8 +350,24 @@ void GameScene::EnemyProcess()
 			Vec = playerPos - EnemyPos;
 			Vec.normalize();
 			Vec.y = 0.0f;
+			aeFlag = true;
 			player_->HitHammerToEnemy(Vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+		}
+		if (aeFlag == true) {
+			if (Enemy->GetHP() > 0) {
+				aEffect_->Update(map_->GetEnemy(i)->GetPos());
+			}
+			else {
+				aeFlag = false;
+			}
+			if (aeCount < 100) {
+				aeCount++;
+			}
+			else {
+				aeCount = 0;
+				aeFlag = false;
+			}
 		}
 	}
 #pragma endregion
@@ -356,23 +389,12 @@ void GameScene::EnemyProcess()
 			vec[i] = playerPos - enemyPos[i];
 			vec[i].normalize();
 			vec[i].y = 0.0f;
-			aeFlag = true;
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
-		if (aeFlag == true) {
-			aEffect_->Update(enemyPos[i], enemys_[i]->GetFlash());
-		}
+
 	}
-	if (aeFlag == true) {
-		if (aeCount < 30) {
-			aeCount++;
-		}
-		else {
-			aeCount = 0;
-			aeFlag = false;
-		}
-	}
+
 
 	//プレイヤーのOBB設定
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],

@@ -103,6 +103,7 @@ void IBScene::Initialize()
 	playerUI_->SetATK(SceneManager::GetATK());
 	playerUI_->SetDEF(SceneManager::GetDEF());
 	playerUI_->SetSPD(SceneManager::GetSPD());
+	playerUI_->SetSkillPoint(SceneManager::GetSkillPoint());
 	hp_ = playerUI_->GetHP();
 	playerUI_->SetStop(true);
 	SoundManager::GetIns()->StopAllBGM();
@@ -390,6 +391,7 @@ void IBScene::SceneChange()
 				SceneManager::SetATK(playerUI_->GetATK());
 				SceneManager::SetDEF(playerUI_->GetDef());
 				SceneManager::SetSPD(playerUI_->GetSPD());
+				SceneManager::SetSkillPoint(playerUI_->GetSkillPoint());
 				if (StageCount::GetIns()->Now() == 5 ||
 					StageCount::GetIns()->Now() == 11 ||
 					StageCount::GetIns()->Now() == 17) {
@@ -415,6 +417,7 @@ void IBScene::SceneChange()
 				SceneManager::SetATK(playerUI_->GetATK());
 				SceneManager::SetDEF(playerUI_->GetDef());
 				SceneManager::SetSPD(playerUI_->GetSPD());
+				SceneManager::SetSkillPoint(playerUI_->GetSkillPoint());
 				if (StageCount::GetIns()->Now() == 5||
 					StageCount::GetIns()->Now() == 11 || 
 					StageCount::GetIns()->Now() == 17 ) {

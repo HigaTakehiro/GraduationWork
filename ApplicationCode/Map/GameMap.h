@@ -107,6 +107,8 @@ public:
 
 	Deposit* GetDePosit();
 	bool DepositIsHit(bool flag) { return deposit_->GetIsHit(flag); }
+	 
+	bool GetHit() { return  wallHit_; }
 
 	int GetCount() { return count_; }
 
@@ -184,6 +186,7 @@ private:
 
 	bool nothit_ = false;
 
+	bool wallHit_ = false;
 	int nextval_ = 0;
 	//イージング用の時間
 	float time_ = 0;

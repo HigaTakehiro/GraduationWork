@@ -20,7 +20,7 @@ public:
 	/// <summary>
 	/// XVˆ—
 	/// </summary>
-	void Update(Vector3 Pos,bool flag);
+	void Update(Vector3 Pos);
 	/// <summary>
 	/// •`‰æ
 	/// </summary>

@@ -171,14 +171,29 @@ void TutorialScene::Update()
 	}
 
 	(this->*FuncTable[phase_])();
-	if (shake_->GetShakeFlag() == true) {
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
+	if (map_->GetHit() == true) {
+		ShakeCount++;
+		if (ShakeCount < 30) {
+			shake_->SetIwaFlag(true);
+		}
 	}
 	else {
-		targetPos_.y = 0;
+		ShakeCount = 0;
 	}
-
+	if (shake_->GetShakeFlag() == true) {
+		if (cameraPos_.y < 13 || cameraPos_.y > 12) {
+			cameraPos_.y += shake_->GetShakePos();
+			targetPos_.y += shake_->GetShakePos();
+		}
+		//cameraPos_.x += shake_->GetShakePos();
+		//targetPos_.x += shake_->GetShakePos();
+	}
+	else {
+		cameraPos_.y = 12;
+		//cameraPos_.x = 0;
+		targetPos_.y = 3;
+		//targetPos_.x = 0;
+	}
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
 		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
 		if (Dep != nullptr && Dep->GetHP() > 0) {
@@ -364,6 +379,7 @@ void TutorialScene::SceneChange()
 	SceneManager::SetATK(player_->GetATK());
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
+	SceneManager::SetSkillPoint(player_->GetSkillPoint());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
