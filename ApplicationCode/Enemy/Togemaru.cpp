@@ -213,9 +213,21 @@ void Togemaru::AnimationSett()
 		AddIndex(m_Model_Role, 2);
 		break;
 
-	case TogemaruAct::AnimeName::CRUSH:
+	case TogemaruAct::AnimeName::CRUSH_FRONT:
 		AddIndex(m_Model_Crush, 4);
 		break;
+
+	case TogemaruAct::AnimeName::CRUSH_RIGHT:
+		AddIndex(m_Model_Crush_Right, 4);
+		break;
+
+	case TogemaruAct::AnimeName::CRUSH_LEFT:
+			AddIndex(m_Model_Crush_Left, 4);
+			break;
+
+	case TogemaruAct::AnimeName::CRUSH_BACK:
+				AddIndex(m_Model_Crush, 4);
+				break;
 	}
 }
 
@@ -239,6 +251,10 @@ void Togemaru::InitAnimatin()
 	}
 	for(size_t i=0;i<4;i++){
 		m_Model_Crush[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		m_Model_Crush_Right[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMoveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
+		m_Model_Crush_Left[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMoveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
+		m_Model_Crush_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+
 	}
 }
 
