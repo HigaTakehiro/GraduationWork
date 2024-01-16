@@ -189,6 +189,31 @@ void TogemaruAct::WalkAnimation()
 	}
 }
 
+
+void TogemaruAct::CrushAnimation()
+{
+	float NowRotAnime = (Rot_.y);
+
+	if (NowRotAnime < -35)
+	{
+		anime_name_ = AnimeName::CRUSH_LEFT;
+	} else if (NowRotAnime < 45)
+	{
+		anime_name_ = AnimeName::CRUSH_FRONT;
+	} else if (NowRotAnime < 135)
+	{
+		anime_name_ = AnimeName::CRUSH_RIGHT;
+	} else if (NowRotAnime < 225)
+	{
+		anime_name_ = AnimeName::CRUSH_BACK;
+	} else if (NowRotAnime < 315)
+	{
+		anime_name_ = AnimeName::CRUSH_LEFT;
+	} else
+	{
+		anime_name_ = AnimeName::CRUSH_FRONT;
+	}
+}
 void TogemaruAct::Move()
 {
 	
@@ -218,9 +243,9 @@ void TogemaruAct::Move()
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 
-	constexpr uint32_t ActionInter = 21;
+	constexpr uint32_t ActionInter = 120;
 	//UŒ‚‚ÉˆÚs
-	if (actionCount % ActionInter == 0)
+	if (++actionCount % ActionInter == 0)
 	{
 		RushStartPos = Pos_;
 		for (size_t i = 0; i < spearSize; i++) {
@@ -303,6 +328,7 @@ float TogemaruAct::Follow()
 
 void TogemaruAct::Attack_Rush()
 {
+	RoleF = true;
 
 	splineT++;
 	
@@ -363,7 +389,7 @@ void TogemaruAct::Attack_ShotSpear()
 			for (size_t i = 0; i < spearSize; i++) {
 			//	spearsAlpha[i] -= 0.02f;//‚¾‚ñ‚¾‚ñ”–‚­
 			}
-			ShotRange += 0.7f;//”ÍˆÍL‚°‚Ä‚­
+			ShotRange += 0.1f;//”ÍˆÍL‚°‚Ä‚­
 		}
 		//”­ŽËI—¹
 		if (endShot) {
@@ -410,8 +436,7 @@ bool TogemaruAct::CrushSpear()
 
 void TogemaruAct::RunAway()
 {
-	anime_name_ = AnimeName::CRUSH;
-
+	CrushAnimation();
 	//ž™‰ñ•œ‚·‚éŽžŠÔ
 	constexpr int32_t reproductionMaxTime = 240;
 
@@ -463,7 +488,7 @@ void TogemaruAct::CollideDeposit()
 			if (beginBattle) {
 				++crushSpearNum;
 			}
-			anime_name_ = AnimeName::CRUSH;
+			CrushAnimation();
 			depositDelF = TRUE;
 		}
 		depositDelTime = 0;

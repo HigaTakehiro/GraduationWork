@@ -14,53 +14,32 @@ Stairs::~Stairs()
 	stairs_.release();
 }
 
-void Stairs::LoadCsv()
+void Stairs::LimiAddPos()
 {
-	std::string line;
-	XMFLOAT3 Pos = { 30.f ,0.f,30.f };
-
-	std::stringstream stream;
-
-
-	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Kaidan.csv");
-
-	while (getline(stream, line)) {
-		std::istringstream line_stream(line);
-		std::string word;
-		getline(line_stream, word, ' ');
-
-
-		if (word.find("POS") == 0) {
-			line_stream >> Pos.x;
-			line_stream >> Pos.y;
-			line_stream >> Pos.z;
-		}
-	}
 	//ƒŠƒ~ƒbƒg
-	if (Pos.x >= 10.f) {
-		Pos.x = 10.f;
+	if (addpos_.x >= 10.f) {
+		addpos_.x = 10.f;
 	}
-	else if (Pos.x <= -8.6f) {
-		Pos.x = -8.6f;
+	else if (addpos_.x <= -8.6f) {
+		addpos_.x = -8.6f;
+	}
+	if (addpos_.z >= 8.2f) {
+		addpos_.z = 8.2f;
+	}
+	else if (addpos_.z <= -11.f) {
+		addpos_.z = -11.f;
 	}
 
-	if (Pos.z >= 8.2f) {
-		Pos.z = 8.2f;
-	}
-	else if (Pos.z <= -11.f) {
-		Pos.z = -11.f;
-	}
-
-	pos_ = Pos;
-	uipos_ = Pos;
 }
 
-void Stairs::Initialize(const XMFLOAT3& Pos, Player* player, int Count)
+void Stairs::Initialize(const XMFLOAT3& Pos, const Vector3& AddPos,Player* player, int Count)
 {
-	LoadCsv();
+	addpos_ = AddPos;
+	LimiAddPos();
+	addpos_.y = -2.5f;
 	player_ = player;
-	pos_ = Pos + pos_;
-	uipos_ = Pos + uipos_;
+	pos_ = Pos + addpos_;
+	uipos_ = Pos + uipos_+addpos_;
 	uipos_.y += 2;
 	count_ = Count;
 
@@ -79,10 +58,11 @@ void Stairs::Initialize(const XMFLOAT3& Pos, Player* player, int Count)
 
 void Stairs::BossInitialize(const XMFLOAT3& Pos, Player* player)
 {
-	LoadCsv();
+	LimiAddPos();
+	addpos_.y = -2.5f;
 	player_ = player;
-	pos_ = Pos + pos_;
-	uipos_ = Pos + uipos_;
+	pos_ = Pos + addpos_;
+	uipos_ = Pos + uipos_ + addpos_;
 	uipos_.y += 2;
 
 	stairsModel_ = Shapes::CreateSquare({ 0,0 }, { 64, 64 }, "steps.png", { 2, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { 64, 64 });
