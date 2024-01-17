@@ -20,6 +20,7 @@ void ImageManager::Initialize() {
 	Sprite::LoadTexture(int32_t(ImageName::asist_), L"Engine/Resources/Images/susumuA.png");
 	Sprite::LoadTexture(int32_t(ImageName::wake), L"Engine/Resources/Images/wakeUpA.png");
 	Sprite::LoadTexture(int32_t(ImageName::TextWindow), L"Engine/Resources/Images/window.png");
+	Sprite::LoadTexture(int32_t(ImageName::skillCursor), L"Engine/Resources/Images/Cursor_normalUI.png");
 	Texture::LoadTexture(Image2DName::USA_1, L"Engine/Resources/Images/usa/usa_idle1.png");
 	Texture::LoadTexture(Image2DName::USA_2, L"Engine/Resources/Images/usa/usa_idle2.png");
 	Texture::LoadTexture(Image2DName::USA_3, L"Engine/Resources/Images/usa/usa_idle3.png");

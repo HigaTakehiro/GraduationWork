@@ -29,6 +29,7 @@ public: //‰æ‘œ–¼
 		asist_,
 		wake,
 		TextWindow,
+		skillCursor = 15,
 	};
 
 	enum Image2DName {
