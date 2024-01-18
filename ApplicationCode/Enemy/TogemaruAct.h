@@ -48,9 +48,13 @@ public:
 		WALK_LEFT,
 		WALK_BACK,
 		ROLE,
-		CRUSH
+		CRUSH_FRONT,
+		CRUSH_RIGHT,
+		CRUSH_LEFT,
+		CRUSH_BACK
 	}anime_name_;
 
+	void CrushAnimation();
 	void WalkAnimation();
 	AnimeName GetName()const { return anime_name_; }
 private:

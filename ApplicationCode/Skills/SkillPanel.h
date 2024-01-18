@@ -21,7 +21,7 @@ public: //メンバ関数
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update();
+	void Update(Vector2 cursorPos);
 
 	/// <summary>
 	/// スプライト描画処理
@@ -67,6 +67,19 @@ public: //メンバ関数
 	/// <param name="pos">座標</param>
 	void SetPos(const Vector2& pos) { pos_ = pos; }
 
+	/// <summary>
+	/// 説明パネル解放処理
+	/// </summary>
+	/// <param name="cursorPos">カーソル座標</param>
+	void TextPanelOpen(Vector2 cursorPos);
+
+	/// <summary>
+	/// パネルにカーソルが触れているかどうか
+	/// </summary>
+	/// <param name="cursorPos">カーソル座標</param>
+	/// <returns>カーソルがパネルに触れているかどうか</returns>
+	bool PanelToCursorHit(Vector2 cursorPos);
+
 private: //メンバ変数
 	//スキル名
 	std::wstring skillName_;
@@ -77,9 +90,15 @@ private: //メンバ変数
 
 	//スキルパネルスプライト
 	std::unique_ptr<Sprite> skillPanel_;
+	//説明パネルスプライト
+	std::unique_ptr<Sprite> textPanel_;
+	//説明パネル開放時間
+	float panelOpenTimer_;
 	//テキスト描画クラス
 	TextDraw* text_;
 	//座標
 	Vector2 pos_;
+	//説明パネルサイズ
+	Vector2 textPanelSize_;
 };
 

@@ -34,19 +34,35 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 		std::string word;
 		getline(line_stream, word, ' ');
 
+		if (word.find("KAIDAN") == 0) {
+			getline(line_stream, word, ',');
+			stairs_ = make_unique<Stairs>();
+			XMFLOAT3 AddPos;
+			float x = (float)std::atof(word.c_str());
+			float y = (float)std::atof(word.c_str());
+			float z = (float)std::atof(word.c_str());
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
+			AddPos.x = x;
+			AddPos.y = y;
+			AddPos.z = z;
+			stairs_->Initialize( Pos,AddPos ,player, COUNT);
+			continue;
+		}
+
 		if (word.find("ENEMY1") == 0) {
 			getline(line_stream, word, ',');
 			ENEMYCOUNT = (int)std::atof(word.c_str());
 			enemyscount_ = ENEMYCOUNT;
-			gameenemyscount_ = ENEMYCOUNT;
+			gameenemyscount_ += ENEMYCOUNT;
 			continue;
 		}
 
 		if (word.find("BOX") == 0) {
 			getline(line_stream, word, ',');
+			int num = (int)std::atof(word.c_str());
 			box_ = make_unique<TreasureBox>();
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			box_->Initialize(1, Pos, player, COUNT);
+			box_->Initialize(num, Pos, player, COUNT);
 			continue;
 		}
 
@@ -151,7 +167,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			Count = COUNT;
 			stairs_ = make_unique<Stairs>();
-			stairs_->Initialize(Pos, player, Count);
+			stairs_->Initialize(Pos, {0.f,0.f,0.f}, player, Count);
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
@@ -346,7 +362,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	if (GameEnemyAllKill() || box_->GetLock() == true) {
+	if (GameEnemyAllKill() || (box_!=nullptr&&box_->GetLock() == true)) {
 		for (unique_ptr<Bridge>& Bridge : bridgeside) {
 			Bridge->invisible_ = false;
 		}

@@ -80,8 +80,8 @@ void IBScene::Initialize()
 	SkillPanelInitialize();
 
 	//カーソルUI
-	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 900.f, 300.f }, { 0.6f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
-	skillCursor_->SetSize({ 100.f, 70.f });
+	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillCursor, { 900.f, 300.f }, { 0.6f, 0.6f, 1.0f, 1.f }, { 0.5f, 0.5f });
+	skillCursor_->SetSize({ 50.f, 50.f });
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();
@@ -119,9 +119,23 @@ void IBScene::Update()
 
 	//スキルパネル更新
 	for (int32_t i = 0; i < 7; i++) {
-		panelStatus_[i][3].skillPanel_->Update();
-		panelStatus_[3][i].skillPanel_->Update();
+		panelStatus_[i][3].skillPanel_->Update(skillCursor_->GetPosition());
+		panelStatus_[3][i].skillPanel_->Update(skillCursor_->GetPosition());
+
+		if (panelStatus_[i][3].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_B))) {
+			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[i][3].skillPanel_->GetIsActive()) {
+				playerUI_->SubSkillPoint(1);
+				panelStatus_[i][3].skillPanel_->SetIsSkillGet(true);
+			}
+		}
+		if (panelStatus_[3][i].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_B))) {
+			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[3][i].skillPanel_->GetIsActive()) {
+				playerUI_->SubSkillPoint(1);
+				panelStatus_[3][i].skillPanel_->SetIsSkillGet(true);
+			}
+		}
 	}
+
 	if (KeyInput::GetIns()->TriggerKey(DIK_P) && playerUI_->GetSkillPoint() > 0) {
 		playerUI_->SubSkillPoint(1);
 		if (!panelStatus_[3][3].skillPanel_->GetIsSkillGet()) {
@@ -259,7 +273,6 @@ void IBScene::Draw()
 		for (int32_t i = 0; i < 3; i++) {
 			window_[i]->Draw();
 		}
-		skillCursor_->Draw();
 		for (int32_t i = 0; i < 7; i++) {
 			for (int32_t j = 0; j < 7; j++) {
 				if (panelStatus_[i][j].panelStatus_ != 0) {
@@ -268,6 +281,7 @@ void IBScene::Draw()
 			}
 		}
 		skillPlayer_[animeCount_]->Draw();
+		skillCursor_->Draw();
 	}
 	schange->Draw();
 	Sprite::PostDraw();
@@ -548,7 +562,7 @@ void IBScene::SkillUIUpdate()
 			if (i == 0 && panelStatus_[i + 1][j].skillPanel_->GetIsSkillGet()) {
 				panelStatus_[i][j].skillPanel_->SetIsActive(true);
 			}
-			if (j && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
+			if (j == 0 && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
 				panelStatus_[i][j].skillPanel_->SetIsActive(true);
 			}
 
@@ -570,6 +584,29 @@ void IBScene::SkillUIUpdate()
 
 		}
 	}
+
+	//カーソル移動処理
+	const Vector2 sideMoveVec = {1.f, 0.f};
+	const Vector2 verticalMoveVec = { 0.f, 1.f };
+	const float moveSpeed = 10.f;
+
+	float leftStick = PadInput::GetIns()->leftStickY();
+	Vector2 moveVec = { 0.f, 0.f };
+	//縦移動
+	if (KeyInput::GetIns()->PushKey(DIK_DOWN) || leftStick > 0) moveVec += verticalMoveVec * moveSpeed;
+	else if (KeyInput::GetIns()->PushKey(DIK_UP) || leftStick < 0)  moveVec += verticalMoveVec * -moveSpeed;
+	//横移動
+	leftStick = PadInput::GetIns()->leftStickX();
+	if (KeyInput::GetIns()->PushKey(DIK_RIGHT) || leftStick > 0) moveVec += sideMoveVec * moveSpeed;
+	else if (KeyInput::GetIns()->PushKey(DIK_LEFT) || leftStick < 0) moveVec += sideMoveVec * -moveSpeed;
+	//現在のカーソル座標に移動ベクトル分加算
+	Vector2 cursorPos = skillCursor_->GetPosition() + moveVec;
+	//画面外にいかないように現在の座標を代入
+	if (cursorPos.x < 0.f || cursorPos.x > 1280.f) cursorPos.x = skillCursor_->GetPosition().x;
+	if (cursorPos.y < 0.f || cursorPos.y > 720.f) cursorPos.y = skillCursor_->GetPosition().y;
+	//カーソル座標セット
+	skillCursor_->SetPosition(cursorPos);
+
 }
 
 void IBScene::SkillPanelInitialize()
