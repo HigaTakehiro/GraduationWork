@@ -73,13 +73,18 @@ void SkillPanel::TextMessageDraw()
 
 void SkillPanel::TextPanelOpen(Vector2 cursorPos)
 {
-	const float panelSizeX = 96 / 2;
-	const float panelSizeY = 64 / 2;
+
 	const float openTime = 30;
 	const Vector2 textPanelEndSize = { 128.f, 256.f };
 
-	if (cursorPos.x >= pos_.x - panelSizeX && cursorPos.x <= pos_.x + panelSizeX && cursorPos.y >= pos_.y - panelSizeY && cursorPos.y <= pos_.y + panelSizeY) {
+	if (PanelToCursorHit(cursorPos)) {
 		if (panelOpenTimer_ < openTime) panelOpenTimer_++;
+		if (!isActive_) {
+			skillPanel_->SetColor({ 0.6f, 0.2f, 0.2f });
+		}
+		else if (!isSkillGet_) {
+			skillPanel_->SetColor({ 0.2f, 0.2f, 0.6f });
+		}
 		float time = panelOpenTimer_ / openTime;
 		textPanelSize_ = easeIn(textPanelSize_, textPanelEndSize, time);
 	}
@@ -89,4 +94,14 @@ void SkillPanel::TextPanelOpen(Vector2 cursorPos)
 	}
 	textPanel_->SetSize(textPanelSize_);
 
+}
+
+bool SkillPanel::PanelToCursorHit(Vector2 cursorPos)
+{
+	const float panelSizeX = 96 / 2;
+	const float panelSizeY = 64 / 2;
+
+	if (cursorPos.x >= pos_.x - panelSizeX && cursorPos.x <= pos_.x + panelSizeX && cursorPos.y >= pos_.y - panelSizeY && cursorPos.y <= pos_.y + panelSizeY) return true;
+
+	return false;
 }

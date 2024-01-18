@@ -73,6 +73,13 @@ public: //メンバ関数
 	/// <param name="cursorPos">カーソル座標</param>
 	void TextPanelOpen(Vector2 cursorPos);
 
+	/// <summary>
+	/// パネルにカーソルが触れているかどうか
+	/// </summary>
+	/// <param name="cursorPos">カーソル座標</param>
+	/// <returns>カーソルがパネルに触れているかどうか</returns>
+	bool PanelToCursorHit(Vector2 cursorPos);
+
 private: //メンバ変数
 	//スキル名
 	std::wstring skillName_;

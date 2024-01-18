@@ -121,7 +121,21 @@ void IBScene::Update()
 	for (int32_t i = 0; i < 7; i++) {
 		panelStatus_[i][3].skillPanel_->Update(skillCursor_->GetPosition());
 		panelStatus_[3][i].skillPanel_->Update(skillCursor_->GetPosition());
+
+		if (panelStatus_[i][3].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_B))) {
+			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[i][3].skillPanel_->GetIsActive()) {
+				playerUI_->SubSkillPoint(1);
+				panelStatus_[i][3].skillPanel_->SetIsSkillGet(true);
+			}
+		}
+		if (panelStatus_[3][i].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_B))) {
+			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[3][i].skillPanel_->GetIsActive()) {
+				playerUI_->SubSkillPoint(1);
+				panelStatus_[3][i].skillPanel_->SetIsSkillGet(true);
+			}
+		}
 	}
+
 	if (KeyInput::GetIns()->TriggerKey(DIK_P) && playerUI_->GetSkillPoint() > 0) {
 		playerUI_->SubSkillPoint(1);
 		if (!panelStatus_[3][3].skillPanel_->GetIsSkillGet()) {
@@ -548,7 +562,7 @@ void IBScene::SkillUIUpdate()
 			if (i == 0 && panelStatus_[i + 1][j].skillPanel_->GetIsSkillGet()) {
 				panelStatus_[i][j].skillPanel_->SetIsActive(true);
 			}
-			if (j && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
+			if (j == 0 && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
 				panelStatus_[i][j].skillPanel_->SetIsActive(true);
 			}
 
