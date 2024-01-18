@@ -91,6 +91,9 @@ void TutorialScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
+	aEffect_ = new AttackEffect();
+	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+
 	//後でcsvから
 	unsigned int EnemySize = 2;
 
@@ -275,6 +278,9 @@ void TutorialScene::Draw()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
 		Enemy->TutorialDraw(25.f);
+		if (Enemy->GetFlash() == true) {
+			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+		}
 	}
 	
 	//3Dオブジェクト描画処理
@@ -460,6 +466,9 @@ void TutorialScene::EnemyProcess()
 			vec.y = 0.0f;
 			player_->HitHammerToEnemy(vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+		}
+		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
+			aEffect_->Update(enemyPos[i]);
 		}
 	}
 

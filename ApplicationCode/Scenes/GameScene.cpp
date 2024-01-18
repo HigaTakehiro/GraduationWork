@@ -89,7 +89,6 @@ void GameScene::Initialize()
 	schange->SetFEnd(true);
 	aEffect_ = new AttackEffect();
 	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
-	aeFlag = false;
 	aeCount = 0;
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
@@ -185,10 +184,11 @@ void GameScene::Draw()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
 		Enemy->Draw();
+		if (Enemy->GetFlash() == true) {
+			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+		}
 	}
-	if (aeFlag == true) {
-		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	}
+
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -274,8 +274,8 @@ void GameScene::SceneChange()
 	}
 	if (schange->GetEnd() == true) {
 
-		if (StageCount::GetIns()->Now() == 4||
-			StageCount::GetIns()->Now() == 10||
+		if (StageCount::GetIns()->Now() == 4 ||
+			StageCount::GetIns()->Now() == 10 ||
 			StageCount::GetIns()->Now() == 16) {
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
@@ -350,26 +350,11 @@ void GameScene::EnemyProcess()
 			Vec = playerPos - EnemyPos;
 			Vec.normalize();
 			Vec.y = 0.0f;
-			aeFlag = true;
 			player_->HitHammerToEnemy(Vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
-		if (aeFlag == true) {
-			if (Enemy->GetHP() > 0) {
-				if (Enemy->GetRecv() == true) {
-					aEffect_->Update(Enemy->GetPos());
-				}
-			}
-			else {
-				aeFlag = false;
-			}
-			if (aeCount < 100) {
-				aeCount++;
-			}
-			else {
-				aeCount = 0;
-				aeFlag = false;
-			}
+		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
+			aEffect_->Update(Enemy->GetPos());
 		}
 	}
 #pragma endregion
