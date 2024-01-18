@@ -119,8 +119,8 @@ void IBScene::Update()
 
 	//スキルパネル更新
 	for (int32_t i = 0; i < 7; i++) {
-		panelStatus_[i][3].skillPanel_->Update();
-		panelStatus_[3][i].skillPanel_->Update();
+		panelStatus_[i][3].skillPanel_->Update(skillCursor_->GetPosition());
+		panelStatus_[3][i].skillPanel_->Update(skillCursor_->GetPosition());
 	}
 	if (KeyInput::GetIns()->TriggerKey(DIK_P) && playerUI_->GetSkillPoint() > 0) {
 		playerUI_->SubSkillPoint(1);
@@ -587,8 +587,10 @@ void IBScene::SkillUIUpdate()
 	else if (KeyInput::GetIns()->PushKey(DIK_LEFT) || leftStick < 0) moveVec += sideMoveVec * -moveSpeed;
 	//現在のカーソル座標に移動ベクトル分加算
 	Vector2 cursorPos = skillCursor_->GetPosition() + moveVec;
+	//画面外にいかないように現在の座標を代入
 	if (cursorPos.x < 0.f || cursorPos.x > 1280.f) cursorPos.x = skillCursor_->GetPosition().x;
 	if (cursorPos.y < 0.f || cursorPos.y > 720.f) cursorPos.y = skillCursor_->GetPosition().y;
+	//カーソル座標セット
 	skillCursor_->SetPosition(cursorPos);
 
 }
