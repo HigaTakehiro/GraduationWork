@@ -25,7 +25,7 @@
 #include "SceneChange.h"
 #include "MessageWindow.h"
 #include "Deposit.h"
-
+#include "AttackEffect.h"
 class TutorialScene :
 	public BaseScene
 {
@@ -200,5 +200,5 @@ private:
 	int shaketimer_ = 0;
 	float shakeval_ = 0.5f;
 	int ShakeCount = 0;
-
+	AttackEffect* aEffect_;
 };

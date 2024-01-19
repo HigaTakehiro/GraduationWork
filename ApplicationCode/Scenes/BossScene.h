@@ -23,6 +23,7 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include "SceneChange.h"
+#include"AttackEffect.h"
 class BossScene :
     public BaseScene
 {
@@ -88,5 +89,7 @@ private:
 	float oldcamerapos_ = 0;
 	XMFLOAT3 nextPos_{};
 	SceneChangeEffect* schange;
+	int ShakeCount = 0;
+	AttackEffect* aEffect_;
 };
 

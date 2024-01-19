@@ -119,14 +119,29 @@ void BossScene::Update()
 		player_->SetHP(3);
 	}
 
-	/*if (shake_->GetShakeFlag() == true) {
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
-	}*/
+	if (map_->GetHit() == true) {
+		ShakeCount++;
+		if (ShakeCount == 1) {
+			shake_->SetIwaFlag(true);
+			shake_->SetShakeFlag(true);
+		}
+	}
+	else {
+		ShakeCount = 0;
+	}
+	if (shake_->GetShakeFlag() == true) {
+		if (cameraPos_.y < 13 || cameraPos_.y > 12) {
+			cameraPos_.y += shake_->GetShakePos();
+			targetPos_.y += shake_->GetShakePos();
+		}
+		//cameraPos_.x += shake_->GetShakePos();
+		//targetPos_.x += shake_->GetShakePos();
+	}
 	else {
 		cameraPos_.y = 12;
-		targetPos_.y = 0;
-
+		//cameraPos_.x = 0;
+		targetPos_.y = 3;
+		//targetPos_.x = 0;
 	}
 	//if (boss_->GetAppearFlag() == FALSE) {
 	camera_->SetEye(cameraPos_);
@@ -146,7 +161,9 @@ void BossScene::Update()
 	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
 	_hummmerObb = &l_obb;
-
+	if (boss_->GetClearF() == false && boss_->GetFlash() == true) {
+		aEffect_->Update(boss_->GetPos());
+	}
 	boss_->Upda();
 
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
@@ -158,7 +175,7 @@ void BossScene::Update()
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
 
-	//shake_->Update();
+	shake_->Update();
 	colManager_->Update();
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
@@ -231,8 +248,10 @@ void BossScene::Draw()
 	player_->Draw();
 	boss_->Draw2();
 	Object3d::PostDraw();
-	//shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-
+	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	if (boss_->GetFlash() == true) {
+		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	}
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	schange->Draw();

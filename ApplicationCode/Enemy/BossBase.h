@@ -82,6 +82,7 @@ public:
 
 	bool GetClearF() { return m_ClearF; }
 
+	bool GetFlash() { return FlashF; }
 public:
 	int32_t val = 0;
 	bool FlashF;

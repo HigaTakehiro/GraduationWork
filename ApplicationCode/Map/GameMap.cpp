@@ -255,7 +255,7 @@ void GameMap::CreateGrass(const XMFLOAT3& MapPos, int Count)
 		float posZ = MapPos.z + (float)randZ(mt2);
 		unique_ptr<Grassland>GrassLand = make_unique<Grassland>();
 		GrassLand->grass_ = std::make_unique<Grass>();
-		GrassLand->grass_->Initialize({ posX, 0, posZ },i);
+		GrassLand->grass_->Initialize({ posX, 0, posZ }, i);
 		GrassLand->num = Count;
 		grass_.push_back(move(GrassLand));
 	}
@@ -439,11 +439,9 @@ void GameMap::CheckHitTest(Player* player)
 		//¶
 		if (PlayerPos.x >= Map->stagePos_.x + limit_.x) {
 			PlayerPos.x = Map->stagePos_.x + limit_.x;
-			wallHit_ = true;
 		}
 		if (PlayerPos.x <= Map->stagePos_.x - limit_.y) {
 			PlayerPos.x = Map->stagePos_.x - limit_.y;
-			wallHit_ = true;
 		}
 		if (PlayerPos.z >= Map->stagePos_.z + limit_.z) {
 			PlayerPos.z = Map->stagePos_.z + limit_.z;
@@ -451,14 +449,6 @@ void GameMap::CheckHitTest(Player* player)
 		if (PlayerPos.z <= Map->stagePos_.z - limit_.w) {
 			PlayerPos.z = Map->stagePos_.z - limit_.w;
 		}
-		if (PlayerPos.x >= Map->stagePos_.x + limit_.x|| 
-			PlayerPos.x <= Map->stagePos_.x - limit_.y||
-			PlayerPos.z >= Map->stagePos_.z + limit_.z||
-			PlayerPos.z <= Map->stagePos_.z - limit_.w)
-		{
-			wallHit_ = true;
-		}
-		else { wallHit_ = false; }
 	}
 	player->SetPos(PlayerPos);
 }
@@ -655,23 +645,35 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 		if (count_ != Map->num) { continue; }
 		//¶
 		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease) {
+			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 		if (pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease) {
+			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 
 		if (pos.z >= Map->stagePos_.z + limit_.z && isHammerRelease) {
+			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 
 		if (pos.z <= Map->stagePos_.z - limit_.w - 3 && isHammerRelease) {
+			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
+		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease ||
+			pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease ||
+			pos.z >= Map->stagePos_.z + limit_.z && isHammerRelease ||
+			pos.z <= Map->stagePos_.z - limit_.w - 3 && isHammerRelease)
+		{
+			wallHit_ = true;
+		}
+		else { wallHit_ = false; }
 
 	}
 
