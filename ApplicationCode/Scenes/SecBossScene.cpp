@@ -254,8 +254,8 @@ void SecBossScene::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 
 	boss_->Draw();
-	player_->Draw();
 	map_->BridgeDraw();
+	player_->Draw();
 	if (!TogemaruAct::depositDelF) {
 		Deposit_->Draw();
 		
