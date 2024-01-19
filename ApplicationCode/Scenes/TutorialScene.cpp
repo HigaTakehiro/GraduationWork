@@ -188,14 +188,10 @@ void TutorialScene::Update()
 			cameraPos_.y += shake_->GetShakePos();
 			targetPos_.y += shake_->GetShakePos();
 		}
-		//cameraPos_.x += shake_->GetShakePos();
-		//targetPos_.x += shake_->GetShakePos();
 	}
 	else {
 		cameraPos_.y = 12;
-		//cameraPos_.x = 0;
 		targetPos_.y = 3;
-		//targetPos_.x = 0;
 	}
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
 		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);

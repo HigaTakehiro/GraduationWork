@@ -174,7 +174,7 @@ void BossScene::Update()
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
 
-	//shake_->Update();
+	shake_->Update();
 	colManager_->Update();
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
