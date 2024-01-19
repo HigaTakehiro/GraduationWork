@@ -54,6 +54,8 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			ENEMYCOUNT = (int)std::atof(word.c_str());
 			enemyscount_ = ENEMYCOUNT;
 			gameenemyscount_ += ENEMYCOUNT;
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
+			CreateEnemy(player, Pos, ENEMYCOUNT);
 			continue;
 		}
 
@@ -138,7 +140,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
-			CreateEnemy(player, Pos, ENEMYCOUNT);
+			//CreateEnemy(player, Pos, ENEMYCOUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -196,7 +198,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			CreateDeposits(Pos, COUNT);
-			CreateEnemy(player, Pos, 2);
+			//CreateEnemy(player, Pos, 2);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -318,7 +320,6 @@ void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
 		std::uniform_int_distribution<> randZ(-8, 8);
 		Enemy1->SetPos({ MapPos.x + (float)randX(mt),MapPos.y,MapPos.z + (float)randZ(mt) });
 		enemys_.push_back(move(Enemy1));
-		enemyscount_ += 1;
 	}
 }
 
@@ -642,37 +643,6 @@ bool GameMap::GameEnemyAllKill()
 		return false;
 	}
 }
-
-//void GameMap::CreateRock()
-//{
-//	//c
-//	int Vert = -2;
-//	//‰¡
-//	int Hori = -2;
-//	XMFLOAT3 Pos{ 5.f,0.f,5.f };
-//	while (rockPos_.z >= 70 && rockPos_.x >= 70) {
-//		int Num = 0;
-//		rockPos_.x += Pos.x * Hori;
-//		rockPos_.z += Pos.z * Vert;
-//		if (CheckRockToMap(rockPos_)) {
-//			unique_ptr Rock = make_unique<Object3d>();
-//			//if (Num == 0) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock")); }
-//			/*else if (Num == 1) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock2")); }
-//			else if (Num == 2) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock3")); }
-//			else if (Num == 3) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock4")); }
-//			else if (Num == 4) { Rock = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("rock5")); }*/
-//			Rock->SetScale({ 1.f,1.f,1.f });
-//			Rock->SetPosition(rockPos_);
-//			rock_.emplace_back(Rock);
-//		}
-//		Hori += 1;
-//		if (rockPos_.x >= 70.f) {
-//			Hori = 0;
-//			Vert += 1;
-//		}
-//	}
-//
-//}
 
 bool GameMap::CheckRockToMap(const XMFLOAT3& RockPos)
 {
