@@ -51,6 +51,9 @@ void TogemaruAct::Phase1()
 	Pos_.x = 0.f;
 	Pos_.z = -8.f;
 
+	DeathSmallF = false;
+
+	shakeT = 0.f;
 	//’n–Ê‚Â‚¢‚½‚çŽŸ‚ÌƒtƒF[ƒY
 	if(PosEaseT>=EaseState_Pos[0]){
 		PosEaseT = 0.f;
@@ -123,15 +126,21 @@ void TogemaruAct::Transition()
 			//“¦‚°˜f‚¤
 			act_ = Act::RUNAWAY;
 		}
-
+		if(Hp<=0)
+		{
+			act_ = Act::DEATH;
+		}
 		//Õ“Ë”¼Œa
 		constexpr float pr = 1.f, er = 1.5f;
 		//Õ“ËŽž‚ÌƒvƒŒƒCƒ„[‚Ì‚¯‚¼‚è
 		bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
-		float KnockDis = AccelJudg ? 0.3f : 1.f;//‚Ì‚¯‚¼‚è’l
+		float KnockDis = AccelJudg ? 0.3f : 0.6f;//‚Ì‚¯‚¼‚è’l
 
 		//”»’è
-		bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr, er);
+		bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
+		if (!damf&&isCollide) { Player_->SubHP(1); damf = true;}
+		if (damf) { damcool++; if (damcool > 90)damf = false; }
+		else { damcool = 0; }
 		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
 
 	}
@@ -216,10 +225,11 @@ void TogemaruAct::CrushAnimation()
 }
 void TogemaruAct::Move()
 {
-	
+
+	if (act_ == Act::DEATH)return;
 	animationWaitTime = 0;
 
-	movSpeed = 0.3f;
+	movSpeed = 0.6f;
 	//Œü‚¢‚½•û‚ÉˆÚ“®‚·‚é
 	move = { 0.f,0.f, 0.1f, 0.0f };
 	matRot = XMMatrixRotationY(XMConvertToRadians(Rot_.y));
@@ -243,7 +253,7 @@ void TogemaruAct::Move()
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 
-	constexpr uint32_t ActionInter = 120;
+	constexpr uint32_t ActionInter = 90;
 	//UŒ‚‚ÉˆÚs
 	if (++actionCount % ActionInter == 0)
 	{
@@ -274,12 +284,12 @@ void TogemaruAct::Move()
 				CurreRandVal[i] = RandM_P;
 			}
 			Vector3 posList[] = {
-				Vector3((rand1(mt)) * CurreRandVal[0],-2.5f,rand2(mt) * CurreRandVal[0]),
-				Vector3(rand1(mt) * CurreRandVal[1],-2.5f,rand2(mt) * CurreRandVal[1]) ,
-				Vector3((rand1(mt)) * CurreRandVal[2],-2.5f,rand2(mt) * CurreRandVal[2]) ,
-				Vector3(rand1(mt) * CurreRandVal[3],-2.5f,rand2(mt) * CurreRandVal[3]),
-				Vector3((rand1(mt)) * CurreRandVal[4],-2.5f,rand2(mt) * CurreRandVal[4]),
-				Vector3(rand1(mt) * CurreRandVal[5],-2.5f,rand2(mt) * CurreRandVal[5])
+				Vector3((rand1(mt)) * RandM_P,-2.5f,rand2(mt) * RandM_P),
+				Vector3(rand1(mt) * -RandM_P,-2.5f,rand2(mt) * -RandM_P) ,
+				Vector3((rand1(mt)) * RandM_P,-2.5f,rand2(mt) * RandM_P) ,
+				Vector3(rand1(mt) * -RandM_P,-2.5f,rand2(mt) * -0.2f),
+				Vector3((rand1(mt)) * -0.2,-2.5f,rand2(mt) * -RandM_P),
+				Vector3(rand1(mt) * RandM_P,-2.5f,rand2(mt) * RandM_P)
 			};
 
 			if (spline == nullptr) {
@@ -328,12 +338,13 @@ float TogemaruAct::Follow()
 
 void TogemaruAct::Attack_Rush()
 {
+	if (act_ == Act::DEATH)return;
 	RoleF = true;
 
 	splineT++;
 	
 	if (splineT > 60) {
-		if (spline->GetIndex() >= SplinePosList.size()-1)
+		if (spline->GetIndex() >= SplinePosList.size()-2)
 		{
 			anime_name_ = AnimeName::IdlE;
 			act_ = Act::MOVE;
@@ -359,6 +370,7 @@ void TogemaruAct::Attack_Rush()
 
 void TogemaruAct::Attack_ShotSpear()
 {
+	if (act_ == Act::DEATH)return;
 	if (++animationWaitTime < 60)return;
 
 	RoleF = true;
@@ -389,7 +401,7 @@ void TogemaruAct::Attack_ShotSpear()
 			for (size_t i = 0; i < spearSize; i++) {
 			//	spearsAlpha[i] -= 0.02f;//‚¾‚ñ‚¾‚ñ”–‚­
 			}
-			ShotRange += 0.1f;//”ÍˆÍL‚°‚Ä‚­
+			ShotRange += 0.2f;//”ÍˆÍL‚°‚Ä‚­
 		}
 		//”­ŽËI—¹
 		if (endShot) {
@@ -436,6 +448,8 @@ bool TogemaruAct::CrushSpear()
 
 void TogemaruAct::RunAway()
 {
+
+	if (act_ == Act::DEATH)return;
 	CrushAnimation();
 	//ž™‰ñ•œ‚·‚éŽžŠÔ
 	constexpr int32_t reproductionMaxTime = 240;
@@ -504,7 +518,7 @@ bool TogemaruAct::CollideSpear()
 	{
 		if (spearsAlpha[i] <= 0.f)continue;
 		if (Helper::GetCircleCollide(Player_->GetPos(), { SpearPos_[i].x,SpearPos_[i].y,SpearPos_[i].z + 3.f }
-			, 1.f, 1.f))
+			, 1.f, 0.5f))
 		{
 			spearsAlpha[i] = 0.f;//“–‚½‚Á‚½‚ç•`‰æÁ‚·
 			return true;
@@ -563,11 +577,31 @@ bool TogemaruAct::Appear()
 
 void TogemaruAct::Death()
 {
-
+	constexpr float shakeVibration = 1.f;
+	anime_name_ = AnimeName::ROLE;
+	shakeT++;
+	shakeXVal = sinf(PI * 2 / 2 * shakeT) * shakeVibration;
+	shakeYVal = sinf(PI * 2 / 2 * shakeT) * shakeVibration;
+	if (shakeT > 90) {
+		shakeXVal = 0;
+		shakeYVal = 0;
+		DeathSmallF = true;
+	}
+	else
+	{
+		Pos_.x += shakeXVal;
+		Pos_.z += shakeYVal;
+	}
+	if (DeathSmallF) {
+		Scl_.x -= 0.01f;
+		Scl_.y -= 0.01f;
+		shakeT = 0;
+	}
 }
 
 void (TogemaruAct::* TogemaruAct::ActionList[])() =
 {
+	
 	&TogemaruAct::Move,
 	&TogemaruAct::Attack_Rush,
 	&TogemaruAct::Attack_ShotSpear,

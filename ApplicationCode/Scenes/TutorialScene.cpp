@@ -43,7 +43,7 @@ void TutorialScene::Initialize()
 	}
 
 	//sky = ModelManager::GetIns()->GetModel("skydome");
-	dome=Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
+	dome = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
 	dome->Initialize();
 
 	for (int i = 0; i < 9; i++) {
@@ -90,6 +90,10 @@ void TutorialScene::Initialize()
 	player_->Initialize();
 
 	postEffectNo_ = PostEffect::NONE;
+
+	aEffect_ = new AttackEffect();
+	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
+
 
 	startenemypos_[0] = { 5, 12.5, 18 };
 	startenemypos_[1] = { -5, 12.5, 18 };
@@ -158,26 +162,25 @@ void TutorialScene::Update()
 	(this->*FuncTable[phase_])();
 	if (map_->GetHit() == true) {
 		ShakeCount++;
-		if (ShakeCount < 30) {
+		if (ShakeCount == 1) {
 			shake_->SetIwaFlag(true);
+			shake_->SetShakeFlag(true);
 		}
 	}
 	else {
 		ShakeCount = 0;
 	}
+
 	if (shake_->GetShakeFlag() == true) {
 		if (cameraPos_.y < 13 || cameraPos_.y > 12) {
 			cameraPos_.y += shake_->GetShakePos();
 			targetPos_.y += shake_->GetShakePos();
 		}
-		//cameraPos_.x += shake_->GetShakePos();
-		//targetPos_.x += shake_->GetShakePos();
 	}
 	else {
 		cameraPos_.y = 12;
-		//cameraPos_.x = 0;
 		targetPos_.y = 0;
-		//targetPos_.x = 0;
+
 	}
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
 		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
@@ -260,8 +263,11 @@ void TutorialScene::Draw()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
 		Enemy->TutorialDraw(25.f);
+		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
+			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+		}
 	}
-	
+
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
@@ -277,11 +283,11 @@ void TutorialScene::Draw()
 		if (Enemy == nullptr) { continue; }
 		Enemy->TutorialTexDraw();
 	}
+	map_->BridgeDraw(notlook_);
 
 	if (phase_ == Phase::Title) { sleep_->Draw(); }
 	else { player_->Draw(); }
 
-	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
@@ -302,7 +308,9 @@ void TutorialScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	//text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
+	//D2D1_RECT_F textDrawRange2 = { 600, 300, 1280, 1280 };
+	//std::wstring hx = std::to_wstring(ShakeCount);
+	//text_->Draw("meiryo", "white", L""+hx, textDrawRange2);
 	std::wstring MoveTimer = std::to_wstring((int32_t)movetimer_);
 	if (phase_ == Phase::Move) {
 		movetextui_->Draw("bestTen", "white", L"Lスティックで動いてみよう\n10/" + MoveTimer, textDrawRange);
@@ -434,7 +442,7 @@ void TutorialScene::EnemyProcess()
 
 	for (auto i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
-		if (Enemy == nullptr||Enemy->GetHP()<=0) { continue; }
+		if (Enemy == nullptr || Enemy->GetHP() <= 0) { continue; }
 		enemyPos[i] = Enemy->GetPos();
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
@@ -445,6 +453,17 @@ void TutorialScene::EnemyProcess()
 			vec.y = 0.0f;
 			player_->HitHammerToEnemy(vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+
+		}
+		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
+			aEffect_->Update(enemyPos[i]);
+		}
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && player_->GetIsHammerRelease()) {
+			ShakeCount++;
+			if (ShakeCount == 1) {
+				shake_->SetIwaFlag(true);
+				shake_->SetShakeFlag(true);
+			}
 		}
 	}
 
@@ -464,7 +483,7 @@ void TutorialScene::EnemyProcess()
 		unique_ptr<BaseEnemy>& Ene1 = map_->GetEnemy(j);
 		for (size_t i = 0; i < map_->GetEnemySize(); i++) {
 			unique_ptr<BaseEnemy>& Ene2 = map_->GetEnemy(i);
-			if (i == j||Ene1==nullptr||Ene2==nullptr)continue;
+			if (i == j || Ene1 == nullptr || Ene2 == nullptr)continue;
 			if (Collision::HitCircle(XMFLOAT2(Ene2->GetPos().x, Ene2->GetPos().z), 1.f,
 				XMFLOAT2(Ene1->GetPos().x, Ene1->GetPos().z), 1.f))
 			{
@@ -481,7 +500,7 @@ void TutorialScene::EnemyProcess()
 	for (auto i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Ene = map_->GetEnemy(i);
 		if (Ene == nullptr) { continue; }
-		if (Ene->GetHP() <= 0 ) { continue; }
+		if (Ene->GetHP() <= 0) { continue; }
 		Ene->SetHammerObb(*_hummmerObb);
 		Ene->TutorialUpda(camera_.get(), notjump_);
 	}
@@ -644,7 +663,7 @@ void TutorialScene::FightPhase()
 
 	if (map_->EnemyAllKill()) {
 		phase_ = Phase::Defeat;
-	}	
+	}
 	/*if (enemys_.size() == 0) {
 		phase_ = Phase::Defeat;
 	}*/

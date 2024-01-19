@@ -67,7 +67,7 @@ public:
 
 	void CreateDeposits(const XMFLOAT3& MapPos, int MapNum);
 
-	void CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy);
+	void CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy,int Count);
 
 	void CheckNextMap();
 
@@ -200,6 +200,8 @@ private:
 	XMFLOAT3 rockPos_{};
 
 	XMFLOAT4 limit_ = { 10.f,10.f,8.8f,12.f };
+
+	bool display_ = true;
 };
 
 

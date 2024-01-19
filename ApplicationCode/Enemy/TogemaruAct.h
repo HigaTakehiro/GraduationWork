@@ -59,13 +59,15 @@ public:
 	AnimeName GetName()const { return anime_name_; }
 private:
 	//通常パラメータ
-	Vector3 Pos_,Rot_,Scl_={};
+	Vector3 Pos_,Rot_,Scl_= { 0.030f, 0.055f, 0.050f };
 	//戦闘開始
 	bool beginBattle = FALSE;
 	//プレイヤーインスタンス
 	Player* Player_ = nullptr;
 	//攻撃インターバル
 	uint32_t actionCount = 1;
+	//
+	int Hp;
 	//行動リスト
 	enum Act
 	{
@@ -146,6 +148,8 @@ private:
 	Vector3 RushStartPos = {};
 
 	bool RoleF;
+	bool damf = false;
+	int32_t damcool = 0;
 //ダメージくらったとき
 private:
 	bool isSpearCrush=FALSE;
@@ -166,7 +170,7 @@ private:
 	XMFLOAT3 SplineAfterPos;
 	float RandM_P = 1;
 		float CurreRandVal[6] = {};
-
+		bool DeathSmallF;
 		int ActionRandVal=0;
 //シェイク
 private:
@@ -183,6 +187,7 @@ public:
 	void ViewShake();
 
 	bool GetRole()const { return RoleF; }
+	void SetHp(int hp) { Hp = hp; }
 public:
 	// ゲッター //
 	Vector3 GetPos()const { return Pos_; }

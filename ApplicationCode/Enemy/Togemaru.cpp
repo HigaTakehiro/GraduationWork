@@ -30,11 +30,11 @@ void Togemaru::Init()
 	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
 	m_Body->SetObbScl({ 9.f,9.f,9.f });
 	m_Body->SetHitRadius(0.5f);
-	m_Body->SetScale({ 0.040f, 0.040f, 0.040f });
+	m_Body->SetScale({ 0.020f, 0.050f, 0.040f });
 
 	UI_Init();
 
-	m_HP = 10;
+	m_HP = 1;
 	BossMaxHP = m_HP;
 
 	Action = new TogemaruAct();
@@ -104,16 +104,22 @@ void Togemaru::Upda()
 	Action->SetPlayerIns(m_player);
 	//行動遷移
 	Action->Transition();
-
+	Action->SetHp(m_HP);
 	
 
 	Pos_ = Action->GetPos();
-	if (m_player->getisHammerActive() && !Action->GetRole())
-	{
-		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f));
-	}
-	if(DamF)FlashF = true;
+	bool judg1 = m_player->getisHammerActive() && !Action->GetRole();
 
+	bool nowcrush=Action->GetName()==TogemaruAct::AnimeName::CRUSH_BACK||
+		Action->GetName() == TogemaruAct::AnimeName::CRUSH_FRONT||
+		Action->GetName() == TogemaruAct::AnimeName::CRUSH_RIGHT||
+		Action->GetName() == TogemaruAct::AnimeName::CRUSH_LEFT;
+
+	if (!nowcrush) {
+		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1 && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f));
+	}
+
+	if (DamF)FlashF = true;
 	RecvDamageFlash();
 	//
 	AnimationSett();
@@ -127,7 +133,9 @@ void Togemaru::Upda()
 	}
 
 	//本体
-	m_Body->SetScale({ 0.030f, 0.040f, 0.040f });
+	
+	m_Body->SetScale(Action->GetScl());
+	
 	m_Body->SetPosition(Action->GetPos());
 	m_Body->SetRotation(Vector3(0, 0, 0));
 	m_Body->SetColor(color_rgb);
@@ -171,10 +179,16 @@ void Togemaru::Attack()
 void Togemaru::AddIndex(Model** model, int size)
 {
 	//アニメーション間隔
-	constexpr int NextIndInter = 30;
+	int NextIndInter = 30;
+	if (Action->GetName() == TogemaruAct::AnimeName::ROLE){
+		NextIndInter = 5;
+	}
+	else{
+		NextIndInter = 30;
+	}
 	//現在のフレーム
 	int NowIndex = animeIndex / NextIndInter;
-
+	
 	if (NowIndex > size-1){//最後まで再生されたら最初に戻す
 		animeIndex = 0;
 	}
@@ -240,8 +254,8 @@ void Togemaru::InitAnimatin()
 	//歩き
 	for (size_t i = 0; i < 4; i++) {
 		m_Model_Walk[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		m_Model_Walk_Right[i]= Shapes::CreateSquare({ 0, 0 }, { 192.0f, 128.0f }, "togemaru_moveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
-		m_Model_Walk_Left[i]= Shapes::CreateSquare({ 0, 0 }, { 192.0f, 128.0f }, "togemaru_moveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
+		m_Model_Walk_Right[i]= Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "togemaru_moveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
+		m_Model_Walk_Left[i]= Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "togemaru_moveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
 		m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 
 	}
@@ -251,8 +265,8 @@ void Togemaru::InitAnimatin()
 	}
 	for(size_t i=0;i<4;i++){
 		m_Model_Crush[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		m_Model_Crush_Right[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMoveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
-		m_Model_Crush_Left[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMoveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
+		m_Model_Crush_Right[i] = Shapes::CreateSquare({ 0, 0 }, { 192.0f, 128.0f }, "togemaru_weekMoveLR.png", { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
+		m_Model_Crush_Left[i] = Shapes::CreateSquare({ 0, 0 }, { 192.0f,128.0f }, "togemaru_weekMoveRL.png", { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
 		m_Model_Crush_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 
 	}

@@ -55,7 +55,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			enemyscount_ = ENEMYCOUNT;
 			gameenemyscount_ += ENEMYCOUNT;
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			CreateEnemy(player, Pos, ENEMYCOUNT);
+			CreateEnemy(player, Pos, ENEMYCOUNT, COUNT);
 			continue;
 		}
 
@@ -119,35 +119,6 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
-			Map->state_ = Map::Forest;
-			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			Map->stagePos_ = Pos;
-			Map->stage_->SetPosition(Pos);
-			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
-			maps_.push_back(move(Map));
-			CreateGrass(Pos, COUNT);
-			NEXTVERT += 1;
-			COUNT += 1;
-		}
-		else if (NUMBER == 3) {
-			unique_ptr<Stage> Map = make_unique<Stage>();
-			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			Map->num = COUNT;
-			Map->state_ = Map::Enemy;
-			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			Map->stagePos_ = Pos;
-			Map->stage_->SetPosition(Pos);
-			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
-			maps_.push_back(move(Map));
-			CreateGrass(Pos, COUNT);
-			//CreateEnemy(player, Pos, ENEMYCOUNT);
-			NEXTVERT += 1;
-			COUNT += 1;
-		}
-		else if (NUMBER == 4) {
-			unique_ptr<Stage> Map = make_unique<Stage>();
-			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			Map->num = COUNT;
 			Map->state_ = Map::Boss;
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
@@ -158,7 +129,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
-		else if (NUMBER == 5) {
+		else if (NUMBER == 3) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
@@ -175,7 +146,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
-		else if (NUMBER == 6) {
+		else if (NUMBER == 4) {
 			count_ = COUNT;
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
@@ -198,11 +169,10 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			CreateDeposits(Pos, COUNT);
-			//CreateEnemy(player, Pos, 2);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
-		else if (NUMBER == 7) {
+		else if (NUMBER == 5) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
@@ -230,10 +200,11 @@ void GameMap::CreateBridge()
 				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
 				Bridges->state_ = Direction::Beside;
 				XMFLOAT3 Pos = Map->stagePos_;
-				Pos.x = Pos.x + 17;
+				Pos.x = Pos.x + 15;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 0.55f,0.5f,0.5f });
+				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,0.f,0.f });
+				Bridges->bridge_->SetColor({0.6f,0.3f,0.1,1.f});
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Beside;
 				if (Map2->state_ == Map::IfMap || Map->state_ == Map::IfMap) {
@@ -250,8 +221,9 @@ void GameMap::CreateBridge()
 				Pos.z = Pos.z + 15.f;
 				Pos.x = Pos.x - 0.5f;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 4.5f,0.5f,2.5f });
+				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
+				Bridges->bridge_->SetColor({ 0.6f,0.3f,0.1,1.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;
 				if (Map2->state_ == Map::IfMap || Map->state_ == Map::IfMap) {
@@ -283,7 +255,7 @@ void GameMap::CreateGrass(const XMFLOAT3& MapPos, int Count)
 		float posZ = MapPos.z + (float)randZ(mt2);
 		unique_ptr<Grassland>GrassLand = make_unique<Grassland>();
 		GrassLand->grass_ = std::make_unique<Grass>();
-		GrassLand->grass_->Initialize({ posX, 0, posZ },i);
+		GrassLand->grass_->Initialize({ posX, 0, posZ }, i);
 		GrassLand->num = Count;
 		grass_.push_back(move(GrassLand));
 	}
@@ -303,7 +275,7 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 
 }
 
-void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
+void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy, int Count)
 {
 	for (size_t i = 0; i < Enemy; i++) {
 		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
@@ -312,7 +284,7 @@ void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
 		XMFLOAT3 MapMaxPos = { MapPos.x + limit_.x,100.f,MapPos.z + limit_.z };
 		XMFLOAT3 MapMinPos = { MapPos.x - limit_.y,100.f,MapPos.z - limit_.w };
 		Enemy1->SetOverPos(MapMaxPos, MapMinPos);
-		Enemy1->SetCount(count_);
+		Enemy1->SetCount(Count);
 		//—”¶¬
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
@@ -399,11 +371,12 @@ void GameMap::MapDraw()
 			Map->stage_->Draw();
 		}
 		if (!stairs_.get()) { continue; }
-		if (count_ == stairs_->GetCont()) {
+		if (count_ == stairs_->GetCont()&&display_ == true) {
 			stairs_->Draw();
 		}
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
+	if (!display_) { return; }
 	for (unique_ptr<Grassland>& GrassLand : grass_) {
 		if (count_ == GrassLand->num) {
 			GrassLand->grass_->Draw();
@@ -466,11 +439,9 @@ void GameMap::CheckHitTest(Player* player)
 		//¶
 		if (PlayerPos.x >= Map->stagePos_.x + limit_.x) {
 			PlayerPos.x = Map->stagePos_.x + limit_.x;
-			wallHit_ = true;
 		}
 		if (PlayerPos.x <= Map->stagePos_.x - limit_.y) {
 			PlayerPos.x = Map->stagePos_.x - limit_.y;
-			wallHit_ = true;
 		}
 		if (PlayerPos.z >= Map->stagePos_.z + limit_.z) {
 			PlayerPos.z = Map->stagePos_.z + limit_.z;
@@ -478,14 +449,6 @@ void GameMap::CheckHitTest(Player* player)
 		if (PlayerPos.z <= Map->stagePos_.z - limit_.w) {
 			PlayerPos.z = Map->stagePos_.z - limit_.w;
 		}
-		if (PlayerPos.x >= Map->stagePos_.x + limit_.x|| 
-			PlayerPos.x <= Map->stagePos_.x - limit_.y||
-			PlayerPos.z >= Map->stagePos_.z + limit_.z||
-			PlayerPos.z <= Map->stagePos_.z - limit_.w)
-		{
-			wallHit_ = true;
-		}
-		else { wallHit_ = false; }
 	}
 	player->SetPos(PlayerPos);
 }
@@ -499,7 +462,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 			if (Bridge->state_ == Direction::Beside && Bridge->invisible_ == false) {
 				if ((pos.z<Pos.z + 2 && pos.z>Pos.z - 2.f)) {
 					//¶‚ÉŒü‚©‚¤
-					if (pos.x > Pos.x && Pos.x + 3.f > pos.x) {
+					if (pos.x > Pos.x  && Pos.x > pos.x - 4.95f) {
 						nothit_ = true;
 						wallHit_ = false;
 						count_ = Bridge->num;
@@ -509,7 +472,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						return;
 					}
 					//‰E‚ÉŒü‚©‚¤
-					else if (pos.x < Pos.x && Pos.x - 7.f < pos.x) {
+					else if (pos.x < Pos.x && Pos.x - 5.f < pos.x) {
 						nothit_ = true;
 						wallHit_ = false;
 						count_ = Bridge->num + 1;
@@ -584,7 +547,7 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 	XMFLOAT3 NEXTPLAYERPOS{};
 	NextTarget = OldCameraPos + NextPos_.z - 2.f;
 
-	if (direction_ == 0) { player->SetStop(false); return; }
+	if (direction_ == 0) { player->SetStop(false); display_ = true; return; }
 	if (direction_ == 2) {
 		NEXTPLAYERPOS.x = NextPos_.x - 5.f;
 		NEXTPLAYERPOS.z = PlayerPos.z;
@@ -610,10 +573,16 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 	TargetPos.z = Easing::easeIn(time_, 0.7f, TargetPos.z, NextPos_.z);
 	PlayerPos.x = Easing::easeIn(time_, 0.3f, PlayerPos.x, NEXTPLAYERPOS.x);
 	PlayerPos.z = Easing::easeIn(time_, 0.3f, PlayerPos.z, NEXTPLAYERPOS.z);
-
+	
 	player->SetPos(PlayerPos);
+	if (time_ < 0.3f) {
+		display_ = false;
+	}
+	else {
+		display_ = true;
+	}
 	if (time_ >= 0.7) {
-		oldcount_ = count_; SetStop(false); player->SetStop(false);
+		oldcount_ = count_; SetStop(false); player->SetStop(false); 
 		if (nowstate_ != Map::Boss) {
 			time_ = 0;
 		}
@@ -676,23 +645,35 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 		if (count_ != Map->num) { continue; }
 		//¶
 		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease) {
+			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 		if (pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease) {
+			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 
 		if (pos.z >= Map->stagePos_.z + limit_.z && isHammerRelease) {
+			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 
 		if (pos.z <= Map->stagePos_.z - limit_.w - 3 && isHammerRelease) {
+			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
+		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease ||
+			pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease ||
+			pos.z >= Map->stagePos_.z + limit_.z && isHammerRelease ||
+			pos.z <= Map->stagePos_.z - limit_.w - 3 && isHammerRelease)
+		{
+			wallHit_ = true;
+		}
+		else { wallHit_ = false; }
 
 	}
 
