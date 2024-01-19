@@ -52,8 +52,6 @@ void NormalEnemyA::Upda(Camera* camera)
 	(this->*stateTable[_action])();
 
 	if (_status.Rot.y >= 360.f || _status.Rot.y <= -360.f)_status.Rot.y = 0.f;
-	//_status.Tex->
-	///_status.HP--;
 
 	TextureAnimation();
 

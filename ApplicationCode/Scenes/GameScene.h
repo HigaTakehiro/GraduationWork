@@ -103,7 +103,6 @@ private: //ƒƒ“ƒo•Ï”
 	Vector3 target{};
 	SceneChangeEffect* schange;
 	AttackEffect* aEffect_;
-	bool aeFlag = false;
 	int aeCount = 0;
 	int ShakeCount = 0;
 };

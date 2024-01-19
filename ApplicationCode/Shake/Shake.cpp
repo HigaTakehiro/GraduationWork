@@ -24,7 +24,7 @@ void Shake::Update()
 
 	if (shakeFlag == true) {
 		if (shakeTimer < shakeMaxTimer) {
-			shakeTimer++;
+			shakeTimer ++;
 			//ƒ‰ƒ“ƒ_ƒ€
 			shakePos = rand() % (int)pos.x - (int)pos.y;
 			shakePos /= 10.0f;
@@ -38,8 +38,7 @@ void Shake::Update()
 	//Šâ
 	if (iwaFlag == true) {
 		iwaCount++;
-		if (iwaCount < 10) {
-			shakeFlag = true;
+		if (iwaCount < 100) {
 			fade -= 0.01f;
 			for (int i = 0; i < 2; i++) {
 				iwa[i]->Update(iwaPos[i], fade);
@@ -47,11 +46,10 @@ void Shake::Update()
 		}
 
 	}
-	if (iwaCount > 10) {
+	if (iwaCount > 100) {
 		iwaCount = 0;
 		fade = 1;
 		iwaFlag = false;
-
 	}
 }
 

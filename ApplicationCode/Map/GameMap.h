@@ -67,7 +67,7 @@ public:
 
 	void CreateDeposits(const XMFLOAT3& MapPos, int MapNum);
 
-	void CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy);
+	void CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy,int Count);
 
 	void CheckNextMap();
 
