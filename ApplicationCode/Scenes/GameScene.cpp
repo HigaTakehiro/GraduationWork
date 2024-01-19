@@ -118,8 +118,9 @@ void GameScene::Update()
 	//当たったらシェイク
 	if (map_->GetHit() == true) {
 		ShakeCount++;
-		if (ShakeCount < 30) {
+		if (ShakeCount == 1) {
 			shake_->SetIwaFlag(true);
+			shake_->SetShakeFlag(true);
 		}
 	}
 	else {
@@ -130,14 +131,10 @@ void GameScene::Update()
 			cameraPos_.y += shake_->GetShakePos();
 			targetPos_.y += shake_->GetShakePos();
 		}
-		//cameraPos_.x += shake_->GetShakePos();
-		//targetPos_.x += shake_->GetShakePos();
 	}
 	else {
 		cameraPos_.y = 12;
-		//cameraPos_.x = 0;
 		targetPos_.y = 3;
-		//targetPos_.x = 0;
 	}
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);

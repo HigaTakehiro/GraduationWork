@@ -121,8 +121,9 @@ void BossScene::Update()
 
 	if (map_->GetHit() == true) {
 		ShakeCount++;
-		if (ShakeCount < 30) {
+		if (ShakeCount == 1) {
 			shake_->SetIwaFlag(true);
+			shake_->SetShakeFlag(true);
 		}
 	}
 	else {
@@ -160,7 +161,7 @@ void BossScene::Update()
 	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
 	_hummmerObb = &l_obb;
-	if (boss_->GetClearF()==false && boss_->GetFlash() == true) {
+	if (boss_->GetClearF() == false && boss_->GetFlash() == true) {
 		aEffect_->Update(boss_->GetPos());
 	}
 	boss_->Upda();
@@ -249,7 +250,7 @@ void BossScene::Draw()
 	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	if (boss_->GetFlash()==true) {
+	if (boss_->GetFlash() == true) {
 		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	}
 	//スプライト描画処理(UI等)

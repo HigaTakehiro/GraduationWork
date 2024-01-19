@@ -162,13 +162,15 @@ void TutorialScene::Update()
 	(this->*FuncTable[phase_])();
 	if (map_->GetHit() == true) {
 		ShakeCount++;
-		if (ShakeCount < 30) {
+		if (ShakeCount == 1) {
 			shake_->SetIwaFlag(true);
+			shake_->SetShakeFlag(true);
 		}
 	}
 	else {
 		ShakeCount = 0;
 	}
+
 	if (shake_->GetShakeFlag() == true) {
 		if (cameraPos_.y < 13 || cameraPos_.y > 12) {
 			cameraPos_.y += shake_->GetShakePos();
@@ -306,7 +308,9 @@ void TutorialScene::Draw()
 	//テキスト描画範囲
 
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
-	//text_->Draw("meiryo", "white", L"チュートリアルシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter", textDrawRange);
+	//D2D1_RECT_F textDrawRange2 = { 600, 300, 1280, 1280 };
+	//std::wstring hx = std::to_wstring(ShakeCount);
+	//text_->Draw("meiryo", "white", L""+hx, textDrawRange2);
 	std::wstring MoveTimer = std::to_wstring((int32_t)movetimer_);
 	if (phase_ == Phase::Move) {
 		movetextui_->Draw("bestTen", "white", L"Lスティックで動いてみよう\n10/" + MoveTimer, textDrawRange);
