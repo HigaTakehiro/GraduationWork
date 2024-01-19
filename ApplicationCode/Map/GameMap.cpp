@@ -232,7 +232,7 @@ void GameMap::CreateBridge()
 				XMFLOAT3 Pos = Map->stagePos_;
 				Pos.x = Pos.x + 15;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 4.2f,0.5f,1.f });
+				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,0.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Beside;
@@ -250,7 +250,7 @@ void GameMap::CreateBridge()
 				Pos.z = Pos.z + 15.f;
 				Pos.x = Pos.x - 0.5f;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 4.2f,0.5f,1.f });
+				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;
