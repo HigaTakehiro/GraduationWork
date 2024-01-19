@@ -37,6 +37,7 @@ void Heart::Update(Player* player, bool& Display)
 	if (!Display) { return; }
 	//HitPlayer(Display);
 	heart_->Update();
+	Jump();
 }
 
 void Heart::Draw(bool Display)
@@ -45,20 +46,12 @@ void Heart::Draw(bool Display)
 	heart_->Draw();
 }
 
-void Heart::Spown()
+void Heart::Jump()
 {
+	pos_.y += 0.1f;
+	col_.w -= 0.05f;
+	heart_->SetColor(col_);
+	heart_->SetPosition(pos_);
 }
 
-void Heart::HitPlayer(bool& Display)
-{
-	if (!spown_) { return; }
-	Vector3 PlayerPos = player_->GetPos();
-	Vector3 Pos = heart_->GetPosition();
 
-	if ((PlayerPos.x >= Pos.x - 1.f && PlayerPos.x <= Pos.x + 1.4f) &&
-		(PlayerPos.z >= Pos.z + 1.f && PlayerPos.z <= Pos.z + 4.f)) {
-		if(player_->GetMaxHP()>player_->GetHP())
-		player_->AddHP(1);
-		Display = false;
-	}
-}

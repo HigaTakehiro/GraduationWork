@@ -2,6 +2,8 @@
 #include "Object3d.h"
 #include "Model.h"
 #include "Vector3.h"
+#include<DirectXMath.h>
+using namespace DirectX;
 
 class Player;
 class Heart
@@ -24,6 +26,8 @@ public:
 	/// ï`âÊèàóù
 	/// </summary>
 	void Draw(bool Display);
+
+	void Jump();
 
 	void Spown();
 
@@ -48,5 +52,7 @@ private:
 	Vector3 pos_;
 
 	bool spown_ = true;
+
+	XMFLOAT4 col_{ 1.f,1.f,1.f,1.f };
 };
 
