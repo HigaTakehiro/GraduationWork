@@ -89,6 +89,18 @@ public: //メンバ関数
 	/// <returns>カーソルがパネルに触れているかどうか</returns>
 	bool PanelToCursorHit(Vector2 cursorPos);
 
+	/// <summary>
+	/// スキルタイプ取得
+	/// </summary>
+	/// <returns>スキルタイプ</returns>
+	SkillType GetSkillType() { return skillType_; }
+
+	/// <summary>
+	/// ステータス上昇数値取得
+	/// </summary>
+	/// <returns>ステータス上昇数値</returns>
+	int32_t GetStatusUpNum() { return num_; }
+
 private: //メンバ変数
 	//スキル名
 	std::wstring skillName_;
@@ -111,5 +123,7 @@ private: //メンバ変数
 	Vector2 textPanelSize_;
 	//ステータス上昇数値
 	int32_t num_;
+	//スキルタイプ
+	SkillType skillType_;
 };
 

@@ -17,6 +17,7 @@ void SkillPanel::Initialize(const std::wstring& skillName, const Vector2& pos, S
 	isSkillGet_ = false;
 	//座標をセット
 	pos_ = pos;
+	skillType_ = type;
 	//スキルパネルスプライト
 	if (type == HPUP) {
 		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_HPUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });

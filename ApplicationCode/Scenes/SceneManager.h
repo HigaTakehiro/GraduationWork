@@ -201,6 +201,7 @@ private: //静的メンバ関数
 
 private: //静的メンバ変数
 	static BaseScene* nowScene;
+	static BaseScene* skillScene_;
 	static int32_t stageNo_;
 	static int32_t score;
 	static CollisionManager* colManager_;
@@ -221,6 +222,8 @@ private: //静的メンバ変数
 	static int32_t spd_;
 	//スキルポイント
 	static int32_t skillPoint_;
+	//スキルシーンフラグ
+	static bool isSkillScene_;
 
 private: //メンバ変数
 	std::unique_ptr<TextDraw> textDraw;

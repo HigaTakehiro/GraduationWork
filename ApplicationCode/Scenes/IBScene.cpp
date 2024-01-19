@@ -77,7 +77,9 @@ void IBScene::Initialize()
 	window_[2]->SetPosition({ 900.f, 300.f });
 	window_[2]->SetSize({ 750.f, 550.f });
 	//スキルパネル
-	SkillPanelInitialize();
+	if (panelStatus_[0][3].skillPanel_ == nullptr) {
+		SkillPanelInitialize();
+	}
 
 	//カーソルUI
 	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillCursor, { 900.f, 300.f }, { 0.6f, 0.6f, 1.0f, 1.f }, { 0.5f, 0.5f });
