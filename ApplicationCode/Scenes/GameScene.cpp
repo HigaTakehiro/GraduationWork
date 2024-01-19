@@ -135,7 +135,6 @@ void GameScene::Update()
 	else {
 		cameraPos_.y = 12;
 		targetPos_.y = 0;
-
 	}
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
@@ -350,6 +349,11 @@ void GameScene::EnemyProcess()
 			Vec.y = 0.0f;
 			player_->HitHammerToEnemy(Vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+			ShakeCount++;
+			if (ShakeCount == 1) {
+				shake_->SetIwaFlag(true);
+				shake_->SetShakeFlag(true);
+			}
 		}
 		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
 			aEffect_->Update(Enemy->GetPos());
@@ -376,8 +380,15 @@ void GameScene::EnemyProcess()
 			vec[i].y = 0.0f;
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+			ShakeCount++;
+			if (ShakeCount == 1) {
+				shake_->SetIwaFlag(true);
+				shake_->SetShakeFlag(true);
+			}
 		}
-
+		if (enemys_[i]->GetHP() > 0 && enemys_[i]->GetFlash() == true) {
+			aEffect_->Update(enemyPos[i]);
+		}
 	}
 
 

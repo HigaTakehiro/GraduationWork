@@ -453,6 +453,11 @@ void TutorialScene::EnemyProcess()
 			vec.y = 0.0f;
 			player_->HitHammerToEnemy(vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+			ShakeCount++;
+			if (ShakeCount == 1) {
+				shake_->SetIwaFlag(true);
+				shake_->SetShakeFlag(true);
+			}
 		}
 		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
 			aEffect_->Update(enemyPos[i]);
