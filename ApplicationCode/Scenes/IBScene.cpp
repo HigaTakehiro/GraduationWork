@@ -409,10 +409,12 @@ void IBScene::SceneChange()
 				SceneManager::SetDEF(playerUI_->GetDef());
 				SceneManager::SetSPD(playerUI_->GetSPD());
 				SceneManager::SetSkillPoint(playerUI_->GetSkillPoint());
-				if (StageCount::GetIns()->Now() == 5 ||
-					StageCount::GetIns()->Now() == 11 ||
-					StageCount::GetIns()->Now() == 17) {
+				if (StageCount::GetIns()->Now() == 5) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss);
+				}
+				else if (StageCount::GetIns()->Now() == 11 ||
+					StageCount::GetIns()->Now() == 17) {
+					SceneManager::SceneChange(SceneManager::SceneName::Boss2);
 				}
 				else {
 					SceneManager::SceneChange(SceneManager::SceneName::Game);
@@ -435,10 +437,12 @@ void IBScene::SceneChange()
 				SceneManager::SetDEF(playerUI_->GetDef());
 				SceneManager::SetSPD(playerUI_->GetSPD());
 				SceneManager::SetSkillPoint(playerUI_->GetSkillPoint());
-				if (StageCount::GetIns()->Now() == 5||
-					StageCount::GetIns()->Now() == 11 || 
-					StageCount::GetIns()->Now() == 17 ) {
+				if (StageCount::GetIns()->Now() == 5) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss);
+				}
+				else if (StageCount::GetIns()->Now() == 11 ||
+					StageCount::GetIns()->Now() == 17) {
+					SceneManager::SceneChange(SceneManager::SceneName::Boss2);
 				}
 				else {
 					SceneManager::SceneChange(SceneManager::SceneName::Game);
@@ -589,7 +593,7 @@ void IBScene::SkillUIUpdate()
 	}
 
 	//ƒJ[ƒ\ƒ‹ˆÚ“®ˆ—
-	const Vector2 sideMoveVec = {1.f, 0.f};
+	const Vector2 sideMoveVec = { 1.f, 0.f };
 	const Vector2 verticalMoveVec = { 0.f, 1.f };
 	const float moveSpeed = 10.f;
 

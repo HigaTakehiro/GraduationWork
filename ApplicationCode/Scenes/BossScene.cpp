@@ -244,9 +244,8 @@ void BossScene::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 
 	boss_->Draw();
-	player_->Draw();
 	map_->BridgeDraw();
-
+	player_->Draw();
 	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());

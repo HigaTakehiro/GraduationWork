@@ -2,6 +2,8 @@
 #include "Object3d.h"
 #include "Model.h"
 #include "Vector3.h"
+#include<DirectXMath.h>
+using namespace DirectX;
 
 class Player;
 class Key
@@ -25,7 +27,7 @@ public:
 	/// </summary>
 	void Draw(bool Display);
 
-	void HitPlayer(bool& lock);
+	void Jump();
 private:
 	//オブジェクト
 	Object3d* key_;
@@ -34,7 +36,13 @@ private:
 
 	Player* player_;
 
+	Vector3 pos_;
+
+	float addpos_ = 0.f;
+
 	bool display_ = false;
+
+	XMFLOAT4 col_{ 1.f,1.f,1.f,1.f };
 
 	//アニメーションタイマー
 	int32_t animeTimer_;
