@@ -176,7 +176,7 @@ void TutorialScene::Update()
 	else {
 		cameraPos_.y = 12;
 		//cameraPos_.x = 0;
-		targetPos_.y = 3;
+		targetPos_.y = 0;
 		//targetPos_.x = 0;
 	}
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
