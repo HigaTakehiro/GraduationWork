@@ -278,7 +278,7 @@ void TutorialScene::Draw()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
 		Enemy->TutorialDraw(25.f);
-		if (Enemy->GetFlash() == true) {
+		if (Enemy->GetHP() > 0&&Enemy->GetFlash() == true) {
 			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
 		}
 	}
