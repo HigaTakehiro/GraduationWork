@@ -283,11 +283,11 @@ void TutorialScene::Draw()
 		if (Enemy == nullptr) { continue; }
 		Enemy->TutorialTexDraw();
 	}
+	map_->BridgeDraw(notlook_);
 
 	if (phase_ == Phase::Title) { sleep_->Draw(); }
 	else { player_->Draw(); }
 
-	map_->BridgeDraw(notlook_);
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
