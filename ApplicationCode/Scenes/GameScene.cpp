@@ -183,7 +183,8 @@ void GameScene::Draw()
 
 	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
-		if (Enemy == nullptr) { continue; }
+		if (Enemy == nullptr ) { continue; }
+		if (map_->GetCount() != Enemy->GetCount()) { continue; }
 		Enemy->Draw();
 	}
 	if (aeFlag == true) {
@@ -202,6 +203,7 @@ void GameScene::Draw()
 	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
+		if (map_->GetCount() != Enemy->GetCount()) { continue; }
 		Enemy->TexDraw();
 	}
 
@@ -450,7 +452,8 @@ void GameScene::EnemyProcess()
 	}
 	for (auto i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Ene = map_->GetEnemy(i);
-		if (Ene == nullptr) { continue; }
+		if (Ene == nullptr ) { continue; }
+		if (map_->GetCount() != Ene->GetCount()) { continue; }
 		if (Ene->GetHP() <= 0) { continue; }
 		Ene->SetHammerObb(*_hummmerObb);
 		Ene->Upda(camera_.get());

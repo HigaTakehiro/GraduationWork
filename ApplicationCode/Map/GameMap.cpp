@@ -55,7 +55,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			enemyscount_ = ENEMYCOUNT;
 			gameenemyscount_ += ENEMYCOUNT;
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			CreateEnemy(player, Pos, ENEMYCOUNT);
+			CreateEnemy(player, Pos, ENEMYCOUNT, COUNT);
 			continue;
 		}
 
@@ -204,6 +204,7 @@ void GameMap::CreateBridge()
 				Bridges->bridge_->SetPosition(Pos);
 				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,0.f,0.f });
+				Bridges->bridge_->SetColor({0.6f,0.3f,0.1,1.f});
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Beside;
 				if (Map2->state_ == Map::IfMap || Map->state_ == Map::IfMap) {
@@ -222,6 +223,7 @@ void GameMap::CreateBridge()
 				Bridges->bridge_->SetPosition(Pos);
 				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
+				Bridges->bridge_->SetColor({ 0.6f,0.3f,0.1,1.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;
 				if (Map2->state_ == Map::IfMap || Map->state_ == Map::IfMap) {
@@ -273,7 +275,7 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 
 }
 
-void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
+void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy, int Count)
 {
 	for (size_t i = 0; i < Enemy; i++) {
 		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
@@ -282,7 +284,7 @@ void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy)
 		XMFLOAT3 MapMaxPos = { MapPos.x + limit_.x,100.f,MapPos.z + limit_.z };
 		XMFLOAT3 MapMinPos = { MapPos.x - limit_.y,100.f,MapPos.z - limit_.w };
 		Enemy1->SetOverPos(MapMaxPos, MapMinPos);
-		Enemy1->SetCount(count_);
+		Enemy1->SetCount(Count);
 		//—”¶¬
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
