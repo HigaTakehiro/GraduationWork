@@ -116,7 +116,7 @@ void Togemaru::Upda()
 		Action->GetName() == TogemaruAct::AnimeName::CRUSH_LEFT;
 
 	if (!nowcrush) {
-		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1 && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f));
+		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1 && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammer()->GetPosition().x, m_player->GetHammer()->GetPosition().z), 1.f));
 	}
 
 	if (DamF)FlashF = true;

@@ -153,7 +153,7 @@ void TogemaruAct::Transition()
 
 	//座標の範囲指定
 	Pos_.x = std::clamp(Pos_.x, -10.f, 10.f);
-	Pos_.z = std::clamp(Pos_.z, -12.f, 8.8f);
+	Pos_.z = std::clamp(Pos_.z, -12.f, 6.8f);
 }
 
 //
@@ -236,6 +236,9 @@ void TogemaruAct::Move()
 
 	move = XMVector3TransformNormal(move, matRot);
 
+	for (size_t i = 0; i < spearSize; i++) {
+		spearsAlpha[i] = 0.f;//だんだん薄く
+	}
 	//常に追従
 	isFollow = TRUE;
 
@@ -270,7 +273,7 @@ void TogemaruAct::Move()
 		else
 		{
 			std::uniform_int_distribution<> rand1(0, 20);
-			std::uniform_int_distribution<> rand2(0, 20);
+			std::uniform_int_distribution<> rand2(0, 10);
 
 			constexpr int PosSize = 6;
 
@@ -407,6 +410,9 @@ void TogemaruAct::Attack_ShotSpear()
 		if (endShot) {
 			isShot = FALSE;//
 			RoleF = false;
+			for (size_t i = 0; i < spearSize; i++) {
+				spearsAlpha[i] = 0.f;//だんだん薄く
+			}
 			act_ = MOVE;//状態を移動に
 		}
 	}
@@ -530,7 +536,7 @@ bool TogemaruAct::CollideSpear()
 Vector3 TogemaruAct::DepositReproduction()
 {
 	//出す座標は4点 上・下・右・左
-	Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,10) ,Vector3(10,-2.5f,0) ,Vector3(-10,-2.5f,0) };
+	Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) ,Vector3(10,-2.5f,0) ,Vector3(-10,-2.5f,0) };
 
 	std::random_device rnd;
 	std::mt19937 mt(rnd());

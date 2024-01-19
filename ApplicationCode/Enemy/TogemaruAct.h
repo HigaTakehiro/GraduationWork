@@ -59,7 +59,7 @@ public:
 	AnimeName GetName()const { return anime_name_; }
 private:
 	//通常パラメータ
-	Vector3 Pos_,Rot_,Scl_= { 0.030f, 0.055f, 0.050f };
+	Vector3 Pos_,Rot_,Scl_= { 0.040f, 0.065f, 0.050f };
 	//戦闘開始
 	bool beginBattle = FALSE;
 	//プレイヤーインスタンス
