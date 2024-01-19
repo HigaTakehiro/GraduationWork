@@ -377,14 +377,16 @@ void GameScene::EnemyProcess()
 			vec[i].y = 0.0f;
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+		}
+		if (enemys_[i]->GetHP() > 0 && enemys_[i]->GetFlash() == true) {
+			aEffect_->Update(enemyPos[i]);
+		}
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && player_->GetIsHammerRelease()) {
 			ShakeCount++;
 			if (ShakeCount == 1) {
 				shake_->SetIwaFlag(true);
 				shake_->SetShakeFlag(true);
 			}
-		}
-		if (enemys_[i]->GetHP() > 0 && enemys_[i]->GetFlash() == true) {
-			aEffect_->Update(enemyPos[i]);
 		}
 	}
 
