@@ -128,10 +128,10 @@ void TogemaruAct::Transition()
 		constexpr float pr = 1.f, er = 1.5f;
 		//衝突時のプレイヤーのけぞり
 		bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
-		float KnockDis = AccelJudg ? 0.3f : 1.f;//のけぞり値
+		float KnockDis = AccelJudg ? 0.3f : 0.6f;//のけぞり値
 
 		//判定
-		bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), Pos_, pr, er);
+		bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
 		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
 
 	}
@@ -219,7 +219,7 @@ void TogemaruAct::Move()
 	
 	animationWaitTime = 0;
 
-	movSpeed = 0.3f;
+	movSpeed = 0.6f;
 	//向いた方に移動する
 	move = { 0.f,0.f, 0.1f, 0.0f };
 	matRot = XMMatrixRotationY(XMConvertToRadians(Rot_.y));
@@ -243,7 +243,7 @@ void TogemaruAct::Move()
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 
-	constexpr uint32_t ActionInter = 120;
+	constexpr uint32_t ActionInter = 90;
 	//攻撃に移行
 	if (++actionCount % ActionInter == 0)
 	{
