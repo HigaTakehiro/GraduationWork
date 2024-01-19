@@ -137,7 +137,7 @@ void GameScene::Update()
 	else {
 		cameraPos_.y = 12;
 		//cameraPos_.x = 0;
-		targetPos_.y = 3;
+		targetPos_.y = 0;
 		//targetPos_.x = 0;
 	}
 	camera_->SetEye(cameraPos_);
@@ -205,14 +205,11 @@ void GameScene::Draw()
 		Enemy->TexDraw();
 	}
 
+	map_->BridgeDraw();
 	for (size_t i = 0; i < enemys_.size(); i++)
 		//enemys_[i]->TexDraw();
 		player_->Draw();
 
-	/*for (std::unique_ptr<Grass>& grass : grasses_) {
-		grass->Draw();
-	}*/
-	map_->BridgeDraw();
 
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
