@@ -230,9 +230,9 @@ void GameMap::CreateBridge()
 				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
 				Bridges->state_ = Direction::Beside;
 				XMFLOAT3 Pos = Map->stagePos_;
-				Pos.x = Pos.x + 17;
+				Pos.x = Pos.x + 15;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 0.55f,0.5f,0.5f });
+				Bridges->bridge_->SetScale({ 4.2f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,0.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Beside;
@@ -250,7 +250,7 @@ void GameMap::CreateBridge()
 				Pos.z = Pos.z + 15.f;
 				Pos.x = Pos.x - 0.5f;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 4.5f,0.5f,2.5f });
+				Bridges->bridge_->SetScale({ 4.2f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;
@@ -399,11 +399,12 @@ void GameMap::MapDraw()
 			Map->stage_->Draw();
 		}
 		if (!stairs_.get()) { continue; }
-		if (count_ == stairs_->GetCont()) {
+		if (count_ == stairs_->GetCont()&&display_ == true) {
 			stairs_->Draw();
 		}
 		if (Map->state_ == Map::Boss) { nowstate_ = Map->state_; }
 	}
+	if (!display_) { return; }
 	for (unique_ptr<Grassland>& GrassLand : grass_) {
 		if (count_ == GrassLand->num) {
 			GrassLand->grass_->Draw();
@@ -499,7 +500,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 			if (Bridge->state_ == Direction::Beside && Bridge->invisible_ == false) {
 				if ((pos.z<Pos.z + 2 && pos.z>Pos.z - 2.f)) {
 					//¶‚ÉŒü‚©‚¤
-					if (pos.x > Pos.x && Pos.x + 3.f > pos.x) {
+					if (pos.x > Pos.x  && Pos.x > pos.x - 4.95f) {
 						nothit_ = true;
 						wallHit_ = false;
 						count_ = Bridge->num;
@@ -509,7 +510,7 @@ void GameMap::CheckHitBridge(const XMFLOAT3& pos, int& Direction)
 						return;
 					}
 					//‰E‚ÉŒü‚©‚¤
-					else if (pos.x < Pos.x && Pos.x - 7.f < pos.x) {
+					else if (pos.x < Pos.x && Pos.x - 5.f < pos.x) {
 						nothit_ = true;
 						wallHit_ = false;
 						count_ = Bridge->num + 1;
@@ -584,7 +585,7 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 	XMFLOAT3 NEXTPLAYERPOS{};
 	NextTarget = OldCameraPos + NextPos_.z - 2.f;
 
-	if (direction_ == 0) { player->SetStop(false); return; }
+	if (direction_ == 0) { player->SetStop(false); display_ = true; return; }
 	if (direction_ == 2) {
 		NEXTPLAYERPOS.x = NextPos_.x - 5.f;
 		NEXTPLAYERPOS.z = PlayerPos.z;
@@ -610,10 +611,16 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 	TargetPos.z = Easing::easeIn(time_, 0.7f, TargetPos.z, NextPos_.z);
 	PlayerPos.x = Easing::easeIn(time_, 0.3f, PlayerPos.x, NEXTPLAYERPOS.x);
 	PlayerPos.z = Easing::easeIn(time_, 0.3f, PlayerPos.z, NEXTPLAYERPOS.z);
-
+	
 	player->SetPos(PlayerPos);
+	if (time_ < 0.3f) {
+		display_ = false;
+	}
+	else {
+		display_ = true;
+	}
 	if (time_ >= 0.7) {
-		oldcount_ = count_; SetStop(false); player->SetStop(false);
+		oldcount_ = count_; SetStop(false); player->SetStop(false); 
 		if (nowstate_ != Map::Boss) {
 			time_ = 0;
 		}
