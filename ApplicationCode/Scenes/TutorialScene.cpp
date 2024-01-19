@@ -91,23 +91,8 @@ void TutorialScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
-	//後でcsvから
-	unsigned int EnemySize = 2;
-
-	//enemys_.resize(EnemySize);
-	//vec.resize(EnemySize);
-
-	/*for (size_t i = 0; i < enemys_.size(); i++) {
-		enemys_[i] = new NormalEnemyA();
-		enemys_[i]->Init();
-		enemys_[i]->SetPlayerIns(player_);
-		enemys_[i]->SetOverPos(XMFLOAT3(13.f, -100.f, 37.f), XMFLOAT3(-11.f, 100.f, 14.f));
-	}*/
 	startenemypos_[0] = { 5, 12.5, 18 };
 	startenemypos_[1] = { -5, 12.5, 18 };
-
-	/*enemys_[0]->SetPos(startenemypos_[0]);
-	enemys_[1]->SetPos(startenemypos_[1]);*/
 
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 0);
@@ -462,30 +447,6 @@ void TutorialScene::EnemyProcess()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
 	}
-
-	/*for (size_t i = 0; i < enemys_.size(); i++)
-	{
-		if (enemys_[i]->GetHP() <= 0)
-		{
-			player_->AddEP(1);
-			enemys_.erase(enemys_.begin() + i);
-			continue;
-		}
-	}*/
-	/*for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i]->GetHP() <= 0)continue;
-		enemyPos[i] = enemys_[i]->GetPos();
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
-			Vector3 playerPos = player_->GetPos();
-			enemys_[i]->GetDamage();
-			vec[i] = playerPos - enemyPos[i];
-			vec[i].normalize();
-			vec[i].y = 0.0f;
-			player_->HitHammerToEnemy(vec[i] / 2.f);
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
-		}
-	}*/
-
 
 	//プレイヤーのOBB設定
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
