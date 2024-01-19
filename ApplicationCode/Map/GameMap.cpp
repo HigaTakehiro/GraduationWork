@@ -119,35 +119,6 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
-			Map->state_ = Map::Forest;
-			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			Map->stagePos_ = Pos;
-			Map->stage_->SetPosition(Pos);
-			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
-			maps_.push_back(move(Map));
-			CreateGrass(Pos, COUNT);
-			NEXTVERT += 1;
-			COUNT += 1;
-		}
-		else if (NUMBER == 3) {
-			unique_ptr<Stage> Map = make_unique<Stage>();
-			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			Map->num = COUNT;
-			Map->state_ = Map::Enemy;
-			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			Map->stagePos_ = Pos;
-			Map->stage_->SetPosition(Pos);
-			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
-			maps_.push_back(move(Map));
-			CreateGrass(Pos, COUNT);
-			//CreateEnemy(player, Pos, ENEMYCOUNT);
-			NEXTVERT += 1;
-			COUNT += 1;
-		}
-		else if (NUMBER == 4) {
-			unique_ptr<Stage> Map = make_unique<Stage>();
-			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
-			Map->num = COUNT;
 			Map->state_ = Map::Boss;
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			Map->stagePos_ = Pos;
@@ -158,7 +129,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
-		else if (NUMBER == 5) {
+		else if (NUMBER == 3) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
@@ -175,7 +146,7 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
-		else if (NUMBER == 6) {
+		else if (NUMBER == 4) {
 			count_ = COUNT;
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
@@ -198,11 +169,10 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
 			CreateDeposits(Pos, COUNT);
-			//CreateEnemy(player, Pos, 2);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
-		else if (NUMBER == 7) {
+		else if (NUMBER == 5) {
 			unique_ptr<Stage> Map = make_unique<Stage>();
 			Map->stage_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 			Map->num = COUNT;
@@ -232,7 +202,7 @@ void GameMap::CreateBridge()
 				XMFLOAT3 Pos = Map->stagePos_;
 				Pos.x = Pos.x + 15;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 4.2f,0.5f,1.f });
+				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,0.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Beside;
@@ -250,7 +220,7 @@ void GameMap::CreateBridge()
 				Pos.z = Pos.z + 15.f;
 				Pos.x = Pos.x - 0.5f;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 4.2f,0.5f,1.f });
+				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;

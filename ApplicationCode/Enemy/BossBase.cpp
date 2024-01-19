@@ -18,9 +18,11 @@ void BossBase::RecvDamageFlash()
 			val = 0.f;
 			FlashF = FALSE;
 		} else {
-			color_rgb.y = sinf(val);
-			color_rgb.z = sinf(val);
+			color_rgb.y = sinf(val)*2;
+			color_rgb.z = sinf(val)*2;
 		}
+		color_rgb.y = std::clamp(color_rgb.y, 0.4f, 2.f);
+		color_rgb.z = std::clamp(color_rgb.z,0.4f,2.f);
 	}
 	else
 	{
@@ -37,8 +39,8 @@ void BossBase::ArmDamageFlash(bool& f, int& t,XMFLOAT4&c)
 		t = 0.f;
 		f = FALSE;
 	} else {
-		c.y = sinf(t);
-		c.z = sinf(t);
+		c.y = sinf(t)*2.f;
+		c.z = sinf(t)*2.f;
 	}
 }
 
