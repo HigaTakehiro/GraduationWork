@@ -227,7 +227,7 @@ void GameMap::CreateBridge()
 			if (Map->num == Map2->num) { continue; }
 			if (Map->stagePos_.x + 30 == Map2->stagePos_.x && Map->num + 1 == Map2->num) {
 				unique_ptr<Bridge> Bridges = make_unique<Bridge>();
-				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("tunnel"));
+				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
 				Bridges->state_ = Direction::Beside;
 				XMFLOAT3 Pos = Map->stagePos_;
 				Pos.x = Pos.x + 17;
@@ -244,13 +244,13 @@ void GameMap::CreateBridge()
 
 			if (Map->stagePos_.z + 30 == Map2->stagePos_.z && Map->num + nextval_ == Map2->num) {
 				unique_ptr<Bridge> Bridges = make_unique<Bridge>();
-				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("tunnel"));
+				Bridges->bridge_ = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("bridge"));
 				Bridges->state_ = Direction::Vertical;
 				XMFLOAT3 Pos = Map->stagePos_;
 				Pos.z = Pos.z + 15.f;
 				Pos.x = Pos.x - 0.5f;
 				Bridges->bridge_->SetPosition(Pos);
-				Bridges->bridge_->SetScale({ 0.5f,0.5f,0.5f });
+				Bridges->bridge_->SetScale({ 4.5f,0.5f,2.5f });
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;

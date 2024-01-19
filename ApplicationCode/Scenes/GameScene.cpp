@@ -134,7 +134,8 @@ void GameScene::Update()
 	}
 	else {
 		cameraPos_.y = 12;
-		targetPos_.y = 3;
+		targetPos_.y = 0;
+
 	}
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
