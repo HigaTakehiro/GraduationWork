@@ -18,7 +18,9 @@ void Key::Initialize(const Vector3& pos)
 	}
 	key_ = Object3d::Create(model[0]);
 	key_->Initialize();
-	key_->SetPosition(pos);
+	pos_ = pos;
+	key_->SetPosition(pos_);
+	key_->SetColor(col_);
 	animeTimer_ = 0;
 	animeTime_ = 20;
 	animeCount_ = 0;
@@ -34,8 +36,8 @@ void Key::Update(Player* player, bool& lock, bool Display)
 	}
 	player_ = player;
 	if (!Display) { return; }
-	//HitPlayer(lock);
 	key_->Update();
+	Jump();
 }
 
 void Key::Draw(bool Display)
@@ -44,14 +46,13 @@ void Key::Draw(bool Display)
 	key_->Draw();
 }
 
-void Key::HitPlayer(bool& lock)
+void Key::Jump()
 {
-	Vector3 PlayerPos = player_->GetPos();
-	Vector3 Pos = key_->GetPosition();
-
-	if ((PlayerPos.x >= Pos.x - 1.f && PlayerPos.x <= Pos.x + 1.4f) &&
-		(PlayerPos.z >= Pos.z + 1.f && PlayerPos.z <= Pos.z + 4.f)) {
-		lock = true;
-		display_ = false;
-	}
+	Vector3 Pos= player_->GetPos();
+	pos_ = Pos;
+	pos_.y = addpos_ + Pos.y+1;
+	addpos_ += 0.1f;
+	col_.w -=0.05f;
+	key_->SetColor(col_);
+	key_->SetPosition(pos_);
 }
