@@ -1,4 +1,6 @@
 MAP 2
 NEXT 
+DEPO -5,0,7
+DEPO 4,0,-4
 MAP 4
 END
