@@ -420,7 +420,7 @@ void Player::Move() {
 		if (vec.x >= maxMoveSpeed_) {
 			vec.x = maxMoveSpeed_;
 		}
-		else if (acc_.x <= -maxMoveSpeed_) {
+		else if (vec.x <= -maxMoveSpeed_) {
 			vec.x = -maxMoveSpeed_;
 		}
 		if (vec.z >= maxMoveSpeed_) {

@@ -152,8 +152,6 @@ private: //メンバ変数
 	int32_t skillCount2 = 0;
 
 	//スキル画面スプライト
-	//ウィンドウUIスプライト
-	std::unique_ptr<Sprite> window_[3];
 	//スキル画面プレイヤースプライト
 	std::unique_ptr<Sprite> skillPlayer_[4];
 	//スキルパネル
