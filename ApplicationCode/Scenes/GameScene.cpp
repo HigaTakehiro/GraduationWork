@@ -182,9 +182,9 @@ void GameScene::Draw()
 		if (Enemy == nullptr ) { continue; }
 		if (map_->GetCount() != Enemy->GetCount()) { continue; }
 		Enemy->Draw();
-		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
-			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-		}
+		//if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
+		//	aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+		//}
 	}
 
 	//3Dオブジェクト描画処理
@@ -354,9 +354,9 @@ void GameScene::EnemyProcess()
 				shake_->SetShakeFlag(true);
 			}
 		}
-		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
-			aEffect_->Update(Enemy->GetPos());
-		}
+		//if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
+		//	aEffect_->Update(Enemy->GetPos());
+		//}
 	}
 #pragma endregion
 	for (size_t i = 0; i < enemys_.size(); i++)
@@ -380,9 +380,9 @@ void GameScene::EnemyProcess()
 			player_->HitHammerToEnemy(vec[i]);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
-		if (enemys_[i]->GetHP() > 0 && enemys_[i]->GetFlash() == true) {
-			aEffect_->Update(enemyPos[i]);
-		}
+		//if (enemys_[i]->GetHP() > 0 && enemys_[i]->GetFlash() == true) {
+		//	aEffect_->Update(enemyPos[i]);
+		//}
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && player_->GetIsHammerRelease()) {
 			ShakeCount++;
 			if (ShakeCount == 1) {

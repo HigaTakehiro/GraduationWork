@@ -249,9 +249,9 @@ void BossScene::Draw()
 	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	if (boss_->GetFlash() == true) {
-		aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	}
+	//if (boss_->GetFlash() == true) {
+	//	aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+	//}
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	schange->Draw();
