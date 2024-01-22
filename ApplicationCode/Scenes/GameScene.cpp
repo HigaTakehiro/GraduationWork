@@ -8,6 +8,7 @@
 #include "PadInput.h"
 #include "Collision.h"
 #include "Dogom.h"
+#include "Helper.h"
 #include "NormalEnemyB.h"
 #include "SoundManager.h"
 #include"StageCount.h"
@@ -114,6 +115,13 @@ void GameScene::Update()
 		}
 	}
 
+	for (int32_t i = 0; i < map_->GetDepositsSize(); i++) {
+		std::unique_ptr<Deposit>& deposit = map_->GetDeposit(i);
+		if (deposit != nullptr) {
+			Helper::ColKnock(player_->GetPos(), deposit->GetPos(), player_, Collision::GetLength(player_->GetPos(), deposit->GetPos()) < 2.f, 1.5f);
+		}
+	}
+
 	EnemyProcess();
 	//当たったらシェイク
 	if (map_->GetHit() == true) {
@@ -139,7 +147,17 @@ void GameScene::Update()
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	light_->Update();
-
+	for (int i = 0; i < map_->GetDepositsSize(); i++) {
+		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
+		if (Dep != nullptr && Dep->GetHP() > 0) {
+			if (Dep->GetIsHit(player_->GetIsHammerSwing())) {
+				unique_ptr<Ore> ore = make_unique<Ore>();
+				ore->Initialize(Dep->GetPos(), Dep->OreDropVec());
+				oreItems_.push_back(std::move(ore));
+			}
+			Dep->Update(player_->GetPos());
+		}
+	}
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
@@ -168,8 +186,14 @@ void GameScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
 	map_->MapDraw();
+	for (int i = 0; i < map_->GetDepositsSize(); i++) {
+		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
+		if (Dep != nullptr) {
+			if (map_->GetCount() != Dep ->GetMapNum() ) { continue; }
+			Dep->Draw();
+		}
+	}
 	Object3d::PostDraw();
 	for (auto i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] != nullptr) {
