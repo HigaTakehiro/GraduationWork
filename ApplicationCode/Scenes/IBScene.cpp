@@ -77,7 +77,9 @@ void IBScene::Initialize()
 	window_[2]->SetPosition({ 900.f, 300.f });
 	window_[2]->SetSize({ 750.f, 550.f });
 	//スキルパネル
-	SkillPanelInitialize();
+	if (panelStatus_[0][3].skillPanel_ == nullptr) {
+		SkillPanelInitialize();
+	}
 
 	//カーソルUI
 	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillCursor, { 900.f, 300.f }, { 0.6f, 0.6f, 1.0f, 1.f }, { 0.5f, 0.5f });
@@ -157,7 +159,7 @@ void IBScene::Update()
 		}
 	}
 	if (KeyInput::GetIns()->TriggerKey(DIK_U) && KeyInput::GetIns()->TriggerKey(DIK_I)) {
-		playerUI_->AddSkillPoint(99);
+		playerUI_->AddSkillPoint(1);
 	}
 	SkillUIUpdate();
 
@@ -343,6 +345,7 @@ void IBScene::Finalize()
 {
 	safe_delete(text_);
 	skillManager_->Finalize();
+	safe_delete(playerUI_);
 	//safe_delete(ene);
 	//safe_delete(_hummmerObb);
 	//colManager_->Finalize();
@@ -635,29 +638,29 @@ void IBScene::SkillPanelInitialize()
 		for (int32_t j = 0; j < 7; j++) {
 			if (panelStatus_[i][j].panelStatus_ == 1) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"HPアップ+5", pos);
+				panelStatus_[i][j].skillPanel_->Initialize(L"HPアップ+5", pos, SkillPanel::HPUP, 5);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 2) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"ATKアップ+5", pos);
+				panelStatus_[i][j].skillPanel_->Initialize(L"ATKアップ+5", pos, SkillPanel::ATKUP, 5);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 3) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"DEFアップ+5", pos);
+				panelStatus_[i][j].skillPanel_->Initialize(L"DEFアップ+5", pos, SkillPanel::DEFUP, 5);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 4) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"SPDアップ+1", pos);
+				panelStatus_[i][j].skillPanel_->Initialize(L"SPDアップ+1", pos, SkillPanel::SPDUP, 1);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 5) {
 				pos = { 900.f, 300.f };
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"ハンマー\n回収", pos);
+				panelStatus_[i][j].skillPanel_->Initialize(L"ハンマー\n回収", pos, SkillPanel::HammerReturn);
 				panelStatus_[i][j].skillPanel_->SetIsActive(true);
 			}
 			else {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"empty", pos);
+				panelStatus_[i][j].skillPanel_->Initialize(L"empty", pos, SkillPanel::HPUP);
 			}
 		}
 	}

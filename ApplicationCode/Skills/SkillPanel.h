@@ -5,6 +5,15 @@
 
 class SkillPanel
 {
+public: //enum
+	enum SkillType {
+		HammerReturn,
+		HPUP,
+		ATKUP,
+		DEFUP,
+		SPDUP,
+	};
+
 public: //メンバ関数
 
 	/// <summary>
@@ -16,7 +25,7 @@ public: //メンバ関数
 	/// 初期化処理
 	/// </summary>
 	/// <param name="skillName">スキル名</param>
-	void Initialize(const std::wstring& skillName, const Vector2& pos);
+	void Initialize(const std::wstring& skillName, const Vector2& pos, SkillType type, int32_t num = 0);
 
 	/// <summary>
 	/// 更新処理
@@ -80,6 +89,18 @@ public: //メンバ関数
 	/// <returns>カーソルがパネルに触れているかどうか</returns>
 	bool PanelToCursorHit(Vector2 cursorPos);
 
+	/// <summary>
+	/// スキルタイプ取得
+	/// </summary>
+	/// <returns>スキルタイプ</returns>
+	SkillType GetSkillType() { return skillType_; }
+
+	/// <summary>
+	/// ステータス上昇数値取得
+	/// </summary>
+	/// <returns>ステータス上昇数値</returns>
+	int32_t GetStatusUpNum() { return num_; }
+
 private: //メンバ変数
 	//スキル名
 	std::wstring skillName_;
@@ -100,5 +121,9 @@ private: //メンバ変数
 	Vector2 pos_;
 	//説明パネルサイズ
 	Vector2 textPanelSize_;
+	//ステータス上昇数値
+	int32_t num_;
+	//スキルタイプ
+	SkillType skillType_;
 };
 

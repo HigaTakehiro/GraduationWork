@@ -8,7 +8,7 @@ SkillPanel::~SkillPanel()
 	safe_delete(text_);
 }
 
-void SkillPanel::Initialize(const std::wstring& skillName, const Vector2& pos)
+void SkillPanel::Initialize(const std::wstring& skillName, const Vector2& pos, SkillType type, int32_t num)
 {
 	//スキル名を設定
 	skillName_ = skillName;
@@ -17,8 +17,29 @@ void SkillPanel::Initialize(const std::wstring& skillName, const Vector2& pos)
 	isSkillGet_ = false;
 	//座標をセット
 	pos_ = pos;
+	skillType_ = type;
 	//スキルパネルスプライト
-	skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	if (type == HPUP) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_HPUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == ATKUP) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_ATKUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == DEFUP) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_DEFUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == SPDUP) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_SPDUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == HammerReturn) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_HammerReturn, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	//ステータス上昇数値をセット
+	num_ = num;
+
 	skillPanel_->SetSize({ 96, 64 });
 	//説明パネルスプライト
 	textPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, pos_, { 1.0f, 1.0f, 1.0f, 1.f }, { 0.5f, 0.5f });
@@ -32,10 +53,9 @@ void SkillPanel::Initialize(const std::wstring& skillName, const Vector2& pos)
 void SkillPanel::Update(Vector2 cursorPos)
 {
 	const Vector3 gray = { 0.2f, 0.2f, 0.2f };
-	const Vector3 white = { 1.f, 1.f, 1.f };
-	const Vector3 green = { 0.2f, 0.6f, 0.2f };
+	const Vector3 white = { 1.5f, 1.5f, 1.5f };
+	const Vector3 green = { 0.2f, 0.8f, 0.2f };
 	Vector2 textPanelPos = { pos_.x + 100.f, pos_.y + 100.f };
-
 
 	if (!isActive_) {
 		skillPanel_->SetColor(gray);
@@ -60,15 +80,18 @@ void SkillPanel::SpriteDraw()
 
 void SkillPanel::TextMessageDraw()
 {
-	D2D1_RECT_F drawRange = { pos_.x - 40.f, pos_.y - 15.f, pos_.x + 50.f, pos_.y + 100.f };
-	std::string textColor = "black";
+	D2D1_RECT_F drawRange = { pos_.x + 10.f, pos_.y, pos_.x + 40.f, pos_.y + 50.f };
+	std::string textColor = "white";
 	if (!isActive_) {
-		textColor = "white";
+		textColor = "gray";
 	}
 	if (isSkillGet_) {
 		textColor = "yellow";
 	}
-	text_->Draw("bestTen_16", textColor, skillName_.c_str(), drawRange);
+	if (num_ != 0) {
+		std::wstring numText = std::to_wstring(num_);
+		text_->Draw("bestTen_16", textColor, L"+" + numText, drawRange);
+	}
 }
 
 void SkillPanel::TextPanelOpen(Vector2 cursorPos)

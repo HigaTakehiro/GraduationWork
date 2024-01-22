@@ -38,8 +38,11 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			getline(line_stream, word, ',');
 			stairs_ = make_unique<Stairs>();
 			XMFLOAT3 AddPos;
+			getline(line_stream, word, ',');
 			float x = (float)std::atof(word.c_str());
+			getline(line_stream, word, ',');
 			float y = (float)std::atof(word.c_str());
+			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			AddPos.x = x;
@@ -65,6 +68,31 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			box_ = make_unique<TreasureBox>();
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			box_->Initialize(num, Pos, player, COUNT);
+			continue;
+		}
+
+		if (word.find("DEPO") == 0) {
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+			//ƒŠƒ~ƒbƒg
+			if (x >= 10.f) { x = 10.f; }
+			else if (x <= -8.6f) { x = -8.6f; }
+			if (z >= 8.2f) { z = 8.2f; }
+			else if (z <= -11.f) { z = -11.f; }
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
+			XMFLOAT3 AddPos;
+			AddPos.x = x;
+			AddPos.y = -2.5f;
+			AddPos.z = z;
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
+			Pos.x += AddPos.x;
+			//Pos.y += AddPos.y;
+			Pos.z += AddPos.z;
+			CreateDeposits(Pos, COUNT);
 			continue;
 		}
 
@@ -168,7 +196,6 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			CameraPos.z = CameraPos.z + startpos_.z - 2.f;
 			maps_.push_back(move(Map));
 			CreateGrass(Pos, COUNT);
-			CreateDeposits(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -183,7 +210,6 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			Map->stage_->SetScale({ 0.1f,0.1f,0.1f });
 			Map->invisible_ = true;
 			maps_.push_back(move(Map));
-			CreateGrass(Pos, COUNT);
 			NEXTVERT += 1;
 			COUNT += 1;
 		}
@@ -267,12 +293,7 @@ void GameMap::CreateDeposits(const XMFLOAT3& MapPos, int MapNum)
 	std::unique_ptr<Deposit> deposit = make_unique<Deposit>();
 	deposit->Initialize({ MapPos.x, MapPos.y,MapPos.z - 5.f });
 	deposit->SetMapNum(MapNum);
-	std::unique_ptr<Deposit> deposit_2 = make_unique<Deposit>();
-	deposit_2->Initialize({ MapPos.x - 5.f, MapPos.y, MapPos.z + 5.f });
-	deposit_2->SetMapNum(MapNum);
 	deposits_.push_back(std::move(deposit));
-	deposits_.push_back(std::move(deposit_2));
-
 }
 
 void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy, int Count)

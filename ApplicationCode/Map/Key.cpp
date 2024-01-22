@@ -51,8 +51,8 @@ void Key::Jump()
 	Vector3 Pos= player_->GetPos();
 	pos_ = Pos;
 	pos_.y = addpos_ + Pos.y+1;
-	addpos_ += 0.1f;
-	col_.w -=0.05f;
+	addpos_ += 0.07f;
+	col_.w -=0.03f;
 	key_->SetColor(col_);
 	key_->SetPosition(pos_);
 }

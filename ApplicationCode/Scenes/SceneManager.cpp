@@ -3,6 +3,7 @@
 #include "SecBossScene.h"
 
 BaseScene* SceneManager::nowScene = nullptr;
+BaseScene* SceneManager::skillScene_ = nullptr;
 int32_t SceneManager::stageNo_ = 1;
 int32_t SceneManager::score = 0;
 CollisionManager* SceneManager::colManager_ = nullptr;
@@ -15,6 +16,7 @@ int32_t SceneManager::atk_ = 1;
 int32_t SceneManager::def_ = 1;
 int32_t SceneManager::spd_ = 1;
 int32_t SceneManager::skillPoint_ = 0;
+bool SceneManager::isSkillScene_ = false;
 
 void SceneManager::Initialize() {
 	//マウスカーソルを非表示にする
@@ -31,18 +33,32 @@ void SceneManager::Initialize() {
 }
 
 void SceneManager::Update() {
-	nowScene->Update();
+	if (!isSkillScene_) {
+		nowScene->Update();
+	}
+	else {
+		skillScene_->Update();
+	}
 }
 
 void SceneManager::Draw() {
-	nowScene->Draw();
+	if (!isSkillScene_) {
+		nowScene->Draw();
+	}
+	else {
+		skillScene_->Draw();
+	}
 }
 
 void SceneManager::Finalize() {
 	//現在のシーンの終了処理
-	nowScene->Finalize();
+	if (!isSkillScene_) {
+		nowScene->Finalize();
+	}
+	skillScene_->Finalize();
 	//ベースシーン解放
 	safe_delete(nowScene);
+	safe_delete(skillScene_);
 	//スキルマネージャ解放
 	safe_delete(skillManager_);
 	//カーソル可視化
@@ -75,6 +91,7 @@ void SceneManager::SceneChange(SceneName scene) {
 		nowScene->Finalize();
 		safe_delete(nowScene);
 	}
+	isSkillScene_ = false;
 
 	switch (scene) {
 	case SceneName::Title:
@@ -90,8 +107,13 @@ void SceneManager::SceneChange(SceneName scene) {
 		NowSceneInitialize();
 		break;
 	case SceneName::IB:
-		nowScene = new IBScene();
-		NowSceneInitialize();
+		if (skillScene_ == nullptr) {
+			skillScene_ = new IBScene();
+		}
+		skillScene_->SetSkillManager(skillManager_);
+		skillScene_->Initialize();
+		skillScene_->SetCollisionManager(colManager_);
+		isSkillScene_ = true;
 		break;
 	case SceneName::SKILL:
 		nowScene = new SkillScene();

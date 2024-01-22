@@ -30,6 +30,11 @@ public: //‰æ‘œ–¼
 		wake,
 		TextWindow,
 		skillCursor = 15,
+		skillIcon_HammerReturn,
+		skillIcon_HPUp,
+		skillIcon_ATKUp,
+		skillIcon_DEFUp,
+		skillIcon_SPDUp
 	};
 
 	enum Image2DName {
