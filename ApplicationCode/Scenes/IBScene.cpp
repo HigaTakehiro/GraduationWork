@@ -75,7 +75,7 @@ void IBScene::Initialize()
 	}
 
 	//ƒJ[ƒ\ƒ‹UI
-	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillCursor, { 900.f, 300.f }, { 1.f, 1.0f, 1.0f, 1.f }, { 0.5f, 0.5f });
+	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillCursor, { 640.f, 300.f }, { 1.f, 1.0f, 1.0f, 1.f }, { 0.5f, 0.5f });
 	skillCursor_->SetSize({ 50.f, 50.f });
 
 	schange = new SceneChangeEffect();
