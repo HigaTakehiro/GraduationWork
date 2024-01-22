@@ -356,6 +356,7 @@ private: //メンバ変数
 	int32_t def_ = 1;
 	//素早さ
 	int32_t spd_ = 1;
+	int32_t oldSpd_ = 1;
 	//スキルポイント
 	int32_t skillPoint_;
 

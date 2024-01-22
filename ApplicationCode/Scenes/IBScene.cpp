@@ -11,6 +11,9 @@
 #include"StageCount.h"
 #include "ATKUpSkill.h"
 #include "HammerReturnSkill.h"
+#include "HPUpSkill.h"
+#include "DEFUpSkill.h"
+#include "SPDUpSkill.h"
 
 void IBScene::Initialize()
 {
@@ -128,12 +131,14 @@ void IBScene::Update()
 			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[i][3].skillPanel_->GetIsActive()) {
 				playerUI_->SubSkillPoint(1);
 				panelStatus_[i][3].skillPanel_->SetIsSkillGet(true);
+				AddSkill(i, 3);
 			}
 		}
 		if (panelStatus_[3][i].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_B))) {
 			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[3][i].skillPanel_->GetIsActive()) {
 				playerUI_->SubSkillPoint(1);
 				panelStatus_[3][i].skillPanel_->SetIsSkillGet(true);
+				AddSkill(3, i);
 			}
 		}
 	}
@@ -159,7 +164,7 @@ void IBScene::Update()
 		}
 	}
 	if (KeyInput::GetIns()->TriggerKey(DIK_U) && KeyInput::GetIns()->TriggerKey(DIK_I)) {
-		playerUI_->AddSkillPoint(1);
+		playerUI_->AddSkillPoint(99);
 	}
 	SkillUIUpdate();
 
@@ -678,6 +683,30 @@ void IBScene::SkillPanelInitialize()
 			pos = { 900.f - (96.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f };
 			panelStatus_[3][i].skillPanel_->SetPos(pos);
 		}
+	}
+}
+
+void IBScene::AddSkill(int32_t arrayNum_1, int32_t arrayNum_2)
+{
+	if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::HammerReturn) {
+		HammerReturnSkill* hammerReturn = new HammerReturnSkill("hammerReturn");
+		skillManager_->AddPlayerPassiveSkill(hammerReturn);
+	}
+	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::HPUP) {
+		HPUpSkill* hpUp = new HPUpSkill("HPUp", panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetStatusUpNum());
+		skillManager_->AddPlayerPassiveSkill(hpUp);
+	}
+	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::ATKUP) {
+		ATKUpSkill* atkUp = new ATKUpSkill("ATKUp", panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetStatusUpNum());
+		skillManager_->AddPlayerPassiveSkill(atkUp);
+	}
+	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::DEFUP) {
+		DEFUpSkill* defUp = new DEFUpSkill("DEFUp", panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetStatusUpNum());
+		skillManager_->AddPlayerPassiveSkill(defUp);
+	}
+	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::SPDUP) {
+		SPDUpSkill* spdUp = new SPDUpSkill("SPDUp", panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetStatusUpNum());
+		skillManager_->AddPlayerPassiveSkill(spdUp);
 	}
 }
 

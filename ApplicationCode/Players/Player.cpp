@@ -340,7 +340,7 @@ void Player::Move() {
 	else if (acc_.z > 0) {
 		acc_.z -= hammerAcc_ / 5;
 	}
-	//通常移動
+	//ハンマー攻撃時移動
 	if ((KeyInput::GetIns()->HoldKey(DIK_SPACE) || PadInput::GetIns()->PushButton(PadInput::Button_B)) && !isHammerRelease_) {
 		if (leftStick > 0) {
 			acc_ += leftRightMoveVec * -hammerAcc_;
@@ -386,34 +386,51 @@ void Player::Move() {
 		//プレイヤーに移動速度を加算
 		pos_ += acc_;
 	}
-	//回転攻撃時移動
+	//通常時移動
 	else {
+		//移動ベクトル
+		Vector3 vec = { 0.f, 0.f, 0.f };
 
 		if (leftStick > 0) {
-			pos_ += leftRightMoveVec * -moveSpeed_;
+			vec += leftRightMoveVec * -moveSpeed_ * spd_;
 		}
 		if (leftStick < 0) {
-			pos_ += leftRightMoveVec * moveSpeed_;
+			vec += leftRightMoveVec * moveSpeed_ * spd_;
 		}
 		leftStick = PadInput::GetIns()->leftStickY();
 		if (leftStick > 0) {
-			pos_ += upDownMoveVec * moveSpeed_;
+			vec += upDownMoveVec * moveSpeed_ * spd_;
 		}
 		if (leftStick < 0) {
-			pos_ += upDownMoveVec * -moveSpeed_;
+			vec += upDownMoveVec * -moveSpeed_ * spd_;
 		}
 		if (KeyInput::GetIns()->HoldKey(DIK_LEFT)) {
-			pos_ += leftRightMoveVec * moveSpeed_;
+			vec += leftRightMoveVec * moveSpeed_ * spd_;
 		}
 		if (KeyInput::GetIns()->HoldKey(DIK_RIGHT)) {
-			pos_ += leftRightMoveVec * -moveSpeed_;
+			vec += leftRightMoveVec * -moveSpeed_ * spd_;
 		}
 		if (KeyInput::GetIns()->HoldKey(DIK_UP)) {
-			pos_ += upDownMoveVec * -moveSpeed_;
+			vec += upDownMoveVec * -moveSpeed_ * spd_;
 		}
 		if (KeyInput::GetIns()->HoldKey(DIK_DOWN)) {
-			pos_ += upDownMoveVec * moveSpeed_;
+			vec += upDownMoveVec * moveSpeed_ * spd_;
 		}
+
+		if (vec.x >= maxMoveSpeed_) {
+			vec.x = maxMoveSpeed_;
+		}
+		else if (acc_.x <= -maxMoveSpeed_) {
+			vec.x = -maxMoveSpeed_;
+		}
+		if (vec.z >= maxMoveSpeed_) {
+			vec.z = maxMoveSpeed_;
+		}
+		else if (vec.z <= -maxMoveSpeed_) {
+			vec.z = -maxMoveSpeed_;
+		}
+
+		pos_ += vec;
 	}
 
 	if (nextflor_) {

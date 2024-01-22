@@ -85,6 +85,12 @@ private: //メンバ関数
 	/// スキルパネル
 	/// </summary>
 	void SkillPanelInitialize();
+
+	/// <summary>
+	/// スキル追加処理
+	/// </summary>
+	void AddSkill(int32_t arrayNum_1, int32_t arrayNum_2);
+
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
