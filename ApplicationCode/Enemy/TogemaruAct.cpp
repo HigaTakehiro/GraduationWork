@@ -52,7 +52,9 @@ void TogemaruAct::Phase1()
 	Pos_.z = -8.f;
 
 	DeathSmallF = false;
-
+	for (size_t i = 0; i < spearSize; i++) {
+		spearsAlpha[i] = 0.f;//だんだん薄く
+	}
 	shakeT = 0.f;
 	//地面ついたら次のフェーズ
 	if(PosEaseT>=EaseState_Pos[0]){
@@ -261,14 +263,11 @@ void TogemaruAct::Move()
 	if (++actionCount % ActionInter == 0)
 	{
 		RushStartPos = Pos_;
-		for (size_t i = 0; i < spearSize; i++) {
-			spearsAlpha[i] = 1.f;
-		}
-
-		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt)==1)
-		{
+	
 			act_ = Act::ATTACK_SHOTSPEAR;
+		std::uniform_int_distribution<> randact(0, 1);
+		if(randact(mt)>-10)
+		{
 		}
 		else
 		{
@@ -382,6 +381,21 @@ void TogemaruAct::Attack_ShotSpear()
 
 	if (++rushEaseT >= maxRushEaseT) {
 		depositCollideF = FALSE;
+		for (size_t i = 0; i < spearSize; i++) {
+			spearsRot[i] = (i * (360 / spearSize));
+			if(i%2!=0)
+			{
+				spearsRot[i] += 90;
+			}
+			if(i==0||i==7)
+			{
+				spearsRot[i] += 180;
+				
+			}
+			spearsAlpha[i] = 1.f;
+		}
+	//	spearsRot[1] = (i * (360 / spearSize));
+		//spearsRot[3] = (i * (360 / spearSize));
 		isShot = TRUE;//突進終わったら針飛ばす
 	} else {
 		//突進
@@ -458,7 +472,7 @@ void TogemaruAct::RunAway()
 	if (act_ == Act::DEATH)return;
 	CrushAnimation();
 	//棘回復する時間
-	constexpr int32_t reproductionMaxTime = 240;
+	constexpr int32_t reproductionMaxTime = 360;
 
 	//向いた方に移動する
 	move = { 0.f,0.f, 0.1f, 0.0f };

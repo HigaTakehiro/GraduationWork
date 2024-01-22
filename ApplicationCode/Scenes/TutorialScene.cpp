@@ -263,9 +263,9 @@ void TutorialScene::Draw()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
 		Enemy->TutorialDraw(25.f);
-		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
-			aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-		}
+		//if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
+		//	aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
+		//}
 	}
 
 	//3Dオブジェクト描画処理
@@ -455,9 +455,9 @@ void TutorialScene::EnemyProcess()
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 
 		}
-		if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
-			aEffect_->Update(enemyPos[i]);
-		}
+		//if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
+		//	aEffect_->Update(enemyPos[i]);
+		//}
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && player_->GetIsHammerRelease()) {
 			ShakeCount++;
 			if (ShakeCount == 1) {

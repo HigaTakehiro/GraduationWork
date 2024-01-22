@@ -17,6 +17,7 @@ private:
 	std::array<float, spearSize>SpearAngle_ = {};
 	//針のアルファ値
 	std::array<float,spearSize>spearsAlpha ={};
+	std::array<float, spearSize>spearsRot= {};
 	//棘の発射範囲
 	float ShotRange = 0.f;
 	//発射フラグ
@@ -57,6 +58,7 @@ public:
 	void CrushAnimation();
 	void WalkAnimation();
 	AnimeName GetName()const { return anime_name_; }
+	float GetSpearsRot(int index) { return spearsRot[index]; }
 private:
 	//通常パラメータ
 	Vector3 Pos_,Rot_,Scl_= { 0.040f, 0.065f, 0.050f };

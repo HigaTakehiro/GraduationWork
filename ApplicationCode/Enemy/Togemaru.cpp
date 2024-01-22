@@ -13,7 +13,7 @@
 
 void Togemaru::Init()
 {
-	m_SpearsModel = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "impact.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f });
+	m_SpearsModel = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "needle.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f });
 
 	for (int32_t i = 0; i < m_SpearArray; i++) {
 		m_Spears[i] = Object3d::UniquePtrCreate(m_SpearsModel);
@@ -125,7 +125,7 @@ void Togemaru::Upda()
 	AnimationSett();
 	//各種パラメータセット
 	for (size_t i = 0; i < m_SpearArray; i++) {
-		m_Spears[i]->SetRotation(Vector3(90, 0, 0));
+		m_Spears[i]->SetRotation(Vector3(90, 0, Action->GetSpearsRot(i)));
 		m_Spears[i]->SetScale(Vector3(0.02f, 0.02f, 1.f));
 		m_Spears[i]->SetPosition(Action->GetSpearPos(i));//Actクラスから引っ張る
 		m_Spears[i]->SetColor(XMFLOAT4(1, 1, 1, Action->GetSpearAlpha(i)));
@@ -149,12 +149,14 @@ void Togemaru::Upda()
 void Togemaru::Draw()
 {
 	//針描画
-	for (size_t i = 0; i < m_SpearArray; i++)
-	{
-		if (Action->GetSpearPos(i).x<MapX_Mx && Action->GetSpearPos(i).x > MapX_Mn &&
-			Action->GetSpearPos(i).z < MapZ_Mx && Action->GetSpearPos(i).z > MapZ_Mn) {
-			m_Spears[i]->Draw();
-		}
+	//if (Action->GetName() != TogemaruAct::AnimeName::ROLE) {
+		for (size_t i = 0; i < m_SpearArray; i++)
+		{
+			if (Action->GetSpearPos(i).x<MapX_Mx && Action->GetSpearPos(i).x > MapX_Mn &&
+				Action->GetSpearPos(i).z < MapZ_Mx && Action->GetSpearPos(i).z > MapZ_Mn) {
+				m_Spears[i]->Draw();
+			}
+		//}
 	}
 	m_Body->Draw();
 
