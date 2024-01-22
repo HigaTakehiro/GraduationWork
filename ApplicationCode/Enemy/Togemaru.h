@@ -47,6 +47,7 @@ private:
     std::array < std::unique_ptr<Object3d>,m_SpearArray>m_Spears;
     Model*m_SpearsModel={};
     std::array<float, m_SpearArray>m_SpearAngle = {};
+    std::array<float, m_SpearArray>m_SpearRot = {};
 
     //�ؑϋv
     std::array<uint32_t, m_ScaleArray>m_ScaleHp = { 1,1,1 };
