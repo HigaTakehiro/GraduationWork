@@ -113,9 +113,12 @@ void IBScene::Update()
 	Animation();
 
 	//スキルパネル更新
+	panelStatus_[3][3].skillPanel_->Update(skillCursor_->GetPosition());
 	for (int32_t i = 0; i < 7; i++) {
-		panelStatus_[i][3].skillPanel_->Update(skillCursor_->GetPosition());
-		panelStatus_[3][i].skillPanel_->Update(skillCursor_->GetPosition());
+		if (i != 3) {
+			panelStatus_[i][3].skillPanel_->Update(skillCursor_->GetPosition());
+			panelStatus_[3][i].skillPanel_->Update(skillCursor_->GetPosition());
+		}
 
 		if (panelStatus_[i][3].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_A))) {
 			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[i][3].skillPanel_->GetIsActive() && !panelStatus_[i][3].skillPanel_->GetIsSkillGet()) {
@@ -132,6 +135,7 @@ void IBScene::Update()
 			}
 		}
 	}
+	
 
 	if (KeyInput::GetIns()->TriggerKey(DIK_P) && playerUI_->GetSkillPoint() > 0) {
 		playerUI_->SubSkillPoint(1);

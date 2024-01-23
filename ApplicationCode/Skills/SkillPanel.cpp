@@ -40,10 +40,10 @@ void SkillPanel::Initialize(const std::wstring& skillName, const Vector2& pos, S
 	}
 	//ステータス上昇数値をセット
 	num_ = num;
+	drawTime_ = 0;
 	SkillTextLoad();
 
 	skillPanel_->SetSize({ 50, 50 });
-
 }
 
 void SkillPanel::Update(Vector2 cursorPos)
@@ -80,7 +80,12 @@ void SkillPanel::TextMessageDraw()
 	std::string textColor = "white";
 	if (isSelect_) {
 		text_->Draw("bestTen", textColor, skillName_, panelNameRange);
-		text_->Draw("bestTen_16", textColor, skillText_, textRange);
+		if (drawTime_ > 0) {
+			text_->Draw("bestTen_16", textColor, drawText_, textRange);
+		}
+		else {
+			text_->Draw("bestTen_16", textColor, skillText_, textRange);
+		}
 	}
 
 	if (!isActive_) {
@@ -100,10 +105,15 @@ void SkillPanel::TextMessageDraw()
 
 void SkillPanel::TextOpen(Vector2 cursorPos)
 {
-	const float openTime = 30;
 	std::string textColor = "white";
 
 	if (PanelToCursorHit(cursorPos)) {
+		if (drawTimer_ < drawTime_) drawTimer_++;
+		if (drawTimer_ >= drawTime_ && skillText_.size() != drawText_.size()) {
+			drawTimer_ = 0;
+			drawText_ += skillText_.substr(drawText_.size(), 1);
+		}
+
 		if (!isActive_) {
 			skillPanel_->SetColor({ 0.6f, 0.2f, 0.2f });
 		}
@@ -114,6 +124,8 @@ void SkillPanel::TextOpen(Vector2 cursorPos)
 	}
 	else {
 		isSelect_ = false;
+		drawText_.clear();
+		drawTimer_ = 0;
 	}
 
 }
@@ -134,6 +146,7 @@ void SkillPanel::SkillTextLoad()
 	std::string text;
 	std::stringstream stream;
 	std::wstring skillText;
+	int32_t time;
 
 	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("skillText.csv");
 
@@ -160,9 +173,13 @@ void SkillPanel::SkillTextLoad()
 		if (word.find("sU") == 0 && skillType_ == SPDUP) {
 			line_stream >> text;
 		}
+		if (word.find("time") == 0) {
+			line_stream >> time;
+		}
 	}
 
 	skillText_ = ExternalFileLoader::GetIns()->StringToWstring(text);
+	drawTime_ = time;
 	if (skillType_ == HPUP || skillType_ == ATKUP || skillType_ == DEFUP || skillType_ == SPDUP) {
 		skillText_ = ExternalFileLoader::GetIns()->ReplaceWstr(skillText_, L"_n", std::to_wstring(num_));
 	}

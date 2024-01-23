@@ -111,6 +111,8 @@ private: //メンバ変数
 	std::wstring skillName_;
 	//スキル説明文
 	std::wstring skillText_;
+	//描画スキル説明文
+	std::wstring drawText_;
 	//スキル取得フラグ
 	bool isSkillGet_;
 	//取得可能状態フラグ
@@ -128,5 +130,8 @@ private: //メンバ変数
 	int32_t num_;
 	//スキルタイプ
 	SkillType skillType_;
+	//説明文表示タイマー
+	int32_t drawTimer_;
+	int32_t drawTime_;
 };
 
