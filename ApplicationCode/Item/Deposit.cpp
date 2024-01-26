@@ -17,7 +17,7 @@ void Deposit::Initialize(Vector3 pos,bool isDestroy,Camera*camera)
 	deposit_->SetObbScl({ 2.f, 2.f, 2.f });
 	deposit_->SetPosition(pos);
 
-	hp_ = 5;
+	hp_ = 3;
 	hitCoolTimer_ = hitCoolTime_ = 30;
 
 	if (isDestroy) {

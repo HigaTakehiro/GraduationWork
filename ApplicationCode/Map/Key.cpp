@@ -38,6 +38,7 @@ void Key::Update(Player* player, bool& lock, bool Display)
 	if (!Display) { return; }
 	key_->Update();
 	Jump();
+	lock = true;
 }
 
 void Key::Draw(bool Display)

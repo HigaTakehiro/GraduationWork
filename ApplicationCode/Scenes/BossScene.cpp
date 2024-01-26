@@ -161,15 +161,15 @@ void BossScene::Update()
 	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
 	_hummmerObb = &l_obb;
-	//if (boss_->GetClearF() == false && boss_->GetFlash() == true) {
-	//	aEffect_->Update(boss_->GetPos());
-	//}
 	boss_->Upda();
 
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
+	}
+	else {
+		player_->ResetOreCount();
 	}
 
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());

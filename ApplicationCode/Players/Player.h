@@ -40,6 +40,11 @@ public: //メンバ関数
 	void AddOreCount() { oreCount_++; }
 
 	/// <summary>
+	/// 鉱石取得数リセット
+	/// </summary>
+	void ResetOreCount() { oreCount_ = 0; }
+
+	/// <summary>
 	/// 反発設定
 	/// </summary>
 	/// <param name="vec"></param>
@@ -405,6 +410,8 @@ private: //メンバ変数
 	int32_t initAtkPoint_;
 	//最高移動速度
 	float maxMoveSpeed_;
+	//最高ハンマー移動速度
+	float maxHammerMoveSpeed_;
 	//加速度
 	Vector3 acc_;
 	//ハンマー攻撃時加速度

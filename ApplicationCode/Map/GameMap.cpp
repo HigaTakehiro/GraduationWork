@@ -602,19 +602,19 @@ void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 
 	if (direction_ == 0) { player->SetStop(false); display_ = true; return; }
 	if (direction_ == 2) {
-		NEXTPLAYERPOS.x = NextPos_.x - 5.f;
+		NEXTPLAYERPOS.x = NextPos_.x - 9.f;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction_ == 1) {
-		NEXTPLAYERPOS.x = NextPos_.x + 7.f;
+		NEXTPLAYERPOS.x = NextPos_.x + 9.f;
 		NEXTPLAYERPOS.z = PlayerPos.z;
 	}
 	else if (direction_ == 4) {
-		NEXTPLAYERPOS.z = NextPos_.z + 4.f;
+		NEXTPLAYERPOS.z = NextPos_.z + 8.f;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 	else if (direction_ == 3) {
-		NEXTPLAYERPOS.z = NextPos_.z - 10.f;
+		NEXTPLAYERPOS.z = NextPos_.z - 9.f;
 		NEXTPLAYERPOS.x = PlayerPos.x;
 	}
 
@@ -688,7 +688,6 @@ bool GameMap::CheckRockToMap(const XMFLOAT3& RockPos)
 		}
 		return true;
 	}
-	return false;
 }
 
 bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
@@ -702,6 +701,7 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease) {
 			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
+			
 			return true;
 		}
 		if (pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease) {
