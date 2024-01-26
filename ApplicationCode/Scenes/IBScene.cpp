@@ -24,14 +24,18 @@ void IBScene::Initialize()
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
 	const Vector3 RT = { +1.0f, +1.0f, 0.0f };
-	postEffect_ = std::make_unique<PostEffect>();
+	if (postEffect_ == nullptr) {
+		postEffect_ = std::make_unique<PostEffect>();
+	}
 	postEffect_->Initialize(LT, LB, RT, RB);
 
 	//カメラ初期化
 	CameraSetting();
 	oldcamerapos_ = cameraPos_.z;
 	//ライト初期化
-	light_ = LightGroup::UniquePtrCreate();
+	if (light_ == nullptr) {
+		light_ = LightGroup::UniquePtrCreate();
+	}
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
 		light_->SetPointLightActive(i, false);
@@ -42,29 +46,52 @@ void IBScene::Initialize()
 
 	//3dオブジェクト初期化
 	for (int32_t i = 0; i < 4; i++) {
-		playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 128.0f }, true);
-		skillPlayer_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::Image2DName::IdlePlayer, { 150.f, 600.f }, { 1.f, 1.f, 1.f, 1.f }, { 0.5f, 0.5f });
-		skillPlayer_[i]->SetTextureRect({ (float)i * 128.f, 2.f }, { 128.f, 128.f });
-		skillPlayer_[i]->SetSize({ 128.f, 128.f });
+		if (playerModel_[i] == nullptr) {
+			playerModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_rest.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 128.0f }, true);
+		}
+		if (skillPlayer_[i] == nullptr) {
+			skillPlayer_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::Image2DName::IdlePlayer, { 150.f, 600.f }, { 1.f, 1.f, 1.f, 1.f }, { 0.5f, 0.5f });
+			skillPlayer_[i]->SetTextureRect({ (float)i * 128.f, 2.f }, { 128.f, 128.f });
+			skillPlayer_[i]->SetSize({ 128.f, 128.f });
+		}
 	}
-	fireModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "fire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * 0, 1.0f }, { 128.0f, 128.0f }, true);
-	player_ = Object3d::UniquePtrCreate(playerModel_[0]);
+
+	if (fireModel_ == nullptr) {
+		fireModel_ = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "fire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * 0, 1.0f }, { 128.0f, 128.0f }, true);
+	}
+	if (player_ == nullptr) {
+		player_ = Object3d::UniquePtrCreate(playerModel_[0]);
+	}
 	player_->SetIsBillboardY(true);
 	player_->SetScale({ 0.15f, 0.15f, 0.15f });
-	fire_ = Object3d::UniquePtrCreate(fireModel_);
+	if (fire_ == nullptr) {
+		fire_ = Object3d::UniquePtrCreate(fireModel_);
+	}
 	fire_->SetIsBillboardY(true);
 	fire_->SetScale({ 0.1f, 0.1f, 0.1f });
 
-	skillB_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillButton, { 1000, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
-	skillSprite_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skill, { 0, 0 }, { 1,1,1,1 }, { 0.0f, 0.0f });
-	susumu_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::susumuButton, { 1000, 150 }, { 1,1,1,1 }, { 0.0f, 0.0f });
-	arrow = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::Arrow, { 900, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	if (skillB_ == nullptr) {
+		skillB_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillButton, { 1000, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	}
+	if (skillSprite_ == nullptr) {
+		skillSprite_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skill, { 0, 0 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	}
+	if (susumu_ == nullptr) {
+		susumu_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::susumuButton, { 1000, 150 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	}
+	if (arrow == nullptr) {
+		arrow = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::Arrow, { 900, 50 }, { 1,1,1,1 }, { 0.0f, 0.0f });
+	}
 	postEffectNo_ = PostEffect::NONE;
 
-	shake_ = new Shake();
+	if (shake_ == nullptr) {
+		shake_ = new Shake();
+	}
 	shake_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
 
-	ib_ = new IntermediateBase();
+	if (ib_ == nullptr) {
+		ib_ = new IntermediateBase();
+	}
 	ib_->Initialize();
 	ib_->LoadFloor();
 
@@ -75,10 +102,14 @@ void IBScene::Initialize()
 	}
 
 	//カーソルUI
-	skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillCursor, { 640.f, 300.f }, { 1.f, 1.0f, 1.0f, 1.f }, { 0.5f, 0.5f });
+	if (skillCursor_ == nullptr) {
+		skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillCursor, { 640.f, 300.f }, { 1.f, 1.0f, 1.0f, 1.f }, { 0.5f, 0.5f });
+	}
 	skillCursor_->SetSize({ 50.f, 50.f });
 
-	schange = new SceneChangeEffect();
+	if (schange == nullptr) {
+		schange = new SceneChangeEffect();
+	}
 	schange->Initialize();
 	schange->SetFadeNum(1);
 	schange->SetFEnd(true);
@@ -87,9 +118,13 @@ void IBScene::Initialize()
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
 	animeSpeed_ = 8;
-	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
+	if (background_ == nullptr) {
+		background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
+	}
 	baseCount = 0;
-	playerUI_ = new Player();
+	if (playerUI_ == nullptr) {
+		playerUI_ = new Player();
+	}
 	playerUI_->Initialize();
 	playerUI_->SetLevel(SceneManager::GetLevel());
 	playerUI_->SetEP(SceneManager::GetEP());
@@ -135,7 +170,7 @@ void IBScene::Update()
 			}
 		}
 	}
-	
+
 
 	if (KeyInput::GetIns()->TriggerKey(DIK_P) && playerUI_->GetSkillPoint() > 0) {
 		playerUI_->SubSkillPoint(1);

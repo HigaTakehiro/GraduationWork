@@ -405,6 +405,8 @@ private: //メンバ変数
 	int32_t initAtkPoint_;
 	//最高移動速度
 	float maxMoveSpeed_;
+	//最高ハンマー移動速度
+	float maxHammerMoveSpeed_;
 	//加速度
 	Vector3 acc_;
 	//ハンマー攻撃時加速度

@@ -195,6 +195,7 @@ void Player::PlayerStatusSetting() {
 	float throwSpeed;
 	float rotResetTime;
 	float maxSpeed;
+	float maxHammerSpeed;
 	float acc;
 	float ref;
 	int32_t hp;
@@ -283,6 +284,9 @@ void Player::PlayerStatusSetting() {
 		if (word.find("HitCool") == 0) {
 			line_stream >> hitCoolTime;
 		}
+		if (word.find("maxHS") == 0) {
+			line_stream >> maxHammerSpeed;
+		}
 	}
 
 	//初期化
@@ -298,6 +302,7 @@ void Player::PlayerStatusSetting() {
 	throwSpeed_ = throwSpeed;
 	maxMoveSpeed_ = maxSpeed;
 	hammerAcc_ = acc;
+	maxHammerMoveSpeed_ = maxHammerSpeed;
 	repulsionPower_ = ref;
 	attackPoint_ = initAtkPoint_ = atk;
 	maxOreCount_ = maxOreCount;
@@ -370,17 +375,17 @@ void Player::Move() {
 		}
 
 		//加速度補正
-		if (acc_.x >= maxMoveSpeed_) {
-			acc_.x = maxMoveSpeed_;
+		if (acc_.x >= maxHammerMoveSpeed_) {
+			acc_.x = maxHammerMoveSpeed_ * (1.f - oreCount_ * 0.15f);
 		}
-		else if (acc_.x <= -maxMoveSpeed_) {
-			acc_.x = -maxMoveSpeed_;
+		else if (acc_.x <= -maxHammerMoveSpeed_) {
+			acc_.x = -maxHammerMoveSpeed_ * (1.f - oreCount_ * 0.15f);
 		}
-		if (acc_.z >= maxMoveSpeed_) {
-			acc_.z = maxMoveSpeed_;
+		if (acc_.z >= maxHammerMoveSpeed_) {
+			acc_.z = maxHammerMoveSpeed_ * (1.f - oreCount_ * 0.15f);
 		}
-		else if (acc_.z <= -maxMoveSpeed_) {
-			acc_.z = -maxMoveSpeed_;
+		else if (acc_.z <= -maxHammerMoveSpeed_) {
+			acc_.z = -maxHammerMoveSpeed_ * (1.f - oreCount_ * 0.15f);
 		}
 
 		//プレイヤーに移動速度を加算
@@ -392,29 +397,29 @@ void Player::Move() {
 		Vector3 vec = { 0.f, 0.f, 0.f };
 
 		if (leftStick > 0) {
-			vec += leftRightMoveVec * -moveSpeed_ * spd_;
+			vec += leftRightMoveVec * -moveSpeed_ * (spd_ * 0.1f + 1.f);
 		}
 		if (leftStick < 0) {
-			vec += leftRightMoveVec * moveSpeed_ * spd_;
+			vec += leftRightMoveVec * moveSpeed_ * (spd_ * 0.1f + 1.f);
 		}
 		leftStick = PadInput::GetIns()->leftStickY();
 		if (leftStick > 0) {
-			vec += upDownMoveVec * moveSpeed_ * spd_;
+			vec += upDownMoveVec * moveSpeed_ * (spd_ * 0.1f + 1.f);
 		}
 		if (leftStick < 0) {
-			vec += upDownMoveVec * -moveSpeed_ * spd_;
+			vec += upDownMoveVec * -moveSpeed_ * (spd_ * 0.1f + 1.f);
 		}
 		if (KeyInput::GetIns()->HoldKey(DIK_LEFT)) {
-			vec += leftRightMoveVec * moveSpeed_ * spd_;
+			vec += leftRightMoveVec * moveSpeed_ * (spd_ * 0.1f + 1.f);
 		}
 		if (KeyInput::GetIns()->HoldKey(DIK_RIGHT)) {
-			vec += leftRightMoveVec * -moveSpeed_ * spd_;
+			vec += leftRightMoveVec * -moveSpeed_ * (spd_ * 0.1f + 1.f);
 		}
 		if (KeyInput::GetIns()->HoldKey(DIK_UP)) {
-			vec += upDownMoveVec * -moveSpeed_ * spd_;
+			vec += upDownMoveVec * -moveSpeed_ * (spd_ * 0.1f + 1.f);
 		}
 		if (KeyInput::GetIns()->HoldKey(DIK_DOWN)) {
-			vec += upDownMoveVec * moveSpeed_ * spd_;
+			vec += upDownMoveVec * moveSpeed_ * (spd_ * 0.1f + 1.f);
 		}
 
 		if (vec.x >= maxMoveSpeed_) {
