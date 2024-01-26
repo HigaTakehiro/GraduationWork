@@ -55,9 +55,9 @@ void MunniAction::Move()
 		isSearch = TRUE;//’ÇÕ‚µ‚Ü
 	}
 
-	constexpr float pr = 1.f, er = 1.f;
-	bool isCollide = Helper::GetCircleCollide(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z}, pr, er);
-	Helper::ColKnock(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z}, m_Player_, isCollide, 1.f);
+	constexpr float pr = 1.5f, er = 1.2f;
+	bool isCollide = Helper::GetCircleCollide(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z+3.f}, pr, er);
+	Helper::ColKnock(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z}, m_Player_, isCollide, 0.8f);
 
 	//’ÇÕŽžŠÔ
 	FollowCount = isSearch ? ++FollowCount : 0;
@@ -249,7 +249,7 @@ void MunniAction::ImpTexUpda()
 
 		bool isCollide = Helper::GetCircleCollide(m_Player_->GetPos(), Pos_, pr, er);
 
-		Helper::ColKnock(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z +0.f}, m_Player_, isCollide, 1.f);
+		Helper::ColKnock(m_Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z }, m_Player_, isCollide, 1.f);
 		if (isCollide) {
 			m_Player_->SubHP(1);
 		}
