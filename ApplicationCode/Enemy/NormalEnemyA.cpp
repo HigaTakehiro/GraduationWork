@@ -15,6 +15,7 @@
 #define PI 3.14
 void NormalEnemyA::Init()
 {
+	type_ = 0;
 	_status.TexSize = 3;
 	_color = XMFLOAT4(1, 1, 1, 1);
 	_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));
@@ -191,6 +192,15 @@ void NormalEnemyA::TextureAnimation()
 		}
 	}
 
+}
+
+void NormalEnemyA::TexDraw()
+{
+	constexpr float dis_max = 15.f;
+
+	Helper::isDraw(_player->GetPos(), _status.Pos, m_ShadowTex.get(), dis_max, _status.HP <= 0);
+
+	Helper::isDraw(_player->GetPos(),_status.Pos, m_HpTex.get(), dis_max,_status.HP <= 0);
 }
 
 

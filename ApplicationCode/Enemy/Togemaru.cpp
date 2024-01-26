@@ -34,9 +34,9 @@ void Togemaru::Init()
 
 	UI_Init();
 
-	m_HP = 1;
+	m_HP = 10;
 	BossMaxHP = m_HP;
-
+	names = "Togemaru";
 	Action = new TogemaruAct();
 }
 
@@ -108,16 +108,15 @@ void Togemaru::Upda()
 	
 
 	Pos_ = Action->GetPos();
-	bool judg1 = m_player->getisHammerActive() && !Action->GetRole();
+	bool judg1 =  m_player->getisHammerActive() && !Action->GetRole();
 
-	bool nowcrush=Action->GetName()==TogemaruAct::AnimeName::CRUSH_BACK||
-		Action->GetName() == TogemaruAct::AnimeName::CRUSH_FRONT||
-		Action->GetName() == TogemaruAct::AnimeName::CRUSH_RIGHT||
-		Action->GetName() == TogemaruAct::AnimeName::CRUSH_LEFT;
+	
+	bool isCol = Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
-	if (!nowcrush) {
-		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1 && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammer()->GetPosition().x, m_player->GetHammer()->GetPosition().z), 1.f));
-	}
+//	if (!nowcrush) {
+		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1&& isCol);
+		Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z+3.f }, m_player, judg1 && isCol);
+	//}
 
 	if (DamF)FlashF = true;
 	RecvDamageFlash();
@@ -242,7 +241,7 @@ void Togemaru::AnimationSett()
 			break;
 
 	case TogemaruAct::AnimeName::CRUSH_BACK:
-				AddIndex(m_Model_Crush, 4);
+				AddIndex(m_Model_Crush_Back, 4);
 				break;
 	}
 }
@@ -258,7 +257,7 @@ void Togemaru::InitAnimatin()
 		m_Model_Walk[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 		m_Model_Walk_Right[i]= Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "togemaru_moveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
 		m_Model_Walk_Left[i]= Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "togemaru_moveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-		m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "togemaru_moveBack.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
 
 	}
 	//ìÀêi
@@ -269,7 +268,7 @@ void Togemaru::InitAnimatin()
 		m_Model_Crush[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 		m_Model_Crush_Right[i] = Shapes::CreateSquare({ 0, 0 }, { 192.0f, 128.0f }, "togemaru_weekMoveLR.png", { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
 		m_Model_Crush_Left[i] = Shapes::CreateSquare({ 0, 0 }, { 192.0f,128.0f }, "togemaru_weekMoveRL.png", { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-		m_Model_Crush_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+		m_Model_Crush_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "togemaru_moveBack.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
 
 	}
 }

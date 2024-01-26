@@ -69,6 +69,8 @@ public:
 
 	void CreateEnemy(Player* player,const XMFLOAT3& MapPos, int Enemy,int Count);
 
+	void CreateEnemy2(Player* player, const XMFLOAT3& MapPos, int Enemy, int Count);
+
 	void CheckNextMap();
 
 	/// <summary>

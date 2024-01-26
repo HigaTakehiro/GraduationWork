@@ -13,15 +13,23 @@ using namespace DirectX;
 class BaseEnemy
 {
 public:
+	
+
 protected:
+
+	int type_ = 0;
+
+	enum Type {
+		TypeA,
+		TypeB,
+	}_type;
 
 	/*敵の各パラメータ*/
 	//*************************************
-
 	struct Status
 	{
 		//体力
-		int HP = 1;
+		int HP = 3;
 		//攻撃値
 		unsigned int DamageValue;
 		//被ダメージ後の仰け反り時間
@@ -138,7 +146,7 @@ protected:
 	void TexInit();
 	void TexUpda();
 public:
-	void TexDraw();
+	virtual void TexDraw()=0;
 
 	void TutorialTexDraw();
 
@@ -201,6 +209,8 @@ public:
 	XMFLOAT3 GetPos2() const;
 	XMFLOAT3 GetRot2() const;
 	XMFLOAT3 GetScl2() const;
+
+	int GetType()const;
 
 public:
 	void SetPos2(Vector3 pos) { state_obj_.Pos_ = pos; }

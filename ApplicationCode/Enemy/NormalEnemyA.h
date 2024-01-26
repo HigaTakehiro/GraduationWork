@@ -22,6 +22,8 @@ public:
     void TutorialDraw(float Mindis)override;
 
     void SetPosDeb(Vector3 pos)override;
+
+    void TexDraw() override;
 private:
     /*じゃんぷ*/
 	float JFrame;

@@ -39,18 +39,22 @@ void BossBase::ArmDamageFlash(bool& f, int& t,XMFLOAT4&c)
 		t = 0.f;
 		f = FALSE;
 	} else {
-		c.y = sinf(t)*2.f;
-		c.z = sinf(t)*2.f;
+		c.y = sinf(t);
+		c.z = sinf(t);
 	}
 }
 
 void BossBase::HPUiInit()
 {
 	m_HpTex = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-	m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
+	if(names=="Dogom")
+	m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::BossBar, { 0, 0 });
+	else if(names=="Togemaru")
+		m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::BossBar_Toge, { 0, 0 });
+
 	m_HpTex_Inner = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
 
-	m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));
+	//m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));
 	m_HpTex_Inner->SetColor(XMFLOAT3(1, 1, 0));
 }
 
@@ -60,7 +64,7 @@ void BossBase::HPUiUpda()
 	float px = 880.f, py = 30.f;
 	float sx, sy;
 	//0~400‚ÌŠÔ‚Å‚Ì•âŠ®Žæ‚é
-	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 400.f;
+	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 270.f;
 	sy = 50.f;
 
 	NowHP = sx;
@@ -97,9 +101,9 @@ void BossBase::HPUiUpda()
 
 void BossBase::HPUiDraw()
 {
-	m_HpTex_Frame->Draw();
+	
 	m_HpTex_Inner->Draw();
-	m_HpTex->Draw();
+	m_HpTex->Draw();m_HpTex_Frame->Draw();
 }
 
 
