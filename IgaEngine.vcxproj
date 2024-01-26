@@ -267,6 +267,7 @@
     <ClInclude Include="ApplicationCode\Map\StageCount.h" />
     <ClInclude Include="ApplicationCode\Map\Stairs.h" />
     <ClInclude Include="ApplicationCode\Map\TreasureBox.h" />
+    <ClInclude Include="ApplicationCode\Maths\DamageMath.h" />
     <ClInclude Include="ApplicationCode\Maths\MotionMath.h" />
     <ClInclude Include="ApplicationCode\Players\AttackEffect.h" />
     <ClInclude Include="ApplicationCode\Players\Player.h" />
