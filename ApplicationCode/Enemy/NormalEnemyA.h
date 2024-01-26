@@ -23,7 +23,7 @@ public:
 
     void SetPosDeb(Vector3 pos)override;
 
-    void TexDraw(XMFLOAT3 Pos) override;
+    void TexDraw() override;
 private:
     /*じゃんぷ*/
 	float JFrame;

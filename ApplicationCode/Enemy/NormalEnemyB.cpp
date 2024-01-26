@@ -27,7 +27,7 @@ void NormalEnemyB::Init()
 
 }
 
-void NormalEnemyB::TexDraw(XMFLOAT3 Pos)
+void NormalEnemyB::TexDraw()
 {
 	constexpr float dis_max = 15.f;
 

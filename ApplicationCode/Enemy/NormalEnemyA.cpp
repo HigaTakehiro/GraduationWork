@@ -193,7 +193,7 @@ void NormalEnemyA::TextureAnimation()
 
 }
 
-void NormalEnemyA::TexDraw(XMFLOAT3 Pos)
+void NormalEnemyA::TexDraw()
 {
 	constexpr float dis_max = 15.f;
 
