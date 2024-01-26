@@ -35,7 +35,8 @@ public: //‰æ‘œ–¼
 		skillIcon_ATKUp,
 		skillIcon_DEFUp,
 		skillIcon_SPDUp,
-		BossBar
+		BossBar,
+		BossBar_Toge
 	};
 
 	enum Image2DName {

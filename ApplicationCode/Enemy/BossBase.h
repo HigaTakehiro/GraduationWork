@@ -21,6 +21,7 @@ public:
 	virtual void SpriteDraw() = 0;
 	
 protected:
+	std::string names;
 	void RecvDamage(Vector3 pos);
 	enum Name
 	{

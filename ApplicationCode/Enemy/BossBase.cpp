@@ -47,7 +47,11 @@ void BossBase::ArmDamageFlash(bool& f, int& t,XMFLOAT4&c)
 void BossBase::HPUiInit()
 {
 	m_HpTex = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
+	if(names=="Dogom")
 	m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::BossBar, { 0, 0 });
+	else if(names=="Togemaru")
+		m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::BossBar_Toge, { 0, 0 });
+
 	m_HpTex_Inner = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
 
 	//m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));

@@ -30,7 +30,8 @@ void ImageManager::Initialize() {
 	Sprite::LoadTexture((UINT)ImageName::skillIcon_ATKUp, L"Engine/Resources/Images/skillPanel_powUP.png");
 	Sprite::LoadTexture((UINT)ImageName::skillIcon_DEFUp, L"Engine/Resources/Images/skillPanel_defUP.png");
 	Sprite::LoadTexture((UINT)ImageName::skillIcon_SPDUp, L"Engine/Resources/Images/skillPanel_speedUP.png");
-	Sprite::LoadTexture((UINT)ImageName::BossBar, L"Engine/Resources/Images/togemaruHP-export.png");
+	Sprite::LoadTexture((UINT)ImageName::BossBar, L"Engine/Resources/Images/dogomuHP-export.png");
+	Sprite::LoadTexture((UINT)ImageName::BossBar_Toge, L"Engine/Resources/Images/togemaruHP-export.png");
 
 	Texture::LoadTexture(Image2DName::BUSA1, L"Engine/Resources/Images/usa_back/usa_back1.png");
 	Texture::LoadTexture(Image2DName::BUSA2, L"Engine/Resources/Images/usa_back/usa_back2.png");

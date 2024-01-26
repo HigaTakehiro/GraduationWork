@@ -19,7 +19,7 @@
 void Dogom::Init()
 {
 	m_Name = DOGOM;
-	
+	names = "Dogom";
 	for (int32_t i = 0; i < 8; i++) {
 		ArmModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "dogomu_hand.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 	}
@@ -64,7 +64,7 @@ void Dogom::Init()
 		m_ArmHpTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {128.0f, 128.0f}, "white1x1.png", {128.0f, 64.0f}, {0.f, 0.f}, {128.0f * (float)i, 0.0f}, {128.0f, 128.0f}));
 	}
 	HPUiInit();
-
+	///HPUiInit();
 	CrossAreaTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64, 64 }, "CrossArea.png", { 64, 64 }, { 0.5f, 0.5f }, { 0, 0 }, { 128, 128 }));
 	CrossAreaTex->SetRotation(Vector3(90, 0, 0));
 	CrossAreaTex->SetScale(Vector3(0.2f, 0.05f, 2.f));
@@ -148,6 +148,8 @@ void Dogom::Upda()
 	CoollisionFace();
 	ImpactTexScling();
 	RotationFace(120);
+
+	HPUiUpda();
 
 	constexpr int AnimationInter = 10;
 	constexpr size_t TexNum = 8;

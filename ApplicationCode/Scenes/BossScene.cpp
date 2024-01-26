@@ -57,7 +57,7 @@ void BossScene::Initialize()
 
 	int Num = StageCount::GetIns()->Up();
 	map_ = make_unique<GameMap>();
-	map_->Initalize(player_, cameraPos_, targetPos_, Num);
+	map_->Initalize(player_, cameraPos_, targetPos_, 6);
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();

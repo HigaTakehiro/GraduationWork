@@ -606,7 +606,7 @@ void TogemaruAct::Death()
 	anime_name_ = AnimeName::ROLE;
 	shakeT++;
 	shakeXVal = sinf(PI * 2 / 2 * shakeT) * shakeVibration;
-	shakeYVal = sinf(PI * 2 / 2 * shakeT) * shakeVibration;
+	
 	if (shakeT > 90) {
 		shakeXVal = 0;
 		shakeYVal = 0;
