@@ -137,7 +137,7 @@ void Dogom::Upda()
 			} else {
 				constexpr int RecvCoolMax = 120;
 				const int DamageVal = 1;
-				bool judg = m_player->getisHammerActive()&& isHit(m_BodyPos, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
+				bool judg = m_player->getisHammerActive() && isHit({ m_BodyPos.x,m_BodyPos.y,m_BodyPos.z+3.f }, m_player->GetHammer()->GetMatWorld().r[3], 3.f, 1.f);
 				if(judg)
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 				Helper::DamageManager(m_HP, DamageVal, BodyRecvDam, BodyDamCool, RecvCoolMax, judg);
