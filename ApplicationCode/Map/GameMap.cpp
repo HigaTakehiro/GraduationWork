@@ -342,7 +342,8 @@ void GameMap::CreateEnemy2(Player* player, const XMFLOAT3& MapPos, int Enemy, in
 		std::mt19937 mt(rnd());
 		std::uniform_int_distribution<> randX(-9, 9);
 		std::uniform_int_distribution<> randZ(-8, 8);
-		Enemy1->SetPos({ MapPos.x + (float)randX(mt),MapPos.y,MapPos.z + (float)randZ(mt) });
+		Enemy1->SetPos2({ MapPos.x + (float)randX(mt),-2.5f,MapPos.z + (float)randZ(mt) });
+		Enemy1->SetPosDeb(Enemy1->GetPos());
 		enemys_.push_back(move(Enemy1));
 	}
 }

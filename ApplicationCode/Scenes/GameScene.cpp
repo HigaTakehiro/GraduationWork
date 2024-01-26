@@ -66,9 +66,9 @@ void GameScene::Initialize()
 
 		enemys_[i]->SetOverPos(XMFLOAT3(39.f, -100.f, 5.f), XMFLOAT3(23.f, 100.f, -5.f));
 	}
-	enemys_[0]->SetPos2(Vector3(30, 0, -4));
-	enemys_[1]->SetPos2(Vector3(25, 0, 2));
-	enemys_[2]->SetPos2(Vector3(35, 0, 5));
+	enemys_[0]->SetPos2(Vector3(30, -2.5f, -4));
+	enemys_[1]->SetPos2(Vector3(25, -2.5f, 2));
+	enemys_[2]->SetPos2(Vector3(35, -2.5f, 5));
 
 	for (size_t i = 0; i < enemys_.size(); i++)
 		enemys_[i]->SetPosDeb(enemys_[i]->GetPos2());
@@ -362,9 +362,10 @@ void GameScene::EnemyProcess()
 	for (auto i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr || Enemy->GetHP() <= 0) { continue; }
-		Vector3 EnemyPos;
+		XMFLOAT3 EnemyPos;
+		int Num = Enemy->GetType();
 		if (Enemy->GetType() == 0) { EnemyPos = Enemy->GetPos(); }
-		else if (Enemy->GetType() == 1) { Vector3 EnemyPos = Enemy->GetPos2(); }
+		else if (Enemy->GetType() == 1) { EnemyPos = Enemy->GetPos2(); }
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			Enemy->GetDamage();
@@ -468,8 +469,8 @@ void GameScene::EnemyProcess()
 			XMFLOAT3 Pos2;
 			if (Ene1->GetType() == 0) { Pos1 = Ene1->GetPos(); }
 			else if (Ene1->GetType() == 1) { Pos1 = Ene1->GetPos2(); }
-			if (Ene2->GetType() == 0) { Pos2 = Ene1->GetPos(); }
-			else if (Ene2->GetType() == 1) { Pos2 = Ene1->GetPos2(); }
+			if (Ene2->GetType() == 0) { Pos2 = Ene2->GetPos(); }
+			else if (Ene2->GetType() == 1) { Pos2 = Ene2->GetPos2(); }
 			if (Collision::HitCircle(XMFLOAT2(Pos2.x,Pos2.z), 1.f,
 				XMFLOAT2(Pos1.x,Pos1.z), 1.f))
 			{
@@ -479,7 +480,7 @@ void GameScene::EnemyProcess()
 				pos.x += sin(atan2f((Ene1->GetPos().x - Ene2->GetPos().x), (Ene1->GetPos().z - Ene2->GetPos().z))) * 0.3f;
 				pos.z += cos(atan2f((Ene1->GetPos().x - Ene2->GetPos().x), (Ene1->GetPos().z - Ene2->GetPos().z))) * 0.3f;
 
-				Ene1->SetPos(pos);
+				
 			}
 		}
 	}
@@ -488,7 +489,7 @@ void GameScene::EnemyProcess()
 		if (Ene == nullptr ) { continue; }
 		if (map_->GetCount() != Ene->GetCount()) { continue; }
 		if (Ene->GetHP() <= 0) { continue; }
-		Ene->SetHammerObb(*_hummmerObb);
+		if (Ene->GetType() == 1) { Ene->SetPos(Ene->GetPos2()); }
 		Ene->Upda(camera_.get());
 	}
 #pragma endregion

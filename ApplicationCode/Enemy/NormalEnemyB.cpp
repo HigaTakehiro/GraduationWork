@@ -8,7 +8,7 @@
 
 void NormalEnemyB::Init()
 {
-	_type = Type::TypeB;
+	type_ = 1;
 	state_obj_.TexSize_ = 6;
 	state_obj_.Model_.resize(state_obj_.TexSize_);
 
@@ -23,6 +23,7 @@ void NormalEnemyB::Init()
 	state_obj_.obj_->SetHitRadius(0.5f);
 	state_obj_.Scl={ 0.02f, 0.02f, 0.02f };
 
+	TexInit();
 	Tag_ = "Munni";
 	action_ = new MunniAction();
 
@@ -31,8 +32,6 @@ void NormalEnemyB::Init()
 void NormalEnemyB::TexDraw()
 {
 	constexpr float dis_max = 15.f;
-
-	Helper::isDraw(_player->GetPos(),state_obj_.Pos_, m_ShadowTex.get(), dis_max, state_obj_.Hp_ <= 0);
 
 	Helper::isDraw(_player->GetPos(), state_obj_.Pos_, m_HpTex.get(), dis_max, state_obj_.Hp_ <= 0);
 }
@@ -73,6 +72,8 @@ void NormalEnemyB::Upda(Camera* camera)
 	state_obj_.obj_->SetColor(state_obj_.Color_);
 	state_obj_.obj_->SetIsBillboardY(true);
 	state_obj_.obj_->Update();
+
+	TexUpda();
 }
 
 
@@ -80,8 +81,6 @@ void NormalEnemyB::Upda(Camera* camera)
 void NormalEnemyB::Draw()
 {
 	float Mindis = 12.f;
-	if (Collision::GetLength(state_obj_.Pos_, _player->GetPos()) > Mindis)return;
-
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	action_->ImpTexDraw();
 	state_obj_.obj_->Draw();
