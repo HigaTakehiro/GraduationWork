@@ -353,6 +353,7 @@ private: //ƒƒ“ƒo•Ï”
 	Vector3 rot_;
 	//HP
 	int32_t hp_;
+	int32_t preHp_;
 	int32_t maxHp_;
 	int32_t initHP_;
 	//UŒ‚—Í

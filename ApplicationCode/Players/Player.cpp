@@ -103,6 +103,23 @@ void Player::Update()
 	HammerPowerUp();
 	LevelUp();
 	
+	if (preHp_ != hp_ && isHammerSwing_) {
+		isHammerRelease_ = true;
+		isHammerSwing_ = false;
+		Vector3 hammerPos = pos_;
+		hammerPos.y = -30.0f;
+		hammerPos_ = hammerPos;
+		hammer_->SetParent(nullptr);
+		hammer_->SetScale(scale_);
+		//進行ベクトルを求める
+		Vector3 vec = arrow_->GetMatWorld().r[3] - hammer_->GetMatWorld().r[3];
+		vec.normalize();
+		//Y軸ベクトルは余計なので0を入れる
+		vec.y = 0.0f;
+		hammerVec_ = vec;
+		hammer_->SetPosition(hammerPos);
+	}
+
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
@@ -115,12 +132,13 @@ void Player::Update()
 
 	player_->SetPosition(pos_);
 	player_->SetRotation(rot_);
-	player_->Update();
 	rotAttackPlayer_->SetPosition(pos_);
 	rotAttackPlayer_->Update();
 	shadow_->Update();
 	hammer_->Update();
 	arrow_->Update();
+	player_->Update();
+	preHp_ = hp_;
 
 }
 
@@ -467,7 +485,7 @@ void Player::Attack() {
 			rotResetTimer_ = 0.0f;
 			rot_.y -= rotSpeed_;
 		}
-		//スペースキーまたはBボタンを離したとき
+		//スペースキーまたはBボタンを離したとき、ダメージを受けた時
 		else if (KeyInput::GetIns()->ReleaseKey(DIK_SPACE) || PadInput::GetIns()->ReleaseButton(PadInput::Button_B)) {
 			isHammerRelease_ = true;
 			isHammerSwing_ = false;
@@ -676,6 +694,8 @@ void Player::LevelUp()
 		skillPoint_++;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
 		maxHp_ += 2;
+		atk_ += 1;
+		def_ += 1;
 		hp_ = maxHp_;
 	}
 }
@@ -699,13 +719,14 @@ void Player::HitCoolTime()
 void Player::DeadAction()
 {
 	if (hp_ > 0) return;
+	if (deadTimer_ <= deadTime_) deadTimer_++;
 
 	if (deadTimer_ >= deadTime_ * 0.6f) {
 		player_->SetModel(deadModel_);
 		player_->Initialize();
 		player_->Update();
 	}
-	if (++deadTimer_ >= deadTime_) {
+	if (deadTimer_ >= deadTime_) {
 		isDead_ = true;
 	}
 }
