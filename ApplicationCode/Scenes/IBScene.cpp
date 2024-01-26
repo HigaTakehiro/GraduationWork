@@ -443,7 +443,7 @@ void IBScene::SceneChange()
 				if (StageCount::GetIns()->Now() == 5) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss);
 				}
-				else if (StageCount::GetIns()->Now() == 11 ||
+				else if (StageCount::GetIns()->Now() == 10 ||
 					StageCount::GetIns()->Now() == 17) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss2);
 				}
