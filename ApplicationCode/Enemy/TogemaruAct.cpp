@@ -139,7 +139,9 @@ void TogemaruAct::Transition()
 		float KnockDis = AccelJudg ? 0.3f : 0.6f;//‚Ì‚¯‚¼‚è’l
 
 		//”»’è
-		bool isCollide = Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
+		bool animenotwalk = anime_name_ != AnimeName::WALK_FRONT && anime_name_ != AnimeName::WALK_BACK &&
+			anime_name_ != AnimeName::WALK_LEFT && anime_name_ != AnimeName::WALK_RIGHT;
+		bool isCollide =animenotwalk&& Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
 		if (!damf&&isCollide) { Player_->SubHP(1); damf = true;}
 		if (damf) { damcool++; if (damcool > 90)damf = false; }
 		else { damcool = 0; }
@@ -390,7 +392,10 @@ void TogemaruAct::Attack_ShotSpear()
 			if(i==0||i==7)
 			{
 				spearsRot[i] += 180;
-				
+			}
+			if(i==4||i==3)
+			{
+				spearsRot[i] += 180;;
 			}
 			spearsAlpha[i] = 1.f;
 		}

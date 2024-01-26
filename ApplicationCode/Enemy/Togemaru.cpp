@@ -34,7 +34,7 @@ void Togemaru::Init()
 
 	UI_Init();
 
-	m_HP = 1;
+	m_HP = 10;
 	BossMaxHP = m_HP;
 
 	Action = new TogemaruAct();
@@ -108,16 +108,15 @@ void Togemaru::Upda()
 	
 
 	Pos_ = Action->GetPos();
-	bool judg1 = m_player->getisHammerActive() && !Action->GetRole();
+	bool judg1 =  m_player->getisHammerActive() && !Action->GetRole();
 
-	bool nowcrush=Action->GetName()==TogemaruAct::AnimeName::CRUSH_BACK||
-		Action->GetName() == TogemaruAct::AnimeName::CRUSH_FRONT||
-		Action->GetName() == TogemaruAct::AnimeName::CRUSH_RIGHT||
-		Action->GetName() == TogemaruAct::AnimeName::CRUSH_LEFT;
+	
+	bool isCol = Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
-	if (!nowcrush) {
-		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1 && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammer()->GetPosition().x, m_player->GetHammer()->GetPosition().z), 1.f));
-	}
+//	if (!nowcrush) {
+		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1&& isCol);
+		Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z+3.f }, m_player, judg1 && isCol);
+	//}
 
 	if (DamF)FlashF = true;
 	RecvDamageFlash();

@@ -520,5 +520,6 @@ public:
 	}
 	void SetStopF(bool flag) { isStop_ = flag; }
 
+	Vector3 GetHammmerPos()const { return hammer_->GetMatWorld().r[3]; }
 };
 

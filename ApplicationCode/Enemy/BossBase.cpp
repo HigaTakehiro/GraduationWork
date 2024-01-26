@@ -60,7 +60,7 @@ void BossBase::HPUiUpda()
 	float px = 880.f, py = 30.f;
 	float sx, sy;
 	//0~400‚ÌŠÔ‚Å‚Ì•âŠ®Žæ‚é
-	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 400.f;
+	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 270.f;
 	sy = 50.f;
 
 	NowHP = sx;
