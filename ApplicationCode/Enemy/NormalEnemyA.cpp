@@ -193,6 +193,15 @@ void NormalEnemyA::TextureAnimation()
 
 }
 
+void NormalEnemyA::TexDraw(XMFLOAT3 Pos)
+{
+	constexpr float dis_max = 15.f;
+
+	Helper::isDraw(_player->GetPos(), _status.Pos, m_ShadowTex.get(), dis_max, _status.HP <= 0);
+
+	Helper::isDraw(_player->GetPos(),_status.Pos, m_HpTex.get(), dis_max,_status.HP <= 0);
+}
+
 
 void NormalEnemyA::Jump()
 {

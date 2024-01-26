@@ -39,18 +39,18 @@ void BossBase::ArmDamageFlash(bool& f, int& t,XMFLOAT4&c)
 		t = 0.f;
 		f = FALSE;
 	} else {
-		c.y = sinf(t)*2.f;
-		c.z = sinf(t)*2.f;
+		c.y = sinf(t);
+		c.z = sinf(t);
 	}
 }
 
 void BossBase::HPUiInit()
 {
 	m_HpTex = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
-	m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
+	m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::BossBar, { 0, 0 });
 	m_HpTex_Inner = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
 
-	m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));
+	//m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));
 	m_HpTex_Inner->SetColor(XMFLOAT3(1, 1, 0));
 }
 
@@ -97,9 +97,9 @@ void BossBase::HPUiUpda()
 
 void BossBase::HPUiDraw()
 {
-	m_HpTex_Frame->Draw();
+	
 	m_HpTex_Inner->Draw();
-	m_HpTex->Draw();
+	m_HpTex->Draw();m_HpTex_Frame->Draw();
 }
 
 

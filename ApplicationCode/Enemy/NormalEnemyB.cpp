@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "Collision.h"
+#include "Helper.h"
 #include "Shapes.h"
 
 void NormalEnemyB::Init()
@@ -24,6 +25,15 @@ void NormalEnemyB::Init()
 	Tag_ = "Munni";
 	action_ = new MunniAction();
 
+}
+
+void NormalEnemyB::TexDraw(XMFLOAT3 Pos)
+{
+	constexpr float dis_max = 15.f;
+
+	Helper::isDraw(_player->GetPos(),state_obj_.Pos_, m_ShadowTex.get(), dis_max, state_obj_.Hp_ <= 0);
+
+	Helper::isDraw(_player->GetPos(), state_obj_.Pos_, m_HpTex.get(), dis_max, state_obj_.Hp_ <= 0);
 }
 
 void NormalEnemyB::Upda(Camera* camera)

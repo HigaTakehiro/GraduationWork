@@ -199,14 +199,7 @@ void BaseEnemy::TexUpda()
 	m_ShadowTex->Update();
 }
 
-void BaseEnemy::TexDraw()
-{
-	constexpr float dis_max = 15.f;
 
-	Helper::isDraw(_player->GetPos(), _status.Pos, m_ShadowTex.get(), dis_max, _status.HP <= 0);
-
-	Helper::isDraw(_player->GetPos(), _status.Pos, m_HpTex.get(), dis_max, _status.HP <= 0);
-}
 
 void BaseEnemy::TutorialTexDraw()
 {

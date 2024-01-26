@@ -138,7 +138,7 @@ protected:
 	void TexInit();
 	void TexUpda();
 public:
-	void TexDraw();
+	virtual void TexDraw()=0;
 
 	void TutorialTexDraw();
 
