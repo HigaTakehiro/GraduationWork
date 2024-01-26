@@ -17,8 +17,9 @@ public:
 
 protected:
 
-	enum Type
-	{
+	int type_ = 0;
+
+	enum Type {
 		TypeA,
 		TypeB,
 	}_type;
@@ -28,7 +29,7 @@ protected:
 	struct Status
 	{
 		//体力
-		int HP = 1;
+		int HP = 3;
 		//攻撃値
 		unsigned int DamageValue;
 		//被ダメージ後の仰け反り時間
@@ -209,7 +210,7 @@ public:
 	XMFLOAT3 GetRot2() const;
 	XMFLOAT3 GetScl2() const;
 
-	int GetType() { return _type; }
+	int GetType()const;
 
 public:
 	void SetPos2(Vector3 pos) { state_obj_.Pos_ = pos; }
