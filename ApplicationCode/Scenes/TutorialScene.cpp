@@ -204,6 +204,9 @@ void TutorialScene::Update()
 	if (!player_->GetIsHammerReflect()) {
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
+	else {
+		player_->ResetOreCount();
+	}
 
 	schange->Change(0);
 

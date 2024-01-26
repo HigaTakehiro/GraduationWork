@@ -171,6 +171,9 @@ void BossScene::Update()
 	if (!player_->GetIsHammerReflect()) {
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 	}
+	else {
+		player_->ResetOreCount();
+	}
 
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
