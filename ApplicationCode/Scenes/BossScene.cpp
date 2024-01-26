@@ -161,9 +161,6 @@ void BossScene::Update()
 	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
 	_hummmerObb = &l_obb;
-	//if (boss_->GetClearF() == false && boss_->GetFlash() == true) {
-	//	aEffect_->Update(boss_->GetPos());
-	//}
 	boss_->Upda();
 
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
