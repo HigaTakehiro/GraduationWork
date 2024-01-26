@@ -688,7 +688,6 @@ bool GameMap::CheckRockToMap(const XMFLOAT3& RockPos)
 		}
 		return true;
 	}
-	return false;
 }
 
 bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
@@ -702,6 +701,7 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease) {
 			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
+			
 			return true;
 		}
 		if (pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease) {
