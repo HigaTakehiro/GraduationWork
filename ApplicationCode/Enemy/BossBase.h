@@ -91,5 +91,20 @@ public:
 	void RecvDamageFlash();
 	//bool GetHp() { return m_ClearF; }
 	float GetBossRot()const { return Action->GetRotY(); }
+
+protected:
+	// 防御力
+	int GuardValue = 0.f;
+	// 受けるダメージ値
+	int SubHPValue = 0.f;
+	//
+	int AttackValue = 1;
+public:
+	// 防御力アクセサ
+	void SetGuardValue(int val){ GuardValue = val; }
+	float GetGuardVal()const { return GuardValue; }
+
+	void SetSubHPValue(int val) { SubHPValue = val; }
+	int GetSubHPVal()const { return SubHPValue; }
 };
 

@@ -197,7 +197,12 @@ void SecBossScene::Update()
 		m_DepositCreate = TRUE;
 		Deposit_->SetDestroyF(true);//エフェクト生成用
 	}
-	
+	if(TogemaruAct::TogemaruDeathF)
+	{
+		Deposit_->SetDestroyBoss(true);
+		Deposit_->SetParPos(boss_->GetPos());
+		Deposit_->SetDestroyF(true);//エフェクト生成用
+	}
 	if(m_DepositCreate)
 	{
 		//完全に透明になったら破棄

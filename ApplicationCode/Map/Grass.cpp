@@ -1,4 +1,5 @@
 #include "Grass.h"
+#include"Collision.h"
 #include "Shapes.h"
 #include "SafeDelete.h"
 
@@ -51,7 +52,7 @@ void Grass::AlphaTest(const Vector3& playerPos)
 {
 	float grassSize = 2.f;
 	Vector3 grassPos = grass_->GetPosition();
-	if (grassPos.x + grassSize >= playerPos.x && grassPos.x - grassSize <= playerPos.x && grassPos.z >= playerPos.z) {
+	if (Collision::GetIns()->HitCircle({ grassPos.x, grassPos.z }, 1.0f, { playerPos.x, playerPos.z }, 2.0f)) {
 		grass_->SetColor({ 1.f, 1.f, 1.f, 0.5f });
 	}
 	else {

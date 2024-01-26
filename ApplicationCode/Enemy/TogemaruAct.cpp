@@ -15,7 +15,7 @@ Vector3 TogemaruAct::cameraPos = {};
 Vector3 TogemaruAct::oldCameraPos = {};
 Vector3 TogemaruAct::DefaultPos= {};
 bool TogemaruAct::depositDelF = false;
-
+bool TogemaruAct::TogemaruDeathF = false;
 TogemaruAct::AppearState TogemaruAct::StateArray[TogemaruAct::StateName::P_Num] =
 {
 	{TogemaruAct::P1,&TogemaruAct::Phase1},
@@ -602,26 +602,35 @@ bool TogemaruAct::Appear()
 
 void TogemaruAct::Death()
 {
-	constexpr float shakeVibration = 1.f;
+	constexpr float shakeVibration = 3.f;
 	anime_name_ = AnimeName::ROLE;
-	shakeT++;
-	shakeXVal = sinf(PI * 2 / 2 * shakeT) * shakeVibration;
-	
-	if (shakeT > 90) {
-		shakeXVal = 0;
-		shakeYVal = 0;
+	dshakeT++;
+	dshakeXVal = sinf(PI * 2 / 2 * dshakeT) * shakeVibration;
+
+	if (dshakeT > 90) {
+		dshakeXVal = 0;
+		dshakeYVal = 0;
 		DeathSmallF = true;
 	}
 	else
 	{
-		Pos_.x += shakeXVal;
-		Pos_.z += shakeYVal;
+		constexpr float radians = PI / PI_180;
+		constexpr float shakeInter = 2.f;
+
+		//Pos_.x += sin(dshakeT * radians) / shakeInter;
 	}
 	if (DeathSmallF) {
-		Scl_.x -= 0.01f;
-		Scl_.y -= 0.01f;
-		shakeT = 0;
+		Scl_.x -= 0.001f;
+		Scl_.y -= 0.001f;
+
+		dshakeT = 0;
+
 	}
+	if (Scl_.x <= 0.f) {
+		TogemaruDeathF = true;
+	}
+	Scl_.x = std::clamp(Scl_.x, 0.f, 1.f);
+	Scl_.y = std::clamp(Scl_.y, 0.f, 1.f);
 }
 
 void (TogemaruAct::* TogemaruAct::ActionList[])() =

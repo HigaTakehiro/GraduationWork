@@ -1,7 +1,7 @@
 #include "BossBase.h"
 
 #include <algorithm>
-
+#include"ExternalFileLoader.h"
 #include "Collision.h"
 #include "Easing.h"
 #include "Helper.h"
@@ -56,6 +56,7 @@ void BossBase::HPUiInit()
 
 	//m_HpTex_Frame->SetColor(XMFLOAT3(0, 0, 0));
 	m_HpTex_Inner->SetColor(XMFLOAT3(1, 1, 0));
+	
 }
 
 void BossBase::HPUiUpda()
