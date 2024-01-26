@@ -55,7 +55,9 @@ void SceneManager::Finalize() {
 	if (!isSkillScene_) {
 		nowScene->Finalize();
 	}
-	skillScene_->Finalize();
+	if (skillScene_ != nullptr) {
+		skillScene_->Finalize();
+	}
 	//ベースシーン解放
 	safe_delete(nowScene);
 	safe_delete(skillScene_);

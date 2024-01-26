@@ -77,10 +77,10 @@ public: //メンバ関数
 	void SetPos(const Vector2& pos) { pos_ = pos; }
 
 	/// <summary>
-	/// 説明パネル解放処理
+	/// 説明文処理
 	/// </summary>
 	/// <param name="cursorPos">カーソル座標</param>
-	void TextPanelOpen(Vector2 cursorPos);
+	void TextOpen(Vector2 cursorPos);
 
 	/// <summary>
 	/// パネルにカーソルが触れているかどうか
@@ -101,29 +101,37 @@ public: //メンバ関数
 	/// <returns>ステータス上昇数値</returns>
 	int32_t GetStatusUpNum() { return num_; }
 
+	/// <summary>
+	/// スキル説明文読み込み処理
+	/// </summary>
+	void SkillTextLoad();
+
 private: //メンバ変数
 	//スキル名
 	std::wstring skillName_;
+	//スキル説明文
+	std::wstring skillText_;
+	//描画スキル説明文
+	std::wstring drawText_;
 	//スキル取得フラグ
 	bool isSkillGet_;
 	//取得可能状態フラグ
 	bool isActive_;
+	//パネル選択フラグ
+	bool isSelect_;
 
 	//スキルパネルスプライト
 	std::unique_ptr<Sprite> skillPanel_;
-	//説明パネルスプライト
-	std::unique_ptr<Sprite> textPanel_;
-	//説明パネル開放時間
-	float panelOpenTimer_;
 	//テキスト描画クラス
 	TextDraw* text_;
 	//座標
 	Vector2 pos_;
-	//説明パネルサイズ
-	Vector2 textPanelSize_;
 	//ステータス上昇数値
 	int32_t num_;
 	//スキルタイプ
 	SkillType skillType_;
+	//説明文表示タイマー
+	int32_t drawTimer_;
+	int32_t drawTime_;
 };
 

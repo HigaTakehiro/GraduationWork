@@ -43,3 +43,27 @@ std::wstring ExternalFileLoader::StringToWstring(const std::string& text)
 
 	return oRet;
 }
+
+std::string ExternalFileLoader::ReplaceStr(std::string& replacedStr, std::string fromStr, std::string toStr)
+{
+	const int32_t pos = replacedStr.find(fromStr);
+	const int32_t len = fromStr.length();
+
+	if (pos == std::string::npos || fromStr.empty()) {
+		return replacedStr;
+	}
+
+	return replacedStr.replace(pos, len, toStr);
+}
+
+std::wstring ExternalFileLoader::ReplaceWstr(std::wstring& replacedStr, std::wstring fromStr, std::wstring toStr)
+{
+	const int32_t pos = replacedStr.find(fromStr);
+	const int32_t len = fromStr.length();
+
+	if (pos == std::string::npos || fromStr.empty()) {
+		return replacedStr;
+	}
+
+	return replacedStr.replace(pos, len, toStr);
+}

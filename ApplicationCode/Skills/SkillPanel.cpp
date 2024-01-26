@@ -2,6 +2,7 @@
 #include "SafeDelete.h"
 #include "ImageManager.h"
 #include "Vector3.h"
+#include "ExternalFileLoader.h"
 
 SkillPanel::~SkillPanel()
 {
@@ -39,15 +40,10 @@ void SkillPanel::Initialize(const std::wstring& skillName, const Vector2& pos, S
 	}
 	//ステータス上昇数値をセット
 	num_ = num;
+	drawTime_ = 0;
+	SkillTextLoad();
 
-	skillPanel_->SetSize({ 96, 64 });
-	//説明パネルスプライト
-	textPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, pos_, { 1.0f, 1.0f, 1.0f, 1.f }, { 0.5f, 0.5f });
-	//タイマー初期化
-	panelOpenTimer_ = 0;
-	//説明パネルサイズ
-	textPanelSize_ = { 0.f, 0.f };
-	textPanel_->SetSize(textPanelSize_);
+	skillPanel_->SetSize({ 50, 50 });
 }
 
 void SkillPanel::Update(Vector2 cursorPos)
@@ -67,64 +63,125 @@ void SkillPanel::Update(Vector2 cursorPos)
 		skillPanel_->SetColor(green);
 	}
 
+	TextOpen(cursorPos);
 	skillPanel_->SetPosition(pos_);
-	textPanel_->SetPosition(textPanelPos);
-	TextPanelOpen(cursorPos);
 }
 
 void SkillPanel::SpriteDraw()
 {
 	skillPanel_->Draw();
-	textPanel_->Draw();
 }
 
 void SkillPanel::TextMessageDraw()
 {
-	D2D1_RECT_F drawRange = { pos_.x + 10.f, pos_.y, pos_.x + 40.f, pos_.y + 50.f };
+	D2D1_RECT_F drawRange = { pos_.x, pos_.y - 5.f, pos_.x + 30.f, pos_.y + 50.f };
+	D2D1_RECT_F panelNameRange = { 800, 520, 1200, 900 };
+	D2D1_RECT_F textRange = { 550, 600, 1200, 700 };
 	std::string textColor = "white";
+	if (isSelect_) {
+		text_->Draw("bestTen", textColor, skillName_, panelNameRange);
+		if (drawTime_ > 0) {
+			text_->Draw("bestTen_16", textColor, drawText_, textRange);
+		}
+		else {
+			text_->Draw("bestTen_16", textColor, skillText_, textRange);
+		}
+	}
+
 	if (!isActive_) {
 		textColor = "gray";
 	}
 	if (isSkillGet_) {
 		textColor = "yellow";
 	}
+
 	if (num_ != 0) {
 		std::wstring numText = std::to_wstring(num_);
 		text_->Draw("bestTen_16", textColor, L"+" + numText, drawRange);
 	}
+
+
 }
 
-void SkillPanel::TextPanelOpen(Vector2 cursorPos)
+void SkillPanel::TextOpen(Vector2 cursorPos)
 {
-
-	const float openTime = 30;
-	const Vector2 textPanelEndSize = { 128.f, 256.f };
+	std::string textColor = "white";
 
 	if (PanelToCursorHit(cursorPos)) {
-		if (panelOpenTimer_ < openTime) panelOpenTimer_++;
+		if (drawTimer_ < drawTime_) drawTimer_++;
+		if (drawTimer_ >= drawTime_ && skillText_.size() != drawText_.size()) {
+			drawTimer_ = 0;
+			drawText_ += skillText_.substr(drawText_.size(), 1);
+		}
+
 		if (!isActive_) {
 			skillPanel_->SetColor({ 0.6f, 0.2f, 0.2f });
 		}
 		else if (!isSkillGet_) {
 			skillPanel_->SetColor({ 0.2f, 0.2f, 0.6f });
 		}
-		float time = panelOpenTimer_ / openTime;
-		textPanelSize_ = easeIn(textPanelSize_, textPanelEndSize, time);
+		isSelect_ = true;
 	}
 	else {
-		textPanelSize_ = { 0.f, 0.f };
-		panelOpenTimer_ = 0.f;
+		isSelect_ = false;
+		drawText_.clear();
+		drawTimer_ = 0;
 	}
-	textPanel_->SetSize(textPanelSize_);
 
 }
 
 bool SkillPanel::PanelToCursorHit(Vector2 cursorPos)
 {
-	const float panelSizeX = 96 / 2;
-	const float panelSizeY = 64 / 2;
+	const float panelSizeX = 50 / 2;
+	const float panelSizeY = 50 / 2;
 
 	if (cursorPos.x >= pos_.x - panelSizeX && cursorPos.x <= pos_.x + panelSizeX && cursorPos.y >= pos_.y - panelSizeY && cursorPos.y <= pos_.y + panelSizeY) return true;
 
 	return false;
+}
+
+void SkillPanel::SkillTextLoad()
+{
+	std::string line;
+	std::string text;
+	std::stringstream stream;
+	std::wstring skillText;
+	int32_t time;
+
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("skillText.csv");
+
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+		if (word.find("#") == 0) {
+			continue;
+		}
+		if (word.find("hR") == 0 && skillType_ == HammerReturn) {
+			line_stream >> text;
+		}
+		if (word.find("hU") == 0 && skillType_ == HPUP) {
+			line_stream >> text;
+		}
+		if (word.find("aU") == 0 && skillType_ == ATKUP) {
+			line_stream >> text;
+		}
+		if (word.find("dU") == 0 && skillType_ == DEFUP) {
+			line_stream >> text;
+		}
+		if (word.find("sU") == 0 && skillType_ == SPDUP) {
+			line_stream >> text;
+		}
+		if (word.find("time") == 0) {
+			line_stream >> time;
+		}
+	}
+
+	skillText_ = ExternalFileLoader::GetIns()->StringToWstring(text);
+	drawTime_ = time;
+	if (skillType_ == HPUP || skillType_ == ATKUP || skillType_ == DEFUP || skillType_ == SPDUP) {
+		skillText_ = ExternalFileLoader::GetIns()->ReplaceWstr(skillText_, L"_n", std::to_wstring(num_));
+	}
+
 }

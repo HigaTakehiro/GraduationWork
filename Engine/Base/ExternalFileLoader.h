@@ -50,6 +50,24 @@ public: //メンバ関数
 	/// <returns>wstring型のテキスト</returns>
 	std::wstring StringToWstring(const std::string& text);
 
+	/// <summary>
+	/// 文字列置換(string)
+	/// </summary>
+	/// <param name="replacedStr">置換したい文字列</param>
+	/// <param name="fromStr">置換したい文字列</param>
+	/// <param name="toStr">置換する文字列</param>
+	/// <returns>置換後文字列</returns>
+	std::string ReplaceStr(std::string& replacedStr, std::string fromStr, std::string toStr);
+
+	/// <summary>
+	/// 文字列置換(wstring)
+	/// </summary>
+	/// <param name="replacedStr">置換したい文字列</param>
+	/// <param name="fromStr">置換したい文字列</param>
+	/// <param name="toStr">置換する文字列</param>
+	/// <returns>置換後文字列</returns>
+	std::wstring ReplaceWstr(std::wstring& replacedStr, std::wstring fromStr, std::wstring toStr);
+
 private: //静的メンバ変数
 	//デフォルトファイルパス
 	const static std::string defaultDirectory;
