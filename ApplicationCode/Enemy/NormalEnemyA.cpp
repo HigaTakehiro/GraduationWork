@@ -15,6 +15,7 @@
 #define PI 3.14
 void NormalEnemyA::Init()
 {
+	_type = Type::TypeA;
 	_status.TexSize = 3;
 	_color = XMFLOAT4(1, 1, 1, 1);
 	_status.Tex.reset(Texture::Create(ImageManager::GetIns()->USA_1, { 0,0,0 }, { 0.5f,0.5f,0.5f }, { 1,1,1,1 }));

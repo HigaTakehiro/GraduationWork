@@ -8,6 +8,7 @@
 
 void NormalEnemyB::Init()
 {
+	_type = Type::TypeB;
 	state_obj_.TexSize_ = 6;
 	state_obj_.Model_.resize(state_obj_.TexSize_);
 

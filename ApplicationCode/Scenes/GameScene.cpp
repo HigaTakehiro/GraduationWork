@@ -295,7 +295,7 @@ void GameScene::SceneChange()
 	if (schange->GetEnd() == true) {
 
 		if (StageCount::GetIns()->Now() == 4 ||
-			StageCount::GetIns()->Now() == 10 ||
+			StageCount::GetIns()->Now() == 9 ||
 			StageCount::GetIns()->Now() == 16) {
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
@@ -362,7 +362,9 @@ void GameScene::EnemyProcess()
 	for (auto i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr || Enemy->GetHP() <= 0) { continue; }
-		Vector3 EnemyPos = Enemy->GetPos();
+		Vector3 EnemyPos;
+		if (Enemy->GetType() == 0) { EnemyPos = Enemy->GetPos(); }
+		else if (Enemy->GetType() == 1) { Vector3 EnemyPos = Enemy->GetPos2(); }
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			Enemy->GetDamage();
@@ -462,11 +464,18 @@ void GameScene::EnemyProcess()
 		for (size_t i = 0; i < map_->GetEnemySize(); i++) {
 			unique_ptr<BaseEnemy>& Ene2 = map_->GetEnemy(i);
 			if (i == j || Ene1 == nullptr || Ene2 == nullptr)continue;
-			if (Collision::HitCircle(XMFLOAT2(Ene2->GetPos().x, Ene2->GetPos().z), 1.f,
-				XMFLOAT2(Ene1->GetPos().x, Ene1->GetPos().z), 1.f))
+			XMFLOAT3 Pos1;
+			XMFLOAT3 Pos2;
+			if (Ene1->GetType() == 0) { Pos1 = Ene1->GetPos(); }
+			else if (Ene1->GetType() == 1) { Pos1 = Ene1->GetPos2(); }
+			if (Ene2->GetType() == 0) { Pos2 = Ene1->GetPos(); }
+			else if (Ene2->GetType() == 1) { Pos2 = Ene1->GetPos2(); }
+			if (Collision::HitCircle(XMFLOAT2(Pos2.x,Pos2.z), 1.f,
+				XMFLOAT2(Pos1.x,Pos1.z), 1.f))
 			{
-				XMFLOAT3 pos = Ene1->GetPos();
-
+				XMFLOAT3 pos;
+				if (Ene1->GetType() == 0) { pos = Ene1->GetPos(); }
+				else if (Ene1->GetType() == 1) { pos = Ene1->GetPos2(); }
 				pos.x += sin(atan2f((Ene1->GetPos().x - Ene2->GetPos().x), (Ene1->GetPos().z - Ene2->GetPos().z))) * 0.3f;
 				pos.z += cos(atan2f((Ene1->GetPos().x - Ene2->GetPos().x), (Ene1->GetPos().z - Ene2->GetPos().z))) * 0.3f;
 
