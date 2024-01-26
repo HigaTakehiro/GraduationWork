@@ -13,11 +13,18 @@ using namespace DirectX;
 class BaseEnemy
 {
 public:
+	
+
 protected:
+
+	enum Type
+	{
+		TypeA,
+		TypeB,
+	}_type;
 
 	/*敵の各パラメータ*/
 	//*************************************
-
 	struct Status
 	{
 		//体力
@@ -201,6 +208,8 @@ public:
 	XMFLOAT3 GetPos2() const;
 	XMFLOAT3 GetRot2() const;
 	XMFLOAT3 GetScl2() const;
+
+	int GetType() { return _type; }
 
 public:
 	void SetPos2(Vector3 pos) { state_obj_.Pos_ = pos; }
