@@ -40,6 +40,11 @@ public: //メンバ関数
 	void AddOreCount() { oreCount_++; }
 
 	/// <summary>
+	/// 鉱石取得数リセット
+	/// </summary>
+	void ResetOreCount() { oreCount_ = 0; }
+
+	/// <summary>
 	/// 反発設定
 	/// </summary>
 	/// <param name="vec"></param>
