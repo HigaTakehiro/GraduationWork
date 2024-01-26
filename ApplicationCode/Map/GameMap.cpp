@@ -3,6 +3,7 @@
 #include "ExternalFileLoader.h"
 #include "Easing.h"
 #include "NormalEnemyA.h"
+#include "NormalEnemyB.h"
 #include "SoundManager.h"
 #include "SafeDelete.h"
 #include"KeyInput.h"
@@ -59,6 +60,16 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 			gameenemyscount_ += ENEMYCOUNT;
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
 			CreateEnemy(player, Pos, ENEMYCOUNT, COUNT);
+			continue;
+		}
+
+		if (word.find("ENEMY2") == 0) {
+			getline(line_stream, word, ',');
+			ENEMYCOUNT = (int)std::atof(word.c_str());
+			enemyscount_ = ENEMYCOUNT;
+			gameenemyscount_ += ENEMYCOUNT;
+			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
+			CreateEnemy2(player, Pos, ENEMYCOUNT, COUNT);
 			continue;
 		}
 
@@ -300,6 +311,26 @@ void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy, int
 {
 	for (size_t i = 0; i < Enemy; i++) {
 		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyA>();
+		Enemy1->Init();
+		Enemy1->SetPlayerIns(player);
+		XMFLOAT3 MapMaxPos = { MapPos.x + limit_.x,100.f,MapPos.z + limit_.z };
+		XMFLOAT3 MapMinPos = { MapPos.x - limit_.y,100.f,MapPos.z - limit_.w };
+		Enemy1->SetOverPos(MapMaxPos, MapMinPos);
+		Enemy1->SetCount(Count);
+		//óêêîê∂ê¨
+		std::random_device rnd;
+		std::mt19937 mt(rnd());
+		std::uniform_int_distribution<> randX(-9, 9);
+		std::uniform_int_distribution<> randZ(-8, 8);
+		Enemy1->SetPos({ MapPos.x + (float)randX(mt),MapPos.y,MapPos.z + (float)randZ(mt) });
+		enemys_.push_back(move(Enemy1));
+	}
+}
+
+void GameMap::CreateEnemy2(Player* player, const XMFLOAT3& MapPos, int Enemy, int Count)
+{
+	for (size_t i = 0; i < Enemy; i++) {
+		unique_ptr<BaseEnemy> Enemy1 = make_unique<NormalEnemyB>();
 		Enemy1->Init();
 		Enemy1->SetPlayerIns(player);
 		XMFLOAT3 MapMaxPos = { MapPos.x + limit_.x,100.f,MapPos.z + limit_.z };

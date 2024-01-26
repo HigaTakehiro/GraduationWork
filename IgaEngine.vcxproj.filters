@@ -548,9 +548,6 @@
     <ClInclude Include="ApplicationCode\Map\Stairs.h">
       <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationCode\Map\IntermediateBase.h">
-      <Filter>ソース ファイル\ApplicationCode\GameMap</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Base\Helper.h" />
     <ClInclude Include="ApplicationCode\Scenes\BossScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
@@ -614,6 +611,9 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Skills\SPDUpSkill.h">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Map\IntermediateBase.h">
+      <Filter>ソース ファイル\ApplicationCode\Maths</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
