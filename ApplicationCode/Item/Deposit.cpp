@@ -23,6 +23,7 @@ void Deposit::Initialize(Vector3 pos,bool isDestroy,Camera*camera)
 	if (isDestroy) {
 		this->isDestroy = isDestroy;
 		color_ = { 1,1,1,1 };
+		if(!BossDestroy)
 		parPos_ = pos;//¶¬À•W
 		desParticle_ = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera);
 	}

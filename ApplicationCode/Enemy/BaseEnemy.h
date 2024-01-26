@@ -16,7 +16,7 @@ public:
 	
 
 protected:
-
+	
 	int type_ = 0;
 
 	enum Type {
@@ -217,5 +217,21 @@ public:
 	void SetPos(Vector3 pos) { _status.Pos = pos; }
 
 	virtual void SetPosDeb(Vector3 pos) = 0;
+
+protected:
+	// 防御力
+	float GuardValue = 0.f;
+	// 受けるダメージ値
+	int SubHPValue = 0.f;
+public:
+	// 防御力アクセサ
+	void SetGuardValue(float val) { GuardValue = val; }
+	float GetGuardVal()const { return GuardValue; }
+
+	void SetSubHPValue(int val) { SubHPValue = val; }
+	int GetSubHPVal()const { return SubHPValue; }
+
+	
+
 };
 

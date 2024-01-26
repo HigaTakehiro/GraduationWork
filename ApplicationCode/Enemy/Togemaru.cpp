@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "ExternalFileLoader.h"
 #include "Helper.h"
 #include "Shapes.h"
 
@@ -32,11 +33,28 @@ void Togemaru::Init()
 	m_Body->SetHitRadius(0.5f);
 	m_Body->SetScale({ 0.020f, 0.050f, 0.040f });
 
-	UI_Init();
+	std::stringstream stream;
+	std::string line;
 
-	m_HP = 10;
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Boss.csv");
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+		if (word.find("Togemaru") == 0) {
+			getline(line_stream, word, ' ');
+			m_HP = (int)std::atof(word.c_str());
+			getline(line_stream, word, ' ');
+			GuardValue = (int)std::atof(word.c_str());
+			getline(line_stream, word, ' ');
+			AttackValue = (float)std::atof(word.c_str());
+			continue;
+		}
+	}
 	BossMaxHP = m_HP;
 	names = "Togemaru";
+	UI_Init();
 	Action = new TogemaruAct();
 }
 
@@ -92,6 +110,7 @@ void Togemaru::UI_Upda()
 
 void Togemaru::UI_Draw()
 {
+	if (TogemaruAct::TogemaruDeathF)return;
 	for (size_t i = 0; i < m_ScaleArray; i++) {
 		m_ScaleSizeUI[i]->Draw();
 	}

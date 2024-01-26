@@ -95,12 +95,14 @@ private:
 	int32_t particleCreateCool_;//‚¸‚éŒ«‚¢‚ª‚±‚¤‚Å‚à‚µ‚È‚¢‚ÆŽQÆ‚ ‚Á‚¿‚±‚Á‚¿s‚Á‚Ä•¡ŽG‚·‚¬‚é
 	Camera* camera_ = nullptr;
 	Vector3 parPos_ = {};
-	//zÎ‚ÌF
+	bool BossDestroy;//zÎ‚ÌF
 	DirectX::XMFLOAT4 color_={1,1,1,1};
 public:
+
+	void SetDestroyBoss(bool f) { BossDestroy = f; }
 	void SetCameraIns(Camera* ins) { camera_ = ins; }
 	void SetDestroyF(bool f) { /* if(particleCreateCool_ > 60)*/ { destroyF_ = f;/* particleCreateCool_ = 0;*/ } }
-
+	void SetParPos(Vector3 pos) { parPos_ = pos; }
 	float GetDepositAlpha()const { return color_.w; }
 	void DestroyEffect();
 	void ParticleDraw();

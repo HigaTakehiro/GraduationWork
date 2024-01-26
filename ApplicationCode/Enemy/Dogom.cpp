@@ -12,6 +12,7 @@
 #include"Helper.h"
 #include "PadInput.h"
 #include "SoundManager.h"
+#include <ExternalFileLoader.h>
 #define BOSSMAP_C 0.f
 #define BOSSMAP_H 12.f
 #define BOSSMAP_W 15.f
@@ -79,6 +80,25 @@ void Dogom::Init()
 
 	DeathAct = &Dogom::Death_Non;
 
+	std::stringstream stream;
+	std::string line;
+
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("Boss.csv");
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+		if (word.find("Dogom") == 0) {
+			getline(line_stream, word, ' ');
+			m_HP = (int)std::atof(word.c_str());
+			getline(line_stream, word, ' ');
+			GuardValue = (int)std::atof(word.c_str());
+			getline(line_stream, word, ' ');
+			AttackValue = (float)std::atof(word.c_str());
+			continue;
+		}
+	}
 	BossMaxHP = m_HP;
 }
 

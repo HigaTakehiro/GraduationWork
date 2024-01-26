@@ -179,6 +179,9 @@ private:
 	bool shakeF = FALSE;
 	float shakeXVal=0.f, shakeYVal=0.f;
 	float shakeT = 0.f;
+
+	float dshakeXVal = 0.f, dshakeYVal = 0.f;
+	float dshakeT = 0.f;
 public:
 	//s“®‘JˆÚ
 	void Transition();
@@ -186,6 +189,7 @@ public:
 	static Vector3 cameraPos;//ƒJƒƒ‰À•W
 	static Vector3 oldCameraPos;
 	static Vector3 DefaultPos;
+	static bool TogemaruDeathF;
 	void ViewShake();
 
 	bool GetRole()const { return RoleF; }
