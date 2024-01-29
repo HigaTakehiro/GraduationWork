@@ -167,7 +167,7 @@ private:
 	//草
 	list<unique_ptr<Grassland>> grass_;
 	//後の宝箱
-	unique_ptr<TreasureBox> box_;
+	list<unique_ptr<TreasureBox>> box_;
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
 
@@ -203,7 +203,7 @@ private:
 	//岩の座標
 	XMFLOAT3 rockPos_{};
 
-	XMFLOAT4 limit_ = { 10.f,10.f,8.8f,11.f };
+	XMFLOAT4 limit_ = { 10.f,10.f,8.8f,12.f };
 
 	bool display_ = true;
 };

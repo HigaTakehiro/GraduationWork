@@ -5,14 +5,23 @@
 #include "ExternalFileLoader.h"
 #include"PadInput.h"
 #include<SafeDelete.h>
+#include <random>
 
 void TreasureBox::Initialize(int num, const XMFLOAT3& MapPos, Player* player, int Count)
 {
+	//óêêîê∂ê¨
+	std::random_device rnd2;
+	std::mt19937 mt2(rnd2());
+	std::uniform_int_distribution<> randX(-9, 9);
+	std::uniform_int_distribution<> randZ(-8, 8);
+	float posX = MapPos.x + (float)randX(mt2);
+	float posZ = MapPos.z + (float)randZ(mt2);
+
 	player_ = player;
-	pos_ = MapPos;
+	pos_.x = posX;
+	pos_.z = posZ;
 	pos_.y = -2.5f;
-	uipos_ = MapPos;
-	uipos_.y = -2.5f;
+	uipos_ = pos_;
 	uipos_.y += 2;
 	count_ = Count;
 

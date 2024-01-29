@@ -6,7 +6,7 @@
 Key::~Key()
 {
 	for (int i = 0; i < 2; i++) {
-		safe_delete(model[2]);
+		safe_delete(model[i]);
 	}
 	safe_delete(key_);
 }
