@@ -168,6 +168,7 @@ void TutorialScene::Update()
 
 	(this->*FuncTable[phase_])();
 	if (map_->GetHit() == true) {
+		//player_->test();
 		ShakeCount++;
 		if (ShakeCount == 1) {
 			shake_->SetIwaFlag(true);
