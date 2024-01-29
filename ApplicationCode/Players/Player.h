@@ -206,6 +206,12 @@ public: //ƒƒ“ƒoŠÖ”
 	int32_t GetATK() { return atk_; }
 
 	/// <summary>
+	/// ƒ_ƒ[ƒWŒvZ‚Ég—p‚·‚éUŒ‚—Í‚ğæ“¾
+	/// </summary>
+	/// <returns>UŒ‚—Í</returns>
+	int32_t GetDamageATK();
+
+	/// <summary>
 	/// –hŒä—Í‚ğæ“¾
 	/// </summary>
 	/// <returns>–hŒä—Í</returns>
@@ -380,6 +386,8 @@ private: //ƒƒ“ƒo•Ï”
 	int32_t maxOreCount_;
 	//UŒ‚—Í
 	int32_t attackPoint_;
+	//zÎæ“¾”‚É‰‚¶‚½UŒ‚—Í”{—¦
+	float oreCountMag_[6];
 	//zÎæ“¾‚²‚Æ‚É‘å‚«‚­‚·‚éƒTƒCƒY
 	Vector3 hammerSizeUp_;
 	//zÎæ“¾‚²‚Æ‚Ì‰ñ“]‘¬“xŒW”

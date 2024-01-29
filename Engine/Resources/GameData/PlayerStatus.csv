@@ -19,12 +19,14 @@ maxHS 0.145
 refPower 0.5
 #攻撃力
 atk 1
+#防御力
+def 1
+#素早さ
+spd 1
 #鉱石の最大取得数
-maxOre 4
+maxOre 6
 #鉱石取得ごとの回転速度係数
 hammerRotCoeff 0.8
-#鉱石取得時、移動速度低下係数
-
 #鉱石取得ごとの大きさ
 sizeUp 0.2 0.2 0.2
 #アニメーション待機時間
@@ -35,3 +37,5 @@ epUp 2
 MagEp 0.0
 #無敵時間
 HitCool 30
+#鉱石取得ごとのダメージ倍率
+oreMagAtk 1.1 1.2 1.4 1.6 1.8 2.0
