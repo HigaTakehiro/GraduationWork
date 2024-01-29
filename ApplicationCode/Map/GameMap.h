@@ -128,6 +128,8 @@ public:
 
 	bool ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease);
 
+	void HammerLimit(XMFLOAT3& Pos);
+
 	/// <summary>
 	/// z–¬ƒŠƒXƒg‚ğæ“¾
 	/// </summary>
@@ -201,7 +203,7 @@ private:
 	//Šâ‚ÌÀ•W
 	XMFLOAT3 rockPos_{};
 
-	XMFLOAT4 limit_ = { 10.f,10.f,8.8f,12.f };
+	XMFLOAT4 limit_ = { 10.f,10.f,8.8f,11.f };
 
 	bool display_ = true;
 };

@@ -349,7 +349,6 @@ private: //メンバ関数
 	/// 死亡演出
 	/// </summary>
 	void DeadAction();
-
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -524,6 +523,8 @@ private: //メンバ変数
 	bool look_ = false;
 	bool animationflag_ = false;
 	bool sestop_ = true;
+
+
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }

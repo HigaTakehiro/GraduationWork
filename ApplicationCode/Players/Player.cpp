@@ -5,6 +5,7 @@
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
 #include "SoundManager.h"
+#include"Collision.h"
 
 void Player::Initialize()
 {
@@ -564,7 +565,7 @@ void Player::HammerGet()
 {
 	if (isHammerReflect_) {
 		//HammerReturn();
-		if (player_->GetIsHit() && hammer_->GetIsHit()) {
+		if (Collision::GetIns()->HitCircle({ pos_.x,pos_.z }, 2.f, { hammerPos_.x,hammerPos_.z }, 1.f)) {
 			hammer_->SetParent(player_.get());
 			hammer_->SetPosition(initHammerPos_);
 			hammer_->SetScale(initHammerScale_);
@@ -753,6 +754,7 @@ void Player::DeadAction()
 		isDead_ = true;
 	}
 }
+
 
 void Player::TutorialUpdate(bool Stop, bool NotAttack)
 {
