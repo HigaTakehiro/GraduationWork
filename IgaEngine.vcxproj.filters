@@ -359,6 +359,15 @@
     <ClCompile Include="ApplicationCode\Skills\SPDUpSkill.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\LastBoss.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Enemy\LastBossAct.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Scenes\LastBossScene.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -617,6 +626,11 @@
     </ClInclude>
     <ClInclude Include="ApplicationCode\Maths\DamageMath.h">
       <Filter>ソース ファイル\ApplicationCode\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Enemy\LastBoss.h" />
+    <ClInclude Include="ApplicationCode\Enemy\LastBossAct.h" />
+    <ClInclude Include="ApplicationCode\Scenes\LastBossScene.h">
+      <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

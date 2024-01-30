@@ -1,7 +1,7 @@
 #include "SceneManager.h"
 
 #include "SecBossScene.h"
-
+#include"LastBossScene.h"
 BaseScene* SceneManager::nowScene = nullptr;
 BaseScene* SceneManager::skillScene_ = nullptr;
 int32_t SceneManager::stageNo_ = 1;
@@ -127,6 +127,10 @@ void SceneManager::SceneChange(SceneName scene) {
 		break;
 	case SceneName::Boss2:
 		nowScene = new SecBossScene();
+		NowSceneInitialize();
+		break;
+	case SceneName::Boss3:
+		nowScene = new LastBossScene();
 		NowSceneInitialize();
 		break;
 	case SceneName::Result:

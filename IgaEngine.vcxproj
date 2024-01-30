@@ -165,6 +165,8 @@
     <ClCompile Include="ApplicationCode\Enemy\BossBase.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\BossCamerawork.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\Dogom.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\LastBoss.cpp" />
+    <ClCompile Include="ApplicationCode\Enemy\LastBossAct.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\MunniAction.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyA.cpp" />
     <ClCompile Include="ApplicationCode\Enemy\NormalEnemyB.cpp" />
@@ -186,6 +188,7 @@
     <ClCompile Include="ApplicationCode\Scenes\BossScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\GameScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\IBScene.cpp" />
+    <ClCompile Include="ApplicationCode\Scenes\LastBossScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\ResultScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\SceneChange.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\SceneManager.cpp" />
@@ -251,6 +254,8 @@
     <ClInclude Include="ApplicationCode\Enemy\BossBase.h" />
     <ClInclude Include="ApplicationCode\Enemy\BossCamerawork.h" />
     <ClInclude Include="ApplicationCode\Enemy\Dogom.h" />
+    <ClInclude Include="ApplicationCode\Enemy\LastBoss.h" />
+    <ClInclude Include="ApplicationCode\Enemy\LastBossAct.h" />
     <ClInclude Include="ApplicationCode\Enemy\MunniAction.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyA.h" />
     <ClInclude Include="ApplicationCode\Enemy\NormalEnemyB.h" />
@@ -275,6 +280,7 @@
     <ClInclude Include="ApplicationCode\Scenes\BossScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\GameScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\IBScene.h" />
+    <ClInclude Include="ApplicationCode\Scenes\LastBossScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\ResultScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\SceneChange.h" />
     <ClInclude Include="ApplicationCode\Scenes\SceneManager.h" />

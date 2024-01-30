@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include"CollisionPrimitive.h"
-
+#include "DamageMath.h"
 #include "TogemaruAct.h"
 
 class BossBase
