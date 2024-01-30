@@ -37,7 +37,7 @@ void LastBossAct::Move()
 	if (++actionCount % ActionInter == 0)
 	{
 		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt) < 0)
+		if(randact(mt) == 0)
 		{
 
 			Vector3 posList1[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) };
