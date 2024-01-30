@@ -76,9 +76,10 @@ void GameMap::LoadCsv(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, 
 		if (word.find("BOX") == 0) {
 			getline(line_stream, word, ',');
 			int num = (int)std::atof(word.c_str());
-			box_ = make_unique<TreasureBox>();
+			unique_ptr<TreasureBox> Box = make_unique<TreasureBox>();
 			Pos = { startX * NEXTVERT ,0.f,30.f * NEXTHORY };
-			box_->Initialize(num, Pos, player, COUNT);
+			Box->Initialize(num, Pos, player, COUNT);
+			box_.push_back(move(Box));
 			continue;
 		}
 
@@ -388,7 +389,7 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		GrassLand->grass_->Update(player->GetPos());
 	}
 
-	if (GameEnemyAllKill() || (box_!=nullptr&&box_->GetLock() == true)) {
+	if (GameEnemyAllKill()) {
 		for (unique_ptr<Bridge>& Bridge : bridgeside) {
 			Bridge->invisible_ = false;
 		}
@@ -398,13 +399,24 @@ void GameMap::Update(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, f
 		}
 	}
 
+	for (unique_ptr<TreasureBox>& Box : box_) {
+		if ((Box != nullptr && Box->GetLock() == true)) {
+			for (unique_ptr<Bridge>& Bridge : bridgeside) {
+				Bridge->invisible_ = false;
+			}
 
+			for (unique_ptr<Bridge>& Bridge : bridgevert) {
+				Bridge->invisible_ = false;
+			}
+		}
+		if (Box != nullptr) {
+			Box->Update();
+		}
+	}
 	if (!stairs_.get()) { return; }
 	stairs_->Update();
 
-	if (box_ != nullptr) {
-		box_->Update();
-	}
+	
 
 	for (int32_t i = 0; i < enemys_.size(); i++) {
 		if (enemys_[i] == nullptr) { continue; }
@@ -435,10 +447,11 @@ void GameMap::MapDraw()
 			GrassLand->grass_->Draw();
 		}
 	}
-
-	if (box_ != nullptr) {
-		if (box_->GetCont() != count_) { return; }
-		box_->Draw();
+	for (unique_ptr<TreasureBox>& Box : box_) {
+		if (Box != nullptr) {
+			if (Box->GetCont() != count_) {continue; }
+			Box->Draw();
+		}
 	}
 }
 
@@ -474,7 +487,7 @@ void GameMap::Finalize()
 	for (int32_t i = 0; i < enemys_.size(); i++) {
 		enemys_[i].release();
 	}
-	box_.release();
+	box_.clear();
 }
 
 void GameMap::CheckHitTest(Player* player)
@@ -701,34 +714,27 @@ bool GameMap::ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease)
 		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease) {
 			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
-			
 			return true;
 		}
-		if (pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease) {
+		else if (pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease) {
 			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 
-		if (pos.z >= Map->stagePos_.z + limit_.z && isHammerRelease) {
+		else if (pos.z >= Map->stagePos_.z + limit_.z - 1 && isHammerRelease) {
 			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
 
-		if (pos.z <= Map->stagePos_.z - limit_.w - 3 && isHammerRelease) {
+		else if (pos.z <= Map->stagePos_.z - limit_.w - 2 && isHammerRelease) {
 			wallHit_ = true;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 			return true;
 		}
-		if (pos.x >= Map->stagePos_.x + limit_.x + 1 && isHammerRelease ||
-			pos.x <= Map->stagePos_.x - limit_.y - 1 && isHammerRelease ||
-			pos.z >= Map->stagePos_.z + limit_.z && isHammerRelease ||
-			pos.z <= Map->stagePos_.z - limit_.w - 3 && isHammerRelease)
-		{
-			wallHit_ = true;
-		}
-		else { wallHit_ = false; }
+		
+		else{ wallHit_ = false; }
 
 	}
 

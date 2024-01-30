@@ -152,6 +152,13 @@ void TutorialScene::Update()
 		}
 	}
 
+	if (KeyInput::GetIns()->TriggerKey(DIK_9)) {
+		player_->AddEP(1);
+	}
+	if (player_->GetIsHammerRelease()) {
+		int32_t damage = player_->GetDamageATK();
+	}
+
 	for (int32_t i = 0; i < map_->GetDepositsSize(); i++) {
 		std::unique_ptr<Deposit>& deposit = map_->GetDeposit(i);
 		if (deposit != nullptr) {
@@ -161,6 +168,7 @@ void TutorialScene::Update()
 
 	(this->*FuncTable[phase_])();
 	if (map_->GetHit() == true) {
+		//player_->test();
 		ShakeCount++;
 		if (ShakeCount == 1) {
 			shake_->SetIwaFlag(true);

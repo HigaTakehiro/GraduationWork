@@ -206,6 +206,12 @@ public: //メンバ関数
 	int32_t GetATK() { return atk_; }
 
 	/// <summary>
+	/// ダメージ計算に使用する攻撃力を取得
+	/// </summary>
+	/// <returns>攻撃力</returns>
+	int32_t GetDamageATK();
+
+	/// <summary>
 	/// 防御力を取得
 	/// </summary>
 	/// <returns>防御力</returns>
@@ -343,7 +349,6 @@ private: //メンバ関数
 	/// 死亡演出
 	/// </summary>
 	void DeadAction();
-
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -380,6 +385,8 @@ private: //メンバ変数
 	int32_t maxOreCount_;
 	//攻撃力
 	int32_t attackPoint_;
+	//鉱石取得数に応じた攻撃力倍率
+	float oreCountMag_[6];
 	//鉱石取得ごとに大きくするサイズ
 	Vector3 hammerSizeUp_;
 	//鉱石取得ごとの回転速度係数
@@ -516,6 +523,8 @@ private: //メンバ変数
 	bool look_ = false;
 	bool animationflag_ = false;
 	bool sestop_ = true;
+
+
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }

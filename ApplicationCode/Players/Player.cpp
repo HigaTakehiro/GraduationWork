@@ -5,6 +5,7 @@
 #include "ExternalFileLoader.h"
 #include "PadInput.h"
 #include "SoundManager.h"
+#include"Collision.h"
 
 void Player::Initialize()
 {
@@ -88,6 +89,9 @@ void Player::Initialize()
 	epBarBack_->SetSize({ epBarSize_, 20 });
 
 	hitCoolTime_ = hitCoolTimer_ = 30;
+	for (int32_t i = 0; i < 6; i++) {
+		oreCountMag_[i] = 1.f;
+	}
 
 	PlayerStatusSetting();
 }
@@ -218,11 +222,14 @@ void Player::PlayerStatusSetting() {
 	float ref;
 	int32_t hp;
 	int32_t atk;
+	int32_t def;
+	int32_t spd;
 	int32_t maxOreCount;
 	int32_t animeSpeed;
 	int32_t ep;
 	float magEp;
 	float hammerRotCoeff;
+	float oreMagAtk[6];
 	int32_t hitCoolTime;
 	Vector3 sizeUp;
 	std::stringstream stream;
@@ -279,6 +286,12 @@ void Player::PlayerStatusSetting() {
 		if (word.find("atk") == 0) {
 			line_stream >> atk;
 		}
+		if (word.find("def") == 0) {
+			line_stream >> def;
+		}
+		if (word.find("spd") == 0) {
+			line_stream >> spd;
+		}
 		if (word.find("maxOre") == 0) {
 			line_stream >> maxOreCount;
 		}
@@ -305,6 +318,11 @@ void Player::PlayerStatusSetting() {
 		if (word.find("maxHS") == 0) {
 			line_stream >> maxHammerSpeed;
 		}
+		if (word.find("oreMagAtk") == 0) {
+			for (int32_t i = 0; i < 6; i++) {
+				line_stream >> oreMagAtk[i];
+			}
+		}
 	}
 
 	//初期化
@@ -312,6 +330,9 @@ void Player::PlayerStatusSetting() {
 	initRot_ = rot_ = rot;
 	scale_ = scale;
 	hp_ = maxHp_ = initHP_ = hp;
+	atk_ = atk;
+	def_ = def;
+	spd_ = spd;
 	skillPoint_ = 0;
 
 	moveSpeed_ = moveSpeed;
@@ -333,6 +354,9 @@ void Player::PlayerStatusSetting() {
 	levelUpEp_ = ep;
 	magEp_ = magEp;
 	hitCoolTime_ = hitCoolTimer_ = hitCoolTime;
+	for (int32_t i = 0; i < 6; i++) {
+		oreCountMag_[i] = oreMagAtk[i];
+	}
 
 	player_->SetPosition(pos_);
 	player_->SetScale(scale_);
@@ -541,7 +565,7 @@ void Player::HammerGet()
 {
 	if (isHammerReflect_) {
 		//HammerReturn();
-		if (player_->GetIsHit() && hammer_->GetIsHit()) {
+		if (Collision::GetIns()->HitCircle({ pos_.x,pos_.z }, 2.f, { hammerPos_.x,hammerPos_.z }, 1.f)) {
 			hammer_->SetParent(player_.get());
 			hammer_->SetPosition(initHammerPos_);
 			hammer_->SetScale(initHammerScale_);
@@ -731,6 +755,7 @@ void Player::DeadAction()
 	}
 }
 
+
 void Player::TutorialUpdate(bool Stop, bool NotAttack)
 {
 	HitCoolTime();
@@ -768,6 +793,24 @@ bool Player::OreCountOverMaxCount()
 	if (oreCount_ >= maxOreCount_) return true;
 
 	return false;
+}
+
+int32_t Player::GetDamageATK()
+{
+	const float hammerReleaseBonus = 1.5f;
+	int32_t atk = 1;
+	//攻撃力ステータスを参照し代入
+	atk = atk_;
+	//攻撃力に鉱石取得数に応じたボーナスを乗算
+	if (oreCount_ != 0) {
+		if (oreCount_ > 6) {
+			oreCount_ = 6;
+		}
+		atk *= oreCountMag_[oreCount_ - 1];
+	}
+	//さらにそれがハンマー投げ状態だった場合さらにダメージボーナス
+	if (isHammerRelease_) atk *= hammerReleaseBonus;
+	return atk;
 }
 
 void Player::TextUIDraw()

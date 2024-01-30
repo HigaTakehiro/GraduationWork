@@ -128,6 +128,8 @@ public:
 
 	bool ReflectHammer(XMFLOAT3& Pos, bool isHammerRelease);
 
+	void HammerLimit(XMFLOAT3& Pos);
+
 	/// <summary>
 	/// 鉱脈リストを取得
 	/// </summary>
@@ -165,7 +167,7 @@ private:
 	//草
 	list<unique_ptr<Grassland>> grass_;
 	//後の宝箱
-	unique_ptr<TreasureBox> box_;
+	list<unique_ptr<TreasureBox>> box_;
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
 

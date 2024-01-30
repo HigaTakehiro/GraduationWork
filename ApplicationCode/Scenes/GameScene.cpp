@@ -155,6 +155,7 @@ void GameScene::Update()
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
 	schange->Change(0);
 	SceneChange();
+	
 }
 
 void GameScene::Draw()
@@ -278,7 +279,10 @@ void GameScene::SceneChange()
 		}
 
 	}
-
+	//‚±‚ê‚¢‚Â‚©Á‚·‚æ‚¤‚É
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+	}
 }
 
 void GameScene::CameraSetting()
