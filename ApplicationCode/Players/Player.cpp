@@ -574,6 +574,7 @@ void Player::HammerGet()
 			isAttack_ = false;
 			isHammerReflect_ = false;
 			notnext_ = false;
+			rot_ = initRot_;
 		}
 	}
 
