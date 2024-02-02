@@ -18,6 +18,8 @@ public:
 
 	int FloorFourTeen();
 
+	int MoveSavePoint(int set);
+
 	static StageCount* GetIns();
 
 private:
@@ -52,6 +54,12 @@ inline int StageCount::FloorEight()
 inline int StageCount::FloorFourTeen()
 {
 	stagenum = 14;
+	return stagenum;
+}
+inline int StageCount::MoveSavePoint(int set)
+{
+	stagenum = set;
+
 	return stagenum;
 }
 inline StageCount* StageCount::GetIns()
