@@ -10,6 +10,8 @@
 #include "SoundManager.h"
 #include"StageCount.h"
 
+#pragma warning(disable:4996)
+
 void BossScene::Initialize()
 {
 	ShowCursor(true);
@@ -317,6 +319,18 @@ void BossScene::SceneChange()
 		SceneManager::SetSkillPoint(player_->GetSkillPoint());
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
+		FILE* fp;
+		int i;
+		fp = fopen("Engine/Resources/GameData/save.csv", "w");
+		fprintf(fp, "%d", 0);
+		fclose(fp);
+		fp = fopen("Engine/Resources/GameData/save.csv", "r");
+		fscanf(fp, "%d", &i);
+		fclose(fp);
+		fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+		i = i + 1;
+		fprintf(fp, "%d", i);
+		fclose(fp);
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}

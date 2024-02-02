@@ -16,34 +16,22 @@
 
 void LastBoss::Init()
 {//待機
-	for (size_t i = 0; i < 4; i++) {
-		m_Model_Idle[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
+	for (size_t i = 0; i < 3; i++) {
+		m_Model_Hole[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "blackHole.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
 	}
-	//歩き
-	for (size_t i = 0; i < 4; i++) {
-		m_Model_Walk[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		m_Model_Walk_Right[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "togemaru_moveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-		m_Model_Walk_Left[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "togemaru_moveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-		m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "togemaru_moveBack.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
-
-	}
-	//m_SpearsModel = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "needle.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f });
-	m_HoleTex[0] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {64.0f, 64.0f}, "Area.png", {64.0f, 64.0f}, {0.5f, 0.5f}, {64.0f * (float)0, 0.0f}, {64.0f, 64.0f}));
-	m_HoleTex[1] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
-
 	for (size_t i = 0; i < 4; i++)
 	{
 		m_FlameTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
 	}
 	for (size_t i = 0; i < 3; i++)
 	{
-		m_GuardTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f }));
+		m_GuardTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "boss_shield.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f }));
 	}
 	
 	//for (int32_t i = 0; i < m_SpearArray; i++) {
 	//}
 
-	//InitAnimatin();
+	InitAnimatin();
 	m_Body = Object3d::UniquePtrCreate(m_Model_Idle[0]);
 	m_Body->SetColType(Object3d::CollisionType::Obb);
 	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
@@ -72,10 +60,12 @@ void LastBoss::Init()
 	}
 	m_BodyAlpha = 1.f;
 	BossMaxHP = m_HP;
+	
 	names = "LastBoss";
 
 	HPUiInit();
 	Action = new LastBossAct();
+Action->SetHp(BossMaxHP);
 }
 
 
@@ -90,12 +80,11 @@ void LastBoss::Init()
 
 void LastBoss::Upda()
 {
+	if (m_player->GetPos().z > 12.f)return;
 	//プレイヤーインスタンスセット
 	Action->SetPlayerIns(m_player);
 	//行動遷移
 	Action->Transision();
-	Action->SetHp(m_HP);
-
 
 	Pos_ = Action->GetPos();
 
@@ -105,27 +94,51 @@ void LastBoss::Upda()
 	//Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1 && isCol);
 	//Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player, judg1 && isCol);
 	//}
+	
+	const int Inter = 30;
+	if(holeanimtime/Inter>1)
+	{
+		holeanimtime = 0;
+	}
+	else {
+		if (++holeanimtime % Inter == 0) {
+			m_HoleTex[0] = Object3d::UniquePtrCreate(m_Model_Hole[holeanimtime / Inter]);
+			m_HoleTex[1] = Object3d::UniquePtrCreate(m_Model_Hole[holeanimtime / Inter]);
+		}
+	}
 
-	//if (DamF)FlashF = true;
+	bool isCollide = Collision::HitCircle({ Pos_.x,Pos_.z + 3.f }, 1.2f, { m_player->GetPos().x,m_player->GetPos().z }, 1.f);
+	Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f },m_player, isCollide,1.f);
+
+	DamF = Action->GetDamF();
+	if (DamF)FlashF = true;
 	RecvDamageFlash();
 	//
-	//AnimationSett();
+	AnimationSett();
 	//各種パラメータセット
-
+	m_HP = Action->GetHp();
 
 	//本体
+	//bool isCollsion = m_player->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
+
+	//	if (!nowcrush) {
+	//Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, isCol);
+	//Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player,  isCol,1.f);
 
 	m_Body->SetScale(Action->GetScl());
-	m_Body->SetPosition(Action->GetPos());
+	m_Body->SetPosition({Action->GetPos().x,-2.f,Action->GetPos().z});
 	m_Body->SetRotation(Vector3(0, 0, 0));
 	m_Body->SetColor(color_rgb);
 	m_Body->Update();
 
 	for(size_t i=0;i<2;i++)
 	{
-		m_HoleTex[i]->SetRotation({ 90,0,0 });
+		if (m_HoleTex[i] == nullptr)continue;
+		m_HoleRot[i]++;
+		m_HoleTex[i]->SetRotation({ 90,0,m_HoleRot[i]});
 		m_HoleTex[i]->SetScale({Action->GetHoleSize(i)});
 		m_HoleTex[i]->SetPosition(Action->GetHolePos(i));
+		m_HoleTex[i]->Update();
 	}
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -137,27 +150,28 @@ void LastBoss::Upda()
 	}
 	for (size_t i = 0; i < 3; i++)
 	{
-		m_GuardTex[i]->SetPosition(Action->GetBarrierPos(i));
+		m_GuardTex[i]->SetPosition({ Action->GetBarrierPos(i) });
 		m_GuardTex[i]->SetScale({ 0.05f,0.05f,0.05f });
 		m_GuardTex[i]->SetRotation({ 0,0,0 });
 		m_GuardTex[i]->SetColor({ 1,1,1,Action->GetBarrierAlpha(i) });
 		m_GuardTex[i]->Update();
 	}
 
-	m_HoleTex[0]->Update();
-	m_HoleTex[1]->Update();
-
+	//m_HP--;
 	//UI_Upda();
 	HPUiUpda();
 }
 
 void LastBoss::Draw()
 {
+	if (m_HP <= 0)return;
 	if (m_player->GetPos().z > 12.f)return;
 	m_Body->Draw();
 
-	m_HoleTex[0]->Draw();
-	m_HoleTex[1]->Draw();
+	for (size_t i = 0; i < 2; i++) {
+		if (m_HoleTex[i] == nullptr)continue;
+		m_HoleTex[i]->Draw();
+	}
 	for(size_t i=0;i<4;i++)
 	{
 		m_FlameTex[i]->Draw();
@@ -183,99 +197,62 @@ void LastBoss::Attack()
 
 }
 
-//void LastBoss::AddIndex(Model** model, int size)
-//{
-//	//アニメーション間隔
-//	int NextIndInter = 30;
-//	if (Action->GetName() == LastBossAct::AnimeName::ROLE) {
-//		NextIndInter = 5;
-//	} else {
-//		NextIndInter = 30;
-//	}
-//	//現在のフレーム
-//	int NowIndex = animeIndex / NextIndInter;
-//
-//	if (NowIndex > size - 1) {//最後まで再生されたら最初に戻す
-//		animeIndex = 0;
-//	} else {
-//		if (++animeIndex % NextIndInter == 0) {
-//			m_Body = Object3d::UniquePtrCreate(model[NowIndex]);
-//		}
-//	}
-//}
-//
-//void LastBoss::AnimationSett()
-//{
-//	switch (Action->GetName())
-//	{
-//	case LastBossAct::AnimeName::IdlE:
-//		AddIndex(m_Model_Idle, 4);
-//		break;
-//
-//	case LastBossAct::AnimeName::WALK_FRONT:
-//		AddIndex(m_Model_Walk, 4);
-//		break;
-//
-//	case LastBossAct::AnimeName::WALK_RIGHT:
-//		AddIndex(m_Model_Walk_Right, 4);
-//		break;
-//
-//	case LastBossAct::AnimeName::WALK_LEFT:
-//		AddIndex(m_Model_Walk_Left, 4);
-//		break;
-//
-//	case LastBossAct::AnimeName::WALK_BACK:
-//		AddIndex(m_Model_Walk_Back, 4);
-//		break;
-//
-//	case LastBossAct::AnimeName::ROLE:
-//		AddIndex(m_Model_Role, 2);
-//		break;
-//
-//	case LastBossAct::AnimeName::CRUSH_FRONT:
-//		AddIndex(m_Model_Crush, 4);
-//		break;
-//
-//	case LastBossAct::AnimeName::CRUSH_RIGHT:
-//		AddIndex(m_Model_Crush_Right, 4);
-//		break;
-//
-//	case LastBossAct::AnimeName::CRUSH_LEFT:
-//		AddIndex(m_Model_Crush_Left, 4);
-//		break;
-//
-//	case LastBossAct::AnimeName::CRUSH_BACK:
-//		AddIndex(m_Model_Crush_Back, 4);
-//		break;
-//	}
-//}
+void LastBoss::AddIndex(Model** model, int size)
+{
+	//アニメーション間隔
+	int NextIndInter = 30;
+	
+	//現在のフレーム
+	int NowIndex = animeIndex / NextIndInter;
 
-//void LastBoss::InitAnimatin()
-//{
-	////待機
-	//for (size_t i = 0; i < 4; i++) {
-	//	m_Model_Idle[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "LastBoss_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-	//}
-	////歩き
-	//for (size_t i = 0; i < 4; i++) {
-	//	m_Model_Walk[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "LastBoss_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-	//	m_Model_Walk_Right[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "LastBoss_moveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-	//	m_Model_Walk_Left[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "LastBoss_moveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-	//	m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "LastBoss_moveBack.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
+	if (NowIndex > size - 1) {//最後まで再生されたら最初に戻す
+		animeIndex = 0;
+	} else {
+		if (++animeIndex % NextIndInter == 0) {
+			m_Body = Object3d::UniquePtrCreate(model[NowIndex]);
+		}
+	}
+}
 
-	//}
-	////突進
-	//for (size_t i = 0; i < 2; i++) {
-	//	m_Model_Role[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "LastBoss_rot.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-	//}
-	//for (size_t i = 0; i < 4; i++) {
-	//	m_Model_Crush[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "LastBoss_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-	//	m_Model_Crush_Right[i] = Shapes::CreateSquare({ 0, 0 }, { 192.0f, 128.0f }, "LastBoss_weekMoveLR.png", { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-	//	m_Model_Crush_Left[i] = Shapes::CreateSquare({ 0, 0 }, { 192.0f,128.0f }, "LastBoss_weekMoveRL.png", { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-	//	m_Model_Crush_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "LastBoss_moveBack.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
+void LastBoss::AnimationSett()
+{
+	switch (Action->GetName())
+	{
+	case LastBossAct::AnimeName::WIDLE:
+		AddIndex(m_Model_Idle, 4);
+		break;
 
-	//}
-//}
+	case LastBossAct::AnimeName::WMOVE:
+		AddIndex(m_Model_Walk, 4);
+		break;
+
+	case LastBossAct::AnimeName::WCHARGE:
+		AddIndex(m_Model_Walk_Right, 4);
+		break;
+
+	case LastBossAct::AnimeName::WDEATH:
+		AddIndex(m_Model_Walk_Left, 4);
+		break;
+
+	}
+}
+
+void LastBoss::InitAnimatin()
+{
+	//待機
+	for (size_t i = 0; i < 4; i++) {
+		m_Model_Idle[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 160.0f });
+	}
+	//歩き
+	for (size_t i = 0; i < 4; i++) {
+		m_Model_Walk[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 160.0f });
+		m_Model_Walk_Right[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "wizard_move.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
+		m_Model_Walk_Left[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "wizard_move.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
+		m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
+
+	}
+	
+}
 
 bool LastBoss::Appear()
 {

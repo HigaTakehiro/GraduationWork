@@ -86,7 +86,6 @@ void LastBossScene::Update()
 	if (!boss_.get()) return;
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
-	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	//Vector3 //enemyPos[3] = {};
 
@@ -140,6 +139,7 @@ void LastBossScene::Update()
 
 	boss_->Upda();
 
+	player_->Update();
 
 	cameraPos_.x += TogemaruAct::cameraPos.x;
 	cameraPos_.y += TogemaruAct::cameraPos.y;

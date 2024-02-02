@@ -161,6 +161,11 @@ void Togemaru::Upda()
 
 	UI_Upda();
 	HPUiUpda();
+
+	if(m_HP<=0)
+	{
+		m_ClearF = true;
+	}
 }
 
 

@@ -40,6 +40,11 @@ public: //メンバ関数
 	void AddOreCount() { oreCount_++; }
 
 	/// <summary>
+	/// ハンマー吸い込まれる
+	/// </summary>
+	void HammeronHole();
+
+	/// <summary>
 	/// 鉱石取得数リセット
 	/// </summary>
 	void ResetOreCount() { oreCount_ = 0; }
@@ -410,7 +415,12 @@ private: //メンバ変数
 	int32_t deadTimer_;
 	//死亡演出時間
 	int32_t deadTime_ = 2 * 60;
-
+	//吸い込まれフラグ
+	bool onHoleF;
+	//
+	bool isJudg_Hole;
+	//落下
+	bool fallF;
 	//移動速度
 	float moveSpeed_;
 	//回転速度
@@ -549,5 +559,7 @@ public:
 	void SetStopF(bool flag) { isStop_ = flag; }
 
 	Vector3 GetHammmerPos()const { return hammer_->GetMatWorld().r[3]; }
+
+	void SetisJudgHole(bool f) { isJudg_Hole = f; }
 };
 

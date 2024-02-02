@@ -45,7 +45,7 @@ void TutorialScene::Initialize()
 	//sky = ModelManager::GetIns()->GetModel("skydome");
 	dome = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
 	dome->Initialize();
-
+	dome->SetRotation({ 0.0f,90.f,0.0f });
 	for (int i = 0; i < 9; i++) {
 		title_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::title, { 0, 0 }, { 1.f, 1.f, 1.f, 1.f }, { 0.f, 0.f });
 		title_[i]->SetTextureRect({ 960.f * i,0.f }, { 960.f ,128.f });
@@ -188,7 +188,6 @@ void TutorialScene::Update()
 	else {
 		cameraPos_.y = 12;
 		targetPos_.y = 0;
-
 	}
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
 		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
@@ -225,10 +224,7 @@ void TutorialScene::Update()
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
 	}
-	FILE* fp;
-	fp = fopen("Engine/Resources/GameData/floor.csv", "w");
-	fprintf(fp, "floor %d", 0);
-	fclose(fp);
+	
 	static bool isAddSkill = false;
 	if (KeyInput::GetIns()->TriggerKey(DIK_T) && !isAddSkill) {
 		HPUpSkill* hpUp = new HPUpSkill("hpUp_Test", 5);
@@ -387,6 +383,18 @@ void TutorialScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
+		FILE* fp;
+		int i;
+		fp = fopen("Engine/Resources/GameData/save.csv", "w");
+		fprintf(fp, "%d", 0);
+		fclose(fp);
+		fp = fopen("Engine/Resources/GameData/save.csv", "r");
+		fscanf(fp, "%d", &i);
+		fclose(fp);
+		fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+		i = i + 1;
+		fprintf(fp, "%d", i);
+		fclose(fp);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 

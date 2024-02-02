@@ -1,4 +1,7 @@
 #include "Player.h"
+
+#include <algorithm>
+
 #include "SafeDelete.h"
 #include "Shapes.h"
 #include "KeyInput.h"
@@ -133,7 +136,7 @@ void Player::Update()
 		Animation();
 		Attack();
 	}
-
+	HammeronHole();
 	player_->SetPosition(pos_);
 	player_->SetRotation(rot_);
 	rotAttackPlayer_->SetPosition(pos_);
@@ -550,11 +553,11 @@ void Player::HammerThrow() {
 		if (rot.y >= 360.0f) {
 			rot.y = 0.0f;
 		}
-
-		hammerPos_ += hammerVec_ * throwSpeed_;
-		hammerPos_.y = -2.0f;
-		hammer_->SetPosition(hammerPos_);
-		//hammer_->SetRotation(rot);
+		if (!onHoleF) {
+			hammerPos_ += hammerVec_ * throwSpeed_;
+			hammerPos_.y = -2.0f;
+			hammer_->SetPosition(hammerPos_);
+		}	//hammer_->SetRotation(rot);
 	}
 }
 
@@ -598,6 +601,7 @@ void Player::HammerReturn()
 void Player::HammerPowerUp()
 {
 	const Vector3 hammerScale = { 0.2f, 0.2f, 0.2f };
+	if(!onHoleF)
 	hammerSize_ = initHammerScale_ + (hammerSizeUp_ * (float)oreCount_);
 	//hammerPos_ = initHammerPos_ + initHammerPos_ * 0.5f;
 	//hammerPos_.y = -30;
@@ -779,7 +783,6 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 			Attack();
 		}
 	}
-
 	player_->SetPosition(pos_);
 	player_->SetRotation(rot_);
 	player_->Update();
@@ -828,4 +831,62 @@ void Player::TextUIDraw()
 	text_->Draw("bestTen_16", "white", ep + L"/" + maxEP, EPTextDrawRange);
 	std::wstring level = std::to_wstring(level_);
 	text_->Draw("bestTen_16", "white", L"LV : " + level, LevelTextDrawRange);
+}
+
+void Player::HammeronHole()
+{
+	constexpr float range = 20.f;
+	if (isJudg_Hole&&!onHoleF)
+	{
+		onHoleF = true;
+	}
+	Vector3 rot = hammer_->GetRotation();
+
+	constexpr float groungY = -2.f;
+	if(onHoleF)
+	{
+		ResetOreCount();
+		isHammerReflect_ = false;
+
+		const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
+		const Vector3 subscl = { 0.1f,0.1f,0.1f };
+		hammerSize_ -= subscl;
+		
+		if(hammerSize_.x<0.f&&!fallF)
+		{
+			hammerPos_.y = 15.f;
+			fallF = true;
+		}
+
+		if (hammerPos_.y <= groungY) {
+			if (fallF&&Collision::GetIns()->HitCircle({ pos_.x,pos_.z }, 2.f, { hammerPos_.x,hammerPos_.z }, 1.f)) {
+				isHammerReflect_ = true;
+				hammer_->SetParent(player_.get());
+				hammer_->SetPosition(initHammerPos_);
+				hammer_->SetScale(initHammerScale_);
+				hammer_->SetRotation(initHammerRot_);
+
+				onHoleF = false;
+			}
+		} else {
+			
+			if(fallF)hammerPos_.y -= 0.2f;
+		}
+
+		if(fallF){
+			hammerSize_ = hammerSize;
+		}
+		//hammerVec_ = {}; //throwSpeed_ = 0.f;
+		hammerPos_.x = 0.f;
+		hammerPos_.z = 0.f;
+		hammer_->SetPosition(hammerPos_);
+		hammer_->SetScale(hammerSize_);
+	}
+	else
+	{
+		fallF = false;
+	}
+	hammerSize_.x = std::clamp(hammerSize_.x, 0.f, 10.f);
+	hammerSize_.y = std::clamp(hammerSize_.z, 0.f, 10.f);
+
 }
