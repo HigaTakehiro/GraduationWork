@@ -325,10 +325,12 @@ void BossScene::SceneChange()
 		fp = fopen("Engine/Resources/GameData/save.csv", "r");
 		fscanf(fp, "%d", &i);
 		fclose(fp);
-		fp = fopen("Engine/Resources/GameData/save.csv", "r+");
-		i = i + 1;
-		fprintf(fp, "%d", i);
-		fclose(fp);
+		if (i == 2) {
+			fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+			i = i + 1;
+			fprintf(fp, "%d", i);
+			fclose(fp);
+		}
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
