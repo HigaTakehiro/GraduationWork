@@ -57,9 +57,12 @@ public:
 
 	void CrushAnimation();
 	void WalkAnimation();
+	
 	AnimeName GetName()const { return anime_name_; }
 	float GetSpearsRot(int index) { return spearsRot[index]; }
+
 private:
+
 	//通常パラメータ
 	Vector3 Pos_,Rot_,Scl_= { 0.040f, 0.065f, 0.050f };
 	//戦闘開始

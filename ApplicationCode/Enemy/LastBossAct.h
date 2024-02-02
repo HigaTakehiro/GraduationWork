@@ -135,7 +135,13 @@ public:
 	Vector3 GetBarrierPos(int ind) { return BarrierPos[ind]; }
 	float GetBarrierAlpha(int ind) { return BarrierAlpha[ind]; }
 
+	BOOL damff;
+	int damcool;
+	int hp;
 
+	void SetDamF(BOOL& F) { F=damff; }
+	BOOL GetDamF() { return damff; }
+	void SetDamCool(int val) { damcool = val; }
 	int GetHp() { return Hp; }
 	void SetHp(int val) { Hp = val; }
 	void SetPlayerIns(Player* player) { Player_ = player; }

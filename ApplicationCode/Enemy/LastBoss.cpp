@@ -72,10 +72,12 @@ void LastBoss::Init()
 	}
 	m_BodyAlpha = 1.f;
 	BossMaxHP = m_HP;
+	
 	names = "LastBoss";
 
 	HPUiInit();
 	Action = new LastBossAct();
+Action->SetHp(BossMaxHP);
 }
 
 
@@ -94,9 +96,7 @@ void LastBoss::Upda()
 	Action->SetPlayerIns(m_player);
 	//行動遷移
 	Action->Transision();
-	Action->SetHp(m_HP);
-
-
+	
 	Pos_ = Action->GetPos();
 
 	bool isCol = Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
@@ -105,16 +105,21 @@ void LastBoss::Upda()
 	//Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1 && isCol);
 	//Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player, judg1 && isCol);
 	//}
-
-	//if (DamF)FlashF = true;
+	DamF = Action->GetDamF();
+	if (DamF)FlashF = true;
 	RecvDamageFlash();
 	//
 	//AnimationSett();
 	//各種パラメータセット
-
+	m_HP = Action->GetHp();
 
 	//本体
+	//bool isCollsion = m_player->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
+	//	if (!nowcrush) {
+	//Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, isCol);
+	//Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player,  isCol,1.f);
+	
 	m_Body->SetScale(Action->GetScl());
 	m_Body->SetPosition(Action->GetPos());
 	m_Body->SetRotation(Vector3(0, 0, 0));
@@ -146,7 +151,7 @@ void LastBoss::Upda()
 
 	m_HoleTex[0]->Update();
 	m_HoleTex[1]->Update();
-
+	//m_HP--;
 	//UI_Upda();
 	HPUiUpda();
 }

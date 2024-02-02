@@ -27,7 +27,7 @@ private:
     std::array<std::unique_ptr<Object3d>, 3>m_GuardTex;
     std::unique_ptr<Object3d>m_SpellTex;
 	std::unique_ptr<Object3d>m_Body;
-
+    BOOL DamF; int DamCoolTime;
     LastBossAct* Action;
 };
 
