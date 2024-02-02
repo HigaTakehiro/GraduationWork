@@ -267,19 +267,20 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
-
-		if (StageCount::GetIns()->Now() == 4 ||
-			StageCount::GetIns()->Now() == 9 ||
+		FILE* fp;
+		int i;
+		fp = fopen("Engine/Resources/GameData/save.csv", "r");
+		fscanf(fp, "%d", &i);
+		fclose(fp);
+		if (StageCount::GetIns()->Now() == 4||
+			StageCount::GetIns()->Now() == 9||
 			StageCount::GetIns()->Now() == 16) {
-			FILE* fp;
-			int i;
-			fp = fopen("Engine/Resources/GameData/save.csv", "r");
-			fscanf(fp, "%d", &i);
-			fclose(fp);
-			fp = fopen("Engine/Resources/GameData/save.csv", "r+");
-			i = i + 1;
-			fprintf(fp, "%d", i);
-			fclose(fp);
+			if (i == 1||i==3||i==5) {
+				fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+				i = i + 1;
+				fprintf(fp, "%d", i);
+				fclose(fp);
+			}
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
 		else {
