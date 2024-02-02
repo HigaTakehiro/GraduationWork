@@ -45,7 +45,7 @@ void TutorialScene::Initialize()
 	//sky = ModelManager::GetIns()->GetModel("skydome");
 	dome = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
 	dome->Initialize();
-
+	dome->SetRotation({ 0.0f,90.f,0.0f });
 	for (int i = 0; i < 9; i++) {
 		title_[i] = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::title, { 0, 0 }, { 1.f, 1.f, 1.f, 1.f }, { 0.f, 0.f });
 		title_[i]->SetTextureRect({ 960.f * i,0.f }, { 960.f ,128.f });
