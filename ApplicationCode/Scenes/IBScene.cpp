@@ -15,6 +15,8 @@
 #include "DEFUpSkill.h"
 #include "SPDUpSkill.h"
 
+#pragma warning(disable:4996)
+
 void IBScene::Initialize()
 {
 	ShowCursor(true);
@@ -145,6 +147,10 @@ void IBScene::Initialize()
 
 void IBScene::Update()
 {
+	SaveFileOpen();
+
+	MoveSavePoint();
+
 	Animation();
 
 	//スキルパネル更新
@@ -737,6 +743,46 @@ void IBScene::AddSkill(int32_t arrayNum_1, int32_t arrayNum_2)
 	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::SPDUP) {
 		SPDUpSkill* spdUp = new SPDUpSkill("SPDUp", panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetStatusUpNum());
 		skillManager_->AddPlayerPassiveSkill(spdUp);
+	}
+}
+
+void IBScene::SaveFileOpen()
+{
+	FILE* fp;
+	fp = fopen("Engine/Resources/GameData/save.csv", "r");
+	fscanf(fp, "%d", &savecount_);
+	fclose(fp);
+}
+
+void IBScene::MoveSavePoint()
+{
+	if (savecount_ >= 2) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_1)) {
+			StageCount::GetIns()->MoveSavePoint(1);
+		}
+		else if (KeyInput::GetIns()->TriggerKey(DIK_2)) {
+			StageCount::GetIns()->MoveSavePoint(5);
+		}
+	}
+	else if (savecount_ >= 3) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_3)) {
+			StageCount::GetIns()->MoveSavePoint(7);
+		}
+	}
+	else if (savecount_ >= 4) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_4)) {
+			StageCount::GetIns()->MoveSavePoint(10);
+		}
+	}
+	else if (savecount_ >= 5) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_5)) {
+			StageCount::GetIns()->MoveSavePoint(12);
+		}
+	}
+	else if (savecount_ >= 6) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_6)) {
+			StageCount::GetIns()->MoveSavePoint(17);
+		}
 	}
 }
 

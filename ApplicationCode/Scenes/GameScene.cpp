@@ -1,6 +1,4 @@
 #include "GameScene.h"
-
-#include "ExternalFileLoader.h"
 #include "KeyInput.h"
 #include "SoundManager.h"
 #include "NormalEnemyA.h"
@@ -12,6 +10,8 @@
 #include "NormalEnemyB.h"
 #include "SoundManager.h"
 #include"StageCount.h"
+
+#pragma warning(disable:4996)
 
 void GameScene::Initialize()
 {
@@ -271,6 +271,15 @@ void GameScene::SceneChange()
 		if (StageCount::GetIns()->Now() == 4 ||
 			StageCount::GetIns()->Now() == 9 ||
 			StageCount::GetIns()->Now() == 16) {
+			FILE* fp;
+			int i;
+			fp = fopen("Engine/Resources/GameData/save.csv", "r");
+			fscanf(fp, "%d", &i);
+			fclose(fp);
+			fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+			i = i + 1;
+			fprintf(fp, "%d", i);
+			fclose(fp);
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
 		else {

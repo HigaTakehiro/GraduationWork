@@ -91,6 +91,13 @@ private: //メンバ関数
 	/// </summary>
 	void AddSkill(int32_t arrayNum_1, int32_t arrayNum_2);
 
+	/// <summary>
+	/// セーブファイルを開く
+	/// </summary>
+	void SaveFileOpen();
+
+	void MoveSavePoint();
+
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -158,5 +165,7 @@ private: //メンバ変数
 	SkillPanelStatus panelStatus_[7][7];
 	//スキル画面カーソルスプライト
 	std::unique_ptr<Sprite> skillCursor_;
+
+	int savecount_ = 0;
 };
 
