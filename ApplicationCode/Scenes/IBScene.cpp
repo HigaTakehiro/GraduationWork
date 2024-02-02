@@ -443,9 +443,11 @@ void IBScene::SceneChange()
 				if (StageCount::GetIns()->Now() == 5) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss);
 				}
-				else if (StageCount::GetIns()->Now() == 10 ||
-					StageCount::GetIns()->Now() == 17) {
+				else if (StageCount::GetIns()->Now() == 10) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss2);
+				}
+				else if (StageCount::GetIns()->Now() == 17) {
+					SceneManager::SceneChange(SceneManager::SceneName::Boss3);
 				}
 				else {
 					SceneManager::SceneChange(SceneManager::SceneName::Game);
@@ -471,9 +473,11 @@ void IBScene::SceneChange()
 				if (StageCount::GetIns()->Now() == 5) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss);
 				}
-				else if (StageCount::GetIns()->Now() == 10 ||
-					StageCount::GetIns()->Now() == 17) {
+				else if (StageCount::GetIns()->Now() == 10) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss2);
+				}
+				else if (StageCount::GetIns()->Now() == 17) {
+					SceneManager::SceneChange(SceneManager::SceneName::Boss3);
 				}
 				else {
 					SceneManager::SceneChange(SceneManager::SceneName::Game);
