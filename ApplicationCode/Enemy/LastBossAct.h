@@ -81,7 +81,7 @@ private://ƒoƒŠƒA
 	std::array<float, barrierSize>BarrierAngle;
 	std::array<float, barrierSize>BarrierAlpha={1,1,1};
 	std::array<BOOL, barrierSize>BarrierDamF;
-	std::array<int, barrierSize>BarrierHp={1,1,1};
+	std::array<int, barrierSize>BarrierHp={5,5,5};
 	std::array<int, barrierSize>BarrierDamCool;
 	bool AllBarrierDestroyF;
 	int RefBarrierTime;
@@ -138,6 +138,7 @@ public:
 	BOOL damff;
 	int damcool;
 	int hp;
+	bool hammeronHole[2];
 
 	void SetDamF(BOOL& F) { F=damff; }
 	BOOL GetDamF() { return damff; }
@@ -145,5 +146,16 @@ public:
 	int GetHp() { return Hp; }
 	void SetHp(int val) { Hp = val; }
 	void SetPlayerIns(Player* player) { Player_ = player; }
+
+public:
+	enum AnimeName
+	{
+		WIDLE,
+		WMOVE,
+		WCHARGE,
+		WDEATH
+	}_state = WMOVE;
+
+	AnimeName GetName() { return _state; }
 };
 

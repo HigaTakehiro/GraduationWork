@@ -13,10 +13,14 @@ private:
     void Draw2()override;
     void Finalize() override;
     void Attack()override;
+    void AddIndex(Model** model, int size);
+    void AnimationSett();
     void SpriteDraw()override;
+    void InitAnimatin();
     bool Appear()override;
 
 private:
+    int animeIndex;
 	Model* m_Model_Idle[4] = {};
        Model* m_Model_Walk[4] = {};
        Model* m_Model_Walk_Left[4] = {};

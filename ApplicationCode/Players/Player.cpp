@@ -133,7 +133,7 @@ void Player::Update()
 		Animation();
 		Attack();
 	}
-
+	HammeronHole();
 	player_->SetPosition(pos_);
 	player_->SetRotation(rot_);
 	rotAttackPlayer_->SetPosition(pos_);
@@ -601,6 +601,7 @@ void Player::HammerReturn()
 void Player::HammerPowerUp()
 {
 	const Vector3 hammerScale = { 0.2f, 0.2f, 0.2f };
+	if(!onHoleF)
 	hammerSize_ = initHammerScale_ + (hammerSizeUp_ * (float)oreCount_);
 	//hammerPos_ = initHammerPos_ + initHammerPos_ * 0.5f;
 	//hammerPos_.y = -30;
@@ -778,7 +779,6 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 			Attack();
 		}
 	}
-
 	player_->SetPosition(pos_);
 	player_->SetRotation(rot_);
 	player_->Update();
@@ -820,11 +820,51 @@ void Player::TextUIDraw()
 	D2D1_RECT_F EPTextDrawRange = { 30, 68, 158, 176 };
 	D2D1_RECT_F LevelTextDrawRange = { 30, 28, 158, 176 };
 	std::wstring hp = std::to_wstring(hp_);
-	std::wstring maxHP = std::to_wstring(maxHp_);
+	std::wstring maxHP = std::to_wstring(hammer_->GetMatWorld().r[3].m128_f32[1]);
 	std::wstring ep = std::to_wstring(ep_);
 	std::wstring maxEP = std::to_wstring(levelUpEp_);
 	text_->Draw("bestTen_16", "white", hp+ L"/" + maxHP, HPTextDrawRange);
 	text_->Draw("bestTen_16", "white", ep + L"/" + maxEP, EPTextDrawRange);
 	std::wstring level = std::to_wstring(level_);
 	text_->Draw("bestTen_16", "white", L"LV : " + level, LevelTextDrawRange);
+}
+
+void Player::HammeronHole()
+{
+	constexpr float range = 20.f;
+	if (isJudg_Hole&&!onHoleF)
+	{
+		onHoleF = true;
+	}
+
+	constexpr float groungY = -2.5f;
+	if(onHoleF)
+	{
+		isHammerReflect_ = false;
+
+		const Vector3 hammerSize = { 1.025f, 1.025f, 1.025f };
+		const Vector3 subscl = { 0.1f,0.1f,0.1f };
+		hammerSize_ -= subscl;
+		hammer_->SetScale(hammerSize_);
+		if(!fallF&&hammerSize_.x<0.f)
+		{
+			
+			hammerPos_.y = 5.f;
+			fallF = true;
+			hammerSize_ = hammerSize;
+		}
+
+		if (hammerPos_.y <= groungY) {
+			if (fallF) {
+				fallF = false;
+				onHoleF = false;
+			}
+		} else {
+			if(fallF)
+			hammerPos_.y -= 0.2f;
+		}hammerPos_.x = 0.f;
+			hammerPos_.z = 0.f;
+	}
+
+	
 }

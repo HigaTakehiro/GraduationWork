@@ -32,12 +32,12 @@ void LastBossAct::Move()
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 
-	constexpr uint32_t ActionInter = 90;
+	constexpr uint32_t ActionInter = 390;
 	//çUåÇÇ…à⁄çs
 	if (++actionCount % ActionInter == 0)
 	{
 		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt) == 0)
+		if(randact(mt) >= 0)
 		{
 
 			Vector3 posList1[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) };
@@ -75,9 +75,7 @@ void LastBossAct::Move()
 	HoleSmalling = false;
 	HoleActivCount = 0;
 
-	for(size_t i=0;i<4;i++)
 	
-
 	flameP = INITFLAME;
 }
 
@@ -102,6 +100,7 @@ float LastBossAct::Follow()
 
 void LastBossAct::Attack_Hole()
 {
+
 	constexpr float maxSize = 0.1f;
 	if (HoleActivCount == 0) {
 		for (size_t i = 0; i < holeSize; i++)
@@ -122,8 +121,8 @@ void LastBossAct::Attack_Hole()
 		{
 			for (size_t i = 0; i < holeSize; i++)
 			{
-				HoleSize[i].x -= 0.01f;
-				HoleSize[i].y -= 0.01f;
+				HoleSize[i].x -= 0.001f;
+				HoleSize[i].y -= 0.001f;
 				if (HoleSize[i].x <= 0.f)continue;
 			}
 		}
@@ -144,9 +143,27 @@ void LastBossAct::Attack_Hole()
 
 		if(judg_Player)
 		{
-			Player_->SubHP(1);
+			Player_->SubHP(0);
 		}
 	}
+	bool onF = Player_->GetIsHammerRelease();
+	for (size_t i = 0; i < holeSize; i++)
+	{
+		if (Collision::HitCircle({ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f,
+			{ HolePos[i].x, HolePos[i].z + 3.f }, HoleSize[i].x * 30.f)) {
+			hammeronHole[i] = true;
+		} else
+		{
+			hammeronHole[i] = false;
+		}
+	}
+
+	// åƒèoÇµ
+	if (hammeronHole[0] || hammeronHole[1])
+		Player_->SetisJudgHole(true);
+	else
+		Player_->SetisJudgHole(false);
+
 }
 
 void LastBossAct::Attack_Flame()
@@ -180,44 +197,78 @@ void LastBossAct::Attack_Flame()
 	flameP = SHOTFLAME;
 }
 
+	constexpr float add = 0.0005f;
 	if(flameP==SHOTFLAME)
 	{
 		if (++ShotWaitTime > 50) {
 			constexpr float accel = 0.2f;
 			if (ss == "FRONT"){
-				for (size_t i = 0; i < flameSize; i++){
-					FlamePos[i].z -= accel;
+				FlameScl[0].x += add;
+				FlameScl[0].y += add;
+				FlameColor[0].w -= 0.005f;
+				FlamePos[0].z -= accel;
+				for (size_t i = 1; i < flameSize; i++){
+					if (FlameColor[i-1].w < 0.8f) {
+						FlameScl[i].x += add;
+						FlameScl[i].y += add;
+						FlameColor[i].w -= 0.005f;
+						FlamePos[i].z -= accel;
+					}
 				}
 			}
 
 			if (ss == "BACK"){
-				for (size_t i = 0; i < flameSize; i++){
-					FlamePos[i].z += accel;
+				FlamePos[0].z += accel;
+				FlameScl[0].x += add;
+				FlameScl[0].y += add;
+				FlameColor[0].w -= 0.005f;
+				for (size_t i = 1; i < flameSize; i++){
+					if (FlameColor[i-1].w < 0.8f) {
+						FlameScl[i].x += add;
+						FlameScl[i].y += add;
+						FlameColor[i].w -= 0.005f;
+						FlamePos[i].z += accel;
+					}
 				}
 			}
 
 			if (ss == "LEFT"){
-				for (size_t i = 0; i < flameSize; i++){
-					FlamePos[i].x -= accel;
+				FlameScl[0].x += add;
+				FlameScl[0].y += add;
+				FlameColor[0].w -= 0.005f;
+				FlamePos[0].x -= accel;
+				for (size_t i = 1; i < flameSize; i++){
+					if (FlameColor[i-1].w < 0.8f) {
+						FlameScl[i].x += add;
+						FlameScl[i].y += add;
+						FlameColor[i].w -= 0.005f;
+						FlamePos[i].x -= accel;
+					}
 				}
 			}
 
 			if (ss == "RIGHT"){
-				for (size_t i = 0; i < flameSize; i++){
-					FlamePos[i].x += accel;
+				FlamePos[0].x += accel;
+				FlameScl[0].x += add;
+				FlameScl[0].y += add;
+				FlameColor[0].w -= 0.005f;
+				for (size_t i = 1; i < flameSize; i++){
+					if (FlameColor[i-1].w < 0.8f) {
+						FlameScl[i].x += add;
+						FlameScl[i].y += add;
+						FlameColor[i].w -= 0.005f;
+
+						FlamePos[i].x += accel;
+					}
 				}
 			}
 		}
-		constexpr float add = 0.0005f;
 		for (size_t i = 0; i < flameSize; i++)
 		{
-			FlameScl[i].x += add;
-			FlameScl[i].y += add;
-			FlameColor[i].w -= 0.005f;
-
 			FlameScl[i].x = std::clamp(FlameScl[i].x, 0.f, 0.1f);
 			FlameScl[i].y = std::clamp(FlameScl[i].y, 0.f, 0.1f);
 
+		
 			bool judg = Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { FlamePos[i].x,FlamePos[i].z + 3.f }, FlameScl[i].x * 20.f);
 			if (judg)
 			{
@@ -225,7 +276,7 @@ void LastBossAct::Attack_Flame()
 			}
 		}
 	}
-	if(FlameColor[0].w<=0.f)
+	if(FlameColor[flameSize-1].w<=0.f)
 	{
 		ShotWaitTime = 0;
 		act_ = Act::MOVE;
@@ -269,8 +320,8 @@ void LastBossAct::Act_Barrier()
 		BarrierPos[i].z = Pos_.z + sinf(BarrierAngle[i] + (i * 90)) * 2.f;
 		BarrierPos[i].y = Pos_.y;
 
-		bool judg = BarrierHp[i] > 0;// && Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
-			//{ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f);
+		bool judg = BarrierHp[i] > 0 && Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
+			{ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f);
 		{
 			Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 60, judg&& Player_->getisHammerActive());
 			Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, judg&& Player_->getisHammerActive(), 1.5f);
