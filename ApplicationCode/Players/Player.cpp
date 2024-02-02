@@ -556,11 +556,11 @@ void Player::HammerThrow() {
 		if (rot.y >= 360.0f) {
 			rot.y = 0.0f;
 		}
-
-		hammerPos_ += hammerVec_ * throwSpeed_;
-		hammerPos_.y = -2.0f;
-		hammer_->SetPosition(hammerPos_);
-		//hammer_->SetRotation(rot);
+		if (!onHoleF) {
+			hammerPos_ += hammerVec_ * throwSpeed_;
+			hammerPos_.y = -2.0f;
+			hammer_->SetPosition(hammerPos_);
+		}	//hammer_->SetRotation(rot);
 	}
 }
 
@@ -823,7 +823,7 @@ void Player::TextUIDraw()
 	D2D1_RECT_F EPTextDrawRange = { 30, 68, 158, 176 };
 	D2D1_RECT_F LevelTextDrawRange = { 30, 28, 158, 176 };
 	std::wstring hp = std::to_wstring(hp_);
-	std::wstring maxHP = std::to_wstring(hammer_->GetMatWorld().r[3].m128_f32[1]);
+	std::wstring maxHP = std::to_wstring(maxHp_);
 	std::wstring ep = std::to_wstring(ep_);
 	std::wstring maxEP = std::to_wstring(levelUpEp_);
 	text_->Draw("bestTen_16", "white", hp+ L"/" + maxHP, HPTextDrawRange);
@@ -839,39 +839,53 @@ void Player::HammeronHole()
 	{
 		onHoleF = true;
 	}
+	Vector3 rot = hammer_->GetRotation();
 
-	constexpr float groungY = -2.5f;
+	constexpr float groungY = -2.f;
 	if(onHoleF)
 	{
+		ResetOreCount();
 		isHammerReflect_ = false;
 
-		const Vector3 hammerSize = { 1.025f, 1.025f, 1.025f };
+		const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
 		const Vector3 subscl = { 0.1f,0.1f,0.1f };
 		hammerSize_ -= subscl;
-		hammer_->SetScale(hammerSize_);
-		if(!fallF&&hammerSize_.x<0.f)
+		
+		if(hammerSize_.x<0.f&&!fallF)
 		{
-			
-			hammerPos_.y = 5.f;
+			hammerPos_.y = 15.f;
 			fallF = true;
-			hammerSize_ = hammerSize;
 		}
 
 		if (hammerPos_.y <= groungY) {
-			if (fallF) {
-				fallF = false;
+			if (fallF&&Collision::GetIns()->HitCircle({ pos_.x,pos_.z }, 2.f, { hammerPos_.x,hammerPos_.z }, 1.f)) {
+				isHammerReflect_ = true;
+				hammer_->SetParent(player_.get());
+				hammer_->SetPosition(initHammerPos_);
+				hammer_->SetScale(initHammerScale_);
+				hammer_->SetRotation(initHammerRot_);
+
 				onHoleF = false;
 			}
 		} else {
-			if(fallF)
-			hammerPos_.y -= 0.2f;
+			
+			if(fallF)hammerPos_.y -= 0.2f;
 		}
 
+		if(fallF){
+			hammerSize_ = hammerSize;
+		}
+		//hammerVec_ = {}; //throwSpeed_ = 0.f;
 		hammerPos_.x = 0.f;
 		hammerPos_.z = 0.f;
+		hammer_->SetPosition(hammerPos_);
+		hammer_->SetScale(hammerSize_);
 	}
-
+	else
+	{
+		fallF = false;
+	}
 	hammerSize_.x = std::clamp(hammerSize_.x, 0.f, 10.f);
-	hammerSize_.z = std::clamp(hammerSize_.z, 0.f, 10.f);
+	hammerSize_.y = std::clamp(hammerSize_.z, 0.f, 10.f);
 
 }

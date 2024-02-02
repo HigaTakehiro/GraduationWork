@@ -20,7 +20,10 @@ private:
     bool Appear()override;
 
 private:
+    int holeanimtime;
+    int index;
     int animeIndex;
+    Model* m_Model_Hole[3] = {};
 	Model* m_Model_Idle[4] = {};
        Model* m_Model_Walk[4] = {};
        Model* m_Model_Walk_Left[4] = {};

@@ -32,12 +32,12 @@ void LastBossAct::Move()
 	std::random_device rnd;
 	std::mt19937 mt(rnd());
 
-	constexpr uint32_t ActionInter = 390;
+	constexpr uint32_t ActionInter = 100;
 	//çUåÇÇ…à⁄çs
 	if (++actionCount % ActionInter == 0)
 	{
 		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt) >= 0)
+		if(randact(mt) == 0)
 		{
 
 			Vector3 posList1[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) };
@@ -143,13 +143,13 @@ void LastBossAct::Attack_Hole()
 
 		if(judg_Player)
 		{
-			Player_->SubHP(0);
+			Player_->SubHP(1);
 		}
 	}
 	bool onF = Player_->GetIsHammerRelease();
 	for (size_t i = 0; i < holeSize; i++)
 	{
-		if (Collision::HitCircle({ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f,
+		if (onF&&Collision::HitCircle({ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f,
 			{ HolePos[i].x, HolePos[i].z + 3.f }, HoleSize[i].x * 30.f)) {
 			hammeronHole[i] = true;
 		} else

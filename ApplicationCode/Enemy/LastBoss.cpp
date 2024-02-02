@@ -16,18 +16,16 @@
 
 void LastBoss::Init()
 {//待機
-	
-	//m_SpearsModel = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "needle.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f });
-	m_HoleTex[0] = Object3d::UniquePtrCreate(Shapes::CreateSquare({0, 0}, {64.0f, 64.0f}, "Area.png", {64.0f, 64.0f}, {0.5f, 0.5f}, {64.0f * (float)0, 0.0f}, {64.0f, 64.0f}));
-	m_HoleTex[1] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
-
+	for (size_t i = 0; i < 3; i++) {
+		m_Model_Hole[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "blackHole.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
+	}
 	for (size_t i = 0; i < 4; i++)
 	{
 		m_FlameTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
 	}
 	for (size_t i = 0; i < 3; i++)
 	{
-		m_GuardTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f }));
+		m_GuardTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "boss_shield.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f }));
 	}
 	
 	//for (int32_t i = 0; i < m_SpearArray; i++) {
@@ -82,6 +80,7 @@ Action->SetHp(BossMaxHP);
 
 void LastBoss::Upda()
 {
+	if (m_player->GetPos().z > 12.f)return;
 	//プレイヤーインスタンスセット
 	Action->SetPlayerIns(m_player);
 	//行動遷移
@@ -95,6 +94,22 @@ void LastBoss::Upda()
 	//Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1 && isCol);
 	//Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player, judg1 && isCol);
 	//}
+	
+	const int Inter = 30;
+	if(holeanimtime/Inter>1)
+	{
+		holeanimtime = 0;
+	}
+	else {
+		if (++holeanimtime % Inter == 0) {
+			m_HoleTex[0] = Object3d::UniquePtrCreate(m_Model_Hole[holeanimtime / Inter]);
+			m_HoleTex[1] = Object3d::UniquePtrCreate(m_Model_Hole[holeanimtime / Inter]);
+		}
+	}
+
+	bool isCollide = Collision::HitCircle({ Pos_.x,Pos_.z + 3.f }, 1.2f, { m_player->GetPos().x,m_player->GetPos().z }, 1.f);
+	Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f },m_player, isCollide,1.f);
+
 	DamF = Action->GetDamF();
 	if (DamF)FlashF = true;
 	RecvDamageFlash();
@@ -118,9 +133,11 @@ void LastBoss::Upda()
 
 	for(size_t i=0;i<2;i++)
 	{
+		if (m_HoleTex[i] == nullptr)continue;
 		m_HoleTex[i]->SetRotation({ 90,0,0 });
 		m_HoleTex[i]->SetScale({Action->GetHoleSize(i)});
 		m_HoleTex[i]->SetPosition(Action->GetHolePos(i));
+		m_HoleTex[i]->Update();
 	}
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -139,8 +156,6 @@ void LastBoss::Upda()
 		m_GuardTex[i]->Update();
 	}
 
-	m_HoleTex[0]->Update();
-	m_HoleTex[1]->Update();
 	//m_HP--;
 	//UI_Upda();
 	HPUiUpda();
@@ -151,8 +166,10 @@ void LastBoss::Draw()
 	if (m_player->GetPos().z > 12.f)return;
 	m_Body->Draw();
 
-	m_HoleTex[0]->Draw();
-	m_HoleTex[1]->Draw();
+	for (size_t i = 0; i < 2; i++) {
+		if (m_HoleTex[i] == nullptr)continue;
+		m_HoleTex[i]->Draw();
+	}
 	for(size_t i=0;i<4;i++)
 	{
 		m_FlameTex[i]->Draw();
