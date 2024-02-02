@@ -20,13 +20,17 @@ private:
     bool Appear()override;
 
 private:
+    int holeanimtime;
+    int index;
     int animeIndex;
+    Model* m_Model_Hole[3] = {};
 	Model* m_Model_Idle[4] = {};
        Model* m_Model_Walk[4] = {};
        Model* m_Model_Walk_Left[4] = {};
        Model* m_Model_Walk_Right[4] = {};
        Model* m_Model_Walk_Back[4] = {};
     std::array<std::unique_ptr<Object3d>, 2>m_HoleTex;
+    std::array<float, 2>m_HoleRot;
     std::array<std::unique_ptr<Object3d>, 4>m_FlameTex;
     std::array<std::unique_ptr<Object3d>, 3>m_GuardTex;
     std::unique_ptr<Object3d>m_SpellTex;

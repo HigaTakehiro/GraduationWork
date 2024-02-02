@@ -132,21 +132,21 @@ void TogemaruAct::Transition()
 		{
 			act_ = Act::DEATH;
 		}
-		//衝突半径
-		constexpr float pr = 1.f, er = 1.5f;
-		//衝突時のプレイヤーのけぞり
-		bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
-		float KnockDis = AccelJudg ? 0.3f : 0.6f;//のけぞり値
+		else {
+			//衝突半径
+			constexpr float pr = 1.f, er = 1.5f;
+			//衝突時のプレイヤーのけぞり
+			bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
+			float KnockDis = AccelJudg ? 0.3f : 0.6f;//のけぞり値
 
-		//判定
-		bool animenotwalk = anime_name_ != AnimeName::WALK_FRONT && anime_name_ != AnimeName::WALK_BACK &&
-			anime_name_ != AnimeName::WALK_LEFT && anime_name_ != AnimeName::WALK_RIGHT;
-		bool isCollide =animenotwalk&& Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
-		if (!damf&&isCollide) { Player_->SubHP(1); damf = true;}
-		if (damf) { damcool++; if (damcool > 90)damf = false; }
-		else { damcool = 0; }
-		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
-
+			//判定
+			bool animenotwalk = anime_name_ != AnimeName::WALK_FRONT && anime_name_ != AnimeName::WALK_BACK &&
+				anime_name_ != AnimeName::WALK_LEFT && anime_name_ != AnimeName::WALK_RIGHT;
+			bool isCollide = animenotwalk && Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
+			if (!damf && isCollide) { Player_->SubHP(1); damf = true; }
+			if (damf) { damcool++; if (damcool > 90)damf = false; } else { damcool = 0; }
+			Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
+		}
 	}
 
 	//鉱石当たり判定
