@@ -87,6 +87,8 @@ void LastBoss::Upda()
 	Action->Transision();
 
 	Pos_ = Action->GetPos();
+//各種パラメータセット
+	m_HP = Action->GetHp();
 
 	bool isCol = Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
@@ -108,16 +110,15 @@ void LastBoss::Upda()
 	}
 
 	bool isCollide = Collision::HitCircle({ Pos_.x,Pos_.z + 3.f }, 1.2f, { m_player->GetPos().x,m_player->GetPos().z }, 1.f);
-	Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f },m_player, isCollide,1.f);
-
+	if (m_HP > 0) {
+		Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player, isCollide, 1.f);
+	}
 	DamF = Action->GetDamF();
 	if (DamF)FlashF = true;
 	RecvDamageFlash();
 	//
 	AnimationSett();
-	//各種パラメータセット
-	m_HP = Action->GetHp();
-
+	
 	//本体
 	//bool isCollsion = m_player->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 

@@ -290,7 +290,7 @@ void GameScene::SceneChange()
 	}
 	//‚±‚ê‚¢‚Â‚©Á‚·‚æ‚¤‚É
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		//SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 }
 
