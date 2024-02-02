@@ -141,9 +141,7 @@ void BossScene::Update()
 	}
 	else {
 		cameraPos_.y = 12;
-		//cameraPos_.x = 0;
-		targetPos_.y = 3;
-		//targetPos_.x = 0;
+		targetPos_.y = 0;
 	}
 	//if (boss_->GetAppearFlag() == FALSE) {
 	camera_->SetEye(cameraPos_);
