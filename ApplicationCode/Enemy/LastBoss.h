@@ -30,6 +30,7 @@ private:
        Model* m_Model_Walk_Right[4] = {};
        Model* m_Model_Walk_Back[4] = {};
     std::array<std::unique_ptr<Object3d>, 2>m_HoleTex;
+    std::array<float, 2>m_HoleRot;
     std::array<std::unique_ptr<Object3d>, 4>m_FlameTex;
     std::array<std::unique_ptr<Object3d>, 3>m_GuardTex;
     std::unique_ptr<Object3d>m_SpellTex;

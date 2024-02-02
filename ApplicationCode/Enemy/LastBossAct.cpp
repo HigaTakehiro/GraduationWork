@@ -320,19 +320,24 @@ void LastBossAct::Act_Barrier()
 		BarrierPos[i].z = Pos_.z + sinf(BarrierAngle[i] + (i * 90)) * 2.f;
 		BarrierPos[i].y = Pos_.y;
 
-		bool judg = BarrierHp[i] > 0 && Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
+		bool judg =  Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
 			{ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f);
+
+		bool isCollsion = Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
 		{
-			Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 60, judg&& Player_->getisHammerActive());
-			Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, judg&& Player_->getisHammerActive(), 1.5f);
-			if (judg) {if(Player_->getisHammerActive()) Player_->SetIsHammerReflect(true); }
+
+			if (BarrierHp[i] > 0) {
+				Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 60, BarrierHp[i] > 0 && judg && Player_->getisHammerActive());
+				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg && Player_->getisHammerActive(), 1.5f);
+			}
+			if (judg) { if (Player_->getisHammerActive()) Player_->SetIsHammerReflect(true); }
 			else
 			{
-				bool isCollsion = Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
-					Helper::DamageManager(Hp, 1, damff,damcool, 60, isCollsion);
+					Helper::DamageManager(Hp, 1, damff,damcool, 90, isCollsion);
 					Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollsion, 1.f);
 			}
 		}
+		
 		if(BarrierHp[i]<=0)
 		{
 			BarrierAlpha[i] -= 0.1f;

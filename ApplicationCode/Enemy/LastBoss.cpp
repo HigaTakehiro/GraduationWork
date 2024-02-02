@@ -134,7 +134,8 @@ void LastBoss::Upda()
 	for(size_t i=0;i<2;i++)
 	{
 		if (m_HoleTex[i] == nullptr)continue;
-		m_HoleTex[i]->SetRotation({ 90,0,0 });
+		m_HoleRot[i]++;
+		m_HoleTex[i]->SetRotation({ 90,0,m_HoleRot[i]});
 		m_HoleTex[i]->SetScale({Action->GetHoleSize(i)});
 		m_HoleTex[i]->SetPosition(Action->GetHolePos(i));
 		m_HoleTex[i]->Update();
@@ -163,6 +164,7 @@ void LastBoss::Upda()
 
 void LastBoss::Draw()
 {
+	if (m_HP <= 0)return;
 	if (m_player->GetPos().z > 12.f)return;
 	m_Body->Draw();
 
