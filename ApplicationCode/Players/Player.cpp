@@ -1,4 +1,7 @@
 #include "Player.h"
+
+#include <algorithm>
+
 #include "SafeDelete.h"
 #include "Shapes.h"
 #include "KeyInput.h"
@@ -862,9 +865,13 @@ void Player::HammeronHole()
 		} else {
 			if(fallF)
 			hammerPos_.y -= 0.2f;
-		}hammerPos_.x = 0.f;
-			hammerPos_.z = 0.f;
+		}
+
+		hammerPos_.x = 0.f;
+		hammerPos_.z = 0.f;
 	}
 
-	
+	hammerSize_.x = std::clamp(hammerSize_.x, 0.f, 10.f);
+	hammerSize_.z = std::clamp(hammerSize_.z, 0.f, 10.f);
+
 }
