@@ -368,6 +368,12 @@
     <ClCompile Include="ApplicationCode\Scenes\LastBossScene.cpp">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\ActiveSkillList.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\HyperModeSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -631,6 +637,15 @@
     <ClInclude Include="ApplicationCode\Enemy\LastBossAct.h" />
     <ClInclude Include="ApplicationCode\Scenes\LastBossScene.h">
       <Filter>ソース ファイル\ApplicationCode\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\IActiveSkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\ActiveSkillList.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\HyperModeSkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

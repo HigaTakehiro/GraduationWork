@@ -151,6 +151,7 @@ void Player::Update()
 
 void Player::Draw()
 {
+
 	shadow_->Draw();
 	if (isAttack_) {
 		hammer_->Draw();
@@ -200,6 +201,7 @@ void Player::SpriteDraw()
 void Player::SubHP(int32_t subHP)
 {
 	if (hitCoolTimer_ < hitCoolTime_) return;
+	if (isInvincible_) return;
 
 	SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDamage, 0.5f);
 	hitCoolTimer_ = 0;
@@ -218,7 +220,6 @@ void Player::PlayerStatusSetting() {
 	float moveSpeed;
 	float rotSpeed;
 	float throwSpeed;
-	float rotResetTime;
 	float maxSpeed;
 	float maxHammerSpeed;
 	float acc;
@@ -267,9 +268,6 @@ void Player::PlayerStatusSetting() {
 		}
 		if (word.find("Srot") == 0) {
 			line_stream >> rotSpeed;
-		}
-		if (word.find("RrotTime") == 0) {
-			line_stream >> rotResetTime;
 		}
 		if (word.find("throwSpeed") == 0) {
 			line_stream >> throwSpeed;
@@ -340,7 +338,6 @@ void Player::PlayerStatusSetting() {
 
 	moveSpeed_ = moveSpeed;
 	rotSpeed_ = initRotSpeed_ = rotSpeed;
-	rotResetTimer_ = rotResetTime_ = rotResetTime;
 	throwSpeed_ = throwSpeed;
 	maxMoveSpeed_ = maxSpeed;
 	hammerAcc_ = acc;
@@ -732,6 +729,10 @@ void Player::LevelUp()
 void Player::HitCoolTime()
 {
 	player_->SetColor({ 1.f, 1.f, 1.f, 1.f });
+
+	if (isInvincible_) {
+		player_->SetColor({ 1.2f, 1.2f, 0.2f, 1.f });
+	}
 
 	if (hitCoolTimer_ >= hitCoolTime_) return;
 

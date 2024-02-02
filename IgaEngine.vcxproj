@@ -198,10 +198,12 @@
     <ClCompile Include="ApplicationCode\Scenes\TutorialScene.cpp" />
     <ClCompile Include="ApplicationCode\Shake\IwaEffect.cpp" />
     <ClCompile Include="ApplicationCode\Shake\Shake.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\ActiveSkillList.cpp" />
     <ClCompile Include="ApplicationCode\Skills\ATKUpSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\DEFUpSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\HammerReturnSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\HPUpSkill.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\HyperModeSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\SkillList.cpp" />
     <ClCompile Include="ApplicationCode\Skills\SkillManager.cpp" />
     <ClCompile Include="ApplicationCode\Skills\SkillPanel.cpp" />
@@ -290,10 +292,13 @@
     <ClInclude Include="ApplicationCode\Scenes\TutorialScene.h" />
     <ClInclude Include="ApplicationCode\Shake\IwaEffect.h" />
     <ClInclude Include="ApplicationCode\Shake\Shake.h" />
+    <ClInclude Include="ApplicationCode\Skills\ActiveSkillList.h" />
     <ClInclude Include="ApplicationCode\Skills\ATKUpSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\DEFUpSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\HammerReturnSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\HPUpSkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\HyperModeSkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\IActiveSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\ISkill.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillList.h" />
     <ClInclude Include="ApplicationCode\Skills\SkillManager.h" />

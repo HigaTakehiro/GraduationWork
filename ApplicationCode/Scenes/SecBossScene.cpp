@@ -86,6 +86,7 @@ void SecBossScene::Initialize()
 	cameraPos_.y = 12;
 	targetPos_.y = 0;
 
+	skillManager_->SetPlayer(player_);
 }
 
 void SecBossScene::Update()
@@ -173,6 +174,7 @@ void SecBossScene::Update()
 
 	//shake_->Update();
 	colManager_->Update();
+	skillManager_->Update();
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 
 	m_Stairs->Update();
@@ -320,6 +322,7 @@ void SecBossScene::Finalize()
 	//safe_delete(_hummmerObb);
 	colManager_->Finalize();
 	map_->Finalize();
+	skillManager_->Finalize();
 }
 
 void SecBossScene::SceneChange()
