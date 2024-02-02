@@ -288,6 +288,15 @@ public: //メンバ関数
 	/// <param name="skillPoint">スキルポイント</param>
 	void SetSkillPoint(int32_t skillPoint) { skillPoint_ = skillPoint; }
 
+	/// <summary>
+	/// 無敵状態フラグをセット
+	/// </summary>
+	/// <param name="isInvicible">無敵状態フラグ</param>
+	void SetIsInvicible(bool isInvicible) { isInvincible_ = isInvicible; }
+
+	//投げ攻撃扱い
+	void FallHammerAttack();
+
 private: //メンバ関数
 
 	/// <summary>
@@ -507,6 +516,8 @@ private: //メンバ変数
 	bool nextflor_ = false;
 
 	bool next_ = false;
+
+	bool isInvincible_ = false;
 
 	//UI
 	//HPバー
