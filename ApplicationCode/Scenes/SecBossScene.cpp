@@ -244,7 +244,7 @@ void SecBossScene::Update()
 	if (NextClearF)
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
 	}
 
