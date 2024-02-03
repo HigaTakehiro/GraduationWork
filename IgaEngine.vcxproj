@@ -186,6 +186,7 @@
     <ClCompile Include="ApplicationCode\Players\AttackEffect.cpp" />
     <ClCompile Include="ApplicationCode\Players\Player.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\BossScene.cpp" />
+    <ClCompile Include="ApplicationCode\Scenes\ClearScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\GameScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\IBScene.cpp" />
     <ClCompile Include="ApplicationCode\Scenes\LastBossScene.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="ApplicationCode\Players\Player.h" />
     <ClInclude Include="ApplicationCode\Scenes\BaseScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\BossScene.h" />
+    <ClInclude Include="ApplicationCode\Scenes\ClearScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\GameScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\IBScene.h" />
     <ClInclude Include="ApplicationCode\Scenes\LastBossScene.h" />
