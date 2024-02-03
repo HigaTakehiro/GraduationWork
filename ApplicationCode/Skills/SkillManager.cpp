@@ -2,6 +2,7 @@
 #include "KeyInput.h"
 #include "PadInput.h"
 #include "HyperModeSkill.h"
+#include "FallHammerAttackSkill.h"
 #include "SafeDelete.h"
 
 SkillManager::SkillManager()
@@ -9,10 +10,12 @@ SkillManager::SkillManager()
 	player_ = nullptr;
 	passiveSkillList_ = new SkillList("PassiveSkill");
 	activeSkillList_ = new ActiveSkillList("ActiveSkill");
-	HyperModeSkill* hyperMode = new HyperModeSkill("HyperMode", 1 * 60, 4 * 60);
+	HyperModeSkill* hyperMode = new HyperModeSkill("HyperMode", 1 * 60, 1 * 60);
+	FallHammerAttackSkill* fallHammerAttack = new FallHammerAttackSkill("FallHammer", 8 * 60);
 	activeSkillList_->AddSkill(hyperMode);
+	activeSkillList_->AddSkill(fallHammerAttack);
 	activeSkillName01_ = "HyperMode";
-	activeSkillName02_ = "none";
+	activeSkillName02_ = "FallHammer";
 }
 
 SkillManager::~SkillManager()

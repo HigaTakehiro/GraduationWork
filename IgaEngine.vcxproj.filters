@@ -374,6 +374,9 @@
     <ClCompile Include="ApplicationCode\Skills\HyperModeSkill.cpp">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationCode\Skills\FallHammerAttackSkill.cpp">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Audio\Sound.h">
@@ -645,6 +648,9 @@
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationCode\Skills\HyperModeSkill.h">
+      <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationCode\Skills\FallHammerAttackSkill.h">
       <Filter>ソース ファイル\ApplicationCode\Players\Skill</Filter>
     </ClInclude>
   </ItemGroup>

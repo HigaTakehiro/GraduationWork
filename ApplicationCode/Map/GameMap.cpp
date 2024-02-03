@@ -601,7 +601,6 @@ XMFLOAT3 GameMap::GetNowMapPos()
 
 void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos)
 {
-
 	//ˆÚ“®’†‚Å‚Í‚È‚¢
 	if (player->GetNotNext()) { return; }
 	count_ = NextCount(player->GetPos(), direction_);

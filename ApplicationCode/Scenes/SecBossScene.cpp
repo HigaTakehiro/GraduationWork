@@ -33,6 +33,12 @@ void SecBossScene::Initialize()
 		light_->SetPointLightActive(i, false);
 		light_->SetSpotLightActive(i, false);
 	}
+
+	dome = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
+	dome->Initialize();
+	dome->SetRotation({ 0.0f,90.f,0.0f });
+	dome->SetPosition({ 30.f,0.f,30.f });
+
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
@@ -91,6 +97,8 @@ void SecBossScene::Initialize()
 
 void SecBossScene::Update()
 {
+	dome->Update();
+
 	if (!boss_.get()) return;
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
@@ -255,6 +263,7 @@ void SecBossScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	dome->Draw();
 	map_->MapDraw();
 	if (boss_->GetClearF())
 		m_Stairs->Draw();

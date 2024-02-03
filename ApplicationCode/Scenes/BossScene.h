@@ -68,6 +68,8 @@ private:
 	std::vector<Vector3> vec;
 	OBB* _hummmerObb;
 
+	unique_ptr<Object3d> dome;
+
 	std::unique_ptr<BossBase>boss_;
 	//テキスト描画
 	TextDraw* text_;

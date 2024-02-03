@@ -24,6 +24,7 @@ void Grass::Initialize(const Vector3& pos, int I)
 	grass_ = Object3d::Create(model_[0]);
 	grass_->Initialize();
 	grass_->SetPosition(pos);
+	grass_->SetScale({ 0.4f,0.9f,1.0f });
 	animeTimer_ = 0;
 	animeTime_ = 30;
 	animeCount_ = 0;

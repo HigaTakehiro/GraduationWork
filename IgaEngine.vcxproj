@@ -201,6 +201,7 @@
     <ClCompile Include="ApplicationCode\Skills\ActiveSkillList.cpp" />
     <ClCompile Include="ApplicationCode\Skills\ATKUpSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\DEFUpSkill.cpp" />
+    <ClCompile Include="ApplicationCode\Skills\FallHammerAttackSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\HammerReturnSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\HPUpSkill.cpp" />
     <ClCompile Include="ApplicationCode\Skills\HyperModeSkill.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="ApplicationCode\Skills\ActiveSkillList.h" />
     <ClInclude Include="ApplicationCode\Skills\ATKUpSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\DEFUpSkill.h" />
+    <ClInclude Include="ApplicationCode\Skills\FallHammerAttackSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\HammerReturnSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\HPUpSkill.h" />
     <ClInclude Include="ApplicationCode\Skills\HyperModeSkill.h" />
