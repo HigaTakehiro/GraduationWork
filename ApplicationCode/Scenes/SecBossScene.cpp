@@ -344,16 +344,15 @@ void SecBossScene::SceneChange()
 		schange->SetFadeNum(0);
 		FILE* fp;
 		int i;
-		fp = fopen("Engine/Resources/GameData/save.csv", "w");
-		fprintf(fp, "%d", 0);
-		fclose(fp);
 		fp = fopen("Engine/Resources/GameData/save.csv", "r");
 		fscanf(fp, "%d", &i);
 		fclose(fp);
-		fp = fopen("Engine/Resources/GameData/save.csv", "r+");
-		i = i + 1;
-		fprintf(fp, "%d", i);
-		fclose(fp);
+		if (i == 4) {
+			fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+			i = i + 1;
+			fprintf(fp, "%d", i);
+			fclose(fp);
+		}
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
