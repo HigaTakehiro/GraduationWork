@@ -68,6 +68,7 @@ void Player::Initialize()
 
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
+	isFallHammer_ = false;
 
 	//レベル初期化
 	if (level_ <= 0) {
@@ -130,6 +131,7 @@ void Player::Update()
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
+		FallHammerAttack();
 	}
 	if (!stop_) {
 		Move();
@@ -210,6 +212,58 @@ void Player::SubHP(int32_t subHP)
 	if (hp_ <= 0) {
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDestroy, 0.5f);
 	}
+}
+
+void Player::FallHammerAttack()
+{
+	const int32_t fallHammerTime = 60;
+	const float reflectPosY = 0.f;
+	//フォールハンマー攻撃フラグが前フレームと異なる場合
+	if (isPreFallHammer_ != isFallHammer_ && !isHammerReflect_) {
+		Vector3 hammerPos = pos_;
+		hammerPos.y = 0.0f;
+		hammerPos_ = hammerPos;
+		hammer_->SetParent(nullptr);
+		hammer_->SetPosition(hammerPos);
+		fallHammerTimer_ = 0;
+	}
+
+	isPreFallHammer_ = isFallHammer_;
+	if (isHammerReflect_) return;
+
+	const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
+	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
+	hammerSize_ = hammerSize + hammerScaleCorrection * (float)oreCount_;
+	hammer_->SetScale(hammerSize_);
+
+	if (fallHammerTimer_ <= fallHammerTime) {
+		hammer_->SetRotation({ 90.f, 0.f, 0.f });
+		hammerPos_.y += 0.2f;
+		fallHammerTimer_++;
+	}
+	else {
+		hammer_->SetRotation({ 90.f, 180.f, 0.f });
+		hammerPos_.y -= 0.2f;
+		if (hammerPos_.y <= reflectPosY) {
+			isHammerReflect_ = true;
+			isFallHammer_ = false;
+			fallHammerTimer_ = 0;
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
+		}
+	}
+	hammer_->SetPosition(hammerPos_);
+
+}
+
+void Player::ActiveFallHammer()
+{
+	hammer_->SetParent(nullptr);
+	Vector3 hammerPos = pos_;
+	hammerPos.y = -30.0f;
+	hammerPos_ = hammerPos;
+	isFallHammer_ = true;
+	isHammerRelease_ = true;
+	isAttack_ = true;
 }
 
 void Player::PlayerStatusSetting() {
@@ -542,6 +596,8 @@ void Player::Attack() {
 }
 
 void Player::HammerThrow() {
+	if (isFallHammer_) return;
+
 	const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
 	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
 	hammerSize_ = hammerSize + hammerScaleCorrection * (float)oreCount_;
@@ -570,6 +626,8 @@ void Player::HammerGet()
 			hammer_->SetPosition(initHammerPos_);
 			hammer_->SetScale(initHammerScale_);
 			hammer_->SetRotation(initHammerRot_);
+			hammerPos_ = initHammerPos_;
+			hammerSize_ = initHammerScale_;
 			isHammerRelease_ = false;
 			isAttack_ = false;
 			isHammerReflect_ = false;
@@ -772,6 +830,7 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 	if (isHammerRelease_) {
 		HammerThrow();
 		HammerGet();
+		FallHammerAttack();
 	}
 	if (!stop_) {
 		UIUpdate();
