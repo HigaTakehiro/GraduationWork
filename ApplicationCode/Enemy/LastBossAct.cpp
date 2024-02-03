@@ -37,7 +37,7 @@ void LastBossAct::Move()
 	if (++actionCount % ActionInter == 0)
 	{
 		std::uniform_int_distribution<> randact(0, 2);
-		if(randact(mt) == 0)
+		if(randact(mt) == 90)
 		{
 
 			Vector3 posList1[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) };
@@ -54,7 +54,7 @@ void LastBossAct::Move()
 
 			act_ = Act::ATTACK_Hole;
 		}
-		else if(randact(mt)==1)
+		else if(randact(mt)==91)
 		{
 			for (size_t i = 0; i < flameSize; i++)
 			{
@@ -300,7 +300,7 @@ void LastBossAct::Attack_Spell()
 		MeteoScl = { 1,1,1 };
 
 		const Vector3 add = { 0.01f/6.f,0.01f/6.f,0.01f };
-		if((beforeHp-Hp)>1)
+		if((beforeHp-Hp)>1||RangeScale.x>=0.5f)
 		{
 			MeteoPos.y -= 0.02f;
 			

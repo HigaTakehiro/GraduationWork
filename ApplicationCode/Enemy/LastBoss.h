@@ -30,6 +30,7 @@ private:
        Model* m_Model_Walk_Right[4] = {};
        Model* m_Model_Walk_Back[4] = {};
        Model* MeteoModel[2];
+       int meteoanim;
     std::array<std::unique_ptr<Object3d>, 2>m_HoleTex;
     std::array<float, 2>m_HoleRot;
     std::array<std::unique_ptr<Object3d>, 4>m_FlameTex;

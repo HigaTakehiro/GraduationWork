@@ -882,7 +882,7 @@ void Dogom::CoollisionFace()
 void Dogom::CoollisionArm()
 {
 	bool canCol = arm_move_ == DEFAULT&& m_player->getisHammerActive();
-
+	if (m_HP <= 0)return;
 	if (canCol) {
 		for (size_t i = 0; i < 2; i++) {
 		 	//
@@ -903,8 +903,9 @@ void Dogom::CoollisionArm()
 
 				m_player->HitHammerToEnemy(vec[i], 1.f);
 			}
-			
-			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60, Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z + 3.f), 2.f, XMFLOAT2(m_player->GetPos().x, m_player->GetPos().z), 1.f));
+
+			bool ajudg =m_player->getisHammerActive()&&Collision::HitCircle(XMFLOAT2(m_ArmPos[i].x, m_ArmPos[i].z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
+			Helper::DamageManager(m_ArmHp[i], damval, m_ArmDamF[i], m_ArmDamCool[i], 60,ajudg );
 			}
 	}
 

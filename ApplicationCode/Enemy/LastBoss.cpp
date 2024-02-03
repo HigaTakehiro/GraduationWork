@@ -20,7 +20,7 @@ void LastBoss::Init()
 		m_Model_Hole[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "blackHole.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
 	}
 	for (size_t i = 0; i <2; i++) {
-		MeteoModel[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "meteorite.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
+		MeteoModel[i] = Shapes::CreateSquare({ 0, 0 }, { 256.0f, 448.0f }, "meteorite.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 256.0f * (float)i, 0.0f }, { 256.0f, 448.0f });
 	}
 	
 	for (size_t i = 0; i < 4; i++)
@@ -116,6 +116,21 @@ void LastBoss::Upda()
 			m_HoleTex[1] = Object3d::UniquePtrCreate(m_Model_Hole[holeanimtime / Inter]);
 		}
 	}
+
+	meteoanim++;
+		if (meteoanim < 30 ) {
+			m_MeteoTex= Object3d::UniquePtrCreate(MeteoModel[0]);
+		}else
+		{
+			m_MeteoTex = Object3d::UniquePtrCreate(MeteoModel[1]);
+		}
+	if(meteoanim>60)
+	{
+		meteoanim = 0;
+	}
+
+	
+	//meteoanim = std::clamp(meteoanim, 0, 10);
 
 	bool isCollide = Collision::HitCircle({ Pos_.x,Pos_.z + 3.f }, 1.2f, { m_player->GetPos().x,m_player->GetPos().z }, 1.f);
 	if (m_HP > 0) {
