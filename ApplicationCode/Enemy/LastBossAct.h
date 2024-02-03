@@ -63,11 +63,12 @@ private:
 	float Follow();
 	void Attack_Hole();
 	void Attack_Flame();
-	void Attack_Spell();
+	
 	void RunAway();
 	void Death();
 	void Act_Barrier();
-	
+public:
+	void Attack_Spell();
 
 public:
 	void Transision();
@@ -116,11 +117,13 @@ private:// 火の玉ストレート
 	std::string ss;
 private://詠唱
 	std::unique_ptr<Object3d>SpellRangeTex;
-	DirectX::XMFLOAT3 RangeScale;
+	Vector3 RangeScale;
 	int SpellCount = 0;
 	bool SpellCancel;
 	DirectX::XMVECTOR move = { 0,0,0.1f,0 };
 	DirectX::XMMATRIX matRot;
+	Vector3 MeteoPos,MeteoScl;
+	int beforeHp;
 public:
 	Vector3 GetPos() { return Pos_; }
 	Vector3 GetScl() { return Scl_; }
@@ -135,6 +138,9 @@ public:
 	Vector3 GetBarrierPos(int ind) { return BarrierPos[ind]; }
 	float GetBarrierAlpha(int ind) { return BarrierAlpha[ind]; }
 
+	Vector3 GetRangeScl() { return RangeScale; }
+	Vector3 GetMeteoPos() { return MeteoPos; }
+	bool meteof;
 	BOOL damff;
 	int damcool;
 	int hp;

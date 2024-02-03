@@ -19,15 +19,23 @@ void LastBoss::Init()
 	for (size_t i = 0; i < 3; i++) {
 		m_Model_Hole[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "blackHole.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
 	}
+	for (size_t i = 0; i <2; i++) {
+		MeteoModel[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "meteorite.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
+	}
+	
 	for (size_t i = 0; i < 4; i++)
 	{
 		m_FlameTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
 	}
+	
 	for (size_t i = 0; i < 3; i++)
 	{
 		m_GuardTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "boss_shield.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f }));
 	}
-	
+	m_SpellTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
+	m_MeteoTex = Object3d::UniquePtrCreate(MeteoModel[0]);
+
+	m_MeteoTex->SetPosition({0,20,0});
 	//for (int32_t i = 0; i < m_SpearArray; i++) {
 	//}
 
@@ -132,6 +140,7 @@ void LastBoss::Upda()
 	m_Body->SetColor(color_rgb);
 	m_Body->Update();
 
+	Action->Attack_Spell();
 	for(size_t i=0;i<2;i++)
 	{
 		if (m_HoleTex[i] == nullptr)continue;
@@ -157,7 +166,17 @@ void LastBoss::Upda()
 		m_GuardTex[i]->SetColor({ 1,1,1,Action->GetBarrierAlpha(i) });
 		m_GuardTex[i]->Update();
 	}
+	m_SpellTex->SetPosition( {0,0,-2.f});
+	m_SpellTex->SetScale(Action->GetRangeScl());
+	m_SpellTex->SetRotation({ 90,0,0 });
+	m_SpellTex->SetColor({ 1,1,1,0.5f });
+	m_SpellTex->Update();
 
+	m_MeteoTex->SetPosition(Action->GetMeteoPos());
+	m_MeteoTex->SetScale({0.2f,0.2f,1.f});
+	m_MeteoTex->SetRotation({ 0,0,0 });
+	m_MeteoTex->SetColor({ 1,1,1,0.9f });
+	m_MeteoTex->Update();
 	//m_HP--;
 	//UI_Upda();
 	HPUiUpda();
@@ -168,7 +187,7 @@ void LastBoss::Draw()
 	if (m_HP <= 0)return;
 	if (m_player->GetPos().z > 12.f)return;
 	m_Body->Draw();
-
+	m_SpellTex->Draw();
 	for (size_t i = 0; i < 2; i++) {
 		if (m_HoleTex[i] == nullptr)continue;
 		m_HoleTex[i]->Draw();
@@ -181,6 +200,7 @@ void LastBoss::Draw()
 	{
 		m_GuardTex[i]->Draw();
 	}//UI_Draw();
+	m_MeteoTex->Draw();
 }
 
 void LastBoss::Draw2()
