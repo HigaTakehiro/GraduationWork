@@ -130,8 +130,8 @@ void Player::Update()
 
 	if (isHammerRelease_) {
 		HammerThrow();
-		HammerGet();
 		FallHammerAttack();
+		HammerGet();
 	}
 	if (!stop_) {
 		Move();
@@ -230,6 +230,7 @@ void Player::FallHammerAttack()
 
 	isPreFallHammer_ = isFallHammer_;
 	if (isHammerReflect_) return;
+	notnext_ = true;
 
 	const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
 	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
@@ -826,11 +827,19 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 	Repulsion();
 	HammerPowerUp();
 	LevelUp();
+	if (notnext_) {
+		int test = 1;
+		test++;
+	}
+	else {
+		int test = 1;
+		test--;
+	}
 	look_ = NotAttack;
 	if (isHammerRelease_) {
 		HammerThrow();
-		HammerGet();
 		FallHammerAttack();
+		HammerGet();
 	}
 	if (!stop_) {
 		UIUpdate();

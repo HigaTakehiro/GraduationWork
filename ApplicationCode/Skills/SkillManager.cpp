@@ -10,7 +10,7 @@ SkillManager::SkillManager()
 	player_ = nullptr;
 	passiveSkillList_ = new SkillList("PassiveSkill");
 	activeSkillList_ = new ActiveSkillList("ActiveSkill");
-	HyperModeSkill* hyperMode = new HyperModeSkill("HyperMode", 1 * 60, 1 * 60);
+	HyperModeSkill* hyperMode = new HyperModeSkill("HyperMode", 1 * 60, 3 * 60);
 	FallHammerAttackSkill* fallHammerAttack = new FallHammerAttackSkill("FallHammer", 8 * 60);
 	activeSkillList_->AddSkill(hyperMode);
 	activeSkillList_->AddSkill(fallHammerAttack);
