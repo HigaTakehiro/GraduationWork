@@ -148,7 +148,10 @@ void LastBoss::Upda()
 	//	if (!nowcrush) {
 	//Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, isCol);
 	//Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player,  isCol,1.f);
-
+	if(m_HP<=0)
+	{
+		color_rgb.w -= 0.02f;
+	}
 	m_Body->SetScale(Action->GetScl());
 	m_Body->SetPosition({Action->GetPos().x,-2.f,Action->GetPos().z});
 	m_Body->SetRotation(Vector3(0, 0, 0));
@@ -199,23 +202,27 @@ void LastBoss::Upda()
 
 void LastBoss::Draw()
 {
-	if (m_HP <= 0)return;
+
 	if (m_player->GetPos().z > 12.f)return;
-	m_Body->Draw();
-	m_SpellTex->Draw();
-	for (size_t i = 0; i < 2; i++) {
-		if (m_HoleTex[i] == nullptr)continue;
-		m_HoleTex[i]->Draw();
+	if (color_rgb.w > 0.f) {
+		m_Body->Draw();
 	}
-	for(size_t i=0;i<4;i++)
-	{
-		m_FlameTex[i]->Draw();
+	if (m_HP > 0) {
+		m_SpellTex->Draw();
+		for (size_t i = 0; i < 2; i++) {
+			if (m_HoleTex[i] == nullptr)continue;
+			m_HoleTex[i]->Draw();
+		}
+		for (size_t i = 0; i < 4; i++)
+		{
+			m_FlameTex[i]->Draw();
+		}
+		for (size_t i = 0; i < 3; i++)
+		{
+			m_GuardTex[i]->Draw();
+		}//UI_Draw();
+		m_MeteoTex->Draw();
 	}
-	for (size_t i = 0; i < 3; i++)
-	{
-		m_GuardTex[i]->Draw();
-	}//UI_Draw();
-	m_MeteoTex->Draw();
 }
 
 void LastBoss::Draw2()

@@ -94,5 +94,10 @@ private:
 	//ƒ}ƒbƒv‚ÌzÎ
 	std::unique_ptr<Deposit>Deposit_;
 	bool m_DepositCreate = FALSE;
+
+
+
+	std::unique_ptr<Deposit>Deposit_2;
+	bool m_DepositCreate2 = FALSE;
 };
 

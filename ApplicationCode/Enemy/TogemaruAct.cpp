@@ -11,10 +11,14 @@
 #define PI_360 360
 
 Vector3 TogemaruAct::depositPos = { 0, -2.5f, -8.f };
+bool TogemaruAct::depositDelF = false;
+
+Vector3 TogemaruAct::depositPos2 = { 5, -2.5f, -8.f };
+bool TogemaruAct::depositDelF2 = false;
 Vector3 TogemaruAct::cameraPos = {};
 Vector3 TogemaruAct::oldCameraPos = {};
 Vector3 TogemaruAct::DefaultPos= {};
-bool TogemaruAct::depositDelF = false;
+
 bool TogemaruAct::TogemaruDeathF = false;
 TogemaruAct::AppearState TogemaruAct::StateArray[TogemaruAct::StateName::P_Num] =
 {
@@ -151,6 +155,7 @@ void TogemaruAct::Transition()
 
 	//zÎ“–‚½‚è”»’è
 	CollideDeposit();
+	CollideDeposit2();
 	//zÎÕ“Ë‚Ì‰æ–Ê‚Ì—h‚ê
 	ViewShake();
 
@@ -267,7 +272,7 @@ void TogemaruAct::Move()
 		RushStartPos = Pos_;
 	
 		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt)==0)
+		if(randact(mt)>-90)
 		{
 			act_ = Act::ATTACK_SHOTSPEAR;
 		}
@@ -350,6 +355,7 @@ void TogemaruAct::Attack_Rush()
 	if (splineT > 60) {
 		if (spline->GetIndex() >= SplinePosList.size()-2)
 		{
+			RoleF = false;
 			anime_name_ = AnimeName::IdlE;
 			act_ = Act::MOVE;
 			if (spline)
@@ -383,6 +389,7 @@ void TogemaruAct::Attack_ShotSpear()
 
 	if (++rushEaseT >= maxRushEaseT) {
 		depositCollideF = FALSE;
+		depositCollideF2 = FALSE;
 		for (size_t i = 0; i < spearSize; i++) {
 			spearsRot[i] = (i * (360 / spearSize));
 			if(i%2!=0)
@@ -409,6 +416,8 @@ void TogemaruAct::Attack_ShotSpear()
 
 		//ˆÚ“®’†‚ÉzÎ‚É“–‚½‚Á‚½‚ç
 		depositCollideF = TRUE;
+
+		depositCollideF2 = TRUE;
 	}
 
 	//j”ò‚Î‚·
@@ -525,12 +534,46 @@ void TogemaruAct::CollideDeposit()
 			shakeF = TRUE;//‰æ–Ê—h‚ç‚·
 			//j‚Ì”1Œ¸‚ç‚·(‰ó‚ê‚½j‚Ì”{‚P)
 			if (beginBattle) {
-				++crushSpearNum;
+				crushSpearNum=3;
 			}
 			CrushAnimation();
 			depositDelF = TRUE;
 		}
 		depositDelTime = 0;
+	}
+}
+
+
+void TogemaruAct::CollideDeposit2()
+{
+	//”»’è—p‚Ì”¼Œa player - boss
+	constexpr float r1 = 1.f, r2 = 2.f;
+
+	//zÎ•œŠˆ‚·‚é‚Ü‚Å‚Í3•b
+	constexpr int32_t ReproductionTimeMax = 180;
+	if (depositDelF2)
+	{
+		if (++depositDelTime2 > ReproductionTimeMax)
+		{
+			//oŒ»
+			depositPos2= DepositReproduction();
+			depositDelF2 = FALSE;
+		}
+	} else
+	{
+		constexpr float GroundY = 2.f;
+		bool col = Helper::GetCircleCollide({ depositPos2.x,depositPos2.y,depositPos2.z + 3.f }, { Pos_.x,Pos_.y,Pos_.z + 3.f }, r1, r2);
+		//zÎ‚ÆÕ“Ë‚µ‚½‚ç
+		if (depositCollideF2 && (Pos_.y < GroundY && col)) {
+			shakeF = TRUE;//‰æ–Ê—h‚ç‚·
+			//j‚Ì”1Œ¸‚ç‚·(‰ó‚ê‚½j‚Ì”{‚P)
+			if (beginBattle) {
+				crushSpearNum=3;
+			}
+			CrushAnimation();
+			depositDelF2 = TRUE;
+		}
+		depositDelTime2 = 0;
 	}
 }
 
@@ -556,6 +599,19 @@ Vector3 TogemaruAct::DepositReproduction()
 {
 	//o‚·À•W‚Í4“_ ãE‰ºE‰EE¶
 	Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) ,Vector3(10,-2.5f,0) ,Vector3(-10,-2.5f,0) };
+
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
+	std::uniform_int_distribution<> rand(0, 3);
+
+	//oŒ»‚·‚éÀ•W‚ÍPosList‚Ì’†‚©‚çƒ‰ƒ“ƒ_ƒ€
+	return posList[rand(mt)];
+}
+
+Vector3 TogemaruAct::DepositReproduction2()
+{
+	//o‚·À•W‚Í4“_ ãE‰ºE‰EE¶
+	Vector3 posList[] = { Vector3(5,-2.5f,-10),Vector3(-5,-2.5f,6) ,Vector3(10,-2.5f,5) ,Vector3(-10,-2.5f,-5) };
 
 	std::random_device rnd;
 	std::mt19937 mt(rnd());

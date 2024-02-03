@@ -87,6 +87,10 @@ void SecBossScene::Initialize()
 	Deposit_->Initialize(Vector3(0, -2.5f, -8.f),true,camera_.get());
 
 
+	Deposit_2.reset(new Deposit());
+	Deposit_2->Initialize(Vector3(5, -2.5f, -8.f), true, camera_.get());
+
+
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss, TRUE, 0.4f);
 	cameraPos_.y = 12;
@@ -158,7 +162,7 @@ void SecBossScene::Update()
 
 
 	TogemaruAct::DefaultPos = cameraPos_;
-	if (!TogemaruAct::depositDelF) {
+	if (!TogemaruAct::depositDelF&& !TogemaruAct::depositDelF2) {
 		TogemaruAct::oldCameraPos = cameraPos_;
 	}
 	cameraPos_.x += TogemaruAct::cameraPos.x;
@@ -212,6 +216,26 @@ void SecBossScene::Update()
 		m_DepositCreate = TRUE;
 		Deposit_->SetDestroyF(true);//エフェクト生成用
 	}
+	if (TogemaruAct::depositDelF2 && !m_DepositCreate2) {
+		m_DepositCreate2 = TRUE;
+		Deposit_2->SetDestroyF(true);//エフェクト生成用
+	}
+	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
+	
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			if (Collision::HitCircle({ore->Getpos().x,ore->Getpos().z+3.f},0.1f,{player_->GetPos().x,player_->GetPos().z},1.f)
+				&& player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
+				player_->AddOreCount();
+				ore = nullptr;
+			}
+		}
+		if (ore != nullptr) {
+			ore->Update();
+		}
+	}
+
+
 	if(TogemaruAct::TogemaruDeathF)
 	{
 		Deposit_->SetDestroyBoss(true);
@@ -232,11 +256,49 @@ void SecBossScene::Update()
 		}
 	}
 
+	if (m_DepositCreate2)
+	{
+		//完全に透明になったら破棄
+		if (Deposit_2->GetDepositAlpha() <= 0.f) {
+			Deposit_2.reset(nullptr);
+		}
+		//一定時間たっｔら鉱石復活
+		if (!TogemaruAct::depositDelF2) {
+			Deposit_2.reset(new Deposit());
+			Deposit_2->Initialize(TogemaruAct::depositPos2, true, camera_.get());
+			m_DepositCreate2 = FALSE;
+		}
+	}
 
+
+		if (Deposit_ != nullptr && Deposit_->GetHP() > 0) {
+			if (Deposit_->GetIsHit(player_->GetIsHammerSwing())) {
+				unique_ptr<Ore> ore = make_unique<Ore>();
+				ore->Initialize(Deposit_->GetPos(), Deposit_->OreDropVec());
+				oreItems_.push_back(std::move(ore));
+			}
+			Deposit_->Update(player_->GetPos());
+		}
+		if (Deposit_2 != nullptr && Deposit_2->GetHP() > 0) {
+			if (Deposit_2->GetIsHit(player_->GetIsHammerSwing())) {
+				unique_ptr<Ore> ore = make_unique<Ore>();
+				ore->Initialize(Deposit_2->GetPos(), Deposit_2->OreDropVec());
+				oreItems_.push_back(std::move(ore));
+			}
+			Deposit_2->Update(player_->GetPos());
+		}
+	
+		if (!player_->GetIsHammerReflect()) {
+			player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
+		} else {
+			player_->ResetOreCount();
+		}
 	if (Deposit_ != nullptr) {
 		Deposit_->Update(player_->Get());
 	}
-
+	if (Deposit_2 != nullptr) {
+		Deposit_2->Update(player_->Get());
+	}
 	schange->Change(0);
 
 	//シーン切り替えmmm
@@ -273,16 +335,23 @@ void SecBossScene::Draw()
 
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
+	for (std::unique_ptr<Ore>& ore : oreItems_) {
+		if (ore != nullptr) {
+			ore->Draw();
+		}
+	}
 	boss_->Draw();
 	map_->BridgeDraw();
 	player_->Draw();
 	if (!TogemaruAct::depositDelF) {
 		Deposit_->Draw();
-		
+	}
+	if (!TogemaruAct::depositDelF2) {
+		Deposit_2->Draw();
 	}
 	boss_->Draw2();
 	Deposit_->ParticleDraw();
+	Deposit_2->ParticleDraw();
 	Object3d::PostDraw();
 	//shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 

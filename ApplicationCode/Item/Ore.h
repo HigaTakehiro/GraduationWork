@@ -49,5 +49,8 @@ private: //ƒƒ“ƒo•Ï”
 	Vector3 vec_;
 	// ‘¬“x
 	float speed_;
+
+public:
+	Vector3 Getpos() { return pos_; }
 };
 
