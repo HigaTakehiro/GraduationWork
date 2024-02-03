@@ -60,7 +60,7 @@ void SecBossScene::Initialize()
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
 
-	int Num = StageCount::GetIns()->Now();
+	int Num = StageCount::GetIns()->Up();
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 6);
 
