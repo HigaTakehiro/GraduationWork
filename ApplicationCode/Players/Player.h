@@ -79,6 +79,12 @@ public: //メンバ関数
 	/// <returns></returns>
 	bool GetIsHammerSwing() { return isHammerSwing_; }
 
+	/// <summary>
+	/// 無敵状態フラグを取得
+	/// </summary>
+	/// <returns>無敵状態フラグ</returns>
+	bool GetIsInvincible() { return isInvincible_; }
+
 	bool GetNotNext() { return notnext_; }
 
 	/// <summary>
