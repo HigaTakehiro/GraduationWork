@@ -79,6 +79,12 @@ public: //メンバ関数
 	/// <returns></returns>
 	bool GetIsHammerSwing() { return isHammerSwing_; }
 
+	/// <summary>
+	/// 無敵状態フラグを取得
+	/// </summary>
+	/// <returns>無敵状態フラグ</returns>
+	bool GetIsInvincible() { return isInvincible_; }
+
 	bool GetNotNext() { return notnext_; }
 
 	/// <summary>
@@ -543,13 +549,13 @@ private: //メンバ変数
 	int32_t fallHammerTimer_ = 0;
 
 	//UI
+	//ステータスバー
+	std::unique_ptr<Sprite> statusBack_;
 	//HPバー
 	std::unique_ptr<Sprite> hpBar_;
-	std::unique_ptr<Sprite> hpBarBack_;
 	float hpBarSize_;
 	//経験値バー
 	std::unique_ptr<Sprite> epBar_;
-	std::unique_ptr<Sprite> epBarBack_;
 	float epBarSize_;
 	//テキスト
 	TextDraw* text_;

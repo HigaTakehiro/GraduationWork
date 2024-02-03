@@ -4,6 +4,7 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include <forward_list>
+#include <string>
 
 class ParticleManager2d
 {
@@ -73,7 +74,7 @@ public: //メンバ関数
 	/// パーティクル追加
 	/// </summary>
 	/// <param name="particle">パーティクル</param>
-	void Add(int32_t life, Vector2 position, Vector2 velocity, Vector2 accel, Vector2 start_scale = { 1.0f, 1.0f }, Vector2 end_scale = {1.0f, 1.0f}, Vector3 start_color = { 1.0f, 1.0f, 1.0f }, Vector3 end_color = { 0.0f, 0.0f, 0.0f }, float start_alpha = 1.0f, float end_alpha = 0.0f);
+	void Add(int32_t life, Vector2 position, Vector2 velocity, Vector2 accel, Vector2 start_scale = { 1.0f, 1.0f }, Vector2 end_scale = {1.0f, 1.0f}, Vector3 start_color = { 1.0f, 1.0f, 1.0f }, Vector3 end_color = { 0.0f, 0.0f, 0.0f }, float start_alpha = 1.0f, float end_alpha = 0.0f, ImageManager::ImageName imageName = ImageManager::ImageName::bar);
 
 private: //メンバ変数
 	//パーティクルリスト

@@ -26,6 +26,8 @@
 #include "MessageWindow.h"
 #include "Deposit.h"
 #include "AttackEffect.h"
+#include "ParticleManager.h"
+
 class TutorialScene :
 	public BaseScene
 {
@@ -68,6 +70,11 @@ private:
 
 	void SleepShale();
 
+	/// <summary>
+	/// パーティクル生成
+	/// </summary>
+	void ParticleCreate();
+
 public:
 
 	void TitlePhase();
@@ -105,6 +112,7 @@ private:
 	Deposit* deposit_;
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;
+	unique_ptr<ParticleManager> invincibleParticle_;
 	OBB* _hummmerObb;
 
 	std::unique_ptr<BossBase>boss_;

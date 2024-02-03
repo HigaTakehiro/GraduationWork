@@ -131,6 +131,8 @@ void TutorialScene::Initialize()
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 
+	invincibleParticle_ = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera_.get());
+
 }
 
 void TutorialScene::Update()
@@ -235,6 +237,8 @@ void TutorialScene::Update()
 	}
 
 	skillManager_->Update();
+	ParticleCreate();
+	invincibleParticle_->Update();
 
 	SceneChange();
 
@@ -277,6 +281,7 @@ void TutorialScene::Draw()
 
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			ore->Draw();
@@ -294,6 +299,7 @@ void TutorialScene::Draw()
 
 	if (phase_ == Phase::Title) { sleep_->Draw(); }
 	else { player_->Draw(); }
+	invincibleParticle_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
@@ -556,6 +562,28 @@ void TutorialScene::SleepShale()
 
 }
 
+
+void TutorialScene::ParticleCreate()
+{
+	//無敵状態パーティクル
+	if (player_->GetIsInvincible()) {
+		int32_t life = 30;
+		Vector3 pos = player_->GetPos();
+		pos.y -= 0.5f;
+
+		Vector3 vel = { 0.f, 0.f, 0.f };
+		float rnd_vel = 0.2f;
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.f;
+
+		Vector3 acc = { 0.f, 0.f, 0.f };
+		float rnd_acc = 0.015f;
+		acc.y = (float)rand() / RAND_MAX * rnd_acc * rnd_acc / 2.0f;
+
+		invincibleParticle_->Add(life, pos, vel, acc, 1.f, 0.f, { 1.5f, 1.5f, 1.5f }, {1.f, 1.f, 1.f}, 0.5f, 0.0f);
+		invincibleParticle_->LoadTexture("Flash");
+	}
+}
 
 void TutorialScene::TitlePhase()
 {
