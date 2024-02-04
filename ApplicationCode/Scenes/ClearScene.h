@@ -58,7 +58,12 @@ private: //メンバ変数
 	//モデル
 	Model* idolModel_[4];
 
+	Model* housemodel_;
+
 	unique_ptr<Object3d> dome;
+
+	unique_ptr<Object3d>house_[6];
+
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点
