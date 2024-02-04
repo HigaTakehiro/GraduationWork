@@ -242,7 +242,7 @@ void GameMap::CreateBridge()
 				Bridges->bridge_->SetPosition(Pos);
 				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,0.f,0.f });
-				Bridges->bridge_->SetColor({0.6f,0.3f,0.1,1.f});
+				Bridges->bridge_->SetColor({ 0.9f,0.8f,0.6f,1.0f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Beside;
 				if (Map2->state_ == Map::IfMap || Map->state_ == Map::IfMap) {
@@ -261,7 +261,7 @@ void GameMap::CreateBridge()
 				Bridges->bridge_->SetPosition(Pos);
 				Bridges->bridge_->SetScale({ 5.f,0.5f,1.f });
 				Bridges->bridge_->SetRotation({ 0.f,90.f,0.f });
-				Bridges->bridge_->SetColor({ 0.6f,0.3f,0.1,1.f });
+				Bridges->bridge_->SetColor({ 0.9f,0.8f,0.6f,1.0f });
 				Bridges->num = Map->num;
 				Bridges->state_ = Direction::Vertical;
 				if (Map2->state_ == Map::IfMap || Map->state_ == Map::IfMap) {
