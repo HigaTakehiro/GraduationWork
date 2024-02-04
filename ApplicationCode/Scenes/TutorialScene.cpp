@@ -57,9 +57,9 @@ void TutorialScene::Initialize()
 	wake_->SetAlpha(1.5f);
 	wake_->SetPosition(wakePos_);
 
-	nextui_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::asist_, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
-	nextui_->SetAlpha(1.5f);
-	nextui_->SetPosition(asistPos_);
+	//nextui_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::asist_, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
+	//nextui_->SetAlpha(1.5f);
+	//->SetPosition(asistPos_);
 
 	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
 	sleep_->SetIsBillboardY(true);
@@ -310,7 +310,7 @@ void TutorialScene::Draw()
 	title_[titleanimeCount_]->Draw();
 	wake_->Draw();
 	if (phase_ == Phase::Description || phase_ == Phase::Spown) {
-		nextui_->Draw();
+		//nextui_->Draw();
 	}
 
 	schange->Draw();
@@ -320,13 +320,13 @@ void TutorialScene::Draw()
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
 
-	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
+	D2D1_RECT_F textDrawRange = { 640, 620, 1280, 1280 };
 	//D2D1_RECT_F textDrawRange2 = { 600, 300, 1280, 1280 };
 	//std::wstring hx = std::to_wstring(ShakeCount);
 	//text_->Draw("meiryo", "white", L""+hx, textDrawRange2);
 	std::wstring MoveTimer = std::to_wstring((int32_t)movetimer_);
 	if (phase_ == Phase::Move) {
-		movetextui_->Draw("bestTen", "white", L"Lスティックで動いてみよう\n10/" + MoveTimer, textDrawRange);
+		movetextui_->Draw("bestTen", "white", L"Lスティックで動いてみよう 10/" + MoveTimer, textDrawRange);
 	}
 
 	if (phase_ == Phase::Fight) {
@@ -334,7 +334,7 @@ void TutorialScene::Draw()
 	}
 
 	if (phase_ == Phase::Defeat) {
-		fighttextui_->Draw("bestTen", "white", L"洞窟を進んで階段へ向かおう\n", textDrawRange);
+		fighttextui_->Draw("bestTen", "white", L"         洞窟を進んで階段へ向かおう\n", textDrawRange);
 	}
 
 	if (phase_ != Phase::Title) {
@@ -371,7 +371,7 @@ void TutorialScene::Finalize()
 	safe_delete(player_);
 	map_->Finalize();
 	wake_.release();
-	nextui_.release();
+	//nextui_.release();
 	titlefilter_.release();
 	skillManager_->Finalize();
 }

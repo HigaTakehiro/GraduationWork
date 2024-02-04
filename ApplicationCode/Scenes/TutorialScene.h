@@ -167,7 +167,7 @@ private:
 	XMFLOAT2 size_ = { 1280.f,720.f };
 
 	XMFLOAT2 titleposition_{160,100};
-	XMFLOAT2 wakePos_{ 544.f,WinApp::window_height - 100 };
+	XMFLOAT2 wakePos_{ 500.f,WinApp::window_height - 110 };
 	XMFLOAT2 asistPos_{ WinApp::window_width-250 ,WinApp::window_height - 100 };
 	XMFLOAT3 sleepPos_ = { 0.f,-2.5f,50.f };
 	SceneChangeEffect* schange;
