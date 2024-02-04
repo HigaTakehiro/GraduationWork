@@ -62,8 +62,9 @@ void BossScene::Initialize()
 	boss_->SetPlayerIns(player_);
 
 	skillManager_->SetPlayer(player_);
-
-	int Num = StageCount::GetIns()->Up();
+	//if (player_->GetHP() > 0) {
+		int Num = StageCount::GetIns()->Up();
+	//}
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 6);
 

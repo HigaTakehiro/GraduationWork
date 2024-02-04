@@ -12,6 +12,8 @@ public:
 
 	int Up();
 
+	int Down();
+
 	int FloorFour();
 
 	int FloorEight();
@@ -39,6 +41,11 @@ inline int StageCount::Now()
 inline int StageCount::Up()
 {
 	return stagenum += 1;
+
+}
+inline int StageCount::Down()
+{
+	return stagenum -= 1;
 
 }
 inline int StageCount::FloorFour()

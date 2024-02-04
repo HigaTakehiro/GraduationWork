@@ -125,7 +125,7 @@ private: //メンバ変数
 	IntermediateBase* ib_;
 
 	int baseNo = 0;
-
+	int x;
 	//プレイヤーオブジェクト
 	std::unique_ptr<Object3d> player_;
 	//プレイヤーモデル

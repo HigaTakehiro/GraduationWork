@@ -140,7 +140,13 @@ void IBScene::Initialize()
 	playerUI_->SetStop(true);
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
-	int Num = StageCount::GetIns()->Up();
+
+	if (hp_ > 0) {
+		int Num = StageCount::GetIns()->Up();
+	}
+	else {
+		int Num = StageCount::GetIns()->Down();
+	}
 
 	skillManager_->SetPlayer(playerUI_);
 }
@@ -241,7 +247,7 @@ void IBScene::Update()
 	playerUI_->Update();
 	playerUI_->SetHP(playerUI_->GetMaxHP());
 
-	if (hp_ != 0) {
+	if (hp_ > 0) {
 		if (baseCount < 2) {
 			baseCount++;
 		}
@@ -249,7 +255,8 @@ void IBScene::Update()
 			baseNo++;
 		}
 	}
-	else {
+	else if (hp_ <= 0) {
+		baseCount = 0;
 		baseNo = ib_->GetBaseNo();
 	}
 
@@ -332,8 +339,8 @@ void IBScene::Draw()
 	D2D1_RECT_F textDrawRange = { 300, 520, 700, 750 };
 	D2D1_RECT_F skillPointDrawRange = { 550, 100, 900, 200 };
 	D2D1_RECT_F skillPanelMessageRange = { 850, 300, 950, 400 };
-	//std::wstring hx = std::to_wstring(SceneManager::GetHP());
-	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
+	std::wstring hx = std::to_wstring(StageCount::GetIns()->Now());
+	text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
 	std::wstring indent = L"\n";
 	std::wstring statusMessage = L"HP : ";
 	std::wstring skillPointMessage = L"スキルポイント : ";
@@ -390,6 +397,7 @@ void IBScene::Finalize()
 
 void IBScene::SceneChange()
 {
+	float leftStick = PadInput::GetIns()->leftStickY();
 	if (schange->GetFStart() == false) {
 		if (skillFlag == false) {
 			if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
@@ -400,7 +408,6 @@ void IBScene::SceneChange()
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
 				arrow->SetPosition({ 900,150 });
 			}
-			float leftStick = PadInput::GetIns()->leftStickY();
 			if (leftStick > 0) {
 				soundCount++;
 				arrow->SetPosition({ 900,150 });
