@@ -62,6 +62,7 @@ void NormalEnemyA::Upda(Camera* camera)
 
 	Jump();
 
+
 	if(_status.Scl.y<=1.3f)
 	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(),Collision::GetLength(_status.Pos, _player->GetPos()) < 1.3f, 1.8f);
 

@@ -145,7 +145,13 @@ public:
 protected:
 	void TexInit();
 	void TexUpda();
+	BOOL edamf;
+	int edamcool;
+	bool damfprot;
 public:
+	void damage();
+	void damage2();
+	void SetDamF(bool f) { damfprot = f; }
 	virtual void TexDraw()=0;
 
 	void TutorialTexDraw();
@@ -186,15 +192,7 @@ public:
 	void SetCount(int Count) { this->count_ = Count; }
 	int GetCount() { return count_; }
 
-	inline void GetDamage()
-	{
-		if (!FlashF)FlashF = TRUE;
-		_status.HP--;
-		if (!_isAttack) {
-			RecvDamage = TRUE;
-		}
-	}
-
+	void GetDamage(bool f);
 	void CollideHammerDeb();
 private:
 	void RotforPlayer();

@@ -469,17 +469,27 @@ void TutorialScene::EnemyProcess()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr || Enemy->GetHP() <= 0) { continue; }
 		enemyPos[i] = Enemy->GetPos();
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		if(Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f}, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack())
+		{
+			Enemy->SetDamF(true);
+		}
+		else
+		{
+			Enemy->SetDamF(false);
+		}
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z+3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
-			Enemy->GetDamage();
+			Enemy->GetDamage(true);
 			Vector3 vec{};
-			vec = playerPos - enemyPos[i];
+			Vector3 eposcorr = { enemyPos[i].x,enemyPos[i].y, enemyPos[i].z + 3.f};
+			vec = playerPos - eposcorr;
 			vec.normalize();
 			vec.y = 0.0f;
 			player_->HitHammerToEnemy(vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 
 		}
+		Enemy->damage();
 		//if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
 		//	aEffect_->Update(enemyPos[i]);
 		//}

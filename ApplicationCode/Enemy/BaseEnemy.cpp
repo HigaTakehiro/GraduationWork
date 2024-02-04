@@ -233,6 +233,25 @@ void BaseEnemy::PlayerHitBody(float dis, bool& f)
 	Helper::ColKnock(posp, pose, _player.get(), f, dis);
 }
 
+void BaseEnemy::damage()
+{
+	Helper::DamageManager(_status.HP, 1, edamf, edamcool, 90, damfprot);
+}
+
+void BaseEnemy::damage2()
+{
+	Helper::DamageManager(_status.HP, 1, edamf, edamcool, 90, damfprot);
+}
+
+void BaseEnemy::GetDamage(bool f)
+{
+	if (!FlashF)FlashF = TRUE;
+
+	if (!_isAttack) {
+		RecvDamage = TRUE;
+	}
+}
+
 
 
 void BaseEnemy::DestryAct(float& alpha, int hp)
