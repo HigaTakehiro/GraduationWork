@@ -348,7 +348,7 @@ float TogemaruAct::Follow()
 void TogemaruAct::Attack_Rush()
 {
 	if (act_ == Act::DEATH)return;
-	RoleF = true;
+
 
 	splineT++;
 	
@@ -364,6 +364,7 @@ void TogemaruAct::Attack_Rush()
 			SplinePosList.clear();
 		} else
 		{
+			RoleF = true;
 			anime_name_ = AnimeName::ROLE;
 			spline->Upda(Pos_);
 		}
