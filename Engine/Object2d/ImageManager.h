@@ -38,7 +38,10 @@ public: //‰æ‘œ–¼
 		BossBar,
 		BossBar_Toge,
 		Flash,
-		PlayerUIBack
+		PlayerUIBack,
+		skillIcon_FallHammer,
+		skillIcon_HyperMode,
+		skillIcon_Empty
 	};
 
 	enum Image2DName {

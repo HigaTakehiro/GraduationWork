@@ -68,6 +68,15 @@ public: //メンバ関数
 	/// <returns>置換後文字列</returns>
 	std::wstring ReplaceWstr(std::wstring& replacedStr, std::wstring fromStr, std::wstring toStr);
 
+	/// <summary>
+	/// 全ての文字列置換(wstring)
+	/// </summary>
+	/// <param name="replacedStr">置換したい文字列</param>
+	/// <param name="fromStr">置換したい文字列</param>
+	/// <param name="toStr">置換する文字列</param>
+	/// <returns>置換後文字列</returns>
+	std::wstring ReplaceAllWstr(std::wstring& replacedStr, std::wstring fromStr, std::wstring toStr);
+
 private: //静的メンバ変数
 	//デフォルトファイルパス
 	const static std::string defaultDirectory;

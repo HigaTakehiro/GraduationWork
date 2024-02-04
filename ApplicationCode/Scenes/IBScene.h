@@ -163,6 +163,8 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> skillPlayer_[4];
 	//スキルパネル
 	SkillPanelStatus panelStatus_[7][7];
+	std::unique_ptr<SkillPanel> activeSkillPanel01_;
+	std::unique_ptr<SkillPanel> activeSkillPanel02_;
 	//スキル画面カーソルスプライト
 	std::unique_ptr<Sprite> skillCursor_;
 
