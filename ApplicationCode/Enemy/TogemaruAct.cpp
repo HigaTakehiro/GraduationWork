@@ -272,7 +272,7 @@ void TogemaruAct::Move()
 		RushStartPos = Pos_;
 	
 		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt)>-90)
+		if(randact(mt)==0)
 		{
 			act_ = Act::ATTACK_SHOTSPEAR;
 		}

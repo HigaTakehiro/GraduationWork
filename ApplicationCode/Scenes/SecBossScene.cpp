@@ -7,6 +7,7 @@
 #include "PadInput.h"
 #include "Collision.h"
 #include "Dogom.h"
+#include "Helper.h"
 #include "SoundManager.h"
 #include "StageCount.h"
 #include "Togemaru.h"
@@ -287,7 +288,11 @@ void SecBossScene::Update()
 			}
 			Deposit_2->Update(player_->GetPos());
 		}
-	
+		Vector3 dpos = { Deposit_->GetPos().x,Deposit_->GetPos().y,Deposit_->GetPos().z + 3.f };
+		Vector3 dpos2 = { Deposit_2->GetPos().x,Deposit_->GetPos().y,Deposit_2->GetPos().z + 3.f };
+		Helper::ColKnock(player_->GetPos(), dpos, player_, Collision::GetLength(player_->GetPos(), dpos) < 3.5f, 1.5f);
+		Helper::ColKnock(player_->GetPos(),dpos2, player_, Collision::GetLength(player_->GetPos(), dpos2) < 3.5f, 1.5f);
+
 		if (!player_->GetIsHammerReflect()) {
 			player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
 		} else {
