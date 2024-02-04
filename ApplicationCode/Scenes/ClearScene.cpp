@@ -29,6 +29,26 @@ void ClearScene::Initialize()
 		idolModel_[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "tuyu_idle.png", { 96.0f, 96.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 2.0f }, { 128.0f, 128.0f });
 	}
 
+	housemodel_=Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "house.png", { 7.0f, 7.0f }, { 0.5f, 0.5f }, { 128.0f , 2.0f }, { 128.0f, 128.0f });
+	for (int32_t i = 0; i < 6; i++) {
+		XMFLOAT3 Pos;
+		if (i < 3) {
+			Pos={ 1.f * i + 9.f,0.f,21.f * i - 35.f };
+			if (i == 1) {
+				Pos = { 2.5f  + 9.f,0.f,21.f  - 31.f };
+			}
+		}
+		else {
+			Pos = { -1.f * (i-3) - 9.f,0.f,21.f * (i - 3) - 35.f };
+			if (i == 4) {
+				Pos = { -2.5f - 9.f,0.f,21.f - 31.f };
+			}
+		}
+		house_[i]= Object3d::UniquePtrCreate(housemodel_);
+		house_[i]->SetPosition(Pos);
+	}
+
+
 	dome = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
 	dome->Initialize();
 	dome->SetRotation({ 0.0f,90.f,0.0f });
@@ -42,6 +62,7 @@ void ClearScene::Initialize()
 
 	ground_= Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("ground"));
 	ground_->SetPosition({ 0.f,-2.f,0.f });
+	ground_->SetScale({ 1.f,1.f,0.5f });
 
 	schange = new SceneChangeEffect();
 	schange->Initialize();
@@ -55,6 +76,9 @@ void ClearScene::Update()
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	Animation();
+	for (int32_t i = 0; i < 6; i++) {
+		house_[i]->Update();
+	}
 	dome->Update();
 	ground_->Update();
 }
@@ -67,6 +91,9 @@ void ClearScene::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	dome->Draw();
 	ground_->Draw();
+	for (int32_t i = 0; i < 6; i++) {
+		house_[i]->Draw();
+	}
 	idol_->Draw();
 	Object3d::PostDraw();
 	//スプライト描画処理(UI等)
