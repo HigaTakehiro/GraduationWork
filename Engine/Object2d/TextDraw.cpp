@@ -21,6 +21,7 @@ void TextDraw::Initialize() {
 	DirectXSetting::GetIns()->registerTextFormat("meiryo_16", defaultFont, 16);
 	DirectXSetting::GetIns()->registerFontFormat("bestTen", L"ベストテン-CRT", L"Engine/Resources/fonts/BestTen-CRT.otf", defaultFontSize);
 	DirectXSetting::GetIns()->registerFontFormat("bestTen_16", L"ベストテン-CRT", L"Engine/Resources/fonts/BestTen-CRT.otf", 16);
+	DirectXSetting::GetIns()->registerFontFormat("bestTen_12", L"ベストテン-CRT", L"Engine/Resources/fonts/BestTen-CRT.otr", 12);
 }
 
 void TextDraw::Draw(const std::string& textFormatKey, const std::string& solidColorBrushKey, const std::wstring& text, const D2D1_RECT_F& rect) {

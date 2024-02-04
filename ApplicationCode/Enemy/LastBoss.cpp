@@ -19,15 +19,23 @@ void LastBoss::Init()
 	for (size_t i = 0; i < 3; i++) {
 		m_Model_Hole[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "blackHole.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
 	}
+	for (size_t i = 0; i <2; i++) {
+		MeteoModel[i] = Shapes::CreateSquare({ 0, 0 }, { 256.0f, 448.0f }, "meteorite.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 256.0f * (float)i, 0.0f }, { 256.0f, 448.0f });
+	}
+	
 	for (size_t i = 0; i < 4; i++)
 	{
 		m_FlameTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
 	}
+	
 	for (size_t i = 0; i < 3; i++)
 	{
 		m_GuardTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "boss_shield.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f }));
 	}
-	
+	m_SpellTex = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
+	m_MeteoTex = Object3d::UniquePtrCreate(MeteoModel[0]);
+
+	m_MeteoTex->SetPosition({0,20,0});
 	//for (int32_t i = 0; i < m_SpearArray; i++) {
 	//}
 
@@ -87,6 +95,8 @@ void LastBoss::Upda()
 	Action->Transision();
 
 	Pos_ = Action->GetPos();
+//各種パラメータセット
+	m_HP = Action->GetHp();
 
 	bool isCol = Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
@@ -107,30 +117,48 @@ void LastBoss::Upda()
 		}
 	}
 
-	bool isCollide = Collision::HitCircle({ Pos_.x,Pos_.z + 3.f }, 1.2f, { m_player->GetPos().x,m_player->GetPos().z }, 1.f);
-	Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f },m_player, isCollide,1.f);
+	meteoanim++;
+		if (meteoanim < 30 ) {
+			m_MeteoTex= Object3d::UniquePtrCreate(MeteoModel[0]);
+		}else
+		{
+			m_MeteoTex = Object3d::UniquePtrCreate(MeteoModel[1]);
+		}
+	if(meteoanim>60)
+	{
+		meteoanim = 0;
+	}
 
+	
+	//meteoanim = std::clamp(meteoanim, 0, 10);
+
+	bool isCollide = Collision::HitCircle({ Pos_.x,Pos_.z + 3.f }, 1.2f, { m_player->GetPos().x,m_player->GetPos().z }, 1.f);
+	if (m_HP > 0) {
+		Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player, isCollide, 1.f);
+	}
 	DamF = Action->GetDamF();
 	if (DamF)FlashF = true;
 	RecvDamageFlash();
 	//
 	AnimationSett();
-	//各種パラメータセット
-	m_HP = Action->GetHp();
-
+	
 	//本体
 	//bool isCollsion = m_player->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
 	//	if (!nowcrush) {
 	//Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, isCol);
 	//Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player,  isCol,1.f);
-
+	if(m_HP<=0)
+	{
+		color_rgb.w -= 0.02f;
+	}
 	m_Body->SetScale(Action->GetScl());
 	m_Body->SetPosition({Action->GetPos().x,-2.f,Action->GetPos().z});
 	m_Body->SetRotation(Vector3(0, 0, 0));
 	m_Body->SetColor(color_rgb);
 	m_Body->Update();
 
+	Action->Attack_Spell();
 	for(size_t i=0;i<2;i++)
 	{
 		if (m_HoleTex[i] == nullptr)continue;
@@ -156,7 +184,17 @@ void LastBoss::Upda()
 		m_GuardTex[i]->SetColor({ 1,1,1,Action->GetBarrierAlpha(i) });
 		m_GuardTex[i]->Update();
 	}
+	m_SpellTex->SetPosition( {0,0,-2.f});
+	m_SpellTex->SetScale(Action->GetRangeScl());
+	m_SpellTex->SetRotation({ 90,0,0 });
+	m_SpellTex->SetColor({ 1,1,1,0.5f });
+	m_SpellTex->Update();
 
+	m_MeteoTex->SetPosition(Action->GetMeteoPos());
+	m_MeteoTex->SetScale({0.2f,0.2f,1.f});
+	m_MeteoTex->SetRotation({ 0,0,0 });
+	m_MeteoTex->SetColor({ 1,1,1,0.9f });
+	m_MeteoTex->Update();
 	//m_HP--;
 	//UI_Upda();
 	HPUiUpda();
@@ -164,22 +202,27 @@ void LastBoss::Upda()
 
 void LastBoss::Draw()
 {
-	if (m_HP <= 0)return;
-	if (m_player->GetPos().z > 12.f)return;
-	m_Body->Draw();
 
-	for (size_t i = 0; i < 2; i++) {
-		if (m_HoleTex[i] == nullptr)continue;
-		m_HoleTex[i]->Draw();
+	if (m_player->GetPos().z > 12.f)return;
+	if (color_rgb.w > 0.f) {
+		m_Body->Draw();
 	}
-	for(size_t i=0;i<4;i++)
-	{
-		m_FlameTex[i]->Draw();
+	if (m_HP > 0) {
+		m_SpellTex->Draw();
+		for (size_t i = 0; i < 2; i++) {
+			if (m_HoleTex[i] == nullptr)continue;
+			m_HoleTex[i]->Draw();
+		}
+		for (size_t i = 0; i < 4; i++)
+		{
+			m_FlameTex[i]->Draw();
+		}
+		for (size_t i = 0; i < 3; i++)
+		{
+			m_GuardTex[i]->Draw();
+		}//UI_Draw();
+		m_MeteoTex->Draw();
 	}
-	for (size_t i = 0; i < 3; i++)
-	{
-		m_GuardTex[i]->Draw();
-	}//UI_Draw();
 }
 
 void LastBoss::Draw2()

@@ -35,6 +35,12 @@ void GameScene::Initialize()
 		light_->SetPointLightActive(i, false);
 		light_->SetSpotLightActive(i, false);
 	}
+
+	dome = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
+	dome->Initialize();
+	dome->SetRotation({ 0.0f,90.f,0.0f });
+	dome->SetPosition({ 30.f,0.f,30.f });
+
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
@@ -77,6 +83,7 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
+	dome->Update();
 	player_->Update();
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
 	if (player_->GetHP() <= 0) {
@@ -170,6 +177,7 @@ void GameScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	dome->Draw();
 	map_->MapDraw();
 	for (int i = 0; i < map_->GetDepositsSize(); i++) {
 		unique_ptr<Deposit>& Dep = map_->GetDeposit(i);
@@ -267,19 +275,20 @@ void GameScene::SceneChange()
 		schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
-
-		if (StageCount::GetIns()->Now() == 4 ||
-			StageCount::GetIns()->Now() == 9 ||
+		FILE* fp;
+		int i;
+		fp = fopen("Engine/Resources/GameData/save.csv", "r");
+		fscanf(fp, "%d", &i);
+		fclose(fp);
+		if (StageCount::GetIns()->Now() == 4||
+			StageCount::GetIns()->Now() == 9||
 			StageCount::GetIns()->Now() == 16) {
-			FILE* fp;
-			int i;
-			fp = fopen("Engine/Resources/GameData/save.csv", "r");
-			fscanf(fp, "%d", &i);
-			fclose(fp);
-			fp = fopen("Engine/Resources/GameData/save.csv", "r+");
-			i = i + 1;
-			fprintf(fp, "%d", i);
-			fclose(fp);
+			if (i == 1||i==3||i==5) {
+				fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+				i = i + 1;
+				fprintf(fp, "%d", i);
+				fclose(fp);
+			}
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
 		else {
@@ -290,7 +299,7 @@ void GameScene::SceneChange()
 	}
 	//‚±‚ê‚¢‚Â‚©Á‚·‚æ‚¤‚É
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss);
+		//SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 }
 

@@ -36,8 +36,8 @@ void LastBossAct::Move()
 	//çUåÇÇ…à⁄çs
 	if (++actionCount % ActionInter == 0)
 	{
-		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt) == 0)
+		std::uniform_int_distribution<> randact(0, 2);
+		if(randact(mt) == 90)
 		{
 
 			Vector3 posList1[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) };
@@ -54,7 +54,7 @@ void LastBossAct::Move()
 
 			act_ = Act::ATTACK_Hole;
 		}
-		else
+		else if(randact(mt)==91)
 		{
 			for (size_t i = 0; i < flameSize; i++)
 			{
@@ -66,6 +66,11 @@ void LastBossAct::Move()
 			std::uniform_int_distribution<> rand1(0, 3);
 			actionval = rand1(mt);
 			act_ = Act::ATTACK_Flame;
+		}
+		else
+		{
+			if(!meteof)
+			meteof = true;
 		}
 		//anime_name_ = AnimeName::ROLE;
 	}
@@ -138,7 +143,7 @@ void LastBossAct::Attack_Hole()
 		HoleRange[i] = HoleSize[i].x *20.f ;
 		bool judg_Ham = Player_->getisHammerActive() && Collision::HitCircle({ HolePos[i].x, HolePos[i].z + 3.f }, HoleRange[i],
 			{ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f);
-		bool judg_Player = Collision::HitCircle({ HolePos[i].x, HolePos[i].z + 3.f }, HoleRange[i],
+		bool judg_Player = Hp>0&&Collision::HitCircle({ HolePos[i].x, HolePos[i].z + 3.f }, HoleRange[i],
 			{ Player_->GetPos().x,Player_->GetPos().z }, 1.f);
 
 		if(judg_Player)
@@ -269,7 +274,7 @@ void LastBossAct::Attack_Flame()
 			FlameScl[i].y = std::clamp(FlameScl[i].y, 0.f, 0.1f);
 
 		
-			bool judg = Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { FlamePos[i].x,FlamePos[i].z + 3.f }, FlameScl[i].x * 20.f);
+			bool judg = Hp>0&&Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { FlamePos[i].x,FlamePos[i].z + 3.f }, FlameScl[i].x * 20.f);
 			if (judg)
 			{
 				Player_->SubHP(1);
@@ -286,10 +291,39 @@ void LastBossAct::Attack_Flame()
 
 void LastBossAct::Attack_Spell()
 {
-	if (!SpellCancel) {
-		RangeScale.x += 0.02f;
-		RangeScale.y += 0.02f;
+	if (!meteof) {
+		beforeHp = Hp;
+		MeteoPos.y = 20;
+		RangeScale = { 0,0,0 };
 	}
+	else {
+		MeteoScl = { 1,1,1 };
+
+		const Vector3 add = { 0.01f/6.f,0.01f/6.f,0.01f };
+		if((beforeHp-Hp)>1||RangeScale.x>=0.5f)
+		{
+			MeteoPos.y -= 0.02f;
+			
+		}
+		else {
+			RangeScale += add;
+		}
+		RangeScale.x = std::clamp(RangeScale.x, 0.f, 0.5f);
+		RangeScale.y = std::clamp(RangeScale.y, 0.f, 0.5f);
+		if (MeteoPos.y < -2.f) {
+			bool judg=Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { 0,0}, RangeScale.x * 20.f);
+			if (judg)Player_->SubHP(1);
+			meteof = false;
+		}
+		if (RangeScale.x > 0.4f)
+		{
+			
+		} else
+		{
+			MeteoPos.y = 20;
+		}
+	}
+
 }
 
 void LastBossAct::Transision()
@@ -320,10 +354,10 @@ void LastBossAct::Act_Barrier()
 		BarrierPos[i].z = Pos_.z + sinf(BarrierAngle[i] + (i * 90)) * 2.f;
 		BarrierPos[i].y = Pos_.y;
 
-		bool judg =  Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
+		bool judg = Hp>0&& Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
 			{ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f);
 
-		bool isCollsion = Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
+		bool isCollsion = Hp>0&&Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
 		{
 
 			if (BarrierHp[i] > 0) {

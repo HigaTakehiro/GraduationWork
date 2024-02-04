@@ -67,6 +67,8 @@ private:
 	std::vector<Vector3> vec;
 	OBB* _hummmerObb;
 
+	unique_ptr<Object3d> dome;
+
 	std::unique_ptr<BossBase>boss_;
 	//テキスト描画
 	TextDraw* text_;
@@ -92,5 +94,10 @@ private:
 	//マップの鉱石
 	std::unique_ptr<Deposit>Deposit_;
 	bool m_DepositCreate = FALSE;
+
+
+
+	std::unique_ptr<Deposit>Deposit_2;
+	bool m_DepositCreate2 = FALSE;
 };
 

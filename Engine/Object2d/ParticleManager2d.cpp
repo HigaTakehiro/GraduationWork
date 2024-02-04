@@ -68,7 +68,7 @@ void ParticleManager2d::Draw()
 	}
 }
 
-void ParticleManager2d::Add(int32_t life, Vector2 position, Vector2 velocity, Vector2 accel, Vector2 start_scale, Vector2 end_scale, Vector3 start_color, Vector3 end_color, float start_alpha, float end_alpha)
+void ParticleManager2d::Add(int32_t life, Vector2 position, Vector2 velocity, Vector2 accel, Vector2 start_scale, Vector2 end_scale, Vector3 start_color, Vector3 end_color, float start_alpha, float end_alpha, ImageManager::ImageName imageName)
 {
 	// ƒŠƒXƒg‚É—v‘f‚ð’Ç‰Á
 	particleList_.emplace_front();
@@ -85,5 +85,5 @@ void ParticleManager2d::Add(int32_t life, Vector2 position, Vector2 velocity, Ve
 	p.end_Alpha_ = end_alpha;
 	p.endFrame_ = life;
 
-	//p.particle_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::particleCircle, position);
+	p.particle_ = Sprite::UniquePtrCreate((UINT)imageName, position);
 }

@@ -68,6 +68,7 @@ void Player::Initialize()
 
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
+	isFallHammer_ = false;
 
 	//レベル初期化
 	if (level_ <= 0) {
@@ -76,21 +77,19 @@ void Player::Initialize()
 	}
 
 	//UI初期化
+	//ステータス背景
+	statusBack_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::PlayerUIBack, { 0, 0 });
 	//HPバー
-	hpBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 50 }, { 0.2f, 0.6f, 0.2f, 1.0f }, { 0.0f, 0.0f });
-	hpBarBack_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 50 }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f });
+	hpBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 3, 48 }, { 0.2f, 0.6f, 0.2f, 1.0f }, { 0.0f, 0.0f });
 	hpBarSize_ = 200.0f;
-	hpBar_->SetSize({ hpBarSize_, 20 });
+	hpBar_->SetSize({ hpBarSize_, 1.f });
 	hpBar_->SetLeftSizeCorrection(true);
-	hpBarBack_->SetSize({ hpBarSize_, 20 });
 	//経験値バー
-	epBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 70 }, { 0.5f, 0.5f, 0.2f, 1.0f }, { 0.0f, 0.0f });
-	epBarBack_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 20, 70 }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f });
-	epBarSize_ = 200.0f;
+	epBar_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 112, 32 }, { 0.5f, 0.5f, 0.2f, 1.0f }, { 0.0f, 0.0f });
+	epBarSize_ = 80.0f;
 	epBar_->SetSize({ epBarSize_, 20 });
 	epBar_->SetLeftSizeCorrection(true);
-	epBarBack_->SetSize({ epBarSize_, 20 });
-
+	
 	hitCoolTime_ = hitCoolTimer_ = 30;
 	for (int32_t i = 0; i < 6; i++) {
 		oreCountMag_[i] = 1.f;
@@ -129,6 +128,7 @@ void Player::Update()
 
 	if (isHammerRelease_) {
 		HammerThrow();
+		FallHammerAttack();
 		HammerGet();
 	}
 	if (!stop_) {
@@ -192,9 +192,8 @@ void Player::HitHammerToEnemy(Vector3 vec, float dis)
 
 void Player::SpriteDraw()
 {
-	hpBarBack_->Draw();
+	statusBack_->Draw();
 	hpBar_->Draw();
-	epBarBack_->Draw();
 	epBar_->Draw();
 }
 
@@ -210,6 +209,59 @@ void Player::SubHP(int32_t subHP)
 	if (hp_ <= 0) {
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDestroy, 0.5f);
 	}
+}
+
+void Player::FallHammerAttack()
+{
+	const int32_t fallHammerTime = 60;
+	const float reflectPosY = 0.f;
+	//フォールハンマー攻撃フラグが前フレームと異なる場合
+	if (isPreFallHammer_ != isFallHammer_ && !isHammerReflect_) {
+		Vector3 hammerPos = pos_;
+		hammerPos.y = 0.0f;
+		hammerPos_ = hammerPos;
+		hammer_->SetParent(nullptr);
+		hammer_->SetPosition(hammerPos);
+		fallHammerTimer_ = 0;
+	}
+
+	isPreFallHammer_ = isFallHammer_;
+	if (isHammerReflect_) return;
+	notnext_ = true;
+
+	const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
+	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
+	hammerSize_ = hammerSize + hammerScaleCorrection * (float)oreCount_;
+	hammer_->SetScale(hammerSize_);
+
+	if (fallHammerTimer_ <= fallHammerTime) {
+		hammer_->SetRotation({ 90.f, 0.f, 0.f });
+		hammerPos_.y += 0.2f;
+		fallHammerTimer_++;
+	}
+	else {
+		hammer_->SetRotation({ 90.f, 180.f, 0.f });
+		hammerPos_.y -= 0.2f;
+		if (hammerPos_.y <= reflectPosY) {
+			isHammerReflect_ = true;
+			isFallHammer_ = false;
+			fallHammerTimer_ = 0;
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
+		}
+	}
+	hammer_->SetPosition(hammerPos_);
+
+}
+
+void Player::ActiveFallHammer()
+{
+	hammer_->SetParent(nullptr);
+	Vector3 hammerPos = pos_;
+	hammerPos.y = -30.0f;
+	hammerPos_ = hammerPos;
+	isFallHammer_ = true;
+	isHammerRelease_ = true;
+	isAttack_ = true;
 }
 
 void Player::PlayerStatusSetting() {
@@ -542,6 +594,8 @@ void Player::Attack() {
 }
 
 void Player::HammerThrow() {
+	if (isFallHammer_) return;
+
 	const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
 	const Vector3 hammerScaleCorrection = { 0.007f, 0.007f, 0.007f };
 	hammerSize_ = hammerSize + hammerScaleCorrection * (float)oreCount_;
@@ -570,6 +624,8 @@ void Player::HammerGet()
 			hammer_->SetPosition(initHammerPos_);
 			hammer_->SetScale(initHammerScale_);
 			hammer_->SetRotation(initHammerRot_);
+			hammerPos_ = initHammerPos_;
+			hammerSize_ = initHammerScale_;
 			isHammerRelease_ = false;
 			isAttack_ = false;
 			isHammerReflect_ = false;
@@ -700,11 +756,12 @@ void Player::Animation()
 
 void Player::UIUpdate()
 {
-	const float BarSize = 200;
-	hpBarSize_ = ((float)hp_ / (float)maxHp_) * BarSize;
-	hpBar_->SetSize({ hpBarSize_, 20 });
-	epBarSize_ = ((float)ep_ / (float)levelUpEp_) * BarSize;
-	epBar_->SetSize({ epBarSize_, 20 });
+	const float hpBarSize = 250;
+	const float epBarSize = 140;
+	hpBarSize_ = ((float)hp_ / (float)maxHp_) * hpBarSize;
+	hpBar_->SetSize({ hpBarSize_, 12.f });
+	epBarSize_ = ((float)ep_ / (float)levelUpEp_) * epBarSize;
+	epBar_->SetSize({ epBarSize_, 12.f });
 }
 
 void Player::LevelUp()
@@ -768,9 +825,18 @@ void Player::TutorialUpdate(bool Stop, bool NotAttack)
 	Repulsion();
 	HammerPowerUp();
 	LevelUp();
+	if (notnext_) {
+		int test = 1;
+		test++;
+	}
+	else {
+		int test = 1;
+		test--;
+	}
 	look_ = NotAttack;
 	if (isHammerRelease_) {
 		HammerThrow();
+		FallHammerAttack();
 		HammerGet();
 	}
 	if (!stop_) {
@@ -820,17 +886,17 @@ int32_t Player::GetDamageATK()
 
 void Player::TextUIDraw()
 {
-	D2D1_RECT_F HPTextDrawRange = { 30, 48, 158, 176 };
-	D2D1_RECT_F EPTextDrawRange = { 30, 68, 158, 176 };
-	D2D1_RECT_F LevelTextDrawRange = { 30, 28, 158, 176 };
+	D2D1_RECT_F HPTextDrawRange = { 10, 45, 158, 176 };
+	D2D1_RECT_F EPTextDrawRange = { 120, 29, 158, 176 };
+	D2D1_RECT_F LevelTextDrawRange = { 70, 28, 158, 176 };
 	std::wstring hp = std::to_wstring(hp_);
 	std::wstring maxHP = std::to_wstring(maxHp_);
 	std::wstring ep = std::to_wstring(ep_);
 	std::wstring maxEP = std::to_wstring(levelUpEp_);
-	text_->Draw("bestTen_16", "white", hp+ L"/" + maxHP, HPTextDrawRange);
-	text_->Draw("bestTen_16", "white", ep + L"/" + maxEP, EPTextDrawRange);
+	text_->Draw("bestTen_12", "white", hp+ L"/" + maxHP, HPTextDrawRange);
+	text_->Draw("bestTen_12", "white", ep + L"/" + maxEP, EPTextDrawRange);
 	std::wstring level = std::to_wstring(level_);
-	text_->Draw("bestTen_16", "white", L"LV : " + level, LevelTextDrawRange);
+	text_->Draw("bestTen_12", "black", L"LV : " + level, LevelTextDrawRange);
 }
 
 void Player::HammeronHole()

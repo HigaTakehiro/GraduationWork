@@ -321,8 +321,8 @@ void GameMap::CreateEnemy(Player* player, const XMFLOAT3& MapPos, int Enemy, int
 		//—”¶¬
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
-		std::uniform_int_distribution<> randX(-9, 9);
-		std::uniform_int_distribution<> randZ(-8, 8);
+		std::uniform_int_distribution<> randX(-8, 8);
+		std::uniform_int_distribution<> randZ(-7, 7);
 		Enemy1->SetPos({ MapPos.x + (float)randX(mt),MapPos.y,MapPos.z + (float)randZ(mt) });
 		enemys_.push_back(move(Enemy1));
 	}
@@ -341,8 +341,8 @@ void GameMap::CreateEnemy2(Player* player, const XMFLOAT3& MapPos, int Enemy, in
 		//—”¶¬
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
-		std::uniform_int_distribution<> randX(-9, 9);
-		std::uniform_int_distribution<> randZ(-8, 8);
+		std::uniform_int_distribution<> randX(-8, 8);
+		std::uniform_int_distribution<> randZ(-7, 7);
 		Enemy1->SetPos2({ MapPos.x + (float)randX(mt),-2.5f,MapPos.z + (float)randZ(mt) });
 		Enemy1->SetPosDeb(Enemy1->GetPos());
 		enemys_.push_back(move(Enemy1));
@@ -601,7 +601,6 @@ XMFLOAT3 GameMap::GetNowMapPos()
 
 void GameMap::NextMap(Player* player, XMFLOAT3& CameraPos, XMFLOAT3& TargetPos, float OldCameraPos)
 {
-
 	//ˆÚ“®’†‚Å‚Í‚È‚¢
 	if (player->GetNotNext()) { return; }
 	count_ = NextCount(player->GetPos(), direction_);

@@ -11,10 +11,14 @@
 #define PI_360 360
 
 Vector3 TogemaruAct::depositPos = { 0, -2.5f, -8.f };
+bool TogemaruAct::depositDelF = false;
+
+Vector3 TogemaruAct::depositPos2 = { 5, -2.5f, -8.f };
+bool TogemaruAct::depositDelF2 = false;
 Vector3 TogemaruAct::cameraPos = {};
 Vector3 TogemaruAct::oldCameraPos = {};
 Vector3 TogemaruAct::DefaultPos= {};
-bool TogemaruAct::depositDelF = false;
+
 bool TogemaruAct::TogemaruDeathF = false;
 TogemaruAct::AppearState TogemaruAct::StateArray[TogemaruAct::StateName::P_Num] =
 {
@@ -132,25 +136,26 @@ void TogemaruAct::Transition()
 		{
 			act_ = Act::DEATH;
 		}
-		//衝突半径
-		constexpr float pr = 1.f, er = 1.5f;
-		//衝突時のプレイヤーのけぞり
-		bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
-		float KnockDis = AccelJudg ? 0.3f : 0.6f;//のけぞり値
+		else {
+			//衝突半径
+			constexpr float pr = 1.f, er = 1.5f;
+			//衝突時のプレイヤーのけぞり
+			bool AccelJudg = (rushEaseT >= 0.2f && rushEaseT <= 0.9f) && (act_ == Act::ATTACK_SHOTSPEAR);
+			float KnockDis = AccelJudg ? 0.3f : 0.6f;//のけぞり値
 
-		//判定
-		bool animenotwalk = anime_name_ != AnimeName::WALK_FRONT && anime_name_ != AnimeName::WALK_BACK &&
-			anime_name_ != AnimeName::WALK_LEFT && anime_name_ != AnimeName::WALK_RIGHT;
-		bool isCollide =animenotwalk&& Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
-		if (!damf&&isCollide) { Player_->SubHP(1); damf = true;}
-		if (damf) { damcool++; if (damcool > 90)damf = false; }
-		else { damcool = 0; }
-		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
-
+			//判定
+			bool animenotwalk = anime_name_ != AnimeName::WALK_FRONT && anime_name_ != AnimeName::WALK_BACK &&
+				anime_name_ != AnimeName::WALK_LEFT && anime_name_ != AnimeName::WALK_RIGHT;
+			bool isCollide =Hp>0&& animenotwalk && Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
+			if (!damf && isCollide) { Player_->SubHP(1); damf = true; }
+			if (damf) { damcool++; if (damcool > 90)damf = false; } else { damcool = 0; }
+			Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
+		}
 	}
 
 	//鉱石当たり判定
 	CollideDeposit();
+	CollideDeposit2();
 	//鉱石衝突時の画面の揺れ
 	ViewShake();
 
@@ -266,10 +271,10 @@ void TogemaruAct::Move()
 	{
 		RushStartPos = Pos_;
 	
-			act_ = Act::ATTACK_SHOTSPEAR;
 		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt)>-10)
+		if(randact(mt)>-90)
 		{
+			act_ = Act::ATTACK_SHOTSPEAR;
 		}
 		else
 		{
@@ -350,6 +355,7 @@ void TogemaruAct::Attack_Rush()
 	if (splineT > 60) {
 		if (spline->GetIndex() >= SplinePosList.size()-2)
 		{
+			RoleF = false;
 			anime_name_ = AnimeName::IdlE;
 			act_ = Act::MOVE;
 			if (spline)
@@ -383,6 +389,7 @@ void TogemaruAct::Attack_ShotSpear()
 
 	if (++rushEaseT >= maxRushEaseT) {
 		depositCollideF = FALSE;
+		depositCollideF2 = FALSE;
 		for (size_t i = 0; i < spearSize; i++) {
 			spearsRot[i] = (i * (360 / spearSize));
 			if(i%2!=0)
@@ -409,6 +416,8 @@ void TogemaruAct::Attack_ShotSpear()
 
 		//移動中に鉱石に当たったら
 		depositCollideF = TRUE;
+
+		depositCollideF2 = TRUE;
 	}
 
 	//針飛ばす
@@ -525,12 +534,46 @@ void TogemaruAct::CollideDeposit()
 			shakeF = TRUE;//画面揺らす
 			//針の数1減らす(壊れた針の数＋１)
 			if (beginBattle) {
-				++crushSpearNum;
+				crushSpearNum=3;
 			}
 			CrushAnimation();
 			depositDelF = TRUE;
 		}
 		depositDelTime = 0;
+	}
+}
+
+
+void TogemaruAct::CollideDeposit2()
+{
+	//判定用の半径 player - boss
+	constexpr float r1 = 1.f, r2 = 2.f;
+
+	//鉱石復活するまでは3秒
+	constexpr int32_t ReproductionTimeMax = 180;
+	if (depositDelF2)
+	{
+		if (++depositDelTime2 > ReproductionTimeMax)
+		{
+			//出現
+			depositPos2= DepositReproduction();
+			depositDelF2 = FALSE;
+		}
+	} else
+	{
+		constexpr float GroundY = 2.f;
+		bool col = Helper::GetCircleCollide({ depositPos2.x,depositPos2.y,depositPos2.z + 3.f }, { Pos_.x,Pos_.y,Pos_.z + 3.f }, r1, r2);
+		//鉱石と衝突したら
+		if (depositCollideF2 && (Pos_.y < GroundY && col)) {
+			shakeF = TRUE;//画面揺らす
+			//針の数1減らす(壊れた針の数＋１)
+			if (beginBattle) {
+				crushSpearNum=3;
+			}
+			CrushAnimation();
+			depositDelF2 = TRUE;
+		}
+		depositDelTime2 = 0;
 	}
 }
 
@@ -556,6 +599,19 @@ Vector3 TogemaruAct::DepositReproduction()
 {
 	//出す座標は4点 上・下・右・左
 	Vector3 posList[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) ,Vector3(10,-2.5f,0) ,Vector3(-10,-2.5f,0) };
+
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
+	std::uniform_int_distribution<> rand(0, 3);
+
+	//出現する座標はPosListの中からランダム
+	return posList[rand(mt)];
+}
+
+Vector3 TogemaruAct::DepositReproduction2()
+{
+	//出す座標は4点 上・下・右・左
+	Vector3 posList[] = { Vector3(5,-2.5f,-10),Vector3(-5,-2.5f,6) ,Vector3(10,-2.5f,5) ,Vector3(-10,-2.5f,-5) };
 
 	std::random_device rnd;
 	std::mt19937 mt(rnd());

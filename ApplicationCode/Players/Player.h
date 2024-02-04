@@ -79,6 +79,12 @@ public: //メンバ関数
 	/// <returns></returns>
 	bool GetIsHammerSwing() { return isHammerSwing_; }
 
+	/// <summary>
+	/// 無敵状態フラグを取得
+	/// </summary>
+	/// <returns>無敵状態フラグ</returns>
+	bool GetIsInvincible() { return isInvincible_; }
+
 	bool GetNotNext() { return notnext_; }
 
 	/// <summary>
@@ -299,8 +305,10 @@ public: //メンバ関数
 	/// <param name="isInvicible">無敵状態フラグ</param>
 	void SetIsInvicible(bool isInvicible) { isInvincible_ = isInvicible; }
 
-	//投げ攻撃扱い
-	void FallHammerAttack();
+	/// <summary>
+	/// フォールハンマー攻撃有効化
+	/// </summary>
+	void ActiveFallHammer();
 
 private: //メンバ関数
 
@@ -363,6 +371,13 @@ private: //メンバ関数
 	/// 死亡演出
 	/// </summary>
 	void DeadAction();
+
+	//投げ攻撃扱い
+	/// <summary>
+	/// フォールハンマー攻撃
+	/// </summary>
+	void FallHammerAttack();
+
 private: //メンバ変数
 	//座標
 	Vector3 pos_;
@@ -526,17 +541,21 @@ private: //メンバ変数
 	bool nextflor_ = false;
 
 	bool next_ = false;
-
+	//無敵状態フラグ
 	bool isInvincible_ = false;
+	//フォールハンマー攻撃フラグ
+	bool isFallHammer_ = false;
+	bool isPreFallHammer_ = false;
+	int32_t fallHammerTimer_ = 0;
 
 	//UI
+	//ステータスバー
+	std::unique_ptr<Sprite> statusBack_;
 	//HPバー
 	std::unique_ptr<Sprite> hpBar_;
-	std::unique_ptr<Sprite> hpBarBack_;
 	float hpBarSize_;
 	//経験値バー
 	std::unique_ptr<Sprite> epBar_;
-	std::unique_ptr<Sprite> epBarBack_;
 	float epBarSize_;
 	//テキスト
 	TextDraw* text_;

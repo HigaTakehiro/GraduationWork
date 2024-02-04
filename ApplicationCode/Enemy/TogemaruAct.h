@@ -28,10 +28,16 @@ private:
 private:
 	//当たり判定周り
 	void CollideDeposit();
+
+	void CollideDeposit2();
 	//
 	bool depositCollideF = FALSE;
 	//
 	int32_t depositDelTime = 0;
+
+	bool depositCollideF2 = FALSE;
+	//
+	int32_t depositDelTime2 = 0;
 	//
 	Vector3 DepositReproduction();
 public:
@@ -39,6 +45,10 @@ public:
 	static Vector3 depositPos;
 	//
 	static bool depositDelF;
+	//鉱石座標
+	static Vector3 depositPos2;
+	//
+	static bool depositDelF2;
 public:
 	//アニメーション名前
 	enum AnimeName
@@ -185,6 +195,8 @@ private:
 
 	float dshakeXVal = 0.f, dshakeYVal = 0.f;
 	float dshakeT = 0.f;
+
+	Vector3 DepositReproduction2();
 public:
 	//行動遷移
 	void Transition();
@@ -207,6 +219,8 @@ public:
 
 	//鉱石座標
 	Vector3 GetDepositPos()const { return depositPos; }
+	//鉱石座標
+	Vector3 GetDepositPos2()const { return depositPos2; }
 
 	int32_t GetCrushSpearNum()const { return crushSpearNum; }
 
@@ -215,10 +229,14 @@ public:
 	//
 	bool GetDepositDelF()const { return depositDelF; }
 
+	bool GetDepositDelF2()const { return depositDelF2; }
+
 	// セッター //
 	void SetPlayerIns(Player* player) { Player_ = player; }
 
 	void SetDepositPos(Vector3 pos) { depositPos = pos; }
+
+	void SetDepositPos2(Vector3 pos) { depositPos2 = pos; }
 
 	float GetRotY()const { return Rot_.y; }
 };
