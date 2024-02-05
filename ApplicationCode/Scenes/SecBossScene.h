@@ -82,9 +82,6 @@ private:
 	Vector3 targetPos_;
 
 	Shake* shake_;
-	std::unique_ptr<Sprite>m_ClearTex = nullptr;
-	XMFLOAT2 m_ClearTexScl;
-	float ClearTexEaseT;
 	bool NextClearF;
 	bool touchFlor;
 	float oldcamerapos_ = 0;
