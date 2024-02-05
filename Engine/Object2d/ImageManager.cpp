@@ -52,6 +52,4 @@ void ImageManager::Initialize() {
 	Texture::LoadTexture(Image2DName::LUSA3, L"Engine/Resources/Images/usa_left/usa_left3.png");
 
 	Sprite::LoadTexture(Image2DName::STONE, L"Engine/Resources/Images/frontRock1.png");
-	Sprite::LoadTexture((Image2DName::TestPlay), L"Engine/Resources/Images/testPlay.png");
-
 }

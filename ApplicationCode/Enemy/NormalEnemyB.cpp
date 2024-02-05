@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "Collision.h"
+#include "CsvLoader.h"
 #include "Helper.h"
 #include "Shapes.h"
 
@@ -26,12 +27,15 @@ void NormalEnemyB::Init()
 	TexInit();
 	Tag_ = "Munni";
 	action_ = new MunniAction();
+	_status.HP = static_cast<float>(std::any_cast<double>(LoadCSV::LoadCsvParam("Engine/Resources/GameData/NormalEnemyB.csv", "HP")));
 
+	_color = { 1,1,1,1 };
+	m_MaxHp = _status.HP;;
 }
 
 void NormalEnemyB::TexDraw()
 {
-	constexpr float dis_max = 15.f;
+	constexpr float dis_max = 150.f;
 
 	Helper::isDraw(_player->GetPos(), state_obj_.Pos_, m_HpTex.get(), dis_max, state_obj_.Hp_ <= 0);
 }
@@ -64,12 +68,12 @@ void NormalEnemyB::Upda(Camera* camera)
 		animeTexIndx= std::clamp(animeTexIndx, 0, state_obj_.TexSize_-1);
 	}
 
-
 	//各種パラメータセット 更新
+	DamageFlash();
 	//state_obj_.obj_->SetRotation(state_obj_.Rot_);
 	state_obj_.obj_->SetScale(state_obj_.Scl);
 	state_obj_.obj_->SetPosition(state_obj_.Pos_);
-	state_obj_.obj_->SetColor(state_obj_.Color_);
+	state_obj_.obj_->SetColor(_color);
 	state_obj_.obj_->SetIsBillboardY(true);
 	state_obj_.obj_->Update();
 
@@ -80,7 +84,6 @@ void NormalEnemyB::Upda(Camera* camera)
 #include "DirectXSetting.h"
 void NormalEnemyB::Draw()
 {
-	float Mindis = 12.f;
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	action_->ImpTexDraw();
 	state_obj_.obj_->Draw();

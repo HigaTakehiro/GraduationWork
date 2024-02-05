@@ -63,7 +63,6 @@ public: //‰æ‘œ–¼
 		LUSA3,
 		//
 		STONE,
-		TestPlay,
 		IdlePlayer,
 	};
 public: //ƒƒ“ƒoŠÖ”

@@ -290,9 +290,9 @@ void Togemaru::InitAnimatin()
 	}
 	for(size_t i=0;i<4;i++){
 		m_Model_Crush[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
-		m_Model_Crush_Right[i] = Shapes::CreateSquare({ 0, 0 }, { 192.0f, 128.0f }, "togemaru_weekMoveLR.png", { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-		m_Model_Crush_Left[i] = Shapes::CreateSquare({ 0, 0 }, { 192.0f,128.0f }, "togemaru_weekMoveRL.png", { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
-		m_Model_Crush_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "togemaru_moveBack.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
+		m_Model_Crush_Right[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "togemaru_weekMoveLR.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
+		m_Model_Crush_Left[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "togemaru_weekMoveRL.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 10.0f }, { 192.0f, 128.0f });
+		m_Model_Crush_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 128.0f }, "togemaru_weekMove.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 128.0f });
 
 	}
 }

@@ -7,7 +7,7 @@
 void MessageWindow::Initialize(const std::string& fileName)
 {
 	textData_ = ExternalFileLoader::GetIns()->ExternalFileOpen(fileName);
-	textWindow_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::TextWindow, { 580, 630 });
+	textWindow_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::TextWindow, { 640, 630 });
 	textWindow_->SetAlpha(1.f);
 	textWindowSize_ = textWindow_->GetSize();
 	textWindowSize_.y = 0;
@@ -131,7 +131,7 @@ void MessageWindow::TextMessageDraw()
 	}
 	//テキスト描画範囲
 	D2D1_RECT_F textDrawPos = {
-		200, 560, 950, 700
+		260, 580, 950, 700
 	};
 	D2D1_RECT_F bombMessageDrawPos = {
 		400, 0, 900, 300

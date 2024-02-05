@@ -272,7 +272,7 @@ void TogemaruAct::Move()
 		RushStartPos = Pos_;
 	
 		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt)>-90)
+		if(randact(mt)==0)
 		{
 			act_ = Act::ATTACK_SHOTSPEAR;
 		}
@@ -348,7 +348,7 @@ float TogemaruAct::Follow()
 void TogemaruAct::Attack_Rush()
 {
 	if (act_ == Act::DEATH)return;
-	RoleF = true;
+
 
 	splineT++;
 	
@@ -364,6 +364,7 @@ void TogemaruAct::Attack_Rush()
 			SplinePosList.clear();
 		} else
 		{
+			RoleF = true;
 			anime_name_ = AnimeName::ROLE;
 			spline->Upda(Pos_);
 		}

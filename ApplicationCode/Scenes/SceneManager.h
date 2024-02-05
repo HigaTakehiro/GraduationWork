@@ -32,6 +32,7 @@ public: //ƒV[ƒ“ŠÇ—”Ô†
 		Boss2,
 		Boss3,
 		Result,
+		Clear,
 		None
 	};
 

@@ -399,6 +399,7 @@ void IBScene::SceneChange()
 			}
 			else {
 				soundCount = 0;
+				
 			}
 		}
 	}

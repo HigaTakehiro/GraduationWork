@@ -360,17 +360,26 @@ void GameScene::EnemyProcess()
 		XMFLOAT3 EnemyPos;
 		int Num = Enemy->GetType();
 		if (Enemy->GetType() == 0) { EnemyPos = Enemy->GetPos(); }
-		else if (Enemy->GetType() == 1) { EnemyPos = Enemy->GetPos2(); }
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		else if (Enemy->GetType() == 1) { EnemyPos = Enemy->GetPos(); }
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack())
+		{
+			Enemy->SetDamF(true);
+		} else
+		{
+			Enemy->SetDamF(false);
+		}
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z+3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
-			Enemy->GetDamage();
+			Enemy->GetDamage(true);
 			Vector3 Vec{};
-			Vec = playerPos - EnemyPos;
+			Vector3 eposcorr = { EnemyPos.x,EnemyPos.y, EnemyPos.z + 3.f };
+			Vec = playerPos - eposcorr;
 			Vec.normalize();
 			Vec.y = 0.0f;
 			player_->HitHammerToEnemy(Vec / 2.f);
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		}
+		Enemy->damage();
 		//if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
 		//	aEffect_->Update(Enemy->GetPos());
 		//}
@@ -407,6 +416,8 @@ void GameScene::EnemyProcess()
 			else if (Ene1->GetType() == 1) { Pos1 = Ene1->GetPos2(); }
 			if (Ene2->GetType() == 0) { Pos2 = Ene2->GetPos(); }
 			else if (Ene2->GetType() == 1) { Pos2 = Ene2->GetPos2(); }
+
+
 			if (Collision::HitCircle(XMFLOAT2(Pos2.x,Pos2.z), 1.f,
 				XMFLOAT2(Pos1.x,Pos1.z), 1.f))
 			{
