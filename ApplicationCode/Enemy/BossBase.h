@@ -45,6 +45,7 @@ protected:
 	bool AppearFlag;
 	bool m_ClearF=FALSE;
 	int Exp;
+	bool isGetExp;
 public:
 	int GetExp()const { return Exp; }
 protected://UI

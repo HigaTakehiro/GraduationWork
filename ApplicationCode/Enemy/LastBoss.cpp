@@ -133,7 +133,10 @@ void LastBoss::Upda()
 		meteoanim = 0;
 	}
 
-	
+	if (m_HP <= 0 && !isGetExp) {
+		m_player->AddEP(Exp);
+		isGetExp = true;
+	}
 	//meteoanim = std::clamp(meteoanim, 0, 10);
 
 	bool isCollide = Collision::HitCircle({ Pos_.x,Pos_.z + 3.f }, 1.2f, { m_player->GetPos().x,m_player->GetPos().z }, 1.f);

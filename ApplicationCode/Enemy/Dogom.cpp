@@ -122,8 +122,11 @@ void Dogom::Upda()
 	return false;
 	};
 
-	
-	//登場終わったら行動
+	if (m_HP <= 0 && !isGetExp) {
+		m_player->AddEP(Exp);
+		isGetExp = true;
+	}
+		//登場終わったら行動
 	if (Appear() == TRUE) {
 		////////
 		m_player->SetStopF(FALSE);

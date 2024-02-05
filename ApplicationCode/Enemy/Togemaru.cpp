@@ -153,7 +153,10 @@ void Togemaru::Upda()
 	}
 
 	//–{‘Ì
-	
+	if (m_HP <= 0 && !isGetExp) {
+		m_player->AddEP(Exp);
+		isGetExp = true;
+	}
 	m_Body->SetScale(Action->GetScl());
 	
 	m_Body->SetPosition(Action->GetPos());
