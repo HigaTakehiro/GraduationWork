@@ -55,6 +55,7 @@ void GameScene::Initialize()
 	player_->SetDEF(SceneManager::GetDEF());
 	player_->SetSPD(SceneManager::GetSPD());
 	player_->SetSkillPoint(SceneManager::GetSkillPoint());
+	player_->SetLevelUpEP(SceneManager::GetLevelUpEP());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -300,6 +301,7 @@ void GameScene::SceneChange()
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
 	SceneManager::SetSkillPoint(player_->GetSkillPoint());
+	SceneManager::SetLevelUpEP(player_->GetLevelUpEP());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetIsDead()) {
@@ -328,10 +330,6 @@ void GameScene::SceneChange()
 			SceneManager::SceneChange(SceneManager::SceneName::Game);
 		}
 
-	}
-	//これいつか消すように
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		//SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {

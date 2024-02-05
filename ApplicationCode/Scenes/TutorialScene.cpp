@@ -368,6 +368,7 @@ void TutorialScene::SceneChange()
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
 	SceneManager::SetSkillPoint(player_->GetSkillPoint());
+	SceneManager::SetLevelUpEP(player_->GetLevelUpEP());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
@@ -555,7 +556,6 @@ void TutorialScene::SleepShale()
 	}
 
 }
-
 
 void TutorialScene::ParticleCreate()
 {

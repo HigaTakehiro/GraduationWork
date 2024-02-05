@@ -53,6 +53,8 @@ private:
 
 	bool spown_ = true;
 
+	float addpos_ = 0.f;
+
 	XMFLOAT4 col_{ 1.f,1.f,1.f,1.f };
 };
 

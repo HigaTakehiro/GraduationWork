@@ -48,6 +48,11 @@ private:
     /// カメラ初期化設定
     /// </summary>
     void CameraSetting();
+	
+	/// <summary>
+	/// パーティクル生成
+	/// </summary>
+	void ParticleCreate();
 
 private:
 	//ポストエフェクト
@@ -68,6 +73,7 @@ private:
 	//スキルパネル
 	std::unique_ptr<SkillPanel> activeSkillPanel01_;
 	std::unique_ptr<SkillPanel> activeSkillPanel02_;
+	std::unique_ptr<ParticleManager> invincibleParticle_;
 
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;

@@ -48,6 +48,11 @@ private:
 	/// </summary>
 	void CameraSetting();
 
+	/// <summary>
+	/// パーティクル生成
+	/// </summary>
+	void ParticleCreate();
+
 private:
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -64,6 +69,7 @@ private:
 	//スキルパネル
 	std::unique_ptr<SkillPanel> activeSkillPanel01_;
 	std::unique_ptr<SkillPanel> activeSkillPanel02_;
+	std::unique_ptr<ParticleManager> invincibleParticle_;
 
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
