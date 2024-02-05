@@ -48,7 +48,6 @@ void ClearScene::Initialize()
 		house_[i]->SetPosition(Pos);
 	}
 
-
 	dome = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
 	dome->Initialize();
 	dome->SetRotation({ 0.0f,90.f,0.0f });
@@ -70,6 +69,9 @@ void ClearScene::Initialize()
 	schange->SetFadeNum(1);
 
 	cleartext_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::ClearText, { WinApp::window_width/2,WinApp::window_height/2 +150},{1.f,1.f,1.f,1.f},{0.5f,0.5f});
+
+	SoundManager::GetIns()->StopAllBGM();
+	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::restPoint, TRUE, 0.4f);
 }
 
 void ClearScene::Update()
@@ -125,9 +127,9 @@ void ClearScene::SceneChange()
 {
 	if (Timer_ > 25.f) {
 		schange->SetFStart(true);
-		//schange->SetFadeNum(0);
 	}
 	if (schange->GetEnd() == true) {
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::restPoint);
 		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
 	}
 }
