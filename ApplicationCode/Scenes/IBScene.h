@@ -174,5 +174,6 @@ private: //ƒƒ“ƒo•Ï”
 	std::unique_ptr<Sprite> skillCursor_;
 
 	int savecount_ = 0;
+	int OKflag_;
 };
 
