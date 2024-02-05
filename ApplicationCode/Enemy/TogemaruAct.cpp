@@ -166,8 +166,8 @@ void TogemaruAct::Transition()
 
 
 	//À•W‚Ì”ÍˆÍw’è
-	Pos_.x = std::clamp(Pos_.x, -14.f, 14.f);
-	Pos_.z = std::clamp(Pos_.z, -12.f, 6.8f);
+	Pos_.x = std::clamp(Pos_.x, -10.f, 10.f);
+	Pos_.z = std::clamp(Pos_.z, -10.f, 6.8f);
 }
 
 //
