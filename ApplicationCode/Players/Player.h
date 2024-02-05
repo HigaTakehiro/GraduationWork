@@ -310,6 +310,8 @@ public: //メンバ関数
 	/// </summary>
 	void ActiveFallHammer();
 
+	void StatusReset();
+
 private: //メンバ関数
 
 	/// <summary>
@@ -377,6 +379,8 @@ private: //メンバ関数
 	/// フォールハンマー攻撃
 	/// </summary>
 	void FallHammerAttack();
+
+
 
 private: //メンバ変数
 	//座標
