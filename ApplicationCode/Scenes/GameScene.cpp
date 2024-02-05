@@ -335,7 +335,7 @@ void GameScene::SceneChange()
 	}
 
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+		SceneManager::SceneChange(SceneManager::SceneName::Clear);
 	}
 }
 
