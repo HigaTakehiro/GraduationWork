@@ -232,7 +232,6 @@ void BossScene::Draw()
 	if (schange->GetFStart() == false && schange->GetFEnd() == false) {
 		player_->TextUIDraw();
 	}
-	player_->TextUIDraw();
 	invincibleParticle_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 	DirectXSetting::GetIns()->PreDraw(backColor);
