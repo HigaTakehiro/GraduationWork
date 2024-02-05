@@ -63,8 +63,7 @@ void NormalEnemyA::Upda(Camera* camera)
 	Jump();
 
 
-	if(_status.Scl.y<=1.3f)
-	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(),Collision::GetLength(_status.Pos, _player->GetPos()) < 1.3f, 1.8f);
+	if (_status.Scl.y <= 1.3f && !damfprot)	Helper::ColKnock(_player->GetPos(), { _status.Pos.x, _status.Pos.y, _status.Pos.z + 1.f }, _player.get(), Collision::HitCircle({ _status.Pos.x,_status.Pos.z + 1.f }, 0.5f, { _player->GetPos().x,_player->GetPos().z }, 1.f), 1.9f);
 
 	DamageFlash();
 	if (_status.Tex != nullptr) {
@@ -192,6 +191,7 @@ void NormalEnemyA::TextureAnimation()
 			AnimationCount = 0;
 		}
 	}
+	//AttackAction();
 
 }
 
@@ -234,13 +234,7 @@ void NormalEnemyA::AttackAction()
 
 	bool isRecv = !PlayerRecv && Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f;
 
-	bool aj = _status.Scl.y > 1.3f && Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f;
-	if (aj)
-	{
-		_player->SubHP(1);
-	}
-	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), aj,1.f);
-
+	
 	if(isRecv)
 	{
 		//if(_status.Scl.y > 1.f)
@@ -289,6 +283,14 @@ PlayerRecv = FALSE;
 		if(JFrame>=1.f)
 		back_t++;
 	}
+	bool aj = _status.Scl.y > 1.3f && Collision::HitCircle({ _status.Pos.x,_status.Pos.z + 1.f }, 1.5f, { _player->GetPos().x,_player->GetPos().z }, 2.5f);
+	if (aj)
+	{
+		_player->SubHP(1);
+	}
+
+	Helper::ColKnock(_player->GetPos(), { _status.Pos.x, _status.Pos.y, _status.Pos.z + 1.f }, _player.get(), aj, 1.f);
+
 	_status.Scl.x = std::clamp(_status.Scl.x, 1.f, 1.3f);
 	_status.Scl.y=std::clamp(_status.Scl.y, 1.3f, 1.8f);
 }
@@ -300,6 +302,10 @@ void NormalEnemyA::TutorialUpda(Camera* camera, bool flag)
 	if (_status.Rot.y >= 360.f || _status.Rot.y <= -360.f)_status.Rot.y = 0.f;
 	//_status.Tex->
 	///_status.HP--;
+	//AttackAction();
+
+	if (_status.Scl.y <= 1.3f && !damfprot)	Helper::ColKnock(_player->GetPos(), { _status.Pos.x, _status.Pos.y, _status.Pos.z + 1.f }, _player.get(), Collision::HitCircle({ _status.Pos.x,_status.Pos.z + 1.f }, 0.5f, { _player->GetPos().x,_player->GetPos().z }, 1.f), 1.9f);
+
 
 	TextureAnimation();
 
@@ -310,7 +316,6 @@ void NormalEnemyA::TutorialUpda(Camera* camera, bool flag)
 	if (flag == false) {
 		Jump();
 	}
-	Helper::ColKnock(_player->GetPos(), _status.Pos, _player.get(), Collision::GetLength(_status.Pos, _player->GetPos()) < 2.f,2.f);
 
 	DamageFlash();
 	if (_status.Tex != nullptr) {

@@ -365,11 +365,7 @@ void LastBossAct::Act_Barrier()
 				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg && Player_->getisHammerActive(), 1.5f);
 			}
 			if (judg) { if (Player_->getisHammerActive()) Player_->SetIsHammerReflect(true); }
-			else
-			{
-					Helper::DamageManager(Hp, 1, damff,damcool, 90, isCollsion);
-					Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollsion, 1.f);
-			}
+			
 		}
 		
 		if(BarrierHp[i]<=0)
@@ -382,7 +378,12 @@ void LastBossAct::Act_Barrier()
 		}
 		BarrierAlpha[i] = std::clamp(BarrierAlpha[i], 0.f, 1.f);
 	}
-
+	bool isCollsion = Hp > 0 && Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
+	if ( BarrierHp[0] <= 0 && BarrierHp[1] <= 0 && BarrierHp[2] <= 0)
+	{
+		Helper::DamageManager(Hp, 1, damff, damcool, 90, isCollsion);
+		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollsion, 1.f);
+	}
 	if(BarrierHp[0]<=0&& BarrierHp[1] <= 0 && BarrierHp[2] <= 0 )
 	{
 		AllBarrierDestroyF = true;
