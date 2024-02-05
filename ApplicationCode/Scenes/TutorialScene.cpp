@@ -386,15 +386,6 @@ void TutorialScene::SceneChange()
 		fclose(fp);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
-
-	//これいつか消すように
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss3);
-	}
-
-	if (PadInput::GetIns()->PushButton(PadInput::Button_A) && PadInput::GetIns()->PushButton(PadInput::Button_RB) && PadInput::GetIns()->PushButton(PadInput::Button_LB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
-	}
 }
 
 void TutorialScene::CameraSetting()
