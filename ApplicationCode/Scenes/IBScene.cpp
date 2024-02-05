@@ -361,6 +361,7 @@ void IBScene::Draw()
 	if (skillFlag != true) {
 		playerUI_->SpriteDraw();
 	}
+
 	activeSkillPanel01_->SpriteDraw();
 	activeSkillPanel02_->SpriteDraw();
 	if (skillFlag) {

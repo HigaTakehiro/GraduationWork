@@ -168,7 +168,9 @@ void BossScene::Update()
 	if (boss_->GetClearF() && player_->GetNextFlor())
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			touchFlor = TRUE;
+			//touchFlor = TRUE;
+			schange->SetFStart(true);
+			schange->SetFadeNum(0);
 		}
 	}
 	schange->Change(0);
@@ -180,17 +182,20 @@ void BossScene::Update()
 	
 	//シーン切り替えmmm
 	SceneChange();
-	if (touchFlor)
-	{
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			if (StageCount::GetIns()->Now() <= 18) {
-				SceneManager::SceneChange(SceneManager::SceneName::IB);
+	//if (touchFlor)
+	//{
+		//if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+			
+			if (schange->GetEnd() == true) {
+				if (StageCount::GetIns()->Now() <= 18) {
+					SceneManager::SceneChange(SceneManager::SceneName::IB);
+				}
+				else {
+					SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+				}
 			}
-			else {
-				SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
-			}
-		}
-	}
+		//}
+	//}
 }
 
 void BossScene::Draw()
@@ -268,24 +273,23 @@ void BossScene::SceneChange()
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
 	SceneManager::SetSkillPoint(player_->GetSkillPoint());
-	schange->SetFStart(true);
-	schange->SetFadeNum(0);
-	FILE* fp;
-	int i;
-	fp = fopen("Engine/Resources/GameData/save.csv", "w");
-	fprintf(fp, "%d", 0);
-	fclose(fp);
-	fp = fopen("Engine/Resources/GameData/save.csv", "r");
-	fscanf(fp, "%d", &i);
-	fclose(fp);
-	if (i == 2) {
-		fp = fopen("Engine/Resources/GameData/save.csv", "r+");
-		i = i + 1;
-		fprintf(fp, "%d", i);
+
+		FILE* fp;
+		int i;
+		fp = fopen("Engine/Resources/GameData/save.csv", "w");
+		fprintf(fp, "%d", 0);
 		fclose(fp);
-	}
-	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
-	SceneManager::SceneChange(SceneManager::SceneName::IB);
+		fp = fopen("Engine/Resources/GameData/save.csv", "r");
+		fscanf(fp, "%d", &i);
+		fclose(fp);
+		if (i == 2) {
+			fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+			i = i + 1;
+			fprintf(fp, "%d", i);
+			fclose(fp);
+		}
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 }
 
 

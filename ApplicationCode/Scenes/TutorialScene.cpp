@@ -90,7 +90,7 @@ void TutorialScene::Initialize()
 
 	aEffect_ = new AttackEffect();
 	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
-	
+
 	startenemypos_[0] = { 5, 12.5, 18 };
 	startenemypos_[1] = { -5, 12.5, 18 };
 
@@ -210,8 +210,8 @@ void TutorialScene::Update()
 	camera_->SetTarget(targetPos_);
 	player_->TutorialUpdate(stop_, notattack_);
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_, notlook_);
-	activeSkillPanel01_->Update({0.f, 0.f});
-	activeSkillPanel02_->Update({0.f, 0.f});
+	activeSkillPanel01_->Update({ 0.f, 0.f });
+	activeSkillPanel02_->Update({ 0.f, 0.f });
 
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
@@ -228,7 +228,7 @@ void TutorialScene::Update()
 	if (phase_ >= Phase::Spown) {
 		EnemyProcess();
 	}
-	
+
 	static bool isAddSkill = false;
 	if (KeyInput::GetIns()->TriggerKey(DIK_T) && !isAddSkill) {
 		HPUpSkill* hpUp = new HPUpSkill("hpUp_Test", 5);
@@ -373,6 +373,10 @@ void TutorialScene::SceneChange()
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
+		schange->SetFStart(true);
+		schange->SetFadeNum(0);
+	}
+	if (schange->GetEnd() == true) {
 		FILE* fp;
 		int i;
 		fp = fopen("Engine/Resources/GameData/save.csv", "w");
@@ -390,7 +394,7 @@ void TutorialScene::SceneChange()
 
 	//これいつか消すように
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss2);
+		SceneManager::SceneChange(SceneManager::SceneName::Boss);
 	}
 
 	if (PadInput::GetIns()->PushButton(PadInput::Button_A) && PadInput::GetIns()->PushButton(PadInput::Button_RB) && PadInput::GetIns()->PushButton(PadInput::Button_LB)) {
@@ -453,21 +457,21 @@ void TutorialScene::EnemyProcess()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr || Enemy->GetHP() <= 0) { continue; }
 		enemyPos[i] = Enemy->GetPos();
-		if(Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f}, 1.0f) && player_->GetIsAttack())
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f) && player_->GetIsAttack())
 		{
 			if (!PadInput::GetIns()->PushButton(PadInput::Button_B) && player_->GetIsHammerRelease())
-			player_->SetIsHammerReflect(true);
+				player_->SetIsHammerReflect(true);
 			Enemy->SetDamF(true);
 		}
 		else
 		{
 			Enemy->SetDamF(false);
 		}
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z+3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { enemyPos[i].x, enemyPos[i].z + 3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			Enemy->GetDamage(true);
 			Vector3 vec{};
-			Vector3 eposcorr = { enemyPos[i].x,enemyPos[i].y, enemyPos[i].z + 3.f};
+			Vector3 eposcorr = { enemyPos[i].x,enemyPos[i].y, enemyPos[i].z + 3.f };
 			vec = playerPos - eposcorr;
 			vec.normalize();
 			vec.y = 0.0f;
@@ -576,7 +580,7 @@ void TutorialScene::ParticleCreate()
 		float rnd_acc = 0.015f;
 		acc.y = (float)rand() / RAND_MAX * rnd_acc * rnd_acc / 2.0f;
 
-		invincibleParticle_->Add(life, pos, vel, acc, 1.f, 0.f, { 1.5f, 1.5f, 1.5f }, {1.f, 1.f, 1.f}, 0.5f, 0.0f);
+		invincibleParticle_->Add(life, pos, vel, acc, 1.f, 0.f, { 1.5f, 1.5f, 1.5f }, { 1.f, 1.f, 1.f }, 0.5f, 0.0f);
 		invincibleParticle_->LoadTexture("Flash");
 	}
 }
