@@ -12,6 +12,7 @@ CollisionManager* SceneManager::colManager_ = nullptr;
 SkillManager* SceneManager::skillManager_ = nullptr;
 int32_t SceneManager::level_ = 1;
 int32_t SceneManager::ep_ = 0;
+int32_t SceneManager::lvUpEp_ = 0;
 int32_t SceneManager::hp_ = 3;
 int32_t SceneManager::maxHp_ = 3;
 int32_t SceneManager::atk_ = 1;

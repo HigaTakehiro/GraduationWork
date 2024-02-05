@@ -37,6 +37,7 @@ public: //‰æ‘œ–¼
 		skillIcon_SPDUp,
 		BossBar,
 		BossBar_Toge,
+		BossBar_last,
 		Flash,
 		PlayerUIBack,
 		skillIcon_FallHammer,

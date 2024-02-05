@@ -52,7 +52,7 @@ void BossBase::HPUiInit()
 	else if(names=="Togemaru")
 		m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::BossBar_Toge, { 0, 0 });
 	else if (names == "LastBoss")
-		m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::BossBar_Toge, { 0, 0 });
+		m_HpTex_Frame = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::BossBar_last, { 0, 0 });
 
 	m_HpTex_Inner = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, { 0, 0 });
 

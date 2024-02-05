@@ -50,6 +50,7 @@ public: //サブクラス
 		releaseHammer,
 		userChoice,
 		userDecision,
+		openBox,
 	};
 
 public:  //静的メンバ関数
