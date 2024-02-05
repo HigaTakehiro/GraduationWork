@@ -58,6 +58,9 @@ void Heart::Jump()
 	heart_->SetPosition(pos_);
 	if (get == false) { return; }
 	player_->AddHP(1);
+	if (player_->GetHP() >= player_->GetMaxHP()) {
+		player_->SetHP(player_->GetMaxHP());
+	}
 }
 
 
