@@ -13,6 +13,7 @@
 #include "HPUpSkill.h"
 #include "SPDUpSkill.h"
 #include "HammerReturnSkill.h"
+#include"StageCount.h"
 
 #pragma warning(disable:4996)
 
@@ -64,7 +65,6 @@ void TutorialScene::Initialize()
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
 	sleep_->SetPosition(sleepPos_);
 
-
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
@@ -90,8 +90,7 @@ void TutorialScene::Initialize()
 
 	aEffect_ = new AttackEffect();
 	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
-
-
+	
 	startenemypos_[0] = { 5, 12.5, 18 };
 	startenemypos_[1] = { -5, 12.5, 18 };
 
@@ -134,6 +133,7 @@ void TutorialScene::Initialize()
 	activeSkillPanel02_ = make_unique<SkillPanel>();
 	activeSkillPanel02_->Initialize(L"Empty", { 352.f, 32.f }, SkillPanel::Empty);
 
+	StageCount::GetIns()->Initi();
 }
 
 void TutorialScene::Update()
