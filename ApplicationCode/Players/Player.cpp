@@ -69,6 +69,7 @@ void Player::Initialize()
 	animeTimer_ = 0;
 	preAnimeCount_ = 999;
 	isFallHammer_ = false;
+	isInvincible_ = false;
 
 	//ƒŒƒxƒ‹‰Šú‰»
 	if (level_ <= 0) {

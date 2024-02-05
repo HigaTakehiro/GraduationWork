@@ -42,6 +42,12 @@ public: //メンバ関数
 	void AddPlayerActiveSkill(IActiveSkill* skill);
 
 	/// <summary>
+	/// アクティブスキル01名を取得
+	/// </summary>
+	/// <returns>アクティブスキル01名</returns>
+	const std::string GetActiveSkillName01() { return activeSkillName01_; }
+
+	/// <summary>
 	/// アクティブスキル01名をセット
 	/// </summary>
 	/// <param name="activeSkillName01">アクティブスキル01名</param>
@@ -60,10 +66,23 @@ public: //メンバ関数
 	void SetActiveSkillName02(const std::string& activeSkillName02);
 
 	/// <summary>
+	/// アクティブスキル02名を取得
+	/// </summary>
+	/// <returns>アクティブスキル02名</returns>
+	const std::string GetActiveSkillName02() { return activeSkillName02_; }
+
+	/// <summary>
 	/// アクティブスキル02を有効化
 	/// </summary>
 	/// <param name="isActiveSkill02">アクティブスキル02有効化フラグ</param>
 	void SetIsActiveSkill02(bool isActiveSkill02);
+
+	/// <summary>
+	/// アクティブスキル有効化フラグを取得
+	/// </summary>
+	/// <param name="activeSkillName">アクティブスキル名</param>
+	/// <returns>有効化フラグ</returns>
+	bool GetIsActiveCheck(const std::string& activeSkillName);
 
 	/// <summary>
 	/// スキルが入手状態かどうかを取得

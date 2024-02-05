@@ -220,6 +220,7 @@ void IBScene::Update()
 	light_->Update();
 	playerUI_->Update();
 	playerUI_->SetHP(playerUI_->GetMaxHP());
+
 	activeSkillPanel01_->Update(skillCursor_->GetPosition());
 	activeSkillPanel02_->Update(skillCursor_->GetPosition());
 
@@ -612,8 +613,8 @@ void IBScene::SkillUIUpdate()
 		activeSkillPanel02_->SetPos({ 320.f, 288.f });
 	}
 	else {
-		activeSkillPanel01_->SetPos({ 352.f, 32.f });
-		activeSkillPanel02_->SetPos({ 287.f, 32.f });
+		activeSkillPanel01_->SetPos({ 287.f, 32.f });
+		activeSkillPanel02_->SetPos({ 352.f, 32.f });	
 	}
 
 	//カーソル移動処理
@@ -798,14 +799,14 @@ void IBScene::AddSkill(int32_t arrayNum_1, int32_t arrayNum_2)
 		skillManager_->AddPlayerPassiveSkill(spdUp);
 	}
 	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::FallHammer) {
-		activeSkillPanel02_->Initialize(L"フォールハンマー", { 320.f, 288.f }, SkillPanel::FallHammer);
+		activeSkillPanel02_->Initialize(L"フォールハンマー", { 155.f, 288.f }, SkillPanel::FallHammer);
 		activeSkillPanel02_->SetIsActive(true);
 		FallHammerAttackSkill* fallHammer = new FallHammerAttackSkill("FallHammer", 8 * 60);
 		skillManager_->AddPlayerActiveSkill(fallHammer);
 		skillManager_->SetActiveSkillName02("FallHammer");
 	}
 	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::HyperMode) {
-		activeSkillPanel01_->Initialize(L"ハイパーモード", { 155.f, 288.f }, SkillPanel::HyperMode);
+		activeSkillPanel01_->Initialize(L"ハイパーモード", { 320.f, 288.f }, SkillPanel::HyperMode);
 		activeSkillPanel01_->SetIsActive(true);
 		HyperModeSkill* hyperMode = new HyperModeSkill("HyperMode", 16 * 60, 4 * 60);
 		skillManager_->AddPlayerActiveSkill(hyperMode);

@@ -132,6 +132,10 @@ void TutorialScene::Initialize()
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::title, TRUE, 0.3f);
 
 	invincibleParticle_ = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera_.get());
+	activeSkillPanel01_ = make_unique<SkillPanel>();
+	activeSkillPanel01_->Initialize(L"Empty", { 287.f, 32.f }, SkillPanel::Empty);
+	activeSkillPanel02_ = make_unique<SkillPanel>();
+	activeSkillPanel02_->Initialize(L"Empty", { 352.f, 32.f }, SkillPanel::Empty);
 
 }
 
@@ -208,6 +212,8 @@ void TutorialScene::Update()
 	camera_->SetTarget(targetPos_);
 	player_->TutorialUpdate(stop_, notattack_);
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_, notlook_);
+	activeSkillPanel01_->Update({0.f, 0.f});
+	activeSkillPanel02_->Update({0.f, 0.f});
 
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
@@ -353,6 +359,8 @@ void TutorialScene::Draw()
 		player_->SpriteDraw();
 		textWindow_->SpriteDraw();
 		fighttextwindow_->SpriteDraw();
+		activeSkillPanel01_->SpriteDraw();
+		activeSkillPanel02_->SpriteDraw();
 		Sprite::PostDraw();
 	}
 	DirectXSetting::GetIns()->PostDraw();
@@ -406,7 +414,7 @@ void TutorialScene::SceneChange()
 
 	//これいつか消すように
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss2);
+		SceneManager::SceneChange(SceneManager::SceneName::Boss3);
 	}
 
 	if (PadInput::GetIns()->PushButton(PadInput::Button_A) && PadInput::GetIns()->PushButton(PadInput::Button_RB) && PadInput::GetIns()->PushButton(PadInput::Button_LB)) {

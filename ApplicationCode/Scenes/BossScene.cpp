@@ -85,6 +85,20 @@ void BossScene::Initialize()
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss, TRUE, 0.4f);
 
+	activeSkillPanel01_ = std::make_unique<SkillPanel>();
+	activeSkillPanel01_->Initialize(L"Empty", { 287.f, 32.f }, SkillPanel::Empty);
+	activeSkillPanel02_ = std::make_unique<SkillPanel>();
+	activeSkillPanel02_->Initialize(L"Empty", { 352.f, 32.f }, SkillPanel::Empty);
+	if (skillManager_->GetActiveSkillName01() != "None") {
+		if (skillManager_->GetActiveSkillName01() == "HyperMode") {
+			activeSkillPanel01_->Initialize(L"HyperMode", { 287.f, 32.f }, SkillPanel::HyperMode);
+		}
+	}
+	if (skillManager_->GetActiveSkillName02() != "None") {
+		if (skillManager_->GetActiveSkillName02() == "FallHammer") {
+			activeSkillPanel02_->Initialize(L"FallHammer", { 352.f, 32.f }, SkillPanel::FallHammer);
+		}
+	}
 }
 
 void BossScene::Update()
@@ -159,6 +173,11 @@ void BossScene::Update()
 	}
 	schange->Change(0);
 	skillManager_->Update();
+	activeSkillPanel01_->SetIsActive(skillManager_->GetIsActiveCheck("HyperMode"));
+	activeSkillPanel02_->SetIsActive(skillManager_->GetIsActiveCheck("FallHammer"));
+	activeSkillPanel01_->Update({ 0.f, 0.f });
+	activeSkillPanel02_->Update({ 0.f, 0.f });
+	
 	//シーン切り替えmmm
 	SceneChange();
 	if (touchFlor)
@@ -216,6 +235,8 @@ void BossScene::Draw()
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	player_->SpriteDraw();
 	boss_->SpriteDraw();
+	activeSkillPanel01_->SpriteDraw();
+	activeSkillPanel02_->SpriteDraw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }

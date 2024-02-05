@@ -28,3 +28,11 @@ void FallHammerAttackSkill::SetIsActive(bool isActive)
 		isActive_ = isActive;
 	}
 }
+
+bool FallHammerAttackSkill::GetIsActive()
+{
+	bool isActive = false;
+	if (coolTimer_ >= coolTime_) isActive = true;
+
+	return isActive;
+}

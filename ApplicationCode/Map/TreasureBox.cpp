@@ -29,7 +29,7 @@ void TreasureBox::Initialize(int num, const XMFLOAT3& MapPos, Player* player, in
 		stairsModel_[i] = Shapes::CreateSquare({0.f, 0.f}, {64.f, 64.f}, "Tbox.png", {1.8f, 1.8f}, {0.5f, 0.5f}, {64.f * (float)i, 1.f}, {64.f, 64.f});
 	}
 	
-	uiModel_ = Shapes::CreateSquare({ 0,0 }, { 192, 64 }, "susumuA.png", { 6, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { -192, 64 });
+	uiModel_ = Shapes::CreateSquare({ 0,0 }, { 192, 64 }, "openUI.png", { 6, 2 }, { 0.5f, 0.5f }, { 0, 0 }, { -192, 64 });
 	treasurebox_ = make_unique<Object3d>();
 	treasurebox_ = Object3d::UniquePtrCreate(stairsModel_[0]);
 	treasurebox_->SetIsBillboardY(true);

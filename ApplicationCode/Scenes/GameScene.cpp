@@ -58,6 +58,20 @@ void GameScene::Initialize()
 
 	postEffectNo_ = PostEffect::NONE;
 
+	activeSkillPanel01_ = std::make_unique<SkillPanel>();
+	activeSkillPanel01_->Initialize(L"Empty", { 287.f, 32.f }, SkillPanel::Empty);
+	activeSkillPanel02_ = std::make_unique<SkillPanel>();
+	activeSkillPanel02_->Initialize(L"Empty", { 352.f, 32.f }, SkillPanel::Empty);
+	if (skillManager_->GetActiveSkillName01() != "None") {
+		if (skillManager_->GetActiveSkillName01() == "HyperMode") {
+			activeSkillPanel01_->Initialize(L"HyperMode", { 287.f, 32.f }, SkillPanel::HyperMode);
+		}
+	}
+	if (skillManager_->GetActiveSkillName02() != "None") {
+		if (skillManager_->GetActiveSkillName02() == "FallHammer") {
+			activeSkillPanel02_->Initialize(L"FallHammer", { 352.f, 32.f }, SkillPanel::FallHammer);
+		}
+	}
 
 	int Num = StageCount::GetIns()->Up();
 
@@ -79,6 +93,9 @@ void GameScene::Initialize()
 	aeCount = 0;
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::dungeon, TRUE, 0.4f);
+
+	invincibleParticle_ = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera_.get());
+
 }
 
 void GameScene::Update()
@@ -159,10 +176,19 @@ void GameScene::Update()
 	colManager_->Update();
 	skillManager_->Update();
 
+	if (player_ != nullptr) {
+		ParticleCreate();
+	}
+	invincibleParticle_->Update();
+	activeSkillPanel01_->SetIsActive(skillManager_->GetIsActiveCheck("HyperMode"));
+	activeSkillPanel02_->SetIsActive(skillManager_->GetIsActiveCheck("FallHammer"));
+	activeSkillPanel01_->Update({ 0.f, 0.f });
+	activeSkillPanel02_->Update({ 0.f, 0.f });
+
 	//シーン切り替え
 	schange->Change(0);
 	SceneChange();
-	
+
 }
 
 void GameScene::Draw()
@@ -216,6 +242,7 @@ void GameScene::Draw()
 	map_->BridgeDraw();
 
 	player_->Draw();
+	invincibleParticle_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
@@ -241,6 +268,8 @@ void GameScene::Draw()
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	player_->SpriteDraw();
+	activeSkillPanel01_->SpriteDraw();
+	activeSkillPanel02_->SpriteDraw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -249,6 +278,8 @@ void GameScene::Finalize()
 {
 	safe_delete(text_);
 	player_->Finalize();
+	safe_delete(player_);
+	invincibleParticle_->Finalize();
 	//boss_->Finalize();
 	safe_delete(player_);
 	//safe_delete(ene);
@@ -440,5 +471,29 @@ void GameScene::EnemyProcess()
 		Ene->Upda(camera_.get());
 	}
 #pragma endregion
+}
+
+void GameScene::ParticleCreate()
+{
+	if (player_ != nullptr) {
+		//無敵状態パーティクル
+		if (player_->GetIsInvincible()) {
+			int32_t life = 30;
+			Vector3 pos = player_->GetPos();
+			pos.y -= 0.5f;
+
+			Vector3 vel = { 0.f, 0.f, 0.f };
+			float rnd_vel = 0.2f;
+			vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.f;
+
+			Vector3 acc = { 0.f, 0.f, 0.f };
+			float rnd_acc = 0.015f;
+			acc.y = (float)rand() / RAND_MAX * rnd_acc * rnd_acc / 2.0f;
+
+			invincibleParticle_->Add(life, pos, vel, acc, 1.f, 0.f, { 1.5f, 1.5f, 1.5f }, { 1.f, 1.f, 1.f }, 0.5f, 0.0f);
+			invincibleParticle_->LoadTexture("Flash");
+		}
+	}
 }
 
