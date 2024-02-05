@@ -386,6 +386,7 @@ void TutorialScene::SceneChange()
 		fclose(fp);
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
+
 }
 
 void TutorialScene::CameraSetting()
