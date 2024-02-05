@@ -366,7 +366,7 @@ void IBScene::Draw()
 	if (skillFlag) {
 		skillCursor_->Draw();
 	}
-
+	schange->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
