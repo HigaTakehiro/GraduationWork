@@ -23,6 +23,8 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include "SceneChange.h"
+#include "SkillPanel.h"
+
 class LastBossScene :
 	public BaseScene
 {
@@ -78,6 +80,9 @@ private:
 	Vector3 cameraPos_;
 	//注視点
 	Vector3 targetPos_;
+	//スキルパネル
+	std::unique_ptr<SkillPanel> activeSkillPanel01_;
+	std::unique_ptr<SkillPanel> activeSkillPanel02_;
 
 	Shake* shake_;
 	std::unique_ptr<Sprite>m_ClearTex = nullptr;

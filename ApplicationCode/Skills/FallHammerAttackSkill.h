@@ -27,5 +27,10 @@ public: //メンバ関数
 	/// <param name="isActive">有効化フラグ</param>
 	void SetIsActive(bool isActive) override;
 
+	/// <summary>
+	/// スキル有効化フラグを取得
+	/// </summary>
+	/// <returns>スキル有効化フラグ</returns>
+	bool GetIsActive() override;
 };
 

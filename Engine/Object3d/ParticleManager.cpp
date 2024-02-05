@@ -94,6 +94,11 @@ void ParticleManager::Initialize(bool isSubBlend)
 	}
 }
 
+void ParticleManager::Finalize()
+{
+	particles.clear();
+}
+
 void ParticleManager::Update()
 {
 	HRESULT result;

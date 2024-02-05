@@ -25,6 +25,8 @@
 #include"IntermediateBase.h"
 #include "Grass.h"
 #include"AttackEffect.h"
+#include "ParticleManager.h"
+#include "SkillPanel.h"
 
 class GameScene : public BaseScene
 {
@@ -66,6 +68,11 @@ private: //メンバ関数
 	/// 敵に関係する処理
 	/// </summary>
 	void EnemyProcess();
+
+	/// <summary>
+	/// パーティクル生成
+	/// </summary>
+	void ParticleCreate();
 private: //メンバ変数
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -79,6 +86,11 @@ private: //メンバ変数
 	Player* player_;
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
+	//無敵状態パーティクル
+	std::unique_ptr<ParticleManager> invincibleParticle_;
+	//スキルパネル
+	std::unique_ptr<SkillPanel> activeSkillPanel01_;
+	std::unique_ptr<SkillPanel> activeSkillPanel02_;
 
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;
