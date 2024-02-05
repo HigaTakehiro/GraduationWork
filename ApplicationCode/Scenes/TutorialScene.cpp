@@ -57,10 +57,6 @@ void TutorialScene::Initialize()
 	wake_->SetAlpha(1.5f);
 	wake_->SetPosition(wakePos_);
 
-	//nextui_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::asist_, { 0,0 }, { 1.f,1.f,1.f,1.f }, { 0.f,0.f });
-	//nextui_->SetAlpha(1.5f);
-	//->SetPosition(asistPos_);
-
 	sleep_ = Object3d::UniquePtrCreate(sleepModel_[0]);
 	sleep_->SetIsBillboardY(true);
 	sleep_->SetObbScl({ 2.f,4.f,2.f });
@@ -121,8 +117,8 @@ void TutorialScene::Initialize()
 	titlefilter_->SetSize(size_);
 	schange = new SceneChangeEffect();
 	schange->Initialize();
+	schange->SetFadeNum(0);
 	schange->SetFEnd(true);
-	schange->SetFadeNum(1);
 	phase_ = Phase::Title;
 	oldpushCount_ = pushCount_;
 
@@ -141,6 +137,7 @@ void TutorialScene::Initialize()
 
 void TutorialScene::Update()
 {
+	schange->Change(0);
 	dome->Update();
 
 	int32_t Max = player_->GetMaxHP();
@@ -223,8 +220,6 @@ void TutorialScene::Update()
 		player_->ResetOreCount();
 	}
 
-	schange->Change(0);
-
 	if (phase_ == Phase::Title) { return; }
 	shake_->Update();
 	colManager_->Update();
@@ -268,64 +263,40 @@ void TutorialScene::Draw()
 			Dep->Draw();
 		}
 	}
-
 	Object3d::PostDraw();
-	/*for (auto i = 0; i < enemys_.size(); i++) {
-		if (enemys_[i] != nullptr) {
-			enemys_[i]->TutorialDraw(25.f);
-		}
-	}	*/
-
 	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
 		Enemy->TutorialDraw(25.f);
-		//if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
-		//	aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-		//}
 	}
-
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
 			ore->Draw();
 		}
 	}
-	/*for (size_t i = 0; i < enemys_.size(); i++)
-		enemys_[i]->TutorialTexDraw();*/
-
 	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
 		Enemy->TutorialTexDraw();
 	}
 	map_->BridgeDraw(notlook_);
-
 	if (phase_ == Phase::Title) { sleep_->Draw(); }
 	else { player_->Draw(); }
 	invincibleParticle_->Draw(DirectXSetting::GetIns()->GetCmdList());
-
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	titlefilter_->Draw();
 	title_[titleanimeCount_]->Draw();
 	wake_->Draw();
-	if (phase_ == Phase::Description || phase_ == Phase::Spown) {
-		//nextui_->Draw();
-	}
-
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
-
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
-
 	D2D1_RECT_F textDrawRange = { 640, 620, 1280, 1280 };
 	//D2D1_RECT_F textDrawRange2 = { 600, 300, 1280, 1280 };
 	//std::wstring hx = std::to_wstring(ShakeCount);
