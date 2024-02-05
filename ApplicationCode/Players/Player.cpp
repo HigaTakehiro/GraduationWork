@@ -254,6 +254,11 @@ void Player::FallHammerAttack()
 
 }
 
+void Player::StatusReset()
+{
+	PlayerStatusSetting();
+}
+
 void Player::ActiveFallHammer()
 {
 	hammer_->SetParent(nullptr);

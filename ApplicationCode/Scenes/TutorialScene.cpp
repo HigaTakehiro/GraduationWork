@@ -84,6 +84,7 @@ void TutorialScene::Initialize()
 	//3dオブジェクト初期化
 	player_ = new Player;
 	player_->Initialize();
+	player_->StatusReset();
 
 	postEffectNo_ = PostEffect::NONE;
 
