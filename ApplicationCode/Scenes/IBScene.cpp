@@ -360,7 +360,7 @@ void IBScene::Draw()
 	if (skillFlag) {
 		skillCursor_->Draw();
 	}
-	
+
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -399,7 +399,7 @@ void IBScene::SceneChange()
 			}
 			else {
 				soundCount = 0;
-				
+
 			}
 		}
 	}
@@ -409,7 +409,7 @@ void IBScene::SceneChange()
 	if (arrow->GetPosition().y == 150) {
 		//ŽŸ‚ÌƒQ[ƒ€ƒV[ƒ“‚¢‚­
 		if (schange->GetEnd() == false) {
-			if (schange->GetFStart() == false) {
+			if (schange->GetFStart() == false && schange->GetFEnd() == false) {
 				if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 					SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 					schange->SetFStart(true);
