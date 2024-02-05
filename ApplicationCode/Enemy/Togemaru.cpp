@@ -133,7 +133,7 @@ void Togemaru::Upda()
 	bool isCol =m_HP>0&& Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
 //	if (!nowcrush) {
-		Helper::DamageManager(m_HP, 1, DamF, DamCoolTime, 60, judg1&& isCol);
+		Helper::DamageManager(m_HP, DamageMath::ReturnDamage(m_player->GetDamageATK(), GuardValue), DamF, DamCoolTime, 60, judg1&& isCol);
 		Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z+3.f }, m_player, judg1 && isCol);
 	//}
 

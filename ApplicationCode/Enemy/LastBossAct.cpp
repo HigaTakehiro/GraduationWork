@@ -381,7 +381,7 @@ void LastBossAct::Act_Barrier()
 	bool isCollsion = Hp > 0 && Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
 	if ( BarrierHp[0] <= 0 && BarrierHp[1] <= 0 && BarrierHp[2] <= 0)
 	{
-		Helper::DamageManager(Hp, 1, damff, damcool, 90, isCollsion);
+		Helper::DamageManager(Hp, DamageMath::ReturnDamage(Player_->GetDamageATK(),guardp), damff, damcool, 90, isCollsion);
 		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollsion, 1.f);
 	}
 	if(BarrierHp[0]<=0&& BarrierHp[1] <= 0 && BarrierHp[2] <= 0 )

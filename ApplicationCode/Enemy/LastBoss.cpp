@@ -74,6 +74,8 @@ void LastBoss::Init()
 	HPUiInit();
 	Action = new LastBossAct();
 Action->SetHp(BossMaxHP);
+
+	Action->SetGuardPoint(GuardValue);
 }
 
 
