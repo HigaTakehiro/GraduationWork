@@ -103,8 +103,6 @@ void SceneManager::SceneChange(SceneName scene) {
 		NowSceneInitialize();
 		break;
 	case SceneName::Tutorial:
-		safe_delete(skillScene_);
-		skillManager_ = new SkillManager;
 		nowScene = new TutorialScene();
 		NowSceneInitialize();
 		break;
