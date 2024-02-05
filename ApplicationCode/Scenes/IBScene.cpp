@@ -305,7 +305,7 @@ void IBScene::Draw()
 		}
 		skillPlayer_[animeCount_]->Draw();
 	}
-	schange->Draw();
+
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -332,7 +332,9 @@ void IBScene::Draw()
 	statusMessage += L"‘f‘‚³ : ";
 	statusMessage += std::to_wstring(playerUI_->GetSPD());
 	if (!skillFlag) {
-		playerUI_->TextUIDraw();
+		if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+			playerUI_->TextUIDraw();
+		}
 	}
 	else {
 		text_->Draw("bestTen_16", "white", skillPointMessage, skillPointDrawRange);
@@ -402,7 +404,8 @@ void IBScene::SceneChange()
 				arrow->SetPosition({ 900,50 });
 			}
 			else {
-				soundCount = 0;			}
+				soundCount = 0;
+			}
 		}
 	}
 	if (soundCount == 1) {
@@ -505,7 +508,7 @@ void IBScene::SceneChange()
 		}
 		else if (skillFlag == false) {
 			if (schange->GetEnd() == false) {
-				if (schange->GetFStart() == false&& schange->GetFEnd() == false) {
+				if (schange->GetFStart() == false && schange->GetFEnd() == false) {
 					if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 						SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 						schange->SetFEnd(false);
@@ -614,7 +617,7 @@ void IBScene::SkillUIUpdate()
 	}
 	else {
 		activeSkillPanel01_->SetPos({ 287.f, 32.f });
-		activeSkillPanel02_->SetPos({ 352.f, 32.f });	
+		activeSkillPanel02_->SetPos({ 352.f, 32.f });
 	}
 
 	//ƒJ[ƒ\ƒ‹ˆÚ“®ˆ—

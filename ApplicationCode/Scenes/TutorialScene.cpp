@@ -292,7 +292,6 @@ void TutorialScene::Draw()
 	titlefilter_->Draw();
 	title_[titleanimeCount_]->Draw();
 	wake_->Draw();
-	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
@@ -315,7 +314,9 @@ void TutorialScene::Draw()
 	}
 
 	if (phase_ != Phase::Title) {
-		player_->TextUIDraw();
+		if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+			player_->TextUIDraw();
+		}
 		textWindow_->TextMessageDraw();
 		fighttextwindow_->TextMessageDraw();
 	}
@@ -332,6 +333,7 @@ void TutorialScene::Draw()
 		fighttextwindow_->SpriteDraw();
 		activeSkillPanel01_->SpriteDraw();
 		activeSkillPanel02_->SpriteDraw();
+		schange->Draw();
 		Sprite::PostDraw();
 	}
 	DirectXSetting::GetIns()->PostDraw();
