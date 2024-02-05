@@ -392,14 +392,15 @@ void GameScene::EnemyProcess()
 		int Num = Enemy->GetType();
 		if (Enemy->GetType() == 0) { EnemyPos = Enemy->GetPos(); }
 		else if (Enemy->GetType() == 1) { EnemyPos = Enemy->GetPos(); }
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack())
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f)  && player_->GetIsAttack())
 		{
+			player_->SetIsHammerReflect(true);
 			Enemy->SetDamF(true);
 		} else
 		{
 			Enemy->SetDamF(false);
 		}
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z+3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z+3.f }, 1.0f) && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			Enemy->GetDamage(true);
 			Vector3 Vec{};

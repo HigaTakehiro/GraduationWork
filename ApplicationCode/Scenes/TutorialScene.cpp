@@ -477,8 +477,9 @@ void TutorialScene::EnemyProcess()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr || Enemy->GetHP() <= 0) { continue; }
 		enemyPos[i] = Enemy->GetPos();
-		if(Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f}, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack())
+		if(Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f}, 1.0f) && player_->GetIsAttack())
 		{
+			player_->SetIsHammerReflect(true);
 			Enemy->SetDamF(true);
 		}
 		else
