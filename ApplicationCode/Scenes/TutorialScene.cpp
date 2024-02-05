@@ -522,7 +522,7 @@ void TutorialScene::EnemyProcess()
 void TutorialScene::SleepShale()
 {
 	if (!action_) {
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+		if (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			pushCount_ += 1;
 			shaketimer_ = 0;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerDamage, 0.2f);
