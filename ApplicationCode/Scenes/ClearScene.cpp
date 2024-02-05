@@ -33,13 +33,13 @@ void ClearScene::Initialize()
 	for (int32_t i = 0; i < 6; i++) {
 		XMFLOAT3 Pos;
 		if (i < 3) {
-			Pos={ 1.f * i + 9.f,0.f,21.f * i - 35.f };
+			Pos={ 2.f * i + 9.f,0.f,21.f * i - 35.f };
 			if (i == 1) {
 				Pos = { 2.5f  + 9.f,0.f,21.f  - 31.f };
 			}
 		}
 		else {
-			Pos = { -1.f * (i-3) - 9.f,0.f,21.f * (i - 3) - 35.f };
+			Pos = { -2.f * (i-3) - 9.f,0.f,21.f * (i - 3) - 35.f };
 			if (i == 4) {
 				Pos = { -2.5f - 9.f,0.f,21.f - 31.f };
 			}
@@ -68,19 +68,23 @@ void ClearScene::Initialize()
 	schange->Initialize();
 	schange->SetFEnd(true);
 	schange->SetFadeNum(1);
+
+	cleartext_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::ClearText, { WinApp::window_width/2,WinApp::window_height/2 +150},{1.f,1.f,1.f,1.f},{0.5f,0.5f});
 }
 
 void ClearScene::Update()
 {
-	schange->Change(0);
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 	Animation();
 	for (int32_t i = 0; i < 6; i++) {
 		house_[i]->Update();
 	}
+	Timer_ += 0.1f;
 	dome->Update();
 	ground_->Update();
+	schange->Change(0);
+	SceneChange();
 }
 
 void ClearScene::Draw()
@@ -98,6 +102,7 @@ void ClearScene::Draw()
 	Object3d::PostDraw();
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	cleartext_->Draw();
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
@@ -113,10 +118,18 @@ void ClearScene::Draw()
 
 void ClearScene::Finalize()
 {
+
 }
 
 void ClearScene::SceneChange()
 {
+	if (Timer_ > 25.f) {
+		schange->SetFStart(true);
+		//schange->SetFadeNum(0);
+	}
+	if (schange->GetEnd() == true) {
+		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+	}
 }
 
 void ClearScene::CameraSetting()

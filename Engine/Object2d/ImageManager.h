@@ -41,7 +41,8 @@ public: //‰æ‘œ–¼
 		PlayerUIBack,
 		skillIcon_FallHammer,
 		skillIcon_HyperMode,
-		skillIcon_Empty
+		skillIcon_Empty,
+		ClearText,
 	};
 
 	enum Image2DName {
