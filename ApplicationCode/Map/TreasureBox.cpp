@@ -3,6 +3,7 @@
 #include"Player.h"
 #include"Modelmanager.h"
 #include "ExternalFileLoader.h"
+#include"SoundManager.h"
 #include"PadInput.h"
 #include<SafeDelete.h>
 #include <random>
@@ -94,9 +95,10 @@ void TreasureBox::CheckHit()
 	if ((Pos.x >= pos_.x - 1.f && Pos.x <= pos_.x + 1.4f) &&
 		(Pos.z >= pos_.z + 1.f && Pos.z <= pos_.z + 4.f)) {
 		f = true;
-		if (PadInput::GetIns()->PushButton(PadInput::Button_A)) {
+		if (PadInput::GetIns()->PushButton(PadInput::Button_A)&& !display_) {
 			boxdisplay_ = false;
 			display_ = true;
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::openBox, 0.3f);
 		}
 	}
 	else {

@@ -334,11 +334,9 @@ void TutorialScene::Draw()
 		fighttextwindow_->SpriteDraw();
 		activeSkillPanel01_->SpriteDraw();
 		activeSkillPanel02_->SpriteDraw();
+		schange->Draw();
 		Sprite::PostDraw();
 	}
-	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	schange->Draw();
-	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
 
@@ -370,6 +368,7 @@ void TutorialScene::SceneChange()
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
 	SceneManager::SetSkillPoint(player_->GetSkillPoint());
+	SceneManager::SetLevelUpEP(player_->GetLevelUpEP());
 
 	bool Change = player_->GetNext();
 	if (Change || player_->GetHP() <= 0) {
@@ -390,7 +389,7 @@ void TutorialScene::SceneChange()
 
 	//これいつか消すように
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss2);
+		SceneManager::SceneChange(SceneManager::SceneName::Boss3);
 	}
 
 	if (PadInput::GetIns()->PushButton(PadInput::Button_A) && PadInput::GetIns()->PushButton(PadInput::Button_RB) && PadInput::GetIns()->PushButton(PadInput::Button_LB)) {
@@ -557,7 +556,6 @@ void TutorialScene::SleepShale()
 	}
 
 }
-
 
 void TutorialScene::ParticleCreate()
 {

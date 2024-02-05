@@ -253,6 +253,18 @@ public: //メンバ関数
 	void SetSPD(int32_t spd) { spd_ = spd; }
 
 	/// <summary>
+	/// レベルアップ必要経験値をセット
+	/// </summary>
+	/// <param name="lvUpEp">レベルアップ必要経験値</param>
+	void SetLevelUpEP(int32_t lvUpEp) { levelUpEp_ = lvUpEp; }
+
+	/// <summary>
+	/// レベルアップ必要経験値を取得
+	/// </summary>
+	/// <returns>レベルアップ必要経験値</returns>
+	int32_t GetLevelUpEP() { return levelUpEp_; }
+
+	/// <summary>
 	/// 攻撃力を加算
 	/// </summary>
 	/// <param name="num">上昇数値</param>

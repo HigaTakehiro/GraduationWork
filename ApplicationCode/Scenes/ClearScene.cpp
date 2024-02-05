@@ -120,7 +120,7 @@ void ClearScene::Draw()
 
 void ClearScene::Finalize()
 {
-	safe_delete(skillManager_);
+
 }
 
 void ClearScene::SceneChange()

@@ -48,6 +48,11 @@ private:
 	/// </summary>
 	void CameraSetting();
 
+	/// <summary>
+	/// パーティクル生成
+	/// </summary>
+	void ParticleCreate();
+
 private:
 	//ポストエフェクト
 	std::unique_ptr<PostEffect> postEffect_;
@@ -83,6 +88,7 @@ private:
 	//スキルパネル
 	std::unique_ptr<SkillPanel> activeSkillPanel01_;
 	std::unique_ptr<SkillPanel> activeSkillPanel02_;
+	std::unique_ptr<ParticleManager> invincibleParticle_;
 
 	Shake* shake_;
 	std::unique_ptr<Sprite>m_ClearTex = nullptr;
