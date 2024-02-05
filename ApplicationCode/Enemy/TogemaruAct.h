@@ -195,7 +195,7 @@ private:
 
 	float dshakeXVal = 0.f, dshakeYVal = 0.f;
 	float dshakeT = 0.f;
-
+	int guardp;
 	Vector3 DepositReproduction2();
 public:
 	//s“®‘JˆÚ
@@ -206,7 +206,7 @@ public:
 	static Vector3 DefaultPos;
 	static bool TogemaruDeathF;
 	void ViewShake();
-
+	void SetGuardPoint(int gv) { guardp = gv; }
 	bool GetRole()const { return RoleF; }
 	void SetHp(int hp) { Hp = hp; }
 public:
