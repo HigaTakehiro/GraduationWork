@@ -78,7 +78,7 @@ public: //メンバ関数
 	/// 座標をセット
 	/// </summary>
 	/// <param name="pos">座標</param>
-	void SetPos(const Vector2& pos) { pos_ = pos; }
+	void SetPos(Vector2 pos) { pos_ = pos; }
 
 	/// <summary>
 	/// 説明文処理

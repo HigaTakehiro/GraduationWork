@@ -301,10 +301,7 @@ void IBScene::Draw()
 				}
 			}
 		}
-		activeSkillPanel01_->SpriteDraw();
-		activeSkillPanel02_->SpriteDraw();
 		skillPlayer_[animeCount_]->Draw();
-		skillCursor_->Draw();
 	}
 	schange->Draw();
 	Sprite::PostDraw();
@@ -354,9 +351,16 @@ void IBScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+
 	if (skillFlag != true) {
 		playerUI_->SpriteDraw();
 	}
+	activeSkillPanel01_->SpriteDraw();
+	activeSkillPanel02_->SpriteDraw();
+	if (skillFlag) {
+		skillCursor_->Draw();
+	}
+	
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -588,39 +592,21 @@ void IBScene::SkillUIUpdate()
 	for (int32_t i = 0; i < 7; i++) {
 		for (int32_t j = 0; j < 7; j++) {
 			if (panelStatus_[i][j].panelStatus_ == 0) continue;
-
-			bool isActive = panelStatus_[i][j].skillPanel_->GetIsActive();
-
-			if (i == 0 && panelStatus_[i + 1][j].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-
-			if (j == 0 && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-			
-
-			if (i == 0 || j == 0) continue;
-			if (!isActive && panelStatus_[i - 1][j].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-			if (!isActive && panelStatus_[i][j - 1].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-
-			if (i + 1 == 7 || j + 1 == 7) continue;
-			if (!isActive && panelStatus_[i + 1][j].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-			if (!isActive && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-
+			SkillPanelActiveCheck(i, j);
 		}
 	}
 
 	if (KeyInput::GetIns()->TriggerKey(DIK_U) && KeyInput::GetIns()->TriggerKey(DIK_I)) {
 		playerUI_->AddSkillPoint(99);
+	}
+
+	if (skillFlag) {
+		activeSkillPanel01_->SetPos({ 155.f, 288.f });
+		activeSkillPanel02_->SetPos({ 320.f, 288.f });
+	}
+	else {
+		activeSkillPanel01_->SetPos({ 352.f, 32.f });
+		activeSkillPanel02_->SetPos({ 287.f, 32.f });
 	}
 
 	//カーソル移動処理
@@ -671,11 +657,11 @@ void IBScene::SkillPanelInitialize()
 		for (int32_t j = 0; j < 7; j++) {
 			if (panelStatus_[i][j].panelStatus_ == 1) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"HPアップ+5", pos, SkillPanel::HPUP, 5);
+				panelStatus_[i][j].skillPanel_->Initialize(L"ATKアップ+5", pos, SkillPanel::ATKUP, 5);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 2) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"ATKアップ+5", pos, SkillPanel::ATKUP, 5);
+				panelStatus_[i][j].skillPanel_->Initialize(L"HPアップ+5", pos, SkillPanel::HPUP, 5);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 3) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
@@ -709,21 +695,77 @@ void IBScene::SkillPanelInitialize()
 	for (int32_t i = 0; i < 7; i++) {
 		if (i < 3) {
 			pos = { 900.f, 300.f + (50.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))) };
-			panelStatus_[i][3].skillPanel_->SetPos(pos);
-			pos = { 900.f + (50.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))), 300.f };
 			panelStatus_[3][i].skillPanel_->SetPos(pos);
+			pos = { 900.f + (50.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))), 300.f };
+			panelStatus_[i][3].skillPanel_->SetPos(pos);
 		}
 		else if (i > 3) {
 			pos = { 900.f, 300.f - (50.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)) };
-			panelStatus_[i][3].skillPanel_->SetPos(pos);
-			pos = { 900.f - (50.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f };
 			panelStatus_[3][i].skillPanel_->SetPos(pos);
+			pos = { 900.f - (50.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f };
+			panelStatus_[i][3].skillPanel_->SetPos(pos);
 		}
 	}
 	pos = { 900.f + (50.f * (4.f - (2.f + 1.f)) + 10.f * (4.f - (2.f + 1.f))), 300.f - (50.f * (6.f - 3.f) + 10.f * (6.f - 3.f)) };
 	panelStatus_[2][6].skillPanel_->SetPos(pos);
 	pos = { 900.f - (50.f * (4.f - 3.f) + 10.f * (4.f - (2.f + 1.f))), 300.f + (50.f * (4.f - (0.f + 1.f)) + 10.f * (4.f - (0.f + 1.f))) };
 	panelStatus_[4][0].skillPanel_->SetPos(pos);
+}
+
+void IBScene::SkillPanelActiveCheck(int32_t arrayNum_1, int32_t arrayNum_2)
+{
+	bool isSkillGet = panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetIsSkillGet();
+	if (isSkillGet) {
+		if (arrayNum_1 != 0 && arrayNum_1 != 6) {
+			if (arrayNum_2 != 0 && arrayNum_2 != 6) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 0) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 6) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+		}
+		else if (arrayNum_1 == 0) {
+			if (arrayNum_2 != 0 && arrayNum_2 != 6) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 0) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 6) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+		}
+		else if (arrayNum_1 == 6) {
+			if (arrayNum_2 != 0 && arrayNum_2 != 6) {
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 0) {
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 6) {
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+		}
+	}
+
 }
 
 void IBScene::AddSkill(int32_t arrayNum_1, int32_t arrayNum_2)
@@ -750,12 +792,14 @@ void IBScene::AddSkill(int32_t arrayNum_1, int32_t arrayNum_2)
 	}
 	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::FallHammer) {
 		activeSkillPanel02_->Initialize(L"フォールハンマー", { 320.f, 288.f }, SkillPanel::FallHammer);
+		activeSkillPanel02_->SetIsActive(true);
 		FallHammerAttackSkill* fallHammer = new FallHammerAttackSkill("FallHammer", 8 * 60);
 		skillManager_->AddPlayerActiveSkill(fallHammer);
 		skillManager_->SetActiveSkillName02("FallHammer");
 	}
 	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::HyperMode) {
 		activeSkillPanel01_->Initialize(L"ハイパーモード", { 155.f, 288.f }, SkillPanel::HyperMode);
+		activeSkillPanel01_->SetIsActive(true);
 		HyperModeSkill* hyperMode = new HyperModeSkill("HyperMode", 16 * 60, 4 * 60);
 		skillManager_->AddPlayerActiveSkill(hyperMode);
 		skillManager_->SetActiveSkillName01("HyperMode");

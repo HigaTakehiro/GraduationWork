@@ -87,6 +87,11 @@ private: //メンバ関数
 	void SkillPanelInitialize();
 
 	/// <summary>
+	/// スキルパネル有効化チェック
+	/// </summary>
+	void SkillPanelActiveCheck(int32_t arrayNum_1, int32_t arrayNum_2);
+
+	/// <summary>
 	/// スキル追加処理
 	/// </summary>
 	void AddSkill(int32_t arrayNum_1, int32_t arrayNum_2);
