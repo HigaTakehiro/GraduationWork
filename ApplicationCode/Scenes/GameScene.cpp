@@ -393,6 +393,7 @@ void GameScene::EnemyProcess()
 		else if (Enemy->GetType() == 1) { EnemyPos = Enemy->GetPos(); }
 		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f)  && player_->GetIsAttack())
 		{
+			if(!PadInput::GetIns()->PushButton(PadInput::Button_B)&& player_->GetIsHammerRelease())
 			player_->SetIsHammerReflect(true);
 			Enemy->SetDamF(true);
 		} else
