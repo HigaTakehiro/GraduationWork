@@ -63,7 +63,8 @@ private: //メンバ変数
 	unique_ptr<Object3d> dome;
 
 	unique_ptr<Object3d>house_[6];
-
+	//クリア
+	std::unique_ptr<Sprite> cleartext_;
 	//カメラ座標
 	Vector3 cameraPos_;
 	//注視点
@@ -99,5 +100,7 @@ private: //メンバ変数
 	int32_t idolanimeTimer_;
 	//前フレームアニメーションカウント
 	int32_t idolpreAnimeCount_;
+	
+	float Timer_ = 0.f;
 };
 
