@@ -63,7 +63,7 @@ void BossScene::Initialize()
 
 	skillManager_->SetPlayer(player_);
 	//if (player_->GetHP() > 0) {
-		int Num = StageCount::GetIns()->Up();
+	int Num = StageCount::GetIns()->Up();
 	//}
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 6);
@@ -79,11 +79,6 @@ void BossScene::Initialize()
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 	boss_->GetCSPos(cameraPos_);
 
-	m_ClearTex = Sprite::UniquePtrCreate((UINT)ImageManager::Image2DName::TestPlay, { 0, 0 });
-	m_ClearTexScl = { 0,0 };
-	m_ClearTex->SetAnchorPoint({ 0.5f,0.5f });
-	m_ClearTex->SetPosition({ 640.f,360.f });
-
 	m_Stairs.reset(new Stairs());
 	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
@@ -96,31 +91,8 @@ void BossScene::Update()
 {
 	dome->Update();
 	if (!boss_.get()) return;
-
-	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
-
 	player_->Update();
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	//Vector3 //enemyPos[3] = {};
-
-
-	//デバッグカメラ移動処理
-	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
-		cameraPos_.z += 1.0f;
-		targetPos_.z += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f;
-		targetPos_.z -= 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
-		cameraPos_.x += 1.0f;
-		targetPos_.x += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
-		cameraPos_.x -= 1.0f;
-		targetPos_.x -= 1.0f;
-	}
 	//HPデバッグ処理
 	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
 		player_->SubHP(1);
@@ -144,8 +116,6 @@ void BossScene::Update()
 			cameraPos_.y += shake_->GetShakePos();
 			targetPos_.y += shake_->GetShakePos();
 		}
-		//cameraPos_.x += shake_->GetShakePos();
-		//targetPos_.x += shake_->GetShakePos();
 	}
 	else {
 		cameraPos_.y = 12;
@@ -157,7 +127,6 @@ void BossScene::Update()
 	//}//
 		//boss_->SetCamera(camera_.get());
 	light_->Update();
-
 	//プレイヤーのOBB設定
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
@@ -167,10 +136,8 @@ void BossScene::Update()
 	l_obb.SetParam_Pos(trans);
 	l_obb.SetParam_Rot(player_->GetHammer()->GetMatRot());
 	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
-
 	_hummmerObb = &l_obb;
 	boss_->Upda();
-
 	map_->Update(player_, cameraPos_, targetPos_, oldcamerapos_);
 	Vector3 hammerPosition = player_->GetHammer()->GetMatWorld().r[3];
 	if (!player_->GetIsHammerReflect()) {
@@ -179,14 +146,10 @@ void BossScene::Update()
 	else {
 		player_->ResetOreCount();
 	}
-
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-
-
 	shake_->Update();
 	colManager_->Update();
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-
 	m_Stairs->Update();
 	if (boss_->GetClearF() && player_->GetNextFlor())
 	{
@@ -194,27 +157,11 @@ void BossScene::Update()
 			touchFlor = TRUE;
 		}
 	}
-	if (touchFlor) {
-		if (++ClearTexEaseT >= 60)
-		{
-			NextClearF = TRUE;
-		}
-		m_ClearTexScl.x = Easing::easeIn(ClearTexEaseT, 60.f, 0, 1280.f);
-		m_ClearTexScl.y = Easing::easeIn(ClearTexEaseT, 60.f, 0, 720.f);
-	}
-	if (NextClearF)
-	{
-		ClearTexEaseT = std::clamp(ClearTexEaseT, 0.f, 60.f);
-	}
-
-	m_ClearTex->SetSize(m_ClearTexScl);
-
 	schange->Change(0);
 	skillManager_->Update();
-
 	//シーン切り替えmmm
 	SceneChange();
-	if (NextClearF)
+	if (touchFlor)
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			if (StageCount::GetIns()->Now() <= 18) {
@@ -225,17 +172,13 @@ void BossScene::Update()
 			}
 		}
 	}
-
-
 }
 
 void BossScene::Draw()
 {
 	//背景色
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
-
 	postEffect_->PreDrawScene(DirectXSetting::GetIns()->GetCmdList());
-
 	//スプライト描画処理(背景)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	background_->Draw();
@@ -245,52 +188,34 @@ void BossScene::Draw()
 	map_->MapDraw();
 	if (boss_->GetClearF())
 		m_Stairs->Draw();
-
 	Object3d::PostDraw();
-
-
 	//3Dオブジェクト描画処理
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-
 	boss_->Draw();
 	map_->BridgeDraw();
 	player_->Draw();
 	boss_->Draw2();
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	//if (boss_->GetFlash() == true) {
-	//	aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	//}
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
-
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
 	//テキスト描画範囲
-
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = boss_->GetStr();
 	//text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
-	if (!boss_->GetClearF()) {
-		player_->TextUIDraw();
-	}
-
+	player_->TextUIDraw();
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
-
 	DirectXSetting::GetIns()->PreDraw(backColor);
 	//ポストエフェクト描画
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
-
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	if (!boss_->GetClearF()) {
-		player_->SpriteDraw();
-	}
+	player_->SpriteDraw();
 	boss_->SpriteDraw();
-	if (boss_->GetClearF())
-		m_ClearTex->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -312,47 +237,32 @@ void BossScene::Finalize()
 void BossScene::SceneChange()
 {
 	if (!player_->GetIsDead())return;
-
-
-	bool Change = player_->GetNext();
-	if (Change || player_->GetIsDead()) {
-		SceneManager::SetLevel(player_->GetLevel());
-		SceneManager::SetEP(player_->GetEP());
-		SceneManager::SetHP(player_->GetHP());
-		SceneManager::SetMaxHP(player_->GetMaxHP());
-		SceneManager::SetATK(player_->GetATK());
-		SceneManager::SetDEF(player_->GetDef());
-		SceneManager::SetSPD(player_->GetSPD());
-		SceneManager::SetSkillPoint(player_->GetSkillPoint());
-		schange->SetFStart(true);
-		schange->SetFadeNum(0);
-		FILE* fp;
-		int i;
-		fp = fopen("Engine/Resources/GameData/save.csv", "w");
-		fprintf(fp, "%d", 0);
+	SceneManager::SetLevel(player_->GetLevel());
+	SceneManager::SetEP(player_->GetEP());
+	SceneManager::SetHP(player_->GetHP());
+	SceneManager::SetMaxHP(player_->GetMaxHP());
+	SceneManager::SetATK(player_->GetATK());
+	SceneManager::SetDEF(player_->GetDef());
+	SceneManager::SetSPD(player_->GetSPD());
+	SceneManager::SetSkillPoint(player_->GetSkillPoint());
+	schange->SetFStart(true);
+	schange->SetFadeNum(0);
+	FILE* fp;
+	int i;
+	fp = fopen("Engine/Resources/GameData/save.csv", "w");
+	fprintf(fp, "%d", 0);
+	fclose(fp);
+	fp = fopen("Engine/Resources/GameData/save.csv", "r");
+	fscanf(fp, "%d", &i);
+	fclose(fp);
+	if (i == 2) {
+		fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+		i = i + 1;
+		fprintf(fp, "%d", i);
 		fclose(fp);
-		fp = fopen("Engine/Resources/GameData/save.csv", "r");
-		fscanf(fp, "%d", &i);
-		fclose(fp);
-		if (i == 2) {
-			fp = fopen("Engine/Resources/GameData/save.csv", "r+");
-			i = i + 1;
-			fprintf(fp, "%d", i);
-			fclose(fp);
-		}
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
-	//if (schange->GetEnd() == true) {
-	//	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
-	//	SceneManager::SceneChange(SceneManager::SceneName::IB);
-	//}
-	//if (/*MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_LB)) {
-	//	SceneManager::SceneChange(SceneManager::SceneName::Title);
-	//}
-	//else if (/*MouseInput::GetIns()->TriggerClick(MouseInput::RIGHT_CLICK) || */PadInput::GetIns()->TriggerButton(PadInput::Button_RB)) {
-	//	SceneManager::SceneChange(SceneManager::SceneName::Result);
-	//}
+	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+	SceneManager::SceneChange(SceneManager::SceneName::IB);
 }
 
 

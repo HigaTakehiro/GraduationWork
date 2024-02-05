@@ -339,8 +339,8 @@ void IBScene::Draw()
 	D2D1_RECT_F textDrawRange = { 300, 520, 700, 750 };
 	D2D1_RECT_F skillPointDrawRange = { 550, 100, 900, 200 };
 	D2D1_RECT_F skillPanelMessageRange = { 850, 300, 950, 400 };
-	std::wstring hx = std::to_wstring(StageCount::GetIns()->Now());
-	text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
+	//std::wstring hx = std::to_wstring(StageCount::GetIns()->Now());
+	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
 	std::wstring indent = L"\n";
 	std::wstring statusMessage = L"HP : ";
 	std::wstring skillPointMessage = L"スキルポイント : ";
@@ -418,6 +418,7 @@ void IBScene::SceneChange()
 			}
 			else {
 				soundCount = 0;
+				
 			}
 		}
 	}

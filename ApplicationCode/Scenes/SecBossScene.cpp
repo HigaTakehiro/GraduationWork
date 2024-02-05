@@ -76,16 +76,11 @@ void SecBossScene::Initialize()
 	background_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::background, { 0, 0 });
 	boss_->GetCSPos(cameraPos_);
 
-	m_ClearTex = Sprite::UniquePtrCreate((UINT)ImageManager::Image2DName::TestPlay, { 0, 0 });
-	m_ClearTexScl = { 0,0 };
-	m_ClearTex->SetAnchorPoint({ 0.5f,0.5f });
-	m_ClearTex->SetPosition({ 640.f,360.f });
-
 	m_Stairs.reset(new Stairs());
 	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
 	Deposit_.reset(new Deposit());
-	Deposit_->Initialize(Vector3(0, -2.5f, -8.f),true,camera_.get());
+	Deposit_->Initialize(Vector3(0, -2.5f, -8.f), true, camera_.get());
 
 
 	Deposit_2.reset(new Deposit());
@@ -163,7 +158,7 @@ void SecBossScene::Update()
 
 
 	TogemaruAct::DefaultPos = cameraPos_;
-	if (!TogemaruAct::depositDelF&& !TogemaruAct::depositDelF2) {
+	if (!TogemaruAct::depositDelF && !TogemaruAct::depositDelF2) {
 		TogemaruAct::oldCameraPos = cameraPos_;
 	}
 	cameraPos_.x += TogemaruAct::cameraPos.x;
@@ -197,23 +192,9 @@ void SecBossScene::Update()
 			touchFlor = TRUE;
 		}
 	}
-	if (touchFlor) {
-		if (++ClearTexEaseT >= 60)
-		{
-			NextClearF = TRUE;
-		}
-		m_ClearTexScl.x = Easing::easeIn(ClearTexEaseT, 60.f, 0, 1280.f);
-		m_ClearTexScl.y = Easing::easeIn(ClearTexEaseT, 60.f, 0, 720.f);
-	}
-	if (NextClearF)
-	{
-		ClearTexEaseT = std::clamp(ClearTexEaseT, 0.f, 60.f);
-	}
-
-	m_ClearTex->SetSize(m_ClearTexScl);
 
 	//衝突時一旦破棄
-	if(TogemaruAct::depositDelF&&!m_DepositCreate){
+	if (TogemaruAct::depositDelF && !m_DepositCreate) {
 		m_DepositCreate = TRUE;
 		Deposit_->SetDestroyF(true);//エフェクト生成用
 	}
@@ -222,10 +203,10 @@ void SecBossScene::Update()
 		Deposit_2->SetDestroyF(true);//エフェクト生成用
 	}
 	oreItems_.remove_if([](std::unique_ptr<Ore>& ore) {return ore == nullptr; });
-	
+
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
-			if (Collision::HitCircle({ore->Getpos().x,ore->Getpos().z+3.f},0.1f,{player_->GetPos().x,player_->GetPos().z},1.f)
+			if (Collision::HitCircle({ ore->Getpos().x,ore->Getpos().z + 3.f }, 0.1f, { player_->GetPos().x,player_->GetPos().z }, 1.f)
 				&& player_->GetIsHammerSwing() && !player_->OreCountOverMaxCount()) {
 				player_->AddOreCount();
 				ore = nullptr;
@@ -237,20 +218,20 @@ void SecBossScene::Update()
 	}
 
 
-	if(TogemaruAct::TogemaruDeathF)
+	if (TogemaruAct::TogemaruDeathF)
 	{
 		Deposit_->SetDestroyBoss(true);
 		Deposit_->SetParPos(boss_->GetPos());
 		Deposit_->SetDestroyF(true);//エフェクト生成用
 	}
-	if(m_DepositCreate)
+	if (m_DepositCreate)
 	{
 		//完全に透明になったら破棄
 		if (Deposit_->GetDepositAlpha() <= 0.f) {
 			Deposit_.reset(nullptr);
 		}
 		//一定時間たっｔら鉱石復活
-		if(!TogemaruAct::depositDelF){
+		if (!TogemaruAct::depositDelF) {
 			Deposit_.reset(new Deposit());
 			Deposit_->Initialize(TogemaruAct::depositPos, true, camera_.get());
 			m_DepositCreate = FALSE;
@@ -272,32 +253,33 @@ void SecBossScene::Update()
 	}
 
 
-		if (Deposit_ != nullptr && Deposit_->GetHP() > 0) {
-			if (Deposit_->GetIsHit(player_->GetIsHammerSwing())) {
-				unique_ptr<Ore> ore = make_unique<Ore>();
-				ore->Initialize(Deposit_->GetPos(), Deposit_->OreDropVec());
-				oreItems_.push_back(std::move(ore));
-			}
-			Deposit_->Update(player_->GetPos());
+	if (Deposit_ != nullptr && Deposit_->GetHP() > 0) {
+		if (Deposit_->GetIsHit(player_->GetIsHammerSwing())) {
+			unique_ptr<Ore> ore = make_unique<Ore>();
+			ore->Initialize(Deposit_->GetPos(), Deposit_->OreDropVec());
+			oreItems_.push_back(std::move(ore));
 		}
-		if (Deposit_2 != nullptr && Deposit_2->GetHP() > 0) {
-			if (Deposit_2->GetIsHit(player_->GetIsHammerSwing())) {
-				unique_ptr<Ore> ore = make_unique<Ore>();
-				ore->Initialize(Deposit_2->GetPos(), Deposit_2->OreDropVec());
-				oreItems_.push_back(std::move(ore));
-			}
-			Deposit_2->Update(player_->GetPos());
+		Deposit_->Update(player_->GetPos());
+	}
+	if (Deposit_2 != nullptr && Deposit_2->GetHP() > 0) {
+		if (Deposit_2->GetIsHit(player_->GetIsHammerSwing())) {
+			unique_ptr<Ore> ore = make_unique<Ore>();
+			ore->Initialize(Deposit_2->GetPos(), Deposit_2->OreDropVec());
+			oreItems_.push_back(std::move(ore));
 		}
-		Vector3 dpos = { Deposit_->GetPos().x,Deposit_->GetPos().y,Deposit_->GetPos().z + 3.f };
-		Vector3 dpos2 = { Deposit_2->GetPos().x,Deposit_->GetPos().y,Deposit_2->GetPos().z + 3.f };
-		Helper::ColKnock(player_->GetPos(), dpos, player_, Collision::GetLength(player_->GetPos(), dpos) < 3.5f, 1.5f);
-		Helper::ColKnock(player_->GetPos(),dpos2, player_, Collision::GetLength(player_->GetPos(), dpos2) < 3.5f, 1.5f);
+		Deposit_2->Update(player_->GetPos());
+	}
+	Vector3 dpos = { Deposit_->GetPos().x,Deposit_->GetPos().y,Deposit_->GetPos().z + 3.f };
+	Vector3 dpos2 = { Deposit_2->GetPos().x,Deposit_->GetPos().y,Deposit_2->GetPos().z + 3.f };
+	Helper::ColKnock(player_->GetPos(), dpos, player_, Collision::GetLength(player_->GetPos(), dpos) < 3.5f, 1.5f);
+	Helper::ColKnock(player_->GetPos(), dpos2, player_, Collision::GetLength(player_->GetPos(), dpos2) < 3.5f, 1.5f);
 
-		if (!player_->GetIsHammerReflect()) {
-			player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
-		} else {
-			player_->ResetOreCount();
-		}
+	if (!player_->GetIsHammerReflect()) {
+		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
+	}
+	else {
+		player_->ResetOreCount();
+	}
 	if (Deposit_ != nullptr) {
 		Deposit_->Update(player_->Get());
 	}
@@ -308,14 +290,12 @@ void SecBossScene::Update()
 
 	//シーン切り替えmmm
 	SceneChange();
-	if (NextClearF)
+	if (touchFlor)
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			SceneManager::SceneChange(SceneManager::SceneName::IB);
 		}
 	}
-
-
 }
 
 void SecBossScene::Draw()
@@ -372,9 +352,7 @@ void SecBossScene::Draw()
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = boss_->GetStr();
 	//text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
-	if (!boss_->GetClearF()) {
-		player_->TextUIDraw();
-	}
+	player_->TextUIDraw();
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -384,12 +362,8 @@ void SecBossScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	if (!boss_->GetClearF()) {
-		player_->SpriteDraw();
-	}
+	player_->SpriteDraw();
 	boss_->SpriteDraw();
-	if (boss_->GetClearF())
-		m_ClearTex->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -411,34 +385,30 @@ void SecBossScene::Finalize()
 void SecBossScene::SceneChange()
 {
 	if (!player_->GetIsDead())return;
-
-
-	bool Change = player_->GetNext();
-	if (Change || player_->GetIsDead()) {
-		SceneManager::SetLevel(player_->GetLevel());
-		SceneManager::SetEP(player_->GetEP());
-		SceneManager::SetHP(player_->GetHP());
-		SceneManager::SetMaxHP(player_->GetMaxHP());
-		SceneManager::SetATK(player_->GetATK());
-		SceneManager::SetDEF(player_->GetDef());
-		SceneManager::SetSPD(player_->GetSPD());
-		SceneManager::SetSkillPoint(player_->GetSkillPoint());
-		schange->SetFStart(true);
-		schange->SetFadeNum(0);
-		FILE* fp;
-		int i;
-		fp = fopen("Engine/Resources/GameData/save.csv", "r");
-		fscanf(fp, "%d", &i);
+	SceneManager::SetLevel(player_->GetLevel());
+	SceneManager::SetEP(player_->GetEP());
+	SceneManager::SetHP(player_->GetHP());
+	SceneManager::SetMaxHP(player_->GetMaxHP());
+	SceneManager::SetATK(player_->GetATK());
+	SceneManager::SetDEF(player_->GetDef());
+	SceneManager::SetSPD(player_->GetSPD());
+	SceneManager::SetSkillPoint(player_->GetSkillPoint());
+	schange->SetFStart(true);
+	schange->SetFadeNum(0);
+	FILE* fp;
+	int i;
+	fp = fopen("Engine/Resources/GameData/save.csv", "r");
+	fscanf(fp, "%d", &i);
+	fclose(fp);
+	if (i == 4) {
+		fp = fopen("Engine/Resources/GameData/save.csv", "r+");
+		i = i + 1;
+		fprintf(fp, "%d", i);
 		fclose(fp);
-		if (i == 4) {
-			fp = fopen("Engine/Resources/GameData/save.csv", "r+");
-			i = i + 1;
-			fprintf(fp, "%d", i);
-			fclose(fp);
-		}
-		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
+	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+	SceneManager::SceneChange(SceneManager::SceneName::IB);
+
 	//if (schange->GetEnd() == true) {
 	//	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
 	//	SceneManager::SceneChange(SceneManager::SceneName::IB);
