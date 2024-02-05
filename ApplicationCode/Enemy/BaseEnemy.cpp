@@ -236,12 +236,12 @@ void BaseEnemy::PlayerHitBody(float dis, bool& f)
 
 void BaseEnemy::damage()
 {
-	Helper::DamageManager(_status.HP, DamageMath::ReturnDamage(_player->GetDamageATK(),guardp), edamf, edamcool, 90, damfprot);
+	Helper::DamageManager(_status.HP,1, edamf, edamcool, 90, damfprot);
 }
 
 void BaseEnemy::damage2()
 {
-	Helper::DamageManager(_status.HP, DamageMath::ReturnDamage(_player->GetDamageATK(), guardp), edamf, edamcool, 90, damfprot);
+	Helper::DamageManager(_status.HP, 1, edamf, edamcool, 90, damfprot);
 }
 
 void BaseEnemy::GetDamage(bool f)

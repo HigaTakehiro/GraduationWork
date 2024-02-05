@@ -217,6 +217,7 @@ void GameScene::Draw()
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr ) { continue; }
 		if (map_->GetCount() != Enemy->GetCount()) { continue; }
+		
 		Enemy->Draw();
 		//if (Enemy->GetHP() > 0 && Enemy->GetFlash() == true) {
 		//	aEffect_->Draw(DirectXSetting::GetIns()->GetCmdList());
