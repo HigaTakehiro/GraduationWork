@@ -38,7 +38,7 @@ void Heart::Update(Player* player, bool& Display)
 	//HitPlayer(Display);
 	heart_->Update();
 	Jump();
-	get = true;
+	get = false;
 }
 
 void Heart::Draw(bool Display)
