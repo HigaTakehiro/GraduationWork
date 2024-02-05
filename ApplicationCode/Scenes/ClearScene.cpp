@@ -123,7 +123,7 @@ void ClearScene::Finalize()
 
 void ClearScene::SceneChange()
 {
-	if (Timer_ > 15.f) {
+	if (Timer_ > 25.f) {
 		schange->SetFStart(true);
 		//schange->SetFadeNum(0);
 	}
