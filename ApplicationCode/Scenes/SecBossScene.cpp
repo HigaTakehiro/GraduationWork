@@ -93,6 +93,21 @@ void SecBossScene::Initialize()
 	targetPos_.y = 0;
 
 	skillManager_->SetPlayer(player_);
+
+	activeSkillPanel01_ = std::make_unique<SkillPanel>();
+	activeSkillPanel01_->Initialize(L"Empty", { 287.f, 32.f }, SkillPanel::Empty);
+	activeSkillPanel02_ = std::make_unique<SkillPanel>();
+	activeSkillPanel02_->Initialize(L"Empty", { 352.f, 32.f }, SkillPanel::Empty);
+	if (skillManager_->GetActiveSkillName01() != "None") {
+		if (skillManager_->GetActiveSkillName01() == "HyperMode") {
+			activeSkillPanel01_->Initialize(L"HyperMode", { 287.f, 32.f }, SkillPanel::HyperMode);
+		}
+	}
+	if (skillManager_->GetActiveSkillName02() != "None") {
+		if (skillManager_->GetActiveSkillName02() == "FallHammer") {
+			activeSkillPanel02_->Initialize(L"FallHammer", { 352.f, 32.f }, SkillPanel::FallHammer);
+		}
+	}
 }
 
 void SecBossScene::Update()
@@ -184,6 +199,10 @@ void SecBossScene::Update()
 	colManager_->Update();
 	skillManager_->Update();
 	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
+	activeSkillPanel01_->SetIsActive(skillManager_->GetIsActiveCheck("HyperMode"));
+	activeSkillPanel02_->SetIsActive(skillManager_->GetIsActiveCheck("FallHammer"));
+	activeSkillPanel01_->Update({ 0.f, 0.f });
+	activeSkillPanel02_->Update({ 0.f, 0.f });
 
 	m_Stairs->Update();
 	if (boss_->GetClearF() && player_->GetNextFlor())
@@ -253,7 +272,7 @@ void SecBossScene::Update()
 	}
 
 
-	if (Deposit_ != nullptr && Deposit_->GetHP() > 0) {
+	if (!TogemaruAct::depositDelF && Deposit_ != nullptr && Deposit_->GetHP() > 0) {
 		if (Deposit_->GetIsHit(player_->GetIsHammerSwing())) {
 			unique_ptr<Ore> ore = make_unique<Ore>();
 			ore->Initialize(Deposit_->GetPos(), Deposit_->OreDropVec());
@@ -261,7 +280,7 @@ void SecBossScene::Update()
 		}
 		Deposit_->Update(player_->GetPos());
 	}
-	if (Deposit_2 != nullptr && Deposit_2->GetHP() > 0) {
+	if (!TogemaruAct::depositDelF2&& Deposit_2 != nullptr &&  Deposit_2->GetHP() > 0) {
 		if (Deposit_2->GetIsHit(player_->GetIsHammerSwing())) {
 			unique_ptr<Ore> ore = make_unique<Ore>();
 			ore->Initialize(Deposit_2->GetPos(), Deposit_2->OreDropVec());
@@ -271,8 +290,8 @@ void SecBossScene::Update()
 	}
 	Vector3 dpos = { Deposit_->GetPos().x,Deposit_->GetPos().y,Deposit_->GetPos().z + 3.f };
 	Vector3 dpos2 = { Deposit_2->GetPos().x,Deposit_->GetPos().y,Deposit_2->GetPos().z + 3.f };
-	Helper::ColKnock(player_->GetPos(), dpos, player_, Collision::GetLength(player_->GetPos(), dpos) < 3.5f, 1.5f);
-	Helper::ColKnock(player_->GetPos(), dpos2, player_, Collision::GetLength(player_->GetPos(), dpos2) < 3.5f, 1.5f);
+	Helper::ColKnock(player_->GetPos(), dpos, player_, !TogemaruAct::depositDelF&& Collision::GetLength(player_->GetPos(), dpos) < 3.5f, 1.5f);
+	Helper::ColKnock(player_->GetPos(), dpos2, player_, !TogemaruAct::depositDelF2 && Collision::GetLength(player_->GetPos(), dpos2) < 3.5f, 1.5f);
 
 	if (!player_->GetIsHammerReflect()) {
 		player_->SetIsHammerReflect(map_->ReflectHammer(hammerPosition, player_->GetIsHammerRelease()));
@@ -364,6 +383,8 @@ void SecBossScene::Draw()
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	player_->SpriteDraw();
 	boss_->SpriteDraw();
+	activeSkillPanel01_->SpriteDraw();
+	activeSkillPanel02_->SpriteDraw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }

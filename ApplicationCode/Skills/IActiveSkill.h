@@ -22,16 +22,16 @@ public: //メンバ関数
 	virtual void SetIsActive(bool isActive) = 0;
 
 	/// <summary>
+	/// スキル有効化フラグを取得
+	/// </summary>
+	/// <returns></returns>
+	virtual bool GetIsActive() = 0;
+
+	/// <summary>
 	/// スキル名を取得
 	/// </summary>
 	/// <returns>スキル名</returns>
 	std::string GetName() const { return name_; }
-
-	/// <summary>
-	/// スキル有効化フラグを取得
-	/// </summary>
-	/// <returns>スキル有効化フラグ</returns>
-	bool GetIsActive() { return isActive_; }
 
 	/// <summary>
 	/// クールタイム中かどうかを取得

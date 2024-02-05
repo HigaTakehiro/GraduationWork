@@ -24,6 +24,8 @@
 #include"Shake.h"
 #include "SceneChange.h"
 #include"AttackEffect.h"
+#include "SkillPanel.h"
+
 class BossScene :
     public BaseScene
 {
@@ -63,6 +65,9 @@ private:
 
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;
+	//スキルパネル
+	std::unique_ptr<SkillPanel> activeSkillPanel01_;
+	std::unique_ptr<SkillPanel> activeSkillPanel02_;
 
 	std::vector<BaseEnemy*> enemys_;
 	std::vector<Vector3> vec;

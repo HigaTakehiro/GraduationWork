@@ -58,7 +58,7 @@ void LastBoss::Init()
 
 		if (word.find("LastBoss") == 0) {
 			getline(line_stream, word, ' ');
-			m_HP = (int)std::atof(word.c_str());
+			m_HP =  (int)std::atof(word.c_str());
 			getline(line_stream, word, ' ');
 			GuardValue = (int)std::atof(word.c_str());
 			getline(line_stream, word, ' ');
@@ -74,6 +74,8 @@ void LastBoss::Init()
 	HPUiInit();
 	Action = new LastBossAct();
 Action->SetHp(BossMaxHP);
+
+	Action->SetGuardPoint(GuardValue);
 }
 
 
@@ -152,6 +154,8 @@ void LastBoss::Upda()
 	{
 		color_rgb.w -= 0.02f;
 	}
+	if (color_rgb.w <= 0.f)m_ClearF = true;
+	if (m_ClearF)color_rgb.w = 0.f;
 	m_Body->SetScale(Action->GetScl());
 	m_Body->SetPosition({Action->GetPos().x,-2.f,Action->GetPos().z});
 	m_Body->SetRotation(Vector3(0, 0, 0));
@@ -198,12 +202,14 @@ void LastBoss::Upda()
 	//m_HP--;
 	//UI_Upda();
 	HPUiUpda();
+	color_rgb.w = std::clamp(color_rgb.w, 0.f, 1.f);
 }
 
 void LastBoss::Draw()
 {
 
 	if (m_player->GetPos().z > 12.f)return;
+
 	if (color_rgb.w > 0.f) {
 		m_Body->Draw();
 	}

@@ -65,6 +65,11 @@ void SkillManager::SetIsActiveSkill02(bool isActiveSkill02)
 	activeSkillList_->SingleIsActive(activeSkillName02_, isActiveSkill02);
 }
 
+bool SkillManager::GetIsActiveCheck(const std::string& activeSkillName)
+{
+	return activeSkillList_->GetSingleIsActive(activeSkillName);
+}
+
 bool SkillManager::GetSkill(const std::string& skillName)
 {
 	if (passiveSkillList_->GetSkill(skillName)) return true;
