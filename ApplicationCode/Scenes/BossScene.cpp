@@ -218,7 +218,6 @@ void BossScene::Draw()
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
@@ -226,7 +225,9 @@ void BossScene::Draw()
 	D2D1_RECT_F textDrawRange = { 0, 0, 700, 700 };
 	std::wstring hp = boss_->GetStr();
 	//text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
-	player_->TextUIDraw();
+	if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+		player_->TextUIDraw();
+	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 	DirectXSetting::GetIns()->PreDraw(backColor);
 	//ポストエフェクト描画
@@ -237,6 +238,7 @@ void BossScene::Draw()
 	boss_->SpriteDraw();
 	activeSkillPanel01_->SpriteDraw();
 	activeSkillPanel02_->SpriteDraw();
+	schange->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }

@@ -13,6 +13,7 @@
 #include "HPUpSkill.h"
 #include "SPDUpSkill.h"
 #include "HammerReturnSkill.h"
+#include"StageCount.h"
 
 #pragma warning(disable:4996)
 
@@ -64,7 +65,6 @@ void TutorialScene::Initialize()
 	sleep_->SetScale({ 0.035f, 0.035f, 0.035f });
 	sleep_->SetPosition(sleepPos_);
 
-
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
@@ -84,13 +84,13 @@ void TutorialScene::Initialize()
 	//3dオブジェクト初期化
 	player_ = new Player;
 	player_->Initialize();
+	player_->StatusReset();
 
 	postEffectNo_ = PostEffect::NONE;
 
 	aEffect_ = new AttackEffect();
 	aEffect_->Initialize(DirectXSetting::GetIns()->GetDev(), camera_.get());
-
-
+	
 	startenemypos_[0] = { 5, 12.5, 18 };
 	startenemypos_[1] = { -5, 12.5, 18 };
 
@@ -133,6 +133,7 @@ void TutorialScene::Initialize()
 	activeSkillPanel02_ = make_unique<SkillPanel>();
 	activeSkillPanel02_->Initialize(L"Empty", { 352.f, 32.f }, SkillPanel::Empty);
 
+	StageCount::GetIns()->Initi();
 }
 
 void TutorialScene::Update()
@@ -151,7 +152,7 @@ void TutorialScene::Update()
 			}
 		}
 		if (ore != nullptr) {
-			ore->Update();
+			ore->Update(player_->GetPos());
 		}
 	}
 
@@ -292,7 +293,6 @@ void TutorialScene::Draw()
 	titlefilter_->Draw();
 	title_[titleanimeCount_]->Draw();
 	wake_->Draw();
-	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
@@ -315,7 +315,9 @@ void TutorialScene::Draw()
 	}
 
 	if (phase_ != Phase::Title) {
-		player_->TextUIDraw();
+		if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+			player_->TextUIDraw();
+		}
 		textWindow_->TextMessageDraw();
 		fighttextwindow_->TextMessageDraw();
 	}
@@ -332,6 +334,7 @@ void TutorialScene::Draw()
 		fighttextwindow_->SpriteDraw();
 		activeSkillPanel01_->SpriteDraw();
 		activeSkillPanel02_->SpriteDraw();
+		schange->Draw();
 		Sprite::PostDraw();
 	}
 	DirectXSetting::GetIns()->PostDraw();

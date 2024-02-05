@@ -115,7 +115,7 @@ void GameScene::Update()
 			}
 		}
 		if (ore != nullptr) {
-			ore->Update();
+			ore->Update(player_->GetPos());
 		}
 	}
 
@@ -247,7 +247,6 @@ void GameScene::Draw()
 
 	//スプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -257,7 +256,9 @@ void GameScene::Draw()
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
 	//std::wstring hx = std::to_wstring(cameraPos_.y);
 	//text_->Draw("meiryo", "white", L"ゲームシーン\n" + hx, textDrawRange);
-	player_->TextUIDraw();
+	if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+		player_->TextUIDraw();
+	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
@@ -269,6 +270,7 @@ void GameScene::Draw()
 	player_->SpriteDraw();
 	activeSkillPanel01_->SpriteDraw();
 	activeSkillPanel02_->SpriteDraw();
+	schange->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -330,6 +332,10 @@ void GameScene::SceneChange()
 	//これいつか消すように
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
 		//SceneManager::SceneChange(SceneManager::SceneName::Boss);
+	}
+
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
 	}
 }
 

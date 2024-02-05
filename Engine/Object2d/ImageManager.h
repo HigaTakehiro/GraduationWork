@@ -43,6 +43,7 @@ public: //‰æ‘œ–¼
 		skillIcon_HyperMode,
 		skillIcon_Empty,
 		ClearText,
+		levelUp
 	};
 
 	enum Image2DName {

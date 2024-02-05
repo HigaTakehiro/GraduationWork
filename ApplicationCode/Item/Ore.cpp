@@ -12,7 +12,7 @@ void Ore::Initialize(Vector3 pos, Vector3 vec)
 	vec_ = vec.normalize();
 	oreModel_ = Shapes::CreateSquare({ 0, 0 }, { 16, 16 }, "Ore.png", { 16, 16 }, {0.0f, 0.0f});
 	ore_ = Object3d::UniquePtrCreate(oreModel_);
-	ore_->SetScale({ 0.02f, 0.02f, 0.02f });
+	ore_->SetScale({ 0.05f, 0.05f, 0.05f });
 	ore_->SetObbScl({ 0.5f,0.5f,0.5f });
 	ore_->SetColType(Object3d::CollisionType::Obb);
 	ore_->SetObjType((int32_t)Object3d::OBJType::Item);
@@ -21,7 +21,7 @@ void Ore::Initialize(Vector3 pos, Vector3 vec)
 	speed_ = 1.0f;
 }
 
-void Ore::Update()
+void Ore::Update(Vector3 playerPos)
 {
 	Vector3 vec = vec_ * speed_;
 	pos_ += vec;
@@ -32,6 +32,9 @@ void Ore::Update()
 	}
 	else {
 		speed_ = 0.0f;
+		Vector3 oreToPlayerVec = playerPos - pos_;
+		oreToPlayerVec.normalize();
+		pos_ += oreToPlayerVec * 0.5f;
 	}
 }
 
