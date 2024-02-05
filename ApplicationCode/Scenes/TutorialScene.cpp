@@ -334,9 +334,11 @@ void TutorialScene::Draw()
 		fighttextwindow_->SpriteDraw();
 		activeSkillPanel01_->SpriteDraw();
 		activeSkillPanel02_->SpriteDraw();
-		schange->Draw();
 		Sprite::PostDraw();
 	}
+	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	schange->Draw();
+	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
 
