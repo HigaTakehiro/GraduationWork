@@ -162,7 +162,6 @@ void GameScene::Update()
 	//ƒV[ƒ“Ø‚è‘Ö‚¦
 	schange->Change(0);
 	SceneChange();
-	
 }
 
 void GameScene::Draw()
