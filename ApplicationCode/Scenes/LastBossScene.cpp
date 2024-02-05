@@ -80,6 +80,7 @@ void LastBossScene::Initialize()
 	cameraPos_.y = 12;
 	targetPos_.y = 0;
 
+	invincibleParticle_ = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera_.get());
 	activeSkillPanel01_ = std::make_unique<SkillPanel>();
 	activeSkillPanel01_->Initialize(L"Empty", { 287.f, 32.f }, SkillPanel::Empty);
 	activeSkillPanel02_ = std::make_unique<SkillPanel>();
@@ -193,6 +194,7 @@ void LastBossScene::Update()
 	activeSkillPanel02_->SetIsActive(skillManager_->GetIsActiveCheck("FallHammer"));
 	activeSkillPanel01_->Update({ 0.f, 0.f });
 	activeSkillPanel02_->Update({ 0.f, 0.f });
+	invincibleParticle_->Update();
 
 	//シーン切り替えmmm
 	SceneChange();
@@ -229,7 +231,7 @@ void LastBossScene::Draw()
 	boss_->Draw();
 	map_->BridgeDraw();
 	player_->Draw();
-
+	invincibleParticle_->Draw(DirectXSetting::GetIns()->GetCmdList());
 	boss_->Draw2();
 	Object3d::PostDraw();
 	//shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
@@ -330,5 +332,27 @@ void LastBossScene::CameraSetting()
 		camera_ = std::make_unique<Camera>();
 		camera_->SetEye(cameraPos_);
 		camera_->SetTarget(targetPos_);
+	}
+}
+
+void LastBossScene::ParticleCreate()
+{
+	//無敵状態パーティクル
+	if (player_->GetIsInvincible()) {
+		int32_t life = 30;
+		Vector3 pos = player_->GetPos();
+		pos.y -= 0.5f;
+
+		Vector3 vel = { 0.f, 0.f, 0.f };
+		float rnd_vel = 0.2f;
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.f;
+
+		Vector3 acc = { 0.f, 0.f, 0.f };
+		float rnd_acc = 0.015f;
+		acc.y = (float)rand() / RAND_MAX * rnd_acc * rnd_acc / 2.0f;
+
+		invincibleParticle_->Add(life, pos, vel, acc, 1.f, 0.f, { 1.5f, 1.5f, 1.5f }, { 1.f, 1.f, 1.f }, 0.5f, 0.0f);
+		invincibleParticle_->LoadTexture("Flash");
 	}
 }

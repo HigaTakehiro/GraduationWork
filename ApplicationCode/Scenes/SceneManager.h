@@ -172,6 +172,19 @@ public: //静的メンバ関数
 	static int32_t GetEP() { return ep_; }
 
 	/// <summary>
+	/// 必要経験値をセット
+	/// </summary>
+	/// <param name="levelUpEP">レベルアップ必要経験値</param>
+	/// <returns>レベルアップ必要経験値</returns>
+	static void SetLevelUpEP(int32_t levelUpEP) { lvUpEp_ = levelUpEP; }
+
+	/// <summary>
+	/// 必要経験値を取得
+	/// </summary>
+	/// <returns>必要経験値</returns>
+	static int32_t GetLevelUpEP() { return lvUpEp_; }
+
+	/// <summary>
 	/// スキルポイントをセット
 	/// </summary>
 	/// <param name="skillPoint">スキルポイント</param>
@@ -212,6 +225,8 @@ private: //静的メンバ変数
 	static int32_t level_;
 	//経験値
 	static int32_t ep_;
+	//レベルアップ必要経験値
+	static int32_t lvUpEp_;
 	//HP
 	static int32_t hp_;
 	//最大HP
