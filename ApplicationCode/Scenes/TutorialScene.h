@@ -27,6 +27,7 @@
 #include "Deposit.h"
 #include "AttackEffect.h"
 #include "ParticleManager.h"
+#include "SkillPanel.h"
 
 class TutorialScene :
 	public BaseScene
@@ -108,6 +109,8 @@ private:
 	unique_ptr<Sprite> asist_;
 	unique_ptr<Sprite> wake_;
 	unique_ptr<Sprite> nextui_;
+	unique_ptr<SkillPanel> activeSkillPanel01_;
+	unique_ptr<SkillPanel> activeSkillPanel02_;
 	unique_ptr<Object3d> sleep_;
 	Deposit* deposit_;
 	std::vector<BaseEnemy*> enemys_;

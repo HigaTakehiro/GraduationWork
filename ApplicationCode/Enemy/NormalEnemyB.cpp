@@ -35,7 +35,7 @@ void NormalEnemyB::Init()
 
 void NormalEnemyB::TexDraw()
 {
-	constexpr float dis_max = 15.f;
+	constexpr float dis_max = 150.f;
 
 	Helper::isDraw(_player->GetPos(), state_obj_.Pos_, m_HpTex.get(), dis_max, state_obj_.Hp_ <= 0);
 }
@@ -84,7 +84,6 @@ void NormalEnemyB::Upda(Camera* camera)
 #include "DirectXSetting.h"
 void NormalEnemyB::Draw()
 {
-	float Mindis = 12.f;
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	action_->ImpTexDraw();
 	state_obj_.obj_->Draw();

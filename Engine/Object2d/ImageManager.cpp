@@ -34,6 +34,9 @@ void ImageManager::Initialize() {
 	Sprite::LoadTexture((UINT)ImageName::BossBar_Toge, L"Engine/Resources/Images/togemaruHP-export.png");
 	Sprite::LoadTexture((UINT)ImageName::Flash, L"Engine/Resources/Images/Flash.png");
 	Sprite::LoadTexture((UINT)ImageName::PlayerUIBack, L"Engine/Resources/Images/playerHPBar.png");
+	Sprite::LoadTexture((UINT)ImageName::skillIcon_FallHammer, L"Engine/Resources/Images/skillPanel_fallHammer.png");
+	Sprite::LoadTexture((UINT)ImageName::skillIcon_HyperMode, L"Engine/Resources/Images/skillPanel_hyperMode.png");
+	Sprite::LoadTexture((UINT)ImageName::skillIcon_Empty, L"Engine/Resources/Images/skillPanel_empty.png");
 
 	Texture::LoadTexture(Image2DName::BUSA1, L"Engine/Resources/Images/usa_back/usa_back1.png");
 	Texture::LoadTexture(Image2DName::BUSA2, L"Engine/Resources/Images/usa_back/usa_back2.png");

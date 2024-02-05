@@ -43,6 +43,11 @@ void LastBossScene::Initialize()
 	player_->SetLevel(SceneManager::GetLevel());
 	player_->SetEP(SceneManager::GetEP());
 	player_->SetHP(SceneManager::GetHP());
+	player_->SetMaxHP(SceneManager::GetMaxHP());
+	player_->SetATK(SceneManager::GetATK());
+	player_->SetDEF(SceneManager::GetDEF());
+	player_->SetSPD(SceneManager::GetSPD());
+	player_->SetSkillPoint(SceneManager::GetSkillPoint());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -75,6 +80,20 @@ void LastBossScene::Initialize()
 	cameraPos_.y = 12;
 	targetPos_.y = 0;
 
+	activeSkillPanel01_ = std::make_unique<SkillPanel>();
+	activeSkillPanel01_->Initialize(L"Empty", { 287.f, 32.f }, SkillPanel::Empty);
+	activeSkillPanel02_ = std::make_unique<SkillPanel>();
+	activeSkillPanel02_->Initialize(L"Empty", { 352.f, 32.f }, SkillPanel::Empty);
+	if (skillManager_->GetActiveSkillName01() != "None") {
+		if (skillManager_->GetActiveSkillName01() == "HyperMode") {
+			activeSkillPanel01_->Initialize(L"HyperMode", { 287.f, 32.f }, SkillPanel::HyperMode);
+		}
+	}
+	if (skillManager_->GetActiveSkillName02() != "None") {
+		if (skillManager_->GetActiveSkillName02() == "FallHammer") {
+			activeSkillPanel02_->Initialize(L"FallHammer", { 352.f, 32.f }, SkillPanel::FallHammer);
+		}
+	}
 }
 
 void LastBossScene::Update()
@@ -169,6 +188,11 @@ void LastBossScene::Update()
 	}
 	//Õ“ËŽžˆê’U”jŠü
 	schange->Change(0);
+	skillManager_->Update();
+	activeSkillPanel01_->SetIsActive(skillManager_->GetIsActiveCheck("HyperMode"));
+	activeSkillPanel02_->SetIsActive(skillManager_->GetIsActiveCheck("FallHammer"));
+	activeSkillPanel01_->Update({ 0.f, 0.f });
+	activeSkillPanel02_->Update({ 0.f, 0.f });
 
 	//ƒV[ƒ“Ø‚è‘Ö‚¦mmm
 	SceneChange();
@@ -238,6 +262,8 @@ void LastBossScene::Draw()
 		player_->SpriteDraw();
 	}
 	boss_->SpriteDraw();
+	activeSkillPanel01_->SpriteDraw();
+	activeSkillPanel02_->SpriteDraw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }

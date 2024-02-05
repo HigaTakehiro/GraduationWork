@@ -114,6 +114,10 @@ public: // メンバ関数
 	/// <returns></returns>
 	void Initialize(bool isSubBlend);
 	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void Finalize();
+	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
 	void Update();

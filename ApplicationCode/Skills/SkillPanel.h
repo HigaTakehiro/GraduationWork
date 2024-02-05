@@ -12,6 +12,10 @@ public: //enum
 		ATKUP,
 		DEFUP,
 		SPDUP,
+		FallHammer,
+		HyperMode,
+		Empty,
+		None
 	};
 
 public: //メンバ関数
@@ -74,7 +78,7 @@ public: //メンバ関数
 	/// 座標をセット
 	/// </summary>
 	/// <param name="pos">座標</param>
-	void SetPos(const Vector2& pos) { pos_ = pos; }
+	void SetPos(Vector2 pos) { pos_ = pos; }
 
 	/// <summary>
 	/// 説明文処理
@@ -105,6 +109,18 @@ public: //メンバ関数
 	/// スキル説明文読み込み処理
 	/// </summary>
 	void SkillTextLoad();
+
+	/// <summary>
+	/// スキルタイプをセット
+	/// </summary>
+	/// <param name="skillType">スキルタイプ</param>
+	void SetSkillType(SkillType type);
+
+	/// <summary>
+	/// スキルパネル名を取得
+	/// </summary>
+	/// <returns>スキルパネル名</returns>
+	std::wstring GetSkillName() { return skillName_; }
 
 private: //メンバ変数
 	//スキル名

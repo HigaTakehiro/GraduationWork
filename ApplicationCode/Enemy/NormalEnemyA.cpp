@@ -85,9 +85,6 @@ void NormalEnemyA::Upda(Camera* camera)
 #include"Helper.h"
 void NormalEnemyA::Draw()
 {
-	constexpr float MinDis = 15.f;
-	//if (_player->GetPos().z > 7)return;
-	if (Collision::GetLength(_status.Pos, _player->GetPos()) > 17.f)return;
 	if (_status.HP <= 0)return;
 	if (_status.Tex == nullptr)return;
 	Texture::PreDraw();
@@ -97,8 +94,6 @@ void NormalEnemyA::Draw()
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 		TexDraw();
 	Object3d::PostDraw();
-
-	//TexDraw();
 }
 
 void NormalEnemyA::TextureAnimation()
@@ -197,7 +192,7 @@ void NormalEnemyA::TextureAnimation()
 
 void NormalEnemyA::TexDraw()
 {
-	constexpr float dis_max = 15.f;
+	constexpr float dis_max = 150.f;
 
 	Helper::isDraw(_player->GetPos(), _status.Pos, m_ShadowTex.get(), dis_max, _status.HP <= 0);
 

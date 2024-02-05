@@ -35,6 +35,15 @@ void SkillPanel::Initialize(const std::wstring& skillName, const Vector2& pos, S
 	else if (type == HammerReturn) {
 		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_HammerReturn, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
 	}
+	else if (type == FallHammer) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_FallHammer, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == HyperMode) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_HyperMode, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == Empty) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_Empty, pos_, { 1.f, 1.f, 1.f, 1.f }, { 0.5f, 0.5f });
+	}
 	else {
 		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
 	}
@@ -173,15 +182,56 @@ void SkillPanel::SkillTextLoad()
 		if (word.find("sU") == 0 && skillType_ == SPDUP) {
 			line_stream >> text;
 		}
+		if (word.find("fH") == 0 && skillType_ == FallHammer) {
+			line_stream >> text;
+		}
+		if (word.find("hM") == 0 && skillType_ == HyperMode) {
+			line_stream >> text;
+		}
+		if (word.find("em") == 0 && skillType_ == Empty) {
+			line_stream >> text;
+		}
 		if (word.find("time") == 0) {
 			line_stream >> time;
 		}
 	}
 
 	skillText_ = ExternalFileLoader::GetIns()->StringToWstring(text);
+	skillText_ = ExternalFileLoader::GetIns()->ReplaceAllWstr(skillText_, L"/", L"\n");
 	drawTime_ = time;
 	if (skillType_ == HPUP || skillType_ == ATKUP || skillType_ == DEFUP || skillType_ == SPDUP) {
 		skillText_ = ExternalFileLoader::GetIns()->ReplaceWstr(skillText_, L"_n", std::to_wstring(num_));
 	}
 
+}
+
+void SkillPanel::SetSkillType(SkillType type)
+{
+	//スキルタイプ
+	skillType_ = type;
+	//スキルパネルスプライト
+	if (type == HPUP) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_HPUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == ATKUP) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_ATKUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == DEFUP) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_DEFUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == SPDUP) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_SPDUp, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == HammerReturn) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_HammerReturn, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == FallHammer) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_FallHammer, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else if (type == HyperMode) {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillIcon_HyperMode, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
+	else {
+		skillPanel_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::bar, pos_, { 0.2f, 0.2f, 0.2f, 1.f }, { 0.5f, 0.5f });
+	}
 }

@@ -35,11 +35,24 @@ public: //メンバ関数
 	void SetIsActive(bool isActive) override;
 
 	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsActive() override;
+
+	/// <summary>
 	/// 指定スキル有効化
 	/// </summary>
 	/// <param name="name">スキル名</param>
 	/// <param name="isActive">スキル有効化フラグ</param>
 	void SingleIsActive(const std::string& name, bool isActive);
+
+	/// <summary>
+	/// 指定スキル有効化フラグ取得
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	bool GetSingleIsActive(const std::string& name);
 
 	/// <summary>
 	/// スキル追加

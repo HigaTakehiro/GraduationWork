@@ -14,6 +14,8 @@
 #include "HPUpSkill.h"
 #include "DEFUpSkill.h"
 #include "SPDUpSkill.h"
+#include "HyperModeSkill.h"
+#include "FallHammerAttackSkill.h"
 
 #pragma warning(disable:4996)
 
@@ -99,6 +101,10 @@ void IBScene::Initialize()
 
 	//スキル画面
 	//スキルパネル
+	activeSkillPanel01_ = std::make_unique<SkillPanel>();
+	activeSkillPanel02_ = std::make_unique<SkillPanel>();
+	activeSkillPanel01_->Initialize(L"スキルセットなし", { 155.f, 288.f }, SkillPanel::Empty);
+	activeSkillPanel02_->Initialize(L"スキルセットなし", { 320.f, 288.f }, SkillPanel::Empty);
 	if (panelStatus_[0][3].skillPanel_ == nullptr) {
 		SkillPanelInitialize();
 	}
@@ -160,53 +166,20 @@ void IBScene::Update()
 	Animation();
 
 	//スキルパネル更新
-	panelStatus_[3][3].skillPanel_->Update(skillCursor_->GetPosition());
 	for (int32_t i = 0; i < 7; i++) {
-		if (i != 3) {
-			panelStatus_[i][3].skillPanel_->Update(skillCursor_->GetPosition());
-			panelStatus_[3][i].skillPanel_->Update(skillCursor_->GetPosition());
-		}
+		for (int32_t j = 0; j < 7; j++) {
+			panelStatus_[i][j].skillPanel_->Update(skillCursor_->GetPosition());
 
-		if (panelStatus_[i][3].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_A))) {
-			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[i][3].skillPanel_->GetIsActive() && !panelStatus_[i][3].skillPanel_->GetIsSkillGet()) {
-				playerUI_->SubSkillPoint(1);
-				panelStatus_[i][3].skillPanel_->SetIsSkillGet(true);
-				AddSkill(i, 3);
-			}
-		}
-		if (panelStatus_[3][i].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_A))) {
-			if (playerUI_->GetSkillPoint() > 0 && panelStatus_[3][i].skillPanel_->GetIsActive() && !panelStatus_[3][i].skillPanel_->GetIsSkillGet()) {
-				playerUI_->SubSkillPoint(1);
-				panelStatus_[3][i].skillPanel_->SetIsSkillGet(true);
-				AddSkill(3, i);
+			if (panelStatus_[i][j].skillPanel_->PanelToCursorHit(skillCursor_->GetPosition()) && (KeyInput::GetIns()->TriggerKey(DIK_SPACE) || PadInput::GetIns()->TriggerButton(PadInput::Button_A))) {
+				if (playerUI_->GetSkillPoint() > 0 && panelStatus_[i][j].skillPanel_->GetIsActive() && !panelStatus_[i][j].skillPanel_->GetIsSkillGet() && panelStatus_[i][j].skillPanel_->GetSkillType() != SkillPanel::None) {
+					playerUI_->SubSkillPoint(1);
+					panelStatus_[i][j].skillPanel_->SetIsSkillGet(true);
+					AddSkill(i, j);
+				}
 			}
 		}
 	}
 
-
-	if (KeyInput::GetIns()->TriggerKey(DIK_P) && playerUI_->GetSkillPoint() > 0) {
-		playerUI_->SubSkillPoint(1);
-		if (!panelStatus_[3][3].skillPanel_->GetIsSkillGet()) {
-			panelStatus_[3][3].skillPanel_->SetIsSkillGet(true);
-			if (!skillManager_->GetSkill("HammerReturn")) {
-				HammerReturnSkill* returnSkill = new HammerReturnSkill("HammerReturn");
-				skillManager_->AddPlayerPassiveSkill(returnSkill);
-			}
-		}
-		if (panelStatus_[2][3].skillPanel_->GetIsActive() && !panelStatus_[2][3].skillPanel_->GetIsSkillGet()) {
-			panelStatus_[2][3].skillPanel_->SetIsSkillGet(true);
-			ATKUpSkill* atkUp = new ATKUpSkill("atkUP", 5);
-			skillManager_->AddPlayerPassiveSkill(atkUp);
-		}
-		if (panelStatus_[1][3].skillPanel_->GetIsActive() && !panelStatus_[1][3].skillPanel_->GetIsSkillGet()) {
-			panelStatus_[1][3].skillPanel_->SetIsSkillGet(true);
-			ATKUpSkill* atkUp = new ATKUpSkill("atkUP", 5);
-			skillManager_->AddPlayerPassiveSkill(atkUp);
-		}
-	}
-	if (KeyInput::GetIns()->TriggerKey(DIK_U) && KeyInput::GetIns()->TriggerKey(DIK_I)) {
-		playerUI_->AddSkillPoint(99);
-	}
 	SkillUIUpdate();
 
 	player_->SetPosition({ -8.0f,2.5f, 8.0f });
@@ -246,6 +219,9 @@ void IBScene::Update()
 	light_->Update();
 	playerUI_->Update();
 	playerUI_->SetHP(playerUI_->GetMaxHP());
+
+	activeSkillPanel01_->Update(skillCursor_->GetPosition());
+	activeSkillPanel02_->Update(skillCursor_->GetPosition());
 
 	if (hp_ > 0) {
 		if (baseCount < 2) {
@@ -327,7 +303,6 @@ void IBScene::Draw()
 			}
 		}
 		skillPlayer_[animeCount_]->Draw();
-		skillCursor_->Draw();
 	}
 	schange->Draw();
 	Sprite::PostDraw();
@@ -339,8 +314,6 @@ void IBScene::Draw()
 	D2D1_RECT_F textDrawRange = { 300, 520, 700, 750 };
 	D2D1_RECT_F skillPointDrawRange = { 550, 100, 900, 200 };
 	D2D1_RECT_F skillPanelMessageRange = { 850, 300, 950, 400 };
-	//std::wstring hx = std::to_wstring(StageCount::GetIns()->Now());
-	//text_->Draw("meiryo", "white", L"" + hx, textDrawRange);
 	std::wstring indent = L"\n";
 	std::wstring statusMessage = L"HP : ";
 	std::wstring skillPointMessage = L"スキルポイント : ";
@@ -368,6 +341,8 @@ void IBScene::Draw()
 				}
 			}
 		}
+		activeSkillPanel01_->TextMessageDraw();
+		activeSkillPanel02_->TextMessageDraw();
 	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
@@ -377,9 +352,16 @@ void IBScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+
 	if (skillFlag != true) {
 		playerUI_->SpriteDraw();
 	}
+	activeSkillPanel01_->SpriteDraw();
+	activeSkillPanel02_->SpriteDraw();
+	if (skillFlag) {
+		skillCursor_->Draw();
+	}
+
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -418,7 +400,7 @@ void IBScene::SceneChange()
 			}
 			else {
 				soundCount = 0;
-				
+
 			}
 		}
 	}
@@ -428,7 +410,7 @@ void IBScene::SceneChange()
 	if (arrow->GetPosition().y == 150) {
 		//次のゲームシーンいく
 		if (schange->GetEnd() == false) {
-			if (schange->GetFStart() == false) {
+			if (schange->GetFStart() == false && schange->GetFEnd() == false) {
 				if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 					SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 					schange->SetFStart(true);
@@ -612,33 +594,21 @@ void IBScene::SkillUIUpdate()
 	for (int32_t i = 0; i < 7; i++) {
 		for (int32_t j = 0; j < 7; j++) {
 			if (panelStatus_[i][j].panelStatus_ == 0) continue;
-
-			bool isActive = panelStatus_[i][j].skillPanel_->GetIsActive();
-
-			if (i == 0 && panelStatus_[i + 1][j].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-			if (j == 0 && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-
-			if (i == 0 || j == 0) continue;
-			if (!isActive && panelStatus_[i - 1][j].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-			if (!isActive && panelStatus_[i][j - 1].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-
-			if (i + 1 == 7 || j + 1 == 7) continue;
-			if (!isActive && panelStatus_[i + 1][j].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-			if (!isActive && panelStatus_[i][j + 1].skillPanel_->GetIsSkillGet()) {
-				panelStatus_[i][j].skillPanel_->SetIsActive(true);
-			}
-
+			SkillPanelActiveCheck(i, j);
 		}
+	}
+
+	if (KeyInput::GetIns()->TriggerKey(DIK_U) && KeyInput::GetIns()->TriggerKey(DIK_I)) {
+		playerUI_->AddSkillPoint(99);
+	}
+
+	if (skillFlag) {
+		activeSkillPanel01_->SetPos({ 155.f, 288.f });
+		activeSkillPanel02_->SetPos({ 320.f, 288.f });
+	}
+	else {
+		activeSkillPanel01_->SetPos({ 287.f, 32.f });
+		activeSkillPanel02_->SetPos({ 352.f, 32.f });	
 	}
 
 	//カーソル移動処理
@@ -680,6 +650,8 @@ void IBScene::SkillPanelInitialize()
 
 	}
 	panelStatus_[3][3].panelStatus_ = 5;
+	panelStatus_[2][6].panelStatus_ = 7;
+	panelStatus_[4][0].panelStatus_ = 6;
 
 	Vector2 pos = { 0.f, 0.f };
 
@@ -687,11 +659,11 @@ void IBScene::SkillPanelInitialize()
 		for (int32_t j = 0; j < 7; j++) {
 			if (panelStatus_[i][j].panelStatus_ == 1) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"HPアップ+5", pos, SkillPanel::HPUP, 5);
+				panelStatus_[i][j].skillPanel_->Initialize(L"ATKアップ+5", pos, SkillPanel::ATKUP, 5);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 2) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"ATKアップ+5", pos, SkillPanel::ATKUP, 5);
+				panelStatus_[i][j].skillPanel_->Initialize(L"HPアップ+5", pos, SkillPanel::HPUP, 5);
 			}
 			else if (panelStatus_[i][j].panelStatus_ == 3) {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
@@ -707,9 +679,17 @@ void IBScene::SkillPanelInitialize()
 				panelStatus_[i][j].skillPanel_->Initialize(L"ハンマー回収", pos, SkillPanel::HammerReturn);
 				panelStatus_[i][j].skillPanel_->SetIsActive(true);
 			}
+			else if (panelStatus_[i][j].panelStatus_ == 6) {
+				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
+				panelStatus_[i][j].skillPanel_->Initialize(L"フォールハンマー", pos, SkillPanel::FallHammer);
+			}
+			else if (panelStatus_[i][j].panelStatus_ == 7) {
+				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
+				panelStatus_[i][j].skillPanel_->Initialize(L"ハイパーモード", pos, SkillPanel::HyperMode);
+			}
 			else {
 				panelStatus_[i][j].skillPanel_ = std::make_unique<SkillPanel>();
-				panelStatus_[i][j].skillPanel_->Initialize(L"empty", pos, SkillPanel::HPUP);
+				panelStatus_[i][j].skillPanel_->Initialize(L"none", pos, SkillPanel::None);
 			}
 		}
 	}
@@ -717,17 +697,77 @@ void IBScene::SkillPanelInitialize()
 	for (int32_t i = 0; i < 7; i++) {
 		if (i < 3) {
 			pos = { 900.f, 300.f + (50.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))) };
-			panelStatus_[i][3].skillPanel_->SetPos(pos);
-			pos = { 900.f + (50.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))), 300.f };
 			panelStatus_[3][i].skillPanel_->SetPos(pos);
+			pos = { 900.f + (50.f * (4.f - ((float)i + 1.f)) + 10.f * (4.f - ((float)i + 1.f))), 300.f };
+			panelStatus_[i][3].skillPanel_->SetPos(pos);
 		}
 		else if (i > 3) {
 			pos = { 900.f, 300.f - (50.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)) };
-			panelStatus_[i][3].skillPanel_->SetPos(pos);
-			pos = { 900.f - (50.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f };
 			panelStatus_[3][i].skillPanel_->SetPos(pos);
+			pos = { 900.f - (50.f * ((float)i - 3.f) + 10.f * ((float)i - 3.f)), 300.f };
+			panelStatus_[i][3].skillPanel_->SetPos(pos);
 		}
 	}
+	pos = { 900.f + (50.f * (4.f - (2.f + 1.f)) + 10.f * (4.f - (2.f + 1.f))), 300.f - (50.f * (6.f - 3.f) + 10.f * (6.f - 3.f)) };
+	panelStatus_[2][6].skillPanel_->SetPos(pos);
+	pos = { 900.f - (50.f * (4.f - 3.f) + 10.f * (4.f - (2.f + 1.f))), 300.f + (50.f * (4.f - (0.f + 1.f)) + 10.f * (4.f - (0.f + 1.f))) };
+	panelStatus_[4][0].skillPanel_->SetPos(pos);
+}
+
+void IBScene::SkillPanelActiveCheck(int32_t arrayNum_1, int32_t arrayNum_2)
+{
+	bool isSkillGet = panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetIsSkillGet();
+	if (isSkillGet) {
+		if (arrayNum_1 != 0 && arrayNum_1 != 6) {
+			if (arrayNum_2 != 0 && arrayNum_2 != 6) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 0) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 6) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+		}
+		else if (arrayNum_1 == 0) {
+			if (arrayNum_2 != 0 && arrayNum_2 != 6) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 0) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 6) {
+				panelStatus_[arrayNum_1 + 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+		}
+		else if (arrayNum_1 == 6) {
+			if (arrayNum_2 != 0 && arrayNum_2 != 6) {
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 0) {
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 + 1].skillPanel_->SetIsActive(true);
+			}
+			else if (arrayNum_2 == 6) {
+				panelStatus_[arrayNum_1 - 1][arrayNum_2].skillPanel_->SetIsActive(true);
+				panelStatus_[arrayNum_1][arrayNum_2 - 1].skillPanel_->SetIsActive(true);
+			}
+		}
+	}
+
 }
 
 void IBScene::AddSkill(int32_t arrayNum_1, int32_t arrayNum_2)
@@ -751,6 +791,20 @@ void IBScene::AddSkill(int32_t arrayNum_1, int32_t arrayNum_2)
 	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::SPDUP) {
 		SPDUpSkill* spdUp = new SPDUpSkill("SPDUp", panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetStatusUpNum());
 		skillManager_->AddPlayerPassiveSkill(spdUp);
+	}
+	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::FallHammer) {
+		activeSkillPanel02_->Initialize(L"フォールハンマー", { 155.f, 288.f }, SkillPanel::FallHammer);
+		activeSkillPanel02_->SetIsActive(true);
+		FallHammerAttackSkill* fallHammer = new FallHammerAttackSkill("FallHammer", 8 * 60);
+		skillManager_->AddPlayerActiveSkill(fallHammer);
+		skillManager_->SetActiveSkillName02("FallHammer");
+	}
+	else if (panelStatus_[arrayNum_1][arrayNum_2].skillPanel_->GetSkillType() == SkillPanel::HyperMode) {
+		activeSkillPanel01_->Initialize(L"ハイパーモード", { 320.f, 288.f }, SkillPanel::HyperMode);
+		activeSkillPanel01_->SetIsActive(true);
+		HyperModeSkill* hyperMode = new HyperModeSkill("HyperMode", 16 * 60, 4 * 60);
+		skillManager_->AddPlayerActiveSkill(hyperMode);
+		skillManager_->SetActiveSkillName01("HyperMode");
 	}
 }
 

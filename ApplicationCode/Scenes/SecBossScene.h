@@ -23,6 +23,8 @@
 #include"BaseEnemy.h"
 #include"Shake.h"
 #include "SceneChange.h"
+#include "SkillPanel.h"
+
 class SecBossScene :
 	public BaseScene
 {
@@ -59,6 +61,9 @@ private:
 	std::unique_ptr<Stairs>m_Stairs;
 	//プレイヤー
 	Player* player_;
+	//スキルパネル
+	std::unique_ptr<SkillPanel> activeSkillPanel01_;
+	std::unique_ptr<SkillPanel> activeSkillPanel02_;
 
 	//鉱石アイテム
 	std::list<std::unique_ptr<Ore>> oreItems_;

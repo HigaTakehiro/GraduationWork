@@ -45,6 +45,18 @@ void ActiveSkillList::SetIsActive(bool isActive)
 	}
 }
 
+bool ActiveSkillList::GetIsActive()
+{
+	bool isActive = false;
+	if (skillList_.size() <= 0) {
+		return isActive;
+	}
+	else {
+		isActive = true;
+	}
+	return isActive;
+}
+
 void ActiveSkillList::SingleIsActive(const std::string& name, bool isActive)
 {
 	for (IActiveSkill* skill : skillList_) {
@@ -52,6 +64,16 @@ void ActiveSkillList::SingleIsActive(const std::string& name, bool isActive)
 			skill->SetIsActive(isActive);
 		}
 	}
+}
+
+bool ActiveSkillList::GetSingleIsActive(const std::string& name)
+{
+	for (IActiveSkill* skill : skillList_) {
+		if (skill->GetName() == name) {
+			return skill->GetIsActive();
+		}
+	}
+	return false;
 }
 
 void ActiveSkillList::AddSkill(IActiveSkill* skill)

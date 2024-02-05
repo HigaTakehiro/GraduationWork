@@ -87,6 +87,11 @@ private: //メンバ関数
 	void SkillPanelInitialize();
 
 	/// <summary>
+	/// スキルパネル有効化チェック
+	/// </summary>
+	void SkillPanelActiveCheck(int32_t arrayNum_1, int32_t arrayNum_2);
+
+	/// <summary>
 	/// スキル追加処理
 	/// </summary>
 	void AddSkill(int32_t arrayNum_1, int32_t arrayNum_2);
@@ -163,6 +168,8 @@ private: //メンバ変数
 	std::unique_ptr<Sprite> skillPlayer_[4];
 	//スキルパネル
 	SkillPanelStatus panelStatus_[7][7];
+	std::unique_ptr<SkillPanel> activeSkillPanel01_;
+	std::unique_ptr<SkillPanel> activeSkillPanel02_;
 	//スキル画面カーソルスプライト
 	std::unique_ptr<Sprite> skillCursor_;
 

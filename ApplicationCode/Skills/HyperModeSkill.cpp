@@ -35,3 +35,12 @@ void HyperModeSkill::SetIsActive(bool isActive)
 		isActive_ = isActive;
 	}
 }
+
+bool HyperModeSkill::GetIsActive()
+{
+	bool isActive = false;
+	if (coolTimer_ < coolTime_) return isActive;
+	isActive = true;
+
+	return isActive;
+}
