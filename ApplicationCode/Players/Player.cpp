@@ -9,6 +9,7 @@
 #include "PadInput.h"
 #include "SoundManager.h"
 #include"Collision.h"
+#include "Vector2.h"
 
 void Player::Initialize()
 {
@@ -90,6 +91,9 @@ void Player::Initialize()
 	epBarSize_ = 80.0f;
 	epBar_->SetSize({ epBarSize_, 20 });
 	epBar_->SetLeftSizeCorrection(true);
+	//レベルアップ演出タイマー
+	lvUpTimer_ = 60;
+	lvUpSprite_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::levelUp, { 0.f, 0.f }, { 1.f, 1.f, 1.f, 0.f }, { 0.5f, 0.5f });
 	
 	hitCoolTime_ = hitCoolTimer_ = 30;
 	for (int32_t i = 0; i < 6; i++) {
@@ -194,9 +198,13 @@ void Player::HitHammerToEnemy(Vector3 vec, float dis)
 
 void Player::SpriteDraw()
 {
+	const int32_t lvUpTime = 30;
 	statusBack_->Draw();
 	hpBar_->Draw();
 	epBar_->Draw();
+	if (lvUpTimer_ < lvUpTime) {
+		lvUpSprite_->Draw();
+	}
 }
 
 void Player::SubHP(int32_t subHP)
@@ -770,12 +778,32 @@ void Player::UIUpdate()
 void Player::LevelUp()
 {
 	const int32_t maxLevel = 99;
+	const int32_t lvUpTime = 30;
+
+	//3D→2D
+	//プレイヤーのワールド行列からワールド座標
+	XMVECTOR playerPos = { player_->GetMatWorld().r[3].m128_f32[0], player_->GetMatWorld().r[3].m128_f32[1], player_->GetMatWorld().r[3].m128_f32[2] };
+	//ビュープロジェクションビューポート行列
+	XMMATRIX matVPV = Camera::GetMatView() * Camera::GetMatProjection() * Camera::GetMatViewPort();
+	//プレイヤーのワールド座標とビュープロジェクションビューポート行列でw除算
+	playerPos = XMVector3TransformCoord(playerPos, matVPV);
+	//画面上の位置を求める
+	Vector2 player2dPos = { playerPos.m128_f32[0], playerPos.m128_f32[1] };
+	player2dPos.y -= 50.f;
+
+	if (lvUpTimer_ <= lvUpTime) {
+		lvUpTimer_++;
+		float alpha = ((float)lvUpTimer_ / (float)lvUpTime);
+		lvUpSprite_->SetPosition(player2dPos);
+		lvUpSprite_->SetAlpha(alpha);
+	}
 
 	if (level_ >= maxLevel) return;
 
 	if (ep_ >= levelUpEp_) {
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerLevelUp, 0.3f);
 		level_++;
+		lvUpTimer_ = 0;
 		ep_ = 0;
 		skillPoint_++;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
