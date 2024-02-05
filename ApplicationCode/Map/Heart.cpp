@@ -38,6 +38,7 @@ void Heart::Update(Player* player, bool& Display)
 	//HitPlayer(Display);
 	heart_->Update();
 	Jump();
+	get = true;
 }
 
 void Heart::Draw(bool Display)
@@ -48,13 +49,15 @@ void Heart::Draw(bool Display)
 
 void Heart::Jump()
 {
-	Vector3 Pos = player_->GetPos();
+	Vector3 Pos= player_->GetPos();
 	pos_ = Pos;
-	pos_.y = addpos_ + Pos.y + 1;
+	pos_.y = addpos_ + Pos.y+1;
 	addpos_ += 0.07f;
-	col_.w -= 0.03f;
+	col_.w -=0.03f;
 	heart_->SetColor(col_);
 	heart_->SetPosition(pos_);
+	if (get == false) { return; }
+	player_->AddHP(1);
 }
 
 

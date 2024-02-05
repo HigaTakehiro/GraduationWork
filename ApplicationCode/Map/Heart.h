@@ -55,6 +55,8 @@ private:
 
 	float addpos_ = 0.f;
 
+	bool get = true;
+
 	XMFLOAT4 col_{ 1.f,1.f,1.f,1.f };
 };
 
