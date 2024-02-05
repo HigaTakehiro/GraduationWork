@@ -156,6 +156,7 @@ void IBScene::Initialize()
 	}
 
 	skillManager_->SetPlayer(playerUI_);
+	OKflag_ = false;
 }
 
 void IBScene::Update()
@@ -305,7 +306,7 @@ void IBScene::Draw()
 		}
 		skillPlayer_[animeCount_]->Draw();
 	}
-	schange->Draw();
+
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
@@ -315,6 +316,8 @@ void IBScene::Draw()
 	D2D1_RECT_F textDrawRange = { 300, 520, 700, 750 };
 	D2D1_RECT_F skillPointDrawRange = { 550, 100, 900, 200 };
 	D2D1_RECT_F skillPanelMessageRange = { 850, 300, 950, 400 };
+	//std::wstring hx = std::to_wstring(arrow->GetPosition().y);
+	//text_->Draw("meiryo", "white", L"\n" + hx, textDrawRange);
 	std::wstring indent = L"\n";
 	std::wstring statusMessage = L"HP : ";
 	std::wstring skillPointMessage = L"スキルポイント : ";
@@ -330,7 +333,9 @@ void IBScene::Draw()
 	statusMessage += L"素早さ : ";
 	statusMessage += std::to_wstring(playerUI_->GetSPD());
 	if (!skillFlag) {
-		playerUI_->TextUIDraw();
+		if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+			playerUI_->TextUIDraw();
+		}
 	}
 	else {
 		text_->Draw("bestTen_16", "white", skillPointMessage, skillPointDrawRange);
@@ -362,7 +367,7 @@ void IBScene::Draw()
 	if (skillFlag) {
 		skillCursor_->Draw();
 	}
-
+	schange->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -381,8 +386,8 @@ void IBScene::Finalize()
 void IBScene::SceneChange()
 {
 	float leftStick = PadInput::GetIns()->leftStickY();
-	if (schange->GetFStart() == false) {
-		if (skillFlag == false) {
+	if (skillFlag == false) {
+		if (schange->GetFStart() == false && schange->GetFEnd() == false && OKflag_ == false) {
 			if (KeyInput::GetIns()->TriggerKey(DIK_UPARROW) || PadInput::GetIns()->TriggerButton(PadInput::Stick_Up)) {
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userChoice, 0.1f);
 				arrow->SetPosition({ 900,50 });
@@ -401,7 +406,6 @@ void IBScene::SceneChange()
 			}
 			else {
 				soundCount = 0;
-
 			}
 		}
 	}
@@ -416,6 +420,7 @@ void IBScene::SceneChange()
 					SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 					schange->SetFStart(true);
 					schange->SetFadeNum(0);
+					OKflag_ = true;
 				}
 			}
 		}
@@ -489,12 +494,13 @@ void IBScene::SceneChange()
 		if (skillFlag == true) {
 
 			if (schange->GetEnd() == false) {
-				if (schange->GetFStart() == false) {
+				if (schange->GetFStart() == false && schange->GetFEnd() == false) {
 					if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_B)) {
 						SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 						schange->SetFEnd(false);
 						schange->SetFStart(true);
 						schange->SetFadeNum(0);
+						OKflag_ = true;
 					}
 				}
 			}
@@ -505,12 +511,13 @@ void IBScene::SceneChange()
 		}
 		else if (skillFlag == false) {
 			if (schange->GetEnd() == false) {
-				if (schange->GetFStart() == false) {
+				if (schange->GetFStart() == false && schange->GetFEnd() == false) {
 					if (KeyInput::GetIns()->TriggerKey(DIK_RETURN) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 						SoundManager::GetIns()->PlaySE(SoundManager::SEKey::userDecision, 0.1f);
 						schange->SetFEnd(false);
 						schange->SetFStart(true);
 						schange->SetFadeNum(0);
+						OKflag_ = true;
 					}
 				}
 			}
@@ -529,7 +536,9 @@ void IBScene::SceneChange()
 			schange->SetEnd(false);
 		}
 	}
-
+	if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+		OKflag_ = false;
+	}
 }
 
 void IBScene::CameraSetting()
@@ -611,7 +620,7 @@ void IBScene::SkillUIUpdate()
 	}
 	else {
 		activeSkillPanel01_->SetPos({ 287.f, 32.f });
-		activeSkillPanel02_->SetPos({ 352.f, 32.f });	
+		activeSkillPanel02_->SetPos({ 352.f, 32.f });
 	}
 
 	//カーソル移動処理

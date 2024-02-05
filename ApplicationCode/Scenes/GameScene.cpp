@@ -16,8 +16,8 @@
 void GameScene::Initialize()
 {
 	ShowCursor(true);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‰Šú‰»
-	//‰æ–Ê‘å‚«‚³İ’è
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
+	//ç”»é¢å¤§ãã•è¨­å®š
 	const Vector3 LB = { -1.0f, -1.0f, 0.0f };
 	const Vector3 LT = { -1.0f, +1.0f, 0.0f };
 	const Vector3 RB = { +1.0f, -1.0f, 0.0f };
@@ -25,10 +25,10 @@ void GameScene::Initialize()
 	postEffect_ = std::make_unique<PostEffect>();
 	postEffect_->Initialize(LT, LB, RT, RB);
 
-	//ƒJƒƒ‰‰Šú‰»
+	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	CameraSetting();
 	oldcamerapos_ = cameraPos_.z;
-	//ƒ‰ƒCƒg‰Šú‰»
+	//ãƒ©ã‚¤ãƒˆåˆæœŸåŒ–
 	light_ = LightGroup::UniquePtrCreate();
 	for (int32_t i = 0; i < 3; i++) {
 		light_->SetDirLightActive(0, true);
@@ -44,7 +44,7 @@ void GameScene::Initialize()
 	//light->SetCircleShadowActive(0, true);
 	Object3d::SetLight(light_.get());
 
-	//3dƒIƒuƒWƒFƒNƒg‰Šú‰»
+	//3dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
 	player_ = new Player;
 	player_->Initialize();
 	player_->SetLevel(SceneManager::GetLevel());
@@ -128,7 +128,7 @@ void GameScene::Update()
 	}
 
 	EnemyProcess();
-	//“–‚½‚Á‚½‚çƒVƒFƒCƒN
+	//å½“ãŸã£ãŸã‚‰ã‚·ã‚§ã‚¤ã‚¯
 	if (map_->GetHit() == true) {
 		ShakeCount++;
 		if (ShakeCount == 1) {
@@ -186,20 +186,19 @@ void GameScene::Update()
 	activeSkillPanel01_->Update({ 0.f, 0.f });
 	activeSkillPanel02_->Update({ 0.f, 0.f });
 
-	//ƒV[ƒ“Ø‚è‘Ö‚¦
+	//ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 	schange->Change(0);
 	SceneChange();
-
 }
 
 void GameScene::Draw()
 {
-	//”wŒiF
+	//èƒŒæ™¯è‰²
 	const DirectX::XMFLOAT4 backColor = { 0.5f,0.25f, 0.5f, 0.0f };
 
 	postEffect_->PreDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(”wŒi)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(èƒŒæ™¯)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	background_->Draw();
 	Sprite::PostDraw();
@@ -224,7 +223,7 @@ void GameScene::Draw()
 		//}
 	}
 
-	//3DƒIƒuƒWƒFƒNƒg•`‰æˆ—
+	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»å‡¦ç†
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	for (std::unique_ptr<Ore>& ore : oreItems_) {
 		if (ore != nullptr) {
@@ -247,30 +246,32 @@ void GameScene::Draw()
 	Object3d::PostDraw();
 	shake_->Draw(DirectXSetting::GetIns()->GetCmdList());
 
-	//ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	schange->Draw();
 	Sprite::PostDraw();
 	postEffect_->PostDrawScene(DirectXSetting::GetIns()->GetCmdList());
 
 	DirectXSetting::GetIns()->beginDrawWithDirect2D();
-	//ƒeƒLƒXƒg•`‰æ”ÍˆÍ
+	//ãƒ†ã‚­ã‚¹ãƒˆæç”»ç¯„å›²
 	//
 	D2D1_RECT_F textDrawRange = { 600, 0, 1280, 1280 };
 	//std::wstring hx = std::to_wstring(cameraPos_.y);
-	//text_->Draw("meiryo", "white", L"ƒQ[ƒ€ƒV[ƒ“\n" + hx, textDrawRange);
-	player_->TextUIDraw();
+	//text_->Draw("meiryo", "white", L"ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³\n" + hx, textDrawRange);
+	if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+		player_->TextUIDraw();
+	}
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
 
 	DirectXSetting::GetIns()->PreDraw(backColor);
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg•`‰æ
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»
 	postEffect_->Draw(DirectXSetting::GetIns()->GetCmdList(), 60.0f, postEffectNo_, true);
 
-	//ƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ‚©‚¯‚È‚¢ƒXƒvƒ‰ƒCƒg•`‰æˆ—(UI“™)
+	//ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ã‹ã‘ãªã„ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»å‡¦ç†(UIç­‰)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
 	player_->SpriteDraw();
 	activeSkillPanel01_->SpriteDraw();
 	activeSkillPanel02_->SpriteDraw();
+	schange->Draw();
 	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
@@ -330,9 +331,13 @@ void GameScene::SceneChange()
 		}
 
 	}
-	//‚±‚ê‚¢‚Â‚©Á‚·‚æ‚¤‚É
+	//ã“ã‚Œã„ã¤ã‹æ¶ˆã™ã‚ˆã†ã«
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
 		//SceneManager::SceneChange(SceneManager::SceneName::Boss);
+	}
+
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Clear);
 	}
 }
 
@@ -377,7 +382,7 @@ void GameScene::EnemyProcess()
 {
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
 	Vector3 enemyPos[3] = {};
-#pragma region “e
+#pragma region å…
 	for (size_t i = 0; i < map_->GetEnemySize(); i++) {
 		unique_ptr<BaseEnemy>& Enemy = map_->GetEnemy(i);
 		if (Enemy == nullptr) { continue; }
@@ -394,14 +399,16 @@ void GameScene::EnemyProcess()
 		int Num = Enemy->GetType();
 		if (Enemy->GetType() == 0) { EnemyPos = Enemy->GetPos(); }
 		else if (Enemy->GetType() == 1) { EnemyPos = Enemy->GetPos(); }
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack())
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f)  && player_->GetIsAttack())
 		{
+			if(!PadInput::GetIns()->PushButton(PadInput::Button_B)&& player_->GetIsHammerRelease())
+			player_->SetIsHammerReflect(true);
 			Enemy->SetDamF(true);
 		} else
 		{
 			Enemy->SetDamF(false);
 		}
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z+3.f }, 1.0f) && !player_->GetIsHammerRelease() && player_->GetIsAttack()) {
+		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { EnemyPos.x, EnemyPos.z+3.f }, 1.0f) && player_->GetIsAttack()) {
 			Vector3 playerPos = player_->GetPos();
 			Enemy->GetDamage(true);
 			Vector3 Vec{};
@@ -426,7 +433,7 @@ void GameScene::EnemyProcess()
 	}
 #pragma endregion
 
-	//ƒvƒŒƒCƒ„[‚ÌOBBİ’è
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®OBBè¨­å®š
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[1],
 		player_->GetHammer()->GetMatWorld().r[3].m128_f32[2]
@@ -437,7 +444,7 @@ void GameScene::EnemyProcess()
 	l_obb.SetParam_Scl({ 1.0f,2.10f,10.0f });
 
 	_hummmerObb = &l_obb;
-#pragma region “e
+#pragma region å…
 	for (size_t j = 0; j < map_->GetEnemySize(); j++) {
 		unique_ptr<BaseEnemy>& Ene1 = map_->GetEnemy(j);
 		for (size_t i = 0; i < map_->GetEnemySize(); i++) {
@@ -478,7 +485,7 @@ void GameScene::EnemyProcess()
 void GameScene::ParticleCreate()
 {
 	if (player_ != nullptr) {
-		//–³“Gó‘Ôƒp[ƒeƒBƒNƒ‹
+		//ç„¡æ•µçŠ¶æ…‹ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 		if (player_->GetIsInvincible()) {
 			int32_t life = 30;
 			Vector3 pos = player_->GetPos();

@@ -146,13 +146,18 @@ void TogemaruAct::Transition()
 			//îªíË
 			bool animenotwalk = anime_name_ != AnimeName::WALK_FRONT && anime_name_ != AnimeName::WALK_BACK &&
 				anime_name_ != AnimeName::WALK_LEFT && anime_name_ != AnimeName::WALK_RIGHT;
-			bool isCollide =Hp>0&& animenotwalk && Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
+			bool isCollide =crushSpearNum<3&&Hp>0&& animenotwalk && Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
 			if (!damf && isCollide) { Player_->SubHP(1); damf = true; }
 			if (damf) { damcool++; if (damcool > 90)damf = false; } else { damcool = 0; }
 			Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
 		}
 	}
 
+	if(anime_name_==ROLE )
+	{
+		RoleF = true;
+	}
+	else { RoleF = false; }
 	//çzêŒìñÇΩÇËîªíË
 	CollideDeposit();
 	CollideDeposit2();
@@ -162,7 +167,7 @@ void TogemaruAct::Transition()
 
 	//ç¿ïWÇÃîÕàÕéwíË
 	Pos_.x = std::clamp(Pos_.x, -10.f, 10.f);
-	Pos_.z = std::clamp(Pos_.z, -12.f, 6.8f);
+	Pos_.z = std::clamp(Pos_.z, -10.f, 6.8f);
 }
 
 //
@@ -272,7 +277,7 @@ void TogemaruAct::Move()
 		RushStartPos = Pos_;
 	
 		std::uniform_int_distribution<> randact(0, 1);
-		if(randact(mt)==0)
+		if(randact(mt)<0)
 		{
 			act_ = Act::ATTACK_SHOTSPEAR;
 		}
@@ -355,7 +360,7 @@ void TogemaruAct::Attack_Rush()
 	if (splineT > 60) {
 		if (spline->GetIndex() >= SplinePosList.size()-2)
 		{
-			RoleF = false;
+			//RoleF = false;
 			anime_name_ = AnimeName::IdlE;
 			act_ = Act::MOVE;
 			if (spline)
@@ -364,7 +369,7 @@ void TogemaruAct::Attack_Rush()
 			SplinePosList.clear();
 		} else
 		{
-			RoleF = true;
+			//RoleF = true;
 			anime_name_ = AnimeName::ROLE;
 			spline->Upda(Pos_);
 		}
@@ -384,7 +389,7 @@ void TogemaruAct::Attack_ShotSpear()
 	if (act_ == Act::DEATH)return;
 	if (++animationWaitTime < 60)return;
 
-	RoleF = true;
+	//RoleF = true;
 
 	constexpr float maxRushEaseT = 30.f;
 
@@ -438,7 +443,7 @@ void TogemaruAct::Attack_ShotSpear()
 		//î≠éÀèIóπ
 		if (endShot) {
 			isShot = FALSE;//
-			RoleF = false;
+			//RoleF = false;
 			for (size_t i = 0; i < spearSize; i++) {
 				spearsAlpha[i] = 0.f;//ÇæÇÒÇæÇÒîñÇ≠
 			}
@@ -535,6 +540,7 @@ void TogemaruAct::CollideDeposit()
 			shakeF = TRUE;//âÊñ óhÇÁÇ∑
 			//êjÇÃêî1å∏ÇÁÇ∑(âÛÇÍÇΩêjÇÃêîÅ{ÇP)
 			if (beginBattle) {
+				RoleF = false;
 				crushSpearNum=3;
 			}
 			CrushAnimation();
@@ -569,6 +575,7 @@ void TogemaruAct::CollideDeposit2()
 			shakeF = TRUE;//âÊñ óhÇÁÇ∑
 			//êjÇÃêî1å∏ÇÁÇ∑(âÛÇÍÇΩêjÇÃêîÅ{ÇP)
 			if (beginBattle) {
+			//	RoleF = false;
 				crushSpearNum=3;
 			}
 			CrushAnimation();

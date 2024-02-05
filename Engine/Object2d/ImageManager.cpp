@@ -37,6 +37,7 @@ void ImageManager::Initialize() {
 	Sprite::LoadTexture((UINT)ImageName::skillIcon_FallHammer, L"Engine/Resources/Images/skillPanel_fallHammer.png");
 	Sprite::LoadTexture((UINT)ImageName::skillIcon_HyperMode, L"Engine/Resources/Images/skillPanel_hyperMode.png");
 	Sprite::LoadTexture((UINT)ImageName::skillIcon_Empty, L"Engine/Resources/Images/skillPanel_empty.png");
+	Sprite::LoadTexture((UINT)ImageName::ClearText, L"Engine/Resources/Images/clearText.png");
 	Sprite::LoadTexture((UINT)ImageName::levelUp, L"Engine/Resources/Images/LEVELUP.png");
 
 	Texture::LoadTexture(Image2DName::BUSA1, L"Engine/Resources/Images/usa_back/usa_back1.png");

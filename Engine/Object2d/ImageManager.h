@@ -42,6 +42,7 @@ public: //‰æ‘œ–¼
 		skillIcon_FallHammer,
 		skillIcon_HyperMode,
 		skillIcon_Empty,
+		ClearText,
 		levelUp
 	};
 

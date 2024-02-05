@@ -37,7 +37,7 @@ void LastBossAct::Move()
 	if (++actionCount % ActionInter == 0)
 	{
 		std::uniform_int_distribution<> randact(0, 2);
-		if(randact(mt) == 90)
+		if(randact(mt) == 0)
 		{
 
 			Vector3 posList1[] = { Vector3(0,-2.5f,-10),Vector3(0,-2.5f,6) };
@@ -54,7 +54,7 @@ void LastBossAct::Move()
 
 			act_ = Act::ATTACK_Hole;
 		}
-		else if(randact(mt)==91)
+		else if(randact(mt)==1)
 		{
 			for (size_t i = 0; i < flameSize; i++)
 			{
@@ -381,7 +381,7 @@ void LastBossAct::Act_Barrier()
 	bool isCollsion = Hp > 0 && Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
 	if ( BarrierHp[0] <= 0 && BarrierHp[1] <= 0 && BarrierHp[2] <= 0)
 	{
-		Helper::DamageManager(Hp, 1, damff, damcool, 90, isCollsion);
+		Helper::DamageManager(Hp, DamageMath::ReturnDamage(Player_->GetDamageATK(),guardp), damff, damcool, 90, isCollsion);
 		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollsion, 1.f);
 	}
 	if(BarrierHp[0]<=0&& BarrierHp[1] <= 0 && BarrierHp[2] <= 0 )
