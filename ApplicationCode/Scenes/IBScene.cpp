@@ -105,8 +105,18 @@ void IBScene::Initialize()
 	activeSkillPanel02_ = std::make_unique<SkillPanel>();
 	activeSkillPanel01_->Initialize(L"スキルセットなし", { 155.f, 288.f }, SkillPanel::Empty);
 	activeSkillPanel02_->Initialize(L"スキルセットなし", { 320.f, 288.f }, SkillPanel::Empty);
+
 	if (panelStatus_[0][3].skillPanel_ == nullptr) {
 		SkillPanelInitialize();
+	}
+
+	if (panelStatus_[4][0].skillPanel_->GetIsSkillGet()) {
+		activeSkillPanel01_->Initialize(L"フォールハンマー", { 155.f, 288.f }, SkillPanel::FallHammer);
+		activeSkillPanel01_->SetIsActive(true);
+	}
+	if (panelStatus_[2][6].skillPanel_->GetIsSkillGet()) {
+		activeSkillPanel02_->Initialize(L"ハイパーモード", { 320.f, 288.f }, SkillPanel::HyperMode);
+		activeSkillPanel02_->SetIsActive(true);
 	}
 
 	//カーソルUI
@@ -362,6 +372,7 @@ void IBScene::Draw()
 	if (skillFlag != true) {
 		playerUI_->SpriteDraw();
 	}
+
 	activeSkillPanel01_->SpriteDraw();
 	activeSkillPanel02_->SpriteDraw();
 	if (skillFlag) {

@@ -170,7 +170,8 @@ void BossScene::Update()
 	if (boss_->GetClearF() && player_->GetNextFlor())
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			touchFlor = TRUE;
+			schange->SetFStart(true);
+			schange->SetFadeNum(0);
 		}
 	}
 	schange->Change(0);
@@ -181,18 +182,16 @@ void BossScene::Update()
 	activeSkillPanel02_->Update({ 0.f, 0.f });
 	ParticleCreate();
 	invincibleParticle_->Update();
-	
+
 	//シーン切り替えmmm
 	SceneChange();
-	if (touchFlor)
-	{
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			if (StageCount::GetIns()->Now() <= 18) {
-				SceneManager::SceneChange(SceneManager::SceneName::IB);
-			}
-			else {
-				SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
-			}
+
+	if (schange->GetEnd() == true) {
+		if (StageCount::GetIns()->Now() <= 18) {
+			SceneManager::SceneChange(SceneManager::SceneName::IB);
+		}
+		else {
+			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
 		}
 	}
 }
