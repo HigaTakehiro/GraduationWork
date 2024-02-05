@@ -389,7 +389,7 @@ void TutorialScene::SceneChange()
 
 	//これいつか消すように
 	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss3);
+		//SceneManager::SceneChange(SceneManager::SceneName::Boss3);
 	}
 
 	if (PadInput::GetIns()->PushButton(PadInput::Button_A) && PadInput::GetIns()->PushButton(PadInput::Button_RB) && PadInput::GetIns()->PushButton(PadInput::Button_LB)) {
