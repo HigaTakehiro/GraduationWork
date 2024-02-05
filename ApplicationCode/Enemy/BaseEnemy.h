@@ -78,7 +78,7 @@ protected:
 		bool DamCool = FALSE;
 	}state_obj_;
 	//**************************************
-
+	int guardp;
 	/*çsìÆ*/
 	//**************************************
 	enum BaseAction

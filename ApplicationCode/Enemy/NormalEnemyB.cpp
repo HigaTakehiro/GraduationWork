@@ -4,6 +4,7 @@
 
 #include "Collision.h"
 #include "CsvLoader.h"
+#include "ExternalFileLoader.h"
 #include "Helper.h"
 #include "Shapes.h"
 
@@ -31,6 +32,21 @@ void NormalEnemyB::Init()
 
 	_color = { 1,1,1,1 };
 	m_MaxHp = _status.HP;;
+	std::stringstream stream;
+	std::string line;
+
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("NormalEnemyB.csv");
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+		if (word.find("Param") == 0) {
+			getline(line_stream, word, ' ');
+			guardp = (int)std::atof(word.c_str());
+			continue;
+		}
+	}
 }
 
 void NormalEnemyB::TexDraw()

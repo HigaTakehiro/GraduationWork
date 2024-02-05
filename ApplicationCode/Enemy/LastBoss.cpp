@@ -63,6 +63,8 @@ void LastBoss::Init()
 			GuardValue = (int)std::atof(word.c_str());
 			getline(line_stream, word, ' ');
 			AttackValue = (float)std::atof(word.c_str());
+			getline(line_stream, word, ' ');
+			Exp = (float)std::atof(word.c_str());
 			continue;
 		}
 	}

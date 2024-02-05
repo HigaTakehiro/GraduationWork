@@ -44,7 +44,9 @@ protected:
 	BOOL BodyRecvDam=FALSE;
 	bool AppearFlag;
 	bool m_ClearF=FALSE;
-
+	int Exp;
+public:
+	int GetExp()const { return Exp; }
 protected://UI
 	std::unique_ptr<Sprite>m_HpTex = nullptr;
 	std::unique_ptr<Sprite>m_HpTex_Frame = nullptr;

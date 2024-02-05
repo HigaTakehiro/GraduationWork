@@ -7,6 +7,7 @@
 #include "Collision.h"
 #include "CsvLoader.h"
 #include "Easing.h"
+#include "ExternalFileLoader.h"
 #include"ImageManager.h"
 #include"ImageManager.h"
 #include "KeyInput.h"
@@ -45,6 +46,22 @@ void NormalEnemyA::Init()
 	m_MaxHp = _status.HP;;
 	TexInit();
 	AnimationInterval = 20;
+	std::stringstream stream;
+	std::string line;
+
+	stream = ExternalFileLoader::GetIns()->ExternalFileOpen("NormalEnemyA.csv");
+	while (getline(stream, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ' ');
+
+		if (word.find("Param") == 0) {
+			getline(line_stream, word, ' ');
+			guardp = (int)std::atof(word.c_str());
+			continue;
+		}
+	}
+
 	_color = { 1,1,1,1 };
 }
 
