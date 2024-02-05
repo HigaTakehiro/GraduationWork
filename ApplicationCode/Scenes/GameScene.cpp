@@ -331,10 +331,6 @@ void GameScene::SceneChange()
 		}
 
 	}
-
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
-	}
 }
 
 void GameScene::CameraSetting()
