@@ -32,6 +32,7 @@ void ImageManager::Initialize() {
 	Sprite::LoadTexture((UINT)ImageName::skillIcon_SPDUp, L"Engine/Resources/Images/skillPanel_speedUP.png");
 	Sprite::LoadTexture((UINT)ImageName::BossBar, L"Engine/Resources/Images/dogomuHP-export.png");
 	Sprite::LoadTexture((UINT)ImageName::BossBar_Toge, L"Engine/Resources/Images/togemaruHP-export.png");
+	Sprite::LoadTexture((UINT)ImageName::BossBar_last, L"Engine/Resources/Images/wizardHP.png");
 	Sprite::LoadTexture((UINT)ImageName::Flash, L"Engine/Resources/Images/Flash.png");
 	Sprite::LoadTexture((UINT)ImageName::PlayerUIBack, L"Engine/Resources/Images/playerHPBar.png");
 	Sprite::LoadTexture((UINT)ImageName::skillIcon_FallHammer, L"Engine/Resources/Images/skillPanel_fallHammer.png");

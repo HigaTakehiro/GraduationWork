@@ -42,8 +42,6 @@ public: //ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void Initialize();
 
-	void Create();
-
 	/// <summary>
 	/// I—¹ˆ—
 	/// </summary>

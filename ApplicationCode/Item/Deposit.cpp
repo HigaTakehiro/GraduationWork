@@ -1,6 +1,7 @@
 #include "Deposit.h"
 #include "Shapes.h"
 #include "SafeDelete.h"
+#include"SoundManager.h"
 #include <random>
 
 Deposit::~Deposit()
@@ -116,6 +117,7 @@ Vector3 Deposit::OreDropVec()
 bool Deposit::GetIsHit(bool isHammerSwing)
 {
 	if (deposit_->GetIsHit() && hitCoolTimer_ >= hitCoolTime_ && isHammerSwing) {
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 		hp_--;
 		hitCoolTimer_ = 0;
 		return true;

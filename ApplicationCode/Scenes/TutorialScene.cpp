@@ -334,11 +334,9 @@ void TutorialScene::Draw()
 		fighttextwindow_->SpriteDraw();
 		activeSkillPanel01_->SpriteDraw();
 		activeSkillPanel02_->SpriteDraw();
+		schange->Draw();
 		Sprite::PostDraw();
 	}
-	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	schange->Draw();
-	Sprite::PostDraw();
 	DirectXSetting::GetIns()->PostDraw();
 }
 
@@ -389,14 +387,6 @@ void TutorialScene::SceneChange()
 		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
 
-	//これいつか消すように
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Boss2);
-	}
-
-	if (PadInput::GetIns()->PushButton(PadInput::Button_A) && PadInput::GetIns()->PushButton(PadInput::Button_RB) && PadInput::GetIns()->PushButton(PadInput::Button_LB)) {
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
-	}
 }
 
 void TutorialScene::CameraSetting()

@@ -261,9 +261,9 @@ void LastBossScene::Draw()
 
 	//ポストエフェクトをかけないスプライト描画処理(UI等)
 	Sprite::PreDraw(DirectXSetting::GetIns()->GetCmdList());
-	if (!boss_->GetClearF()) {
+	//if (!boss_->GetClearF()) {
 		player_->SpriteDraw();
-	}
+	//}
 	boss_->SpriteDraw();
 	activeSkillPanel01_->SpriteDraw();
 	activeSkillPanel02_->SpriteDraw();
