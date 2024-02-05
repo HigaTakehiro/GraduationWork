@@ -196,7 +196,7 @@ void LastBossScene::Update()
 	if (NextClearF)
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+			SceneManager::SceneChange(SceneManager::SceneName::Clear);
 		}
 	}
 
@@ -293,7 +293,7 @@ void LastBossScene::SceneChange()
 		schange->SetFStart(true);
 		schange->SetFadeNum(0);
 		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
-		SceneManager::SceneChange(SceneManager::SceneName::IB);
+		SceneManager::SceneChange(SceneManager::SceneName::Clear);
 	}
 	//if (schange->GetEnd() == true) {
 	//	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
