@@ -9,7 +9,7 @@ FallHammerAttackSkill::FallHammerAttackSkill(const std::string& name, int32_t co
 
 void FallHammerAttackSkill::Use(Player* player)
 {
-	if (isActive_ == true && !player->GetIsHammerRelease()) {
+	if (isActive_ == true && !player->GetIsHammerRelease() && !player->GetIsHammerSwing()) {
 		coolTimer_ = 0;
  		player->ActiveFallHammer();
 	}

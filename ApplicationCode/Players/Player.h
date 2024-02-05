@@ -399,6 +399,10 @@ private: //メンバ変数
 	int32_t oldSpd_ = 1;
 	//スキルポイント
 	int32_t skillPoint_;
+	//レベルアップ演出タイマー
+	int32_t lvUpTimer_;
+	//レベルアップ演出スプライト
+	std::unique_ptr<Sprite> lvUpSprite_;
 
 	//レベル
 	int32_t level_ = 0;

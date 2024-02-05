@@ -127,6 +127,8 @@ void Player::Update()
 		hammer_->SetPosition(hammerPos);
 	}
 
+	HammeronHole();
+
 	if (isHammerRelease_) {
 		HammerThrow();
 		FallHammerAttack();
@@ -137,7 +139,6 @@ void Player::Update()
 		Animation();
 		Attack();
 	}
-	HammeronHole();
 	player_->SetPosition(pos_);
 	player_->SetRotation(rot_);
 	rotAttackPlayer_->SetPosition(pos_);
@@ -236,12 +237,12 @@ void Player::FallHammerAttack()
 	hammer_->SetScale(hammerSize_);
 
 	if (fallHammerTimer_ <= fallHammerTime) {
-		hammer_->SetRotation({ 90.f, 0.f, 0.f });
+		hammer_->SetRotation({ 0.f, 0.f, 0.f });
 		hammerPos_.y += 0.2f;
 		fallHammerTimer_++;
 	}
 	else {
-		hammer_->SetRotation({ 90.f, 180.f, 0.f });
+		hammer_->SetRotation({ 180.f, 0.f, 0.f });
 		hammerPos_.y -= 0.2f;
 		if (hammerPos_.y <= reflectPosY) {
 			isHammerReflect_ = true;
@@ -642,6 +643,7 @@ void Player::HammerReturn()
 {
 	//‰ñ“]Šp‚ð‹‚ß‚é
 	Vector3 rot = hammer_->GetRotation();
+	rot.x = 90.0f;
 	rot.y += 5.0f;
 	if (rot.y >= 360.0f) {
 		rot.y = 0.0f;
