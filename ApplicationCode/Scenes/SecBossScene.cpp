@@ -232,7 +232,7 @@ void SecBossScene::Update()
 			}
 		}
 		if (ore != nullptr) {
-			ore->Update();
+			ore->Update(player_->GetPos());
 		}
 	}
 
