@@ -331,14 +331,7 @@ void GameScene::SceneChange()
 		}
 
 	}
-	//これいつか消すように
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		//SceneManager::SceneChange(SceneManager::SceneName::Boss);
-	}
 
-	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
-		SceneManager::SceneChange(SceneManager::SceneName::Clear);
-	}
 }
 
 void GameScene::CameraSetting()

@@ -48,8 +48,11 @@ void Heart::Draw(bool Display)
 
 void Heart::Jump()
 {
-	pos_.y += 0.1f;
-	col_.w -= 0.05f;
+	Vector3 Pos = player_->GetPos();
+	pos_ = Pos;
+	pos_.y = addpos_ + Pos.y + 1;
+	addpos_ += 0.07f;
+	col_.w -= 0.03f;
 	heart_->SetColor(col_);
 	heart_->SetPosition(pos_);
 }
