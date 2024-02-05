@@ -48,6 +48,7 @@ void LastBossScene::Initialize()
 	player_->SetDEF(SceneManager::GetDEF());
 	player_->SetSPD(SceneManager::GetSPD());
 	player_->SetSkillPoint(SceneManager::GetSkillPoint());
+	player_->SetLevelUpEP(SceneManager::GetLevelUpEP());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -289,6 +290,12 @@ void LastBossScene::SceneChange()
 	SceneManager::SetLevel(player_->GetLevel());
 	SceneManager::SetEP(player_->GetEP());
 	SceneManager::SetHP(player_->GetHP());
+	SceneManager::SetMaxHP(player_->GetMaxHP());
+	SceneManager::SetATK(player_->GetATK());
+	SceneManager::SetDEF(player_->GetDef());
+	SceneManager::SetSPD(player_->GetSPD());
+	SceneManager::SetSkillPoint(player_->GetSkillPoint());
+	SceneManager::SetLevelUpEP(player_->GetLevelUpEP());
 	schange->SetFStart(true);
 	schange->SetFadeNum(0);
 	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);

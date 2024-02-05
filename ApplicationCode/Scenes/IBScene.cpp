@@ -142,6 +142,7 @@ void IBScene::Initialize()
 	playerUI_->SetDEF(SceneManager::GetDEF());
 	playerUI_->SetSPD(SceneManager::GetSPD());
 	playerUI_->SetSkillPoint(SceneManager::GetSkillPoint());
+	playerUI_->SetLevelUpEP(SceneManager::GetLevelUpEP());
 	hp_ = playerUI_->GetHP();
 	playerUI_->SetStop(true);
 	SoundManager::GetIns()->StopAllBGM();
@@ -436,6 +437,7 @@ void IBScene::SceneChange()
 				SceneManager::SetDEF(playerUI_->GetDef());
 				SceneManager::SetSPD(playerUI_->GetSPD());
 				SceneManager::SetSkillPoint(playerUI_->GetSkillPoint());
+				SceneManager::SetLevelUpEP(playerUI_->GetLevelUpEP());
 				if (StageCount::GetIns()->Now() == 5) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss);
 				}
@@ -466,6 +468,7 @@ void IBScene::SceneChange()
 				SceneManager::SetDEF(playerUI_->GetDef());
 				SceneManager::SetSPD(playerUI_->GetSPD());
 				SceneManager::SetSkillPoint(playerUI_->GetSkillPoint());
+				SceneManager::SetLevelUpEP(playerUI_->GetLevelUpEP());
 				if (StageCount::GetIns()->Now() == 5) {
 					SceneManager::SceneChange(SceneManager::SceneName::Boss);
 				}

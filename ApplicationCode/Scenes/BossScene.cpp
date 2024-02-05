@@ -54,6 +54,7 @@ void BossScene::Initialize()
 	player_->SetDEF(SceneManager::GetDEF());
 	player_->SetSPD(SceneManager::GetSPD());
 	player_->SetSkillPoint(SceneManager::GetSkillPoint());
+	player_->SetLevelUpEP(SceneManager::GetLevelUpEP());
 
 	postEffectNo_ = PostEffect::NONE;
 
@@ -270,6 +271,7 @@ void BossScene::SceneChange()
 	SceneManager::SetDEF(player_->GetDef());
 	SceneManager::SetSPD(player_->GetSPD());
 	SceneManager::SetSkillPoint(player_->GetSkillPoint());
+	SceneManager::SetLevelUpEP(player_->GetLevelUpEP());
 	schange->SetFStart(true);
 	schange->SetFadeNum(0);
 	FILE* fp;
