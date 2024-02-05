@@ -154,7 +154,7 @@ void TutorialScene::Update()
 			}
 		}
 		if (ore != nullptr) {
-			ore->Update();
+			ore->Update(player_->GetPos());
 		}
 	}
 

@@ -21,7 +21,7 @@ void Ore::Initialize(Vector3 pos, Vector3 vec)
 	speed_ = 1.0f;
 }
 
-void Ore::Update()
+void Ore::Update(Vector3 playerPos)
 {
 	Vector3 vec = vec_ * speed_;
 	pos_ += vec;
@@ -32,6 +32,9 @@ void Ore::Update()
 	}
 	else {
 		speed_ = 0.0f;
+		Vector3 oreToPlayerVec = playerPos - pos_;
+		oreToPlayerVec.normalize();
+		pos_ += oreToPlayerVec * 0.5f;
 	}
 }
 
