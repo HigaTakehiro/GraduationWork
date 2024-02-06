@@ -181,7 +181,7 @@ public:
 
 public:
 	bool DeathJudg();
-
+	bool death() { if (_status.HP <= 0)return true; return false; }
 	void CollideHummmer();
 
 	void RecvFlashColor();
@@ -197,7 +197,7 @@ public:
 private:
 	void RotforPlayer();
 public:
-	unsigned int GetHP()const;
+	int GetHP()const;
 	unsigned int GetAttackVal()const;
 
 	XMFLOAT3 GetPos() const;
