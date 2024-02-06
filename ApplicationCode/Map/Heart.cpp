@@ -57,7 +57,7 @@ void Heart::Jump()
 	heart_->SetColor(col_);
 	heart_->SetPosition(pos_);
 	if (get == false) { return; }
-	player_->AddHP(1);
+	player_->AddHP(3);
 	if (player_->GetHP() >= player_->GetMaxHP()) {
 		player_->SetHP(player_->GetMaxHP());
 	}
