@@ -47,8 +47,7 @@ std::random_device rnd;
 
 			HolePos[0] = posList1[rand1(mt)];
 			HolePos[1] = posList2[rand2(mt)];
-			if (!meteof)
-				meteof = true;
+			
 			act_ = Act::ATTACK_Hole;
 		}
 		if(randact(mt)==1)
@@ -58,8 +57,7 @@ std::random_device rnd;
 				FlameScl[i] = { 0.01f,0.01f,0.01f };
 				FlameColor[i] = { 1,1,1,1 };
 			}
-			if (!meteof)
-				meteof = true;
+			
 			std::random_device rnd;
 			std::mt19937 mt(rnd());
 			std::uniform_int_distribution<> rand1(0, 3);
@@ -343,8 +341,22 @@ void LastBossAct::Transision()
 		actionval = randpos(mt);
 
 		warptime++;
-		if (warptime % 300 == 0) {
-			Pos_ = posList1[randpos(mt)];
+		if (warptime % 900 == 0) {
+			warpidle = true;
+		}
+
+		if (warpidle){
+			idletime++;
+			if (idletime > 120) {
+				killdraw=true;// posList1[randpos(mt)];
+			}
+			if (idletime > 240) {
+				killdraw = false;
+				Pos_ = posList1[randpos(mt)];
+				warpidle = false;
+			}
+		} else{
+			idletime = 0;
 		}
 		(this->*ActionList[act_])();
 		//êjÇ∆ÉvÉåÉCÉÑÅ[è’ìÀ

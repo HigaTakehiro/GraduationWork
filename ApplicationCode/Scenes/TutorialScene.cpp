@@ -244,6 +244,9 @@ void TutorialScene::Update()
 
 
 	SceneChange();
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Boss3);
+	}
 }
 
 void TutorialScene::Draw()

@@ -165,11 +165,16 @@ public:
 
 	AnimeName GetName() { return _state; }
 	int warptime;
-	int coolmeteo;
+	int coolmeteo,idletime;
+	bool warpidle;
+	bool killdraw;
 public:
 	bool bomf;
 	bool GetBom() { return bomf; }
-
+	bool GetkillDraw()
+	{
+		return killdraw;
+	}
 	void SetBom(bool f) { bomf=f; }
 	bool hammercol;
 };

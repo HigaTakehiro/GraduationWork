@@ -248,6 +248,7 @@ void LastBoss::Draw()
 	if (m_player->GetPos().z > 12.f)return;
 
 	if (color_rgb.w > 0.f) {
+		if(!Action->GetkillDraw())
 		m_Body->Draw();
 	}
 	if (m_HP > 0) {
@@ -260,10 +261,12 @@ void LastBoss::Draw()
 		{
 			m_FlameTex[i]->Draw();
 		}
-		for (size_t i = 0; i < 3; i++)
-		{
-			m_GuardTex[i]->Draw();
-		}//UI_Draw();
+		if (!Action->GetkillDraw()) {
+			for (size_t i = 0; i < 3; i++)
+			{
+				m_GuardTex[i]->Draw();
+			}//UI_Draw();
+		}
 		m_MeteoTex->Draw();
 	}
 }
