@@ -242,8 +242,8 @@ void TutorialScene::Update()
 	ParticleCreate();
 	invincibleParticle_->Update();
 
-	SceneChange();
 
+	SceneChange();
 }
 
 void TutorialScene::Draw()

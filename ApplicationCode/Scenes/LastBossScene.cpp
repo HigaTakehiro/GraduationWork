@@ -55,7 +55,7 @@ void LastBossScene::Initialize()
 	boss_.reset(new LastBoss());
 	boss_->Init();
 	boss_->SetPlayerIns(player_);
-
+	boss_->SetCam(camera_.get());
 	int Num = StageCount::GetIns()->Now();
 	map_ = make_unique<GameMap>();
 	map_->Initalize(player_, cameraPos_, targetPos_, 6);

@@ -242,7 +242,6 @@ void BaseEnemy::damage()
 
 void BaseEnemy::damage2()
 {
-	guardp = 1;
 	Helper::DamageManager(_status.HP, DamageMath::ReturnDamage(_player->GetDamageATK(), guardp), edamf, edamcool, 90, damfprot);
 }
 

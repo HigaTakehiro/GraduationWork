@@ -164,5 +164,13 @@ public:
 	}_state = WMOVE;
 
 	AnimeName GetName() { return _state; }
+	int warptime;
+	int coolmeteo;
+public:
+	bool bomf;
+	bool GetBom() { return bomf; }
+
+	void SetBom(bool f) { bomf=f; }
+	bool hammercol;
 };
 

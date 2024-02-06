@@ -78,6 +78,8 @@ void LastBoss::Init()
 Action->SetHp(BossMaxHP);
 
 	Action->SetGuardPoint(GuardValue);
+	particle = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera);
+
 }
 
 
@@ -204,6 +206,36 @@ void LastBoss::Upda()
 	m_MeteoTex->SetRotation({ 0,0,0 });
 	m_MeteoTex->SetColor({ 1,1,1,0.9f });
 	m_MeteoTex->Update();
+
+	bomf = Action->GetBom();
+	if (bomf) {
+		ptime++;
+		for (size_t i = 0; i < 1; i++) {
+			if (ptime > 10)break;
+			const float rnd_pos = 0.01f;
+			Vector3 ppos = { 0.f,-2.f,0.f };
+			ppos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			ppos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			ppos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+			const float rnd_vel = 2.15f;
+			Vector3 vel{};
+			vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+			Vector3 acc{};
+			const float rnd_acc = 0.006f;
+			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+			// ’Ç‰Á
+			particle->Add(100, ppos, vel, acc, 10.5f, 0.2f, { 1,0.4f,0.3f }, { 0.9f,0.8f,0.8f }, 0.5, 0);
+
+		}
+	}
+
+	if (!bomf)ptime = 0;
+		particle->Update();
 	//m_HP--;
 	//UI_Upda();
 	HPUiUpda();
@@ -238,7 +270,7 @@ void LastBoss::Draw()
 
 void LastBoss::Draw2()
 {
-
+	particle->Draw(DirectXSetting::GetIns()->GetCmdList());
 }
 
 void LastBoss::SpriteDraw()

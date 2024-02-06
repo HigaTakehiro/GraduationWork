@@ -1,6 +1,7 @@
 #pragma once
 #include "BossBase.h"
 #include "LastBossAct.h"
+#include "ParticleManager.h"
 
 class LastBoss :
     public BossBase
@@ -40,5 +41,10 @@ private:
 	std::unique_ptr<Object3d>m_Body;
     BOOL DamF; int DamCoolTime;
     LastBossAct* Action;
+    std::unique_ptr<ParticleManager>particle;
+    bool bomf;
+    int ptime;
+public:
+    
 };
 

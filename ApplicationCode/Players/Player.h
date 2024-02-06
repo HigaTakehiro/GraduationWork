@@ -583,8 +583,9 @@ private: //ƒƒ“ƒo•Ï”
 	bool look_ = false;
 	bool animationflag_ = false;
 	bool sestop_ = true;
-
-
+	bool hammernocach;
+public:
+	bool GetCatch() { return hammernocach; }
 
 public:
 	Object3d* GetHammer() { return hammer_.get(); }
