@@ -174,6 +174,9 @@ void BossScene::Update()
 			schange->SetFadeNum(0);
 		}
 	}
+	if (player_->GetIsDead()==true) {
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
+	}
 	schange->Change(0);
 	skillManager_->Update();
 	activeSkillPanel01_->SetIsActive(skillManager_->GetIsActiveCheck("HyperMode"));

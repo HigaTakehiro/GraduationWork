@@ -250,7 +250,9 @@ void LastBossScene::Draw()
 	std::wstring hp = boss_->GetStr();
 	//text_->Draw("meiryo", "white", L"ボスシーン\n左クリックまたはLボタンでタイトルシーン\n右クリックまたはRボタンでリザルトシーン\nシェイクはEnter\nHP : " + hp, textDrawRange);
 	if (!boss_->GetClearF()) {
-		player_->TextUIDraw();
+		if (schange->GetFStart() == false && schange->GetFEnd() == false) {
+			player_->TextUIDraw();
+		}
 	}
 
 	DirectXSetting::GetIns()->endDrawWithDirect2D();
