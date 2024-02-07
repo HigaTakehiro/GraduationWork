@@ -159,7 +159,7 @@ void Player::Draw()
 {
 
 	shadow_->Draw();
-	if (isAttack_) {
+	if (isAttack_||onHoleF) {
 		hammer_->Draw();
 	}
 	if (look_ == false) {
@@ -950,10 +950,10 @@ void Player::HammeronHole()
 		ResetOreCount();
 		isHammerReflect_ = false;
 
-		const Vector3 hammerSize = { 0.025f, 0.025f, 0.025f };
+		const Vector3 hammerSize = { 0.035f, 0.035f, 0.035f };
 		const Vector3 subscl = { 0.1f,0.1f,0.1f };
 		hammerSize_ -= subscl;
-		
+		isAttack_ = false;
 		if(hammerSize_.x<0.f&&!fallF)
 		{
 			hammerPos_.y = 15.f;
@@ -962,6 +962,7 @@ void Player::HammeronHole()
 
 		if (hammerPos_.y <= groungY) {
 			if (fallF&&Collision::GetIns()->HitCircle({ pos_.x,pos_.z }, 2.f, { hammerPos_.x,hammerPos_.z }, 1.f)) {
+				
 				isHammerReflect_ = true;
 				hammer_->SetParent(player_.get());
 				hammer_->SetPosition(initHammerPos_);
@@ -981,12 +982,19 @@ void Player::HammeronHole()
 		//hammerVec_ = {}; //throwSpeed_ = 0.f;
 		hammerPos_.x = 0.f;
 		hammerPos_.z = 0.f;
+		hammernocach = true;
 		hammer_->SetPosition(hammerPos_);
 		hammer_->SetScale(hammerSize_);
 	}
 	else
 	{
 		fallF = false;
+	}
+
+	if(hammernocach)
+	{
+		if (isHammerRelease_ == false)
+			hammernocach = false;
 	}
 	hammerSize_.x = std::clamp(hammerSize_.x, 0.f, 10.f);
 	hammerSize_.y = std::clamp(hammerSize_.z, 0.f, 10.f);

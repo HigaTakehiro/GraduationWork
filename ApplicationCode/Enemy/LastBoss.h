@@ -1,6 +1,7 @@
 #pragma once
 #include "BossBase.h"
 #include "LastBossAct.h"
+#include "ParticleManager.h"
 
 class LastBoss :
     public BossBase
@@ -24,10 +25,9 @@ private:
     int index;
     int animeIndex;
     Model* m_Model_Hole[3] = {};
-	Model* m_Model_Idle[4] = {};
        Model* m_Model_Walk[4] = {};
-       Model* m_Model_Walk_Left[4] = {};
-       Model* m_Model_Walk_Right[4] = {};
+       Model* m_Model_Spell[4] = {};
+       Model* m_Model_Idle[4] = {};
        Model* m_Model_Walk_Back[4] = {};
        Model* MeteoModel[2];
        int meteoanim;
@@ -40,5 +40,10 @@ private:
 	std::unique_ptr<Object3d>m_Body;
     BOOL DamF; int DamCoolTime;
     LastBossAct* Action;
+    std::unique_ptr<ParticleManager>particle;
+    bool bomf;
+    int ptime;
+public:
+    
 };
 

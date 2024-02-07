@@ -47,8 +47,10 @@ protected:
 	int Exp;
 	bool isGetExp;
 public:
+	void SetCam(Camera* c) { camera = c; }
 	int GetExp()const { return Exp; }
 protected://UI
+	Camera* camera;
 	std::unique_ptr<Sprite>m_HpTex = nullptr;
 	std::unique_ptr<Sprite>m_HpTex_Frame = nullptr;
 	std::unique_ptr<Sprite>m_HpTex_Inner = nullptr;

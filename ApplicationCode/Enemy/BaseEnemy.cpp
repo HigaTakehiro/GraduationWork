@@ -13,7 +13,7 @@
 
 /***                    GETTER                      ***/
 /******************************************************/
-unsigned int BaseEnemy::GetHP() const { return _status.HP; }
+int BaseEnemy::GetHP() const { return _status.HP; }
 unsigned int BaseEnemy::GetAttackVal() const { return _status.DamageValue; }
 
 XMFLOAT3 BaseEnemy::GetPos() const { return _status.Pos; }
@@ -236,6 +236,7 @@ void BaseEnemy::PlayerHitBody(float dis, bool& f)
 
 void BaseEnemy::damage()
 {
+	guardp = 1;
 	Helper::DamageManager(_status.HP, DamageMath::ReturnDamage(_player->GetDamageATK(),guardp), edamf, edamcool, 90, damfprot);
 }
 

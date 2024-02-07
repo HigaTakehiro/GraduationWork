@@ -27,7 +27,7 @@ void BossBase::RecvDamageFlash()
 	else
 	{
 		val = 0;
-		color_rgb = XMFLOAT4(1, 1, 1, 1);
+		color_rgb = XMFLOAT4(1, 1, 1, color_rgb.w);
 	}
 }
 

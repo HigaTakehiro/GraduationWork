@@ -20,23 +20,19 @@ void LastBossAct::Move()
 
 	//WalkAnimation();
 	//ç¿ïWîΩâf(å¸Ç¢ÇΩï˚Ç…)
-	Pos_ = {
-		Pos_.x += move.m128_f32[0] * 0.8f,
-		Pos_.y,
-		Pos_.z += move.m128_f32[2] * 0.8f,
-	};
+std::random_device rnd;
+	std::mt19937 mt(rnd());
+	std::uniform_int_distribution<> randpos(0, 3);
+	actionval = randpos(mt);
 	for (size_t i = 0; i < flameSize; i++)
 	{
 		FlameColor[i] = { 1,1,1,0 };
 	}
-	std::random_device rnd;
-	std::mt19937 mt(rnd());
-
-	constexpr uint32_t ActionInter = 100;
+	constexpr uint32_t ActionInter = 150;
 	//çUåÇÇ…à⁄çs
-	if (++actionCount % ActionInter == 0)
+	if (++actionCount % ActionInter == 0&&Hp>0)
 	{
-		std::uniform_int_distribution<> randact(0, 2);
+		std::uniform_int_distribution<> randact(0, 1);
 		if(randact(mt) == 0)
 		{
 
@@ -51,29 +47,32 @@ void LastBossAct::Move()
 
 			HolePos[0] = posList1[rand1(mt)];
 			HolePos[1] = posList2[rand2(mt)];
-
+			
 			act_ = Act::ATTACK_Hole;
 		}
-		else if(randact(mt)==1)
+		if(randact(mt)==1)
 		{
 			for (size_t i = 0; i < flameSize; i++)
 			{
 				FlameScl[i] = { 0.01f,0.01f,0.01f };
 				FlameColor[i] = { 1,1,1,1 };
 			}
+			
 			std::random_device rnd;
 			std::mt19937 mt(rnd());
 			std::uniform_int_distribution<> rand1(0, 3);
 			actionval = rand1(mt);
 			act_ = Act::ATTACK_Flame;
 		}
-		else
+		
+		//anime_name_ = AnimeName::ROLE;
+	}
+	if(actionCount%1340==0)
 		{
+			bomf = false;
 			if(!meteof)
 			meteof = true;
 		}
-		//anime_name_ = AnimeName::ROLE;
-	}
 	HoleSize[0] = { 0,0,0 };
 	HoleSize[1] = { 0,0,0 };
 
@@ -82,6 +81,16 @@ void LastBossAct::Move()
 
 	
 	flameP = INITFLAME;
+	if(meteof)
+	{
+		_aname = AnimName::SPELL;
+	}
+	else {
+		if (warpidle)
+			_aname = AnimName::WALK;
+		else
+			_aname = AnimName::IDLE;
+	}
 }
 
 float LastBossAct::Follow()
@@ -302,7 +311,7 @@ void LastBossAct::Attack_Spell()
 		const Vector3 add = { 0.01f/6.f,0.01f/6.f,0.01f };
 		if((beforeHp-Hp)>1||RangeScale.x>=0.5f)
 		{
-			MeteoPos.y -= 0.02f;
+			MeteoPos.y -= 0.06f;
 			
 		}
 		else {
@@ -311,6 +320,7 @@ void LastBossAct::Attack_Spell()
 		RangeScale.x = std::clamp(RangeScale.x, 0.f, 0.5f);
 		RangeScale.y = std::clamp(RangeScale.y, 0.f, 0.5f);
 		if (MeteoPos.y < -2.f) {
+			bomf = true;
 			bool judg=Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { 0,0}, RangeScale.x * 20.f);
 			if (judg)Player_->SubHP(1);
 			meteof = false;
@@ -333,6 +343,31 @@ void LastBossAct::Transision()
 
 	if (beginBattle) {//êÌì¨
 		beforeBattle = FALSE;
+		Vector3 posList1[] = { Vector3(10,-2.5f,-10),Vector3(-10,-2.5f,-10),Vector3(10,-2.5f,6),Vector3(-10,-2.5f,6) };
+
+		std::random_device rnd;
+		std::mt19937 mt(rnd());
+		std::uniform_int_distribution<> randpos(0, 3);
+		actionval = randpos(mt);
+
+		warptime++;
+		if (warptime % 600 == 0) {
+			warpidle = true;
+		}
+
+		if (warpidle){
+			idletime++;
+			if (idletime > 120) {
+				killdraw=true;// posList1[randpos(mt)];
+			}
+			if (idletime > 240) {
+				killdraw = false;
+				Pos_ = posList1[randpos(mt)];
+				warpidle = false;
+			}
+		} else{
+			idletime = 0;
+		}
 		(this->*ActionList[act_])();
 		//êjÇ∆ÉvÉåÉCÉÑÅ[è’ìÀ
 	}
@@ -350,11 +385,11 @@ void LastBossAct::Act_Barrier()
 	for (size_t i = 0; i < barrierSize; i++)
 	{
 		BarrierAngle[i] += XMConvertToRadians(1.f);
-		BarrierPos[i].x = Pos_.x + cosf(BarrierAngle[i] + (i * 90)) * 2.f;
-		BarrierPos[i].z = Pos_.z + sinf(BarrierAngle[i] + (i * 90)) * 2.f;
+		BarrierPos[i].x = Pos_.x + cosf(BarrierAngle[i] + (i * 90)) * 3.f;
+		BarrierPos[i].z = Pos_.z + sinf(BarrierAngle[i] + (i * 90)) * 3.f;
 		BarrierPos[i].y = Pos_.y;
 
-		bool judg = Hp>0&& Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
+		bool judg = Hp>0 &&!killdraw&& Player_->GetIsAttack() && Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
 			{ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f);
 
 		bool isCollsion = Hp>0&&Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
@@ -378,7 +413,7 @@ void LastBossAct::Act_Barrier()
 		}
 		BarrierAlpha[i] = std::clamp(BarrierAlpha[i], 0.f, 1.f);
 	}
-	bool isCollsion = Hp > 0 && Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
+	bool isCollsion = Hp > 0 && !killdraw && Player_->GetIsAttack() && Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
 	if ( BarrierHp[0] <= 0 && BarrierHp[1] <= 0 && BarrierHp[2] <= 0)
 	{
 		Helper::DamageManager(Hp, DamageMath::ReturnDamage(Player_->GetDamageATK(),guardp), damff, damcool, 90, isCollsion);

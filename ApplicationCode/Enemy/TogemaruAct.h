@@ -239,5 +239,6 @@ public:
 	void SetDepositPos2(Vector3 pos) { depositPos2 = pos; }
 
 	float GetRotY()const { return Rot_.y; }
+
 };
 

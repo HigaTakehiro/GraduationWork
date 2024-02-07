@@ -163,6 +163,28 @@ public:
 		WDEATH
 	}_state = WMOVE;
 
-	AnimeName GetName() { return _state; }
+	int warptime;
+	int coolmeteo,idletime;
+	bool warpidle;
+	bool killdraw;
+	float colalpha;
+	
+public:
+	enum AnimName
+	{
+		IDLE,
+		WALK,
+		SPELL
+	}_aname;
+
+	AnimName GetName() { return _aname; }
+	bool bomf;
+	bool GetBom() { return bomf; }
+	bool GetkillDraw()
+	{
+		return killdraw;
+	}
+	void SetBom(bool f) { bomf=f; }
+	bool hammercol;
 };
 

@@ -242,8 +242,11 @@ void TutorialScene::Update()
 	ParticleCreate();
 	invincibleParticle_->Update();
 
-	SceneChange();
 
+	SceneChange();
+	if (PadInput::GetIns()->TriggerButton(PadInput::Button_X)) {
+		SceneManager::SceneChange(SceneManager::SceneName::Boss3);
+	}
 }
 
 void TutorialScene::Draw()

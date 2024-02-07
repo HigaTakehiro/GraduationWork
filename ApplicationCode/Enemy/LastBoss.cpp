@@ -78,6 +78,8 @@ void LastBoss::Init()
 Action->SetHp(BossMaxHP);
 
 	Action->SetGuardPoint(GuardValue);
+	particle = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera);
+
 }
 
 
@@ -101,7 +103,9 @@ void LastBoss::Upda()
 	Pos_ = Action->GetPos();
 //各種パラメータセット
 	m_HP = Action->GetHp();
-
+	//if (m_HP > 0) {
+	
+	//}
 	bool isCol = Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
 	//	if (!nowcrush) {
@@ -158,8 +162,16 @@ void LastBoss::Upda()
 	if(m_HP<=0)
 	{
 		color_rgb.w -= 0.02f;
+		if (color_rgb.w <= 0.f)m_ClearF = true;
 	}
-	if (color_rgb.w <= 0.f)m_ClearF = true;
+	else
+	{
+		if (Action->GetkillDraw())
+			color_rgb.w -= 0.05f;
+		else
+			color_rgb.w += 0.05f;
+	}
+	
 	if (m_ClearF)color_rgb.w = 0.f;
 	m_Body->SetScale(Action->GetScl());
 	m_Body->SetPosition({Action->GetPos().x,-2.f,Action->GetPos().z});
@@ -204,8 +216,40 @@ void LastBoss::Upda()
 	m_MeteoTex->SetRotation({ 0,0,0 });
 	m_MeteoTex->SetColor({ 1,1,1,0.9f });
 	m_MeteoTex->Update();
+
+	bomf = Action->GetBom();
+	if (bomf) {
+		ptime++;
+		for (size_t i = 0; i < 1; i++) {
+			if (ptime > 10)break;
+			const float rnd_pos = 0.01f;
+			Vector3 ppos = { 0.f,-2.f,0.f };
+			ppos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			ppos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			ppos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+			const float rnd_vel = 2.15f;
+			Vector3 vel{};
+			vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+			Vector3 acc{};
+			const float rnd_acc = 0.006f;
+			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+			// 追加
+			particle->Add(100, ppos, vel, acc, 10.5f, 0.2f, { 1,0.4f,0.3f }, { 0.9f,0.8f,0.8f }, 0.5, 0);
+
+		}
+	}
+
+	if (!bomf)ptime = 0;
+		particle->Update();
 	//m_HP--;
 	//UI_Upda();
+
+	
 	HPUiUpda();
 	color_rgb.w = std::clamp(color_rgb.w, 0.f, 1.f);
 }
@@ -228,17 +272,19 @@ void LastBoss::Draw()
 		{
 			m_FlameTex[i]->Draw();
 		}
-		for (size_t i = 0; i < 3; i++)
-		{
-			m_GuardTex[i]->Draw();
-		}//UI_Draw();
+		if (!Action->GetkillDraw()) {
+			for (size_t i = 0; i < 3; i++)
+			{
+				m_GuardTex[i]->Draw();
+			}//UI_Draw();
+		}
 		m_MeteoTex->Draw();
 	}
 }
 
 void LastBoss::Draw2()
 {
-
+	particle->Draw(DirectXSetting::GetIns()->GetCmdList());
 }
 
 void LastBoss::SpriteDraw()
@@ -272,20 +318,16 @@ void LastBoss::AnimationSett()
 {
 	switch (Action->GetName())
 	{
-	case LastBossAct::AnimeName::WIDLE:
+	case LastBossAct::AnimName::IDLE:
 		AddIndex(m_Model_Idle, 4);
 		break;
 
-	case LastBossAct::AnimeName::WMOVE:
+	case LastBossAct::AnimName::SPELL:
+		AddIndex(m_Model_Spell, 4);
+		break;
+
+	case LastBossAct::AnimName::WALK :
 		AddIndex(m_Model_Walk, 4);
-		break;
-
-	case LastBossAct::AnimeName::WCHARGE:
-		AddIndex(m_Model_Walk_Right, 4);
-		break;
-
-	case LastBossAct::AnimeName::WDEATH:
-		AddIndex(m_Model_Walk_Left, 4);
 		break;
 
 	}
@@ -300,10 +342,9 @@ void LastBoss::InitAnimatin()
 	//歩き
 	for (size_t i = 0; i < 4; i++) {
 		m_Model_Walk[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 160.0f });
-		m_Model_Walk_Right[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "wizard_move.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
-		m_Model_Walk_Left[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "wizard_move.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
-		m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
-
+		m_Model_Spell[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_chanting.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 160.0f });
+		m_Model_Idle[i] = Shapes::CreateSquare({ 0, 0 }, {  128.0f, 160.0f }, "wizard_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 160.0f });
+	
 	}
 	
 }

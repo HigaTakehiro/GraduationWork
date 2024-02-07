@@ -32,6 +32,8 @@ public:
 	void Spown();
 
 	void HitPlayer(bool& Display);
+	
+	bool Get() { return get; }
 private:
 	//オブジェクト
 	Object3d* heart_;
