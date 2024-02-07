@@ -30,7 +30,7 @@ std::random_device rnd;
 	}
 	constexpr uint32_t ActionInter = 150;
 	//UŒ‚‚ÉˆÚs
-	if (++actionCount % ActionInter == 0)
+	if (++actionCount % ActionInter == 0&&Hp>0)
 	{
 		std::uniform_int_distribution<> randact(0, 1);
 		if(randact(mt) == 0)
@@ -341,7 +341,7 @@ void LastBossAct::Transision()
 		actionval = randpos(mt);
 
 		warptime++;
-		if (warptime % 900 == 0) {
+		if (warptime % 600 == 0) {
 			warpidle = true;
 		}
 
@@ -379,7 +379,7 @@ void LastBossAct::Act_Barrier()
 		BarrierPos[i].z = Pos_.z + sinf(BarrierAngle[i] + (i * 90)) * 2.f;
 		BarrierPos[i].y = Pos_.y;
 
-		bool judg = Hp>0 && Player_->GetIsAttack() && Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
+		bool judg = Hp>0 &&!killdraw&& Player_->GetIsAttack() && Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,
 			{ Player_->GetHammmerPos().x,Player_->GetHammmerPos().z }, 1.f);
 
 		bool isCollsion = Hp>0&&Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
@@ -403,7 +403,7 @@ void LastBossAct::Act_Barrier()
 		}
 		BarrierAlpha[i] = std::clamp(BarrierAlpha[i], 0.f, 1.f);
 	}
-	bool isCollsion = Hp > 0 && Player_->GetIsAttack() && Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
+	bool isCollsion = Hp > 0 && !killdraw && Player_->GetIsAttack() && Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
 	if ( BarrierHp[0] <= 0 && BarrierHp[1] <= 0 && BarrierHp[2] <= 0)
 	{
 		Helper::DamageManager(Hp, DamageMath::ReturnDamage(Player_->GetDamageATK(),guardp), damff, damcool, 90, isCollsion);

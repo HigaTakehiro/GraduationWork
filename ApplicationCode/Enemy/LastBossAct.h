@@ -168,7 +168,15 @@ public:
 	int coolmeteo,idletime;
 	bool warpidle;
 	bool killdraw;
+	float colalpha;
+	
 public:
+	enum AnimName
+	{
+		IDLE,
+		WALK,
+		SPELL
+	}_aname;
 	bool bomf;
 	bool GetBom() { return bomf; }
 	bool GetkillDraw()

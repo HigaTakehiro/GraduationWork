@@ -103,7 +103,9 @@ void LastBoss::Upda()
 	Pos_ = Action->GetPos();
 //各種パラメータセット
 	m_HP = Action->GetHp();
-
+	//if (m_HP > 0) {
+	
+	//}
 	bool isCol = Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
 	//	if (!nowcrush) {
@@ -160,8 +162,16 @@ void LastBoss::Upda()
 	if(m_HP<=0)
 	{
 		color_rgb.w -= 0.02f;
+		if (color_rgb.w <= 0.f)m_ClearF = true;
 	}
-	if (color_rgb.w <= 0.f)m_ClearF = true;
+	else
+	{
+		if (Action->GetkillDraw())
+			color_rgb.w -= 0.05f;
+		else
+			color_rgb.w += 0.05f;
+	}
+	
 	if (m_ClearF)color_rgb.w = 0.f;
 	m_Body->SetScale(Action->GetScl());
 	m_Body->SetPosition({Action->GetPos().x,-2.f,Action->GetPos().z});
@@ -238,6 +248,8 @@ void LastBoss::Upda()
 		particle->Update();
 	//m_HP--;
 	//UI_Upda();
+
+	
 	HPUiUpda();
 	color_rgb.w = std::clamp(color_rgb.w, 0.f, 1.f);
 }
@@ -248,7 +260,6 @@ void LastBoss::Draw()
 	if (m_player->GetPos().z > 12.f)return;
 
 	if (color_rgb.w > 0.f) {
-		if(!Action->GetkillDraw())
 		m_Body->Draw();
 	}
 	if (m_HP > 0) {
