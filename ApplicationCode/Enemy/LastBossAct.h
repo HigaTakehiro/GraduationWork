@@ -163,7 +163,6 @@ public:
 		WDEATH
 	}_state = WMOVE;
 
-	AnimeName GetName() { return _state; }
 	int warptime;
 	int coolmeteo,idletime;
 	bool warpidle;
@@ -177,6 +176,8 @@ public:
 		WALK,
 		SPELL
 	}_aname;
+
+	AnimName GetName() { return _aname; }
 	bool bomf;
 	bool GetBom() { return bomf; }
 	bool GetkillDraw()

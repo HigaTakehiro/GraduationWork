@@ -81,6 +81,16 @@ std::random_device rnd;
 
 	
 	flameP = INITFLAME;
+	if(meteof)
+	{
+		_aname = AnimName::SPELL;
+	}
+	else {
+		if (warpidle)
+			_aname = AnimName::WALK;
+		else
+			_aname = AnimName::IDLE;
+	}
 }
 
 float LastBossAct::Follow()
@@ -375,8 +385,8 @@ void LastBossAct::Act_Barrier()
 	for (size_t i = 0; i < barrierSize; i++)
 	{
 		BarrierAngle[i] += XMConvertToRadians(1.f);
-		BarrierPos[i].x = Pos_.x + cosf(BarrierAngle[i] + (i * 90)) * 2.f;
-		BarrierPos[i].z = Pos_.z + sinf(BarrierAngle[i] + (i * 90)) * 2.f;
+		BarrierPos[i].x = Pos_.x + cosf(BarrierAngle[i] + (i * 90)) * 3.f;
+		BarrierPos[i].z = Pos_.z + sinf(BarrierAngle[i] + (i * 90)) * 3.f;
 		BarrierPos[i].y = Pos_.y;
 
 		bool judg = Hp>0 &&!killdraw&& Player_->GetIsAttack() && Collision::HitCircle({ BarrierPos[i].x, BarrierPos[i].z + 3.f }, 1.f,

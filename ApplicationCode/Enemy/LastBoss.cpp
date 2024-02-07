@@ -318,20 +318,16 @@ void LastBoss::AnimationSett()
 {
 	switch (Action->GetName())
 	{
-	case LastBossAct::AnimeName::WIDLE:
+	case LastBossAct::AnimName::IDLE:
 		AddIndex(m_Model_Idle, 4);
 		break;
 
-	case LastBossAct::AnimeName::WMOVE:
+	case LastBossAct::AnimName::SPELL:
+		AddIndex(m_Model_Spell, 4);
+		break;
+
+	case LastBossAct::AnimName::WALK :
 		AddIndex(m_Model_Walk, 4);
-		break;
-
-	case LastBossAct::AnimeName::WCHARGE:
-		AddIndex(m_Model_Walk_Right, 4);
-		break;
-
-	case LastBossAct::AnimeName::WDEATH:
-		AddIndex(m_Model_Walk_Left, 4);
 		break;
 
 	}
@@ -346,10 +342,9 @@ void LastBoss::InitAnimatin()
 	//•à‚«
 	for (size_t i = 0; i < 4; i++) {
 		m_Model_Walk[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 160.0f });
-		m_Model_Walk_Right[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "wizard_move.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
-		m_Model_Walk_Left[i] = Shapes::CreateSquare({ 10, 0 }, { 192.0f, 128.0f }, "wizard_move.png", { 192.0f, 64.0f }, { 0.5f, 0.5f }, { 192.0f * (float)i, 0.0f }, { 192.0f, 128.0f });
-		m_Model_Walk_Back[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_move.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 0.0f }, { 128.0f, 160.0f });
-
+		m_Model_Spell[i] = Shapes::CreateSquare({ 0, 0 }, { 128.0f, 160.0f }, "wizard_chanting.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 160.0f });
+		m_Model_Idle[i] = Shapes::CreateSquare({ 0, 0 }, {  128.0f, 160.0f }, "wizard_idle.png", { 128.0f, 64.0f }, { 0.5f, 0.5f }, { 128.0f * (float)i, 1.0f }, { 128.0f, 160.0f });
+	
 	}
 	
 }
