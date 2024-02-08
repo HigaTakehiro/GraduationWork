@@ -8,6 +8,7 @@
 #include "Helper.h"
 #include "PadInput.h"
 #include "SoundManager.h"
+#include "DamageMath.h"
 #define PI 3.14
 #define PI_180 180
 #define PI_360 360
@@ -135,7 +136,7 @@ void TogemaruAct::Transition()
 		if (CollideSpear()) {
 			if (!Player_->GetIsHammerRelease() && PadInput::GetIns()->PushButton(PadInput::Button_B))
 				Player_->SetIsHammerRelease(true);
-			Player_->SubHP(atk);
+			Player_->SubHP(DamageMath::ReturnDamage(atk, Player_->GetDef()));
 		}
 
 		//ž™‚ª3‚Â‰ó‚ê‚½‚ç
@@ -158,7 +159,7 @@ void TogemaruAct::Transition()
 			bool animenotwalk = anime_name_ != AnimeName::WALK_FRONT && anime_name_ != AnimeName::WALK_BACK &&
 				anime_name_ != AnimeName::WALK_LEFT && anime_name_ != AnimeName::WALK_RIGHT;
 			bool isCollide =crushSpearNum<3&&Hp>0&& animenotwalk && Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
-			if (!damf && isCollide) { Player_->SubHP(atk); damf = true; }
+			if (!damf && isCollide) { Player_->SubHP(DamageMath::ReturnDamage(atk, Player_->GetDef())); damf = true; }
 			if (damf) { damcool++; if (damcool > 90)damf = false; } else { damcool = 0; }
 			Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
 		}
