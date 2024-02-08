@@ -25,3 +25,13 @@ SE_playerLevelUp.wav = プレイヤーがレベルアップした時の音
 SE_userChoice.wav = 項目を選択ているときの音(中間地点)
 
 SE_userDecision.wav = 項目を決定するときの音(中間地点)
+
+↓追加SE
+
+nidleThrow.wav = 2ボスが棘を飛ばした瞬間の音
+
+fire.wav = 3ボスが炎が出現する瞬間(個々なる)
+
+stormChanting.wav = 3ボスが隕石を落とす間の詠唱(ループさせる)+ワープする瞬間(こちらはループしない)
+
+stornDamage = 3ボスの隕石が地面に落ちた瞬間
