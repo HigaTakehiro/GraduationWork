@@ -167,8 +167,8 @@ void BossScene::Update()
 	colManager_->Update();
 
 	if (boss_->GetClearF()) {
+		m_Stairs->Update();
 		if (player_->GetNextFlor()) {
-			m_Stairs->Update();
 			if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 				touchFlor = TRUE;
 			}
