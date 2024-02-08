@@ -296,10 +296,11 @@ void LastBoss::Draw()
 
 	if (m_player->GetPos().z > 12.f)return;
 	if (color_rgb.w > 0.f) {
-	for (size_t i = 0; i < m_Shadow.size(); i++){
+	for (size_t i = 0; i < m_Shadow.size()-1; i++){
 		if (Action->GetBarrierAlpha(i) <= 0.f)continue;
 		m_Shadow[i]->Draw();
 	}
+	m_Shadow[3]->Draw();
 		m_Body->Draw();
 	}
 	if (m_HP > 0) {
