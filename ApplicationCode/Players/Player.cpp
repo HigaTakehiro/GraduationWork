@@ -105,6 +105,8 @@ void Player::Initialize()
 
 void Player::Update()
 {
+	NextFloor();
+	if (notmove_) { return; }
 	DeadAction();
 	UIUpdate();
 	if (hp_ <= 0) return;
@@ -152,7 +154,6 @@ void Player::Update()
 	arrow_->Update();
 	player_->Update();
 	preHp_ = hp_;
-
 }
 
 void Player::Draw()
@@ -260,6 +261,23 @@ void Player::FallHammerAttack()
 		}
 	}
 	hammer_->SetPosition(hammerPos_);
+
+}
+
+void Player::NextFloor()
+{
+	if (nextflor_) {
+		if (KeyInput::GetIns()->PushKey(DIK_Z) || PadInput::GetIns()->PushButton(PadInput::Button_A)) {
+			next_ = true;
+			if (!sestop_) { return; }
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::gimmickSteps, 0.3f);
+			sestop_ = false;
+			notmove_ = true;
+		}
+		else {
+			next_ = false;
+		}
+	}
 
 }
 
@@ -546,20 +564,6 @@ void Player::Move() {
 
 		pos_ += vec;
 	}
-
-	if (nextflor_) {
-		if (KeyInput::GetIns()->PushKey(DIK_Z) || PadInput::GetIns()->PushButton(PadInput::Button_A)) {
-			next_ = true;
-			if (!sestop_) { return; }
-			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::gimmickSteps, 0.3f);
-			sestop_ = false;
-		}
-		else {
-			next_ = false;
-		}
-	}
-
-
 }
 
 void Player::Attack() {
@@ -857,6 +861,8 @@ void Player::DeadAction()
 
 void Player::TutorialUpdate(bool Stop, bool NotAttack)
 {
+	NextFloor();
+	if (notmove_) { return; }
 	HitCoolTime();
 	Repulsion();
 	HammerPowerUp();
