@@ -37,6 +37,8 @@ void SoundManager::Initialize(Sound* sound)
 	LoadSE("Engine/Resources/Sound/SE/SE_userChoice.wav", SEKey::userChoice);
 	LoadSE("Engine/Resources/Sound/SE/SE_userDecision.wav", SEKey::userDecision);
 	LoadSE("Engine/Resources/Sound/SE/openTreger.wav", SEKey::openBox);
+	LoadSE("Engine/Resources/Sound/SE/openSkill.wav", SEKey::skillOpen);
+
 }
 
 void SoundManager::PlayBGM(const BGMKey bgmKey, const bool isRoop, const float volume)
