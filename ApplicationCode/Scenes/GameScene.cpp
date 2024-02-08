@@ -392,7 +392,9 @@ void GameScene::EnemyProcess()
 		int Num = Enemy->GetType();
 		if (Enemy->GetType() == 0) { EnemyPos = Enemy->GetPos(); }
 		else if (Enemy->GetType() == 1) { EnemyPos = Enemy->GetPos(); }
-		if (Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f)  && player_->GetIsAttack())
+
+		bool fallham = player_->GetIsFall() && Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 3.5f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f);
+		if (fallham||(Collision::GetIns()->HitCircle({ hammerPos.x, hammerPos.z }, 1.0f, { Enemy->GetPos().x, Enemy->GetPos().z + 3.f }, 1.0f)  && player_->GetIsAttack()))
 		{
 			if(!PadInput::GetIns()->PushButton(PadInput::Button_B)&& player_->GetIsHammerRelease())
 			player_->SetIsHammerReflect(true);
