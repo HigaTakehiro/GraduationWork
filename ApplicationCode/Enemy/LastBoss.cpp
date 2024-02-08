@@ -25,7 +25,8 @@ void LastBoss::Init()
 	
 	for (size_t i = 0; i < 4; i++)
 	{
-		m_FlameTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
+		m_Model_Frames[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "normalFire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
+		m_FlameTex[i] = Object3d::UniquePtrCreate(m_Model_Frames[0]);
 	}
 	
 	for (size_t i = 0; i < 3; i++)
@@ -45,7 +46,7 @@ void LastBoss::Init()
 	m_Body->SetObjType((int32_t)Object3d::OBJType::Enemy);
 	m_Body->SetObbScl({ 9.f,9.f,9.f });
 	m_Body->SetHitRadius(0.5f);
-	m_Body->SetScale({ 0.020f, 0.050f, 0.040f });
+	m_Body->SetScale({ 0.015f, 0.050f, 0.040f });
 
 	std::stringstream stream;
 	std::string line;
@@ -113,7 +114,7 @@ void LastBoss::Upda()
 	//Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, m_player, judg1 && isCol);
 	//}
 	
-	const int Inter = 30;
+	const int Inter = 20;
 	if(holeanimtime/Inter>1)
 	{
 		holeanimtime = 0;
@@ -122,6 +123,18 @@ void LastBoss::Upda()
 		if (++holeanimtime % Inter == 0) {
 			m_HoleTex[0] = Object3d::UniquePtrCreate(m_Model_Hole[holeanimtime / Inter]);
 			m_HoleTex[1] = Object3d::UniquePtrCreate(m_Model_Hole[holeanimtime / Inter]);
+		}
+	}
+
+	if (frameanim / Inter > 2)
+	{
+		frameanim = 0;
+	} else {
+		if (++frameanim % Inter == 0) {
+			for (size_t i = 0; i < 4; i++)
+			{
+				m_FlameTex[i] = Object3d::UniquePtrCreate(m_Model_Frames[frameanim / Inter]);
+			}
 		}
 	}
 
@@ -138,7 +151,7 @@ void LastBoss::Upda()
 	}
 
 	if (m_HP <= 0 && !isGetExp) {
-		m_player->AddEP(Exp);
+		m_player->AddEP(30);
 		isGetExp = true;
 	}
 	//meteoanim = std::clamp(meteoanim, 0, 10);
@@ -302,7 +315,7 @@ void LastBoss::Attack()
 void LastBoss::AddIndex(Model** model, int size)
 {
 	//アニメーション間隔
-	int NextIndInter = 30;
+	int NextIndInter = 20;
 	
 	//現在のフレーム
 	int NowIndex = animeIndex / NextIndInter;

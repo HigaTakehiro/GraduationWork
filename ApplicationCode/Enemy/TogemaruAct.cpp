@@ -124,7 +124,7 @@ void TogemaruAct::Transition()
 		(this->*ActionList[act_])();
 		//j‚ÆƒvƒŒƒCƒ„[Õ“Ë
 		if (CollideSpear()) {
-			Player_->SubHP(1);
+			Player_->SubHP(atk);
 		}
 
 		//ž™‚ª3‚Â‰ó‚ê‚½‚ç
@@ -147,7 +147,7 @@ void TogemaruAct::Transition()
 			bool animenotwalk = anime_name_ != AnimeName::WALK_FRONT && anime_name_ != AnimeName::WALK_BACK &&
 				anime_name_ != AnimeName::WALK_LEFT && anime_name_ != AnimeName::WALK_RIGHT;
 			bool isCollide =crushSpearNum<3&&Hp>0&& animenotwalk && Helper::GetCircleCollide(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, pr, er);
-			if (!damf && isCollide) { Player_->SubHP(1); damf = true; }
+			if (!damf && isCollide) { Player_->SubHP(atk); damf = true; }
 			if (damf) { damcool++; if (damcool > 90)damf = false; } else { damcool = 0; }
 			Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollide, KnockDis);
 		}

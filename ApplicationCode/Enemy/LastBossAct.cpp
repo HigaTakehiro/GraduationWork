@@ -159,6 +159,7 @@ void LastBossAct::Attack_Hole()
 		if(judg_Player)
 		{
 			Player_->SubHP(1);
+			Helper::ColKnock(Player_->GetPos(), { HolePos[i].x, HolePos[i].y, HolePos[i].z + 3.f }, Player_,judg_Player, 1.5f);
 		}
 	}
 	bool onF = Player_->GetIsHammerRelease();
@@ -284,10 +285,11 @@ void LastBossAct::Attack_Flame()
 			FlameScl[i].y = std::clamp(FlameScl[i].y, 0.f, 0.1f);
 
 		
-			bool judg = Hp>0&&Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { FlamePos[i].x,FlamePos[i].z + 3.f }, FlameScl[i].x * 20.f);
+			bool judg = Hp>0&&Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { FlamePos[i].x,FlamePos[i].z + 3.f }, FlameScl[i].x * 19.f);
 			if (judg)
 			{
-				Player_->SubHP(1);
+				Player_->SubHP(2);
+				Helper::ColKnock(Player_->GetPos(), { FlamePos[i].x, FlamePos[i].y,FlamePos[i].z + 3.f }, Player_, judg, 1.5f);
 			}
 		}
 	}
@@ -322,8 +324,12 @@ void LastBossAct::Attack_Spell()
 		RangeScale.y = std::clamp(RangeScale.y, 0.f, 0.5f);
 		if (MeteoPos.y < -2.f) {
 			bomf = true;
-			bool judg=Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { 0,0}, RangeScale.x * 20.f);
-			if (judg)Player_->SubHP(1);
+			bool judg=Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { 0,0}, RangeScale.x * 30.f);
+			if (judg) {
+				Player_->SubHP(3);
+				Helper::ColKnock(Player_->GetPos(), { 0.f,-2.f,0.f}, Player_, judg, 1.5f);
+
+			}
 			meteof = false;
 		}
 		if (RangeScale.x > 0.4f)
@@ -398,7 +404,7 @@ void LastBossAct::Act_Barrier()
 
 			if (BarrierHp[i] > 0) {
 				Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 30, BarrierHp[i] > 0 && judg && Player_->getisHammerActive());
-				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg && Player_->getisHammerActive(), 1.5f);
+				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg, 1.5f);
 				if (BarrierDamF[i])BarrierCol[i] = { 1,0,0 };
 				else {
 					BarrierCol[i].x = 1.f;
@@ -422,7 +428,7 @@ void LastBossAct::Act_Barrier()
 		}
 		BarrierAlpha[i] = std::clamp(BarrierAlpha[i], 0.f, 1.f);
 	}
-	bool isCollsion = Hp > 0 && !killdraw && Player_->GetIsAttack() && Player_->getisHammerActive() && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
+	bool isCollsion = Hp > 0 && !killdraw && Player_->GetIsAttack()  && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
 	if ( BarrierHp[0] <= 0 && BarrierHp[1] <= 0 && BarrierHp[2] <= 0)
 	{
 		Helper::DamageManager(Hp, DamageMath::ReturnDamage(Player_->GetDamageATK(),guardp), damff, damcool, 90, isCollsion);

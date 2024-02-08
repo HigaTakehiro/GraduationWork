@@ -54,10 +54,12 @@ void Togemaru::Init()
 			continue;
 		}
 	}
+
 	BossMaxHP = m_HP;
 	names = "Togemaru";
 	UI_Init();
 	Action = new TogemaruAct();
+	Action->SetAtk(AttackValue);
 }
 
 void Togemaru::UI_Init()
@@ -154,7 +156,7 @@ void Togemaru::Upda()
 
 	//–{‘Ì
 	if (m_HP <= 0 && !isGetExp) {
-		m_player->AddEP(Exp);
+		m_player->AddEP(20);
 		isGetExp = true;
 	}
 	m_Body->SetScale(Action->GetScl());

@@ -139,7 +139,7 @@ private:
 private:
 	float Walk();//通常歩き
 	float Follow();//追従
-
+	int atk;
 	//移動スピード
 	float movSpeed = 0.1f;
 	//向いた方に移動する
@@ -178,6 +178,8 @@ private:
 	bool CollideSpear();
 
 	void RushGround360();
+
+	
 	Spline* spline;
 	std::vector<XMFLOAT3>SplinePosList;
 	float splineT;
@@ -209,7 +211,7 @@ public:
 	void SetGuardPoint(int gv) { guardp = gv; }
 	bool GetRole()const { return RoleF; }
 	void SetHp(int hp) { Hp = hp; }
-public:
+public:void SetAtk(int v) { atk = v; }
 	// ゲッター //
 	Vector3 GetPos()const { return Pos_; }
 	Vector3 GetRot()const { return Rot_; }
