@@ -256,6 +256,7 @@ void Player::FallHammerAttack()
 		if (hammerPos_.y <= reflectPosY) {
 			isHammerReflect_ = true;
 			isFallHammer_ = false;
+			isFall_ = true;
 			fallHammerTimer_ = 0;
 			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerShake, 0.5f);
 		}

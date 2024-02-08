@@ -324,6 +324,18 @@ public: //メンバ関数
 	void SetIsInvicible(bool isInvicible) { isInvincible_ = isInvicible; }
 
 	/// <summary>
+	/// フォールハンマー接地フラグ取得
+	/// </summary>
+	/// <returns>接地フラグ</returns>
+	bool GetIsFall() { return isFall_; }
+
+	/// <summary>
+	/// フォールハンマー接地フラグセット
+	/// </summary>
+	/// <param name="isFall">接地フラグ</param>
+	void SetIsFall(bool isFall) { isFall_ = isFall; }
+
+	/// <summary>
 	/// フォールハンマー攻撃有効化
 	/// </summary>
 	void ActiveFallHammer();
@@ -572,6 +584,7 @@ private: //メンバ変数
 	//フォールハンマー攻撃フラグ
 	bool isFallHammer_ = false;
 	bool isPreFallHammer_ = false;
+	bool isFall_ = false;
 	int32_t fallHammerTimer_ = 0;
 
 	//UI
