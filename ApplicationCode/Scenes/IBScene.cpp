@@ -193,9 +193,6 @@ void IBScene::Update()
 		}
 	}
 
-	if (KeyInput::GetIns()->TriggerKey(DIK_0)) {
-		playerUI_->AddSkillPoint(99);
-	}
 	SkillUIUpdate();
 
 	player_->SetPosition({ -8.0f,2.5f, 8.0f });
