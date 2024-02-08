@@ -866,6 +866,8 @@ void Dogom::CoollisionFace()
 			m_player->HitHammerToEnemy(vec[i], magniVal);
 			m_Knock = TRUE;
 
+			if (!m_player->GetIsHammerRelease() && PadInput::GetIns()->PushButton(PadInput::Button_B))
+				m_player->SetIsHammerRelease(true);
 			m_player->SubHP(AttackValue);
 			ColF[0] = TRUE;
 		}

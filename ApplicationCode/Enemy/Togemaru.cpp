@@ -138,7 +138,7 @@ void Togemaru::Upda()
 
 //	if (!nowcrush) {
 		Helper::DamageManager(m_HP, DamageMath::ReturnDamage(m_player->GetDamageATK(), GuardValue), DamF, DamCoolTime, 60, judg1&& isCol);
-		Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z+3.f }, m_player, judg1 && isCol);
+		Helper::ColKnock(m_player->GetPos(), { Pos_.x,Pos_.y,Pos_.z+3.f }, m_player, judg1 && isCol && !m_player->GetIsHammerRelease());
 	//}
 
 	if (DamF)FlashF = true;

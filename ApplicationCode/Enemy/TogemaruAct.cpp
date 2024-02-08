@@ -6,6 +6,7 @@
 
 #include "Easing.h"
 #include "Helper.h"
+#include "PadInput.h"
 #define PI 3.14
 #define PI_180 180
 #define PI_360 360
@@ -124,6 +125,8 @@ void TogemaruAct::Transition()
 		(this->*ActionList[act_])();
 		//j‚ÆƒvƒŒƒCƒ„[Õ“Ë
 		if (CollideSpear()) {
+			if (!Player_->GetIsHammerRelease() && PadInput::GetIns()->PushButton(PadInput::Button_B))
+				Player_->SetIsHammerRelease(true);
 			Player_->SubHP(atk);
 		}
 

@@ -5,6 +5,7 @@
 #include "Collision.h"
 #include "Helper.h"
 #include "LastBoss.h"
+#include "PadInput.h"
 
 void LastBossAct::Move()
 {
@@ -158,7 +159,7 @@ void LastBossAct::Attack_Hole()
 
 		if(judg_Player)
 		{
-			Player_->SubHP(1);
+			Player_->SubHP(2);
 			Helper::ColKnock(Player_->GetPos(), { HolePos[i].x, HolePos[i].y, HolePos[i].z + 3.f }, Player_,judg_Player, 1.f);
 		}
 	}
@@ -288,6 +289,8 @@ void LastBossAct::Attack_Flame()
 			bool judg = Hp>0&&Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { FlamePos[i].x,FlamePos[i].z + 3.f }, FlameScl[i].x * 19.f);
 			if (judg)
 			{
+				if (!Player_->GetIsHammerRelease() && PadInput::GetIns()->PushButton(PadInput::Button_B))
+					Player_->SetIsHammerRelease(true);
 				Player_->SubHP(2);
 				Helper::ColKnock(Player_->GetPos(), { FlamePos[i].x, FlamePos[i].y,FlamePos[i].z + 3.f }, Player_, judg, 1.f);
 			}
@@ -326,6 +329,8 @@ void LastBossAct::Attack_Spell()
 			bomf = true;
 			bool judg=Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { 0,0}, RangeScale.x * 30.f);
 			if (judg) {
+				if (!Player_->GetIsHammerRelease() &&PadInput::GetIns()->PushButton(PadInput::Button_B))
+						Player_->SetIsHammerRelease(true);
 				Player_->SubHP(3);
 				Helper::ColKnock(Player_->GetPos(), { 0.f,-2.f,0.f}, Player_, judg, 1.f);
 
@@ -404,7 +409,7 @@ void LastBossAct::Act_Barrier()
 
 			if (BarrierHp[i] > 0) {
 				Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 30, BarrierHp[i] > 0 && judg && Player_->getisHammerActive());
-				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg, 1.f);
+				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg && !Player_->GetIsHammerRelease(), 1.f);
 				if (BarrierDamF[i])BarrierCol[i] = { 1,0,0 };
 				else {
 					BarrierCol[i].x = 1.f;
@@ -432,7 +437,7 @@ void LastBossAct::Act_Barrier()
 	if ( BarrierHp[0] <= 0 && BarrierHp[1] <= 0 && BarrierHp[2] <= 0)
 	{
 		Helper::DamageManager(Hp, DamageMath::ReturnDamage(Player_->GetDamageATK(),guardp), damff, damcool, 90, isCollsion);
-		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollsion, 1.f);
+		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollsion && !Player_->GetIsHammerRelease(), 1.f);
 	}
 	if(BarrierHp[0]<=0&& BarrierHp[1] <= 0 && BarrierHp[2] <= 0 )
 	{

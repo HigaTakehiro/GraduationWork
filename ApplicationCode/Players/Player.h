@@ -189,6 +189,12 @@ public: //メンバ関数
 	void SetIsHammerReflect(bool isReflect) { isHammerReflect_ = isReflect; }
 
 	/// <summary>
+	/// ハンマー反射フラグをセット
+	/// </summary>
+	/// <param name="isReflect"></param>
+	void SetIsHammerRelease(bool isRe) { isHammerRelease_ = isRe; }
+
+	/// <summary>
 	/// 文字描画
 	/// </summary>
 	void TextUIDraw();
