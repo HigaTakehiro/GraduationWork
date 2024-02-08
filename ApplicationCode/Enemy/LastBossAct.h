@@ -141,6 +141,7 @@ public:
 	Vector3 GetBarrierCol(int ind) { return BarrierCol[ind]; }
 	float GetBarrierAlpha(int ind) { return BarrierAlpha[ind]; }
 	int guardp;
+	bool soundf;
 	void SetGuardPoint(int gv) { guardp = gv; }
 	Vector3 GetRangeScl() { return RangeScale; }
 	Vector3 GetMeteoPos() { return MeteoPos; }

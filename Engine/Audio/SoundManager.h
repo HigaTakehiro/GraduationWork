@@ -28,6 +28,7 @@ public: //サブクラス
 		firstBoss,
 		restPoint,
 		title,
+		spellbgm
 	};
 
 	enum class SEKey {
@@ -52,6 +53,10 @@ public: //サブクラス
 		userDecision,
 		openBox,
 		skillOpen,
+		nidle,
+		fire,
+		spell,
+		meteground
 	};
 
 public:  //静的メンバ関数

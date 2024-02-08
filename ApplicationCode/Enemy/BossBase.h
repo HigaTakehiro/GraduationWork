@@ -43,7 +43,7 @@ protected:
 	int BodyDamCool = 0;
 	BOOL BodyRecvDam=FALSE;
 	bool AppearFlag;
-	bool m_ClearF=FALSE;
+	bool m_ClearF=false;
 	int Exp;
 	bool isGetExp;
 public:

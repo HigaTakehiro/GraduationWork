@@ -6,6 +6,7 @@
 #include "Helper.h"
 #include "LastBoss.h"
 #include "PadInput.h"
+#include "SoundManager.h"
 
 void LastBossAct::Move()
 {
@@ -69,7 +70,7 @@ std::random_device rnd;
 		
 		//anime_name_ = AnimeName::ROLE;
 	}
-	if(actionCount%1340==0)
+	if(actionCount%1300==0)
 		{
 			bomf = false;
 			if(!meteof)
@@ -218,7 +219,7 @@ void LastBossAct::Attack_Flame()
 	if(flameP==SHOTFLAME)
 	{
 		if (++ShotWaitTime > 50) {
-			constexpr float accel = 0.2f;
+			constexpr float accel = 0.35f;
 			if (ss == "FRONT"){
 				FlameScl[0].x += add;
 				FlameScl[0].y += add;
@@ -280,6 +281,22 @@ void LastBossAct::Attack_Flame()
 				}
 			}
 		}
+		if (FlameColor[0].w >0.95f&& FlameColor[0].w<1.f)
+		{
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::fire, 0.3f);
+		}
+		if (FlameColor[1].w > 0.95f && FlameColor[1].w < 1.f)
+		{
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::fire, 0.3f);
+		}
+		if (FlameColor[2].w > 0.95f && FlameColor[2].w < 1.f)
+		{
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::fire, 0.3f);
+		}
+		if (FlameColor[3].w > 0.95f && FlameColor[3].w < 1.f)
+		{
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::fire, 0.3f);
+		}
 		for (size_t i = 0; i < flameSize; i++)
 		{
 			FlameScl[i].x = std::clamp(FlameScl[i].x, 0.f, 0.1f);
@@ -327,7 +344,7 @@ void LastBossAct::Attack_Spell()
 		RangeScale.y = std::clamp(RangeScale.y, 0.f, 0.5f);
 		if (MeteoPos.y < -2.f) {
 			bomf = true;
-			bool judg=Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { 0,0}, RangeScale.x * 30.f);
+			bool judg=Collision::HitCircle({ Player_->GetPos().x,Player_->GetPos().z }, 1.f, { 0,0}, RangeScale.x * 20.f);
 			if (judg) {
 				if (!Player_->GetIsHammerRelease() &&PadInput::GetIns()->PushButton(PadInput::Button_B))
 						Player_->SetIsHammerRelease(true);
@@ -335,7 +352,25 @@ void LastBossAct::Attack_Spell()
 				Helper::ColKnock(Player_->GetPos(), { 0.f,-2.f,0.f}, Player_, judg, 1.f);
 
 			}
+			if(soundf)
+			SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::spellbgm);
+			SoundManager::GetIns()->PlaySE(SoundManager::SEKey::meteground, 0.7f);
+			soundf = false;
 			meteof = false;
+		}
+		else
+		{
+			if (!soundf) {
+				SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::spellbgm, TRUE, 0.4f);
+				soundf = true;
+			}
+			else
+			{
+				
+			}
+
+		//	SoundManager::GetIns()->PlaySE(SoundManager::SEKey::spell, 0.7f);
+
 		}
 		if (RangeScale.x > 0.4f)
 		{
@@ -370,6 +405,7 @@ void LastBossAct::Transision()
 		if (warpidle){
 			idletime++;
 			if (idletime > 120) {
+				if(!killdraw)SoundManager::GetIns()->PlaySE(SoundManager::SEKey::spell, 0.7f);
 				killdraw=true;// posList1[randpos(mt)];
 			}
 			if (idletime > 240) {

@@ -123,7 +123,7 @@ void Dogom::Upda()
 	};
 
 	if (m_HP <= 0 && !isGetExp) {
-		m_player->AddEP(30);
+		m_player->AddEP(10);
 		isGetExp = true;
 	}
 		//“oêI‚í‚Á‚½‚çs“®

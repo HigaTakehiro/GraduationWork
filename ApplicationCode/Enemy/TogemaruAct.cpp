@@ -7,6 +7,7 @@
 #include "Easing.h"
 #include "Helper.h"
 #include "PadInput.h"
+#include "SoundManager.h"
 #define PI 3.14
 #define PI_180 180
 #define PI_360 360
@@ -442,6 +443,10 @@ void TogemaruAct::Attack_ShotSpear()
 			//	spearsAlpha[i] -= 0.02f;//‚¾‚ñ‚¾‚ñ”–‚­
 			}
 			ShotRange += 0.2f;//”ÍˆÍL‚°‚Ä‚­
+			if(ShotRange<=0.2f)
+			{
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::nidle, 0.2f);
+			}
 		}
 		//”­ËI—¹
 		if (endShot) {

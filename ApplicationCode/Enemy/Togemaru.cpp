@@ -169,7 +169,7 @@ void Togemaru::Upda()
 	UI_Upda();
 	HPUiUpda();
 
-	if(m_HP<=0)
+	if(Action->GetScl().x<0.1f)
 	{
 		m_ClearF = true;
 	}

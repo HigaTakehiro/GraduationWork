@@ -15,6 +15,7 @@ void SoundManager::Initialize(Sound* sound)
 	LoadBGM("Engine/Resources/Sound/BGM/BGM_firstBoss.wav", BGMKey::firstBoss);
 	LoadBGM("Engine/Resources/Sound/BGM/BGM_restPoint.wav", BGMKey::restPoint);
 	LoadBGM("Engine/Resources/Sound/BGM/BGM_title.wav", BGMKey::title);
+	LoadBGM("Engine/Resources/Sound/SE/stormChanting.wav", BGMKey::spellbgm);
 
 	//SE
 	LoadSE("Engine/Resources/Sound/SE/SE_Attack.wav", SEKey::attack);
@@ -38,6 +39,10 @@ void SoundManager::Initialize(Sound* sound)
 	LoadSE("Engine/Resources/Sound/SE/SE_userDecision.wav", SEKey::userDecision);
 	LoadSE("Engine/Resources/Sound/SE/openTreger.wav", SEKey::openBox);
 	LoadSE("Engine/Resources/Sound/SE/openSkill.wav", SEKey::skillOpen);
+	LoadSE("Engine/Resources/Sound/SE/nidleThrow.wav", SEKey::nidle);
+	LoadSE("Engine/Resources/Sound/SE/fire.wav", SEKey::fire);
+	LoadSE("Engine/Resources/Sound/SE/stormChanting.wav", SEKey::spell);
+	LoadSE("Engine/Resources/Sound/SE/stornDamage.wav", SEKey::meteground);
 
 }
 
