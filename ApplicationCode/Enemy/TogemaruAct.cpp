@@ -45,6 +45,15 @@ void TogemaruAct::StateExecute(int state)
 
 void TogemaruAct::Phase1()
 {
+	Vector3 TogemaruAct::depositPos = { 0, -2.5f, -8.f };
+	depositDelF = false;
+	depositPos2 = { 5, -2.5f, -8.f };
+	depositDelF2 = false;
+	cameraPos = {};
+	oldCameraPos = {};
+	DefaultPos = {};
+
+	TogemaruDeathF = false;
 	//イージング用{カウンタ上限,Y座標(上),Y座標(下)}
 	float EaseState_Pos[3] = {40.f, 20.f, -2.5f};
 
