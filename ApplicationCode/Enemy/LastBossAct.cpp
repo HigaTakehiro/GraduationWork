@@ -333,7 +333,7 @@ void LastBossAct::Attack_Spell()
 		MeteoScl = { 1,1,1 };
 
 		const Vector3 add = { 0.01f/6.f,0.01f/6.f,0.01f };
-		if((beforeHp-Hp)>1||RangeScale.x>=0.5f)
+		if(RangeScale.x>=0.5f)
 		{
 			MeteoPos.y -= 0.06f;
 			
