@@ -123,6 +123,7 @@ void IBScene::Initialize()
 	if (skillCursor_ == nullptr) {
 		skillCursor_ = Sprite::UniquePtrCreate((UINT)ImageManager::ImageName::skillCursor, { 640.f, 300.f }, { 1.f, 1.0f, 1.0f, 1.f }, { 0.5f, 0.5f });
 	}
+	skillCursor_->SetPosition({ 200.f, 300.f });
 	skillCursor_->SetSize({ 50.f, 50.f });
 
 	if (schange == nullptr) {

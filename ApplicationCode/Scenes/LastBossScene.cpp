@@ -141,6 +141,7 @@ void LastBossScene::Update()
 	//}//
 		//boss_->SetCamera(camera_.get());
 	light_->Update();
+	ParticleCreate();
 
 	//ƒvƒŒƒCƒ„[‚ÌOBBÝ’è
 	XMFLOAT3 trans = { player_->GetHammer()->GetMatWorld().r[3].m128_f32[0],
