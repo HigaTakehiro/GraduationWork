@@ -45,7 +45,7 @@ void TogemaruAct::StateExecute(int state)
 
 void TogemaruAct::Phase1()
 {
-	Vector3 TogemaruAct::depositPos = { 0, -2.5f, -8.f };
+	depositPos = { 0, -2.5f, -8.f };
 	depositDelF = false;
 	depositPos2 = { 5, -2.5f, -8.f };
 	depositDelF2 = false;
