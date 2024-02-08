@@ -813,7 +813,7 @@ void Player::LevelUp()
 		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::playerLevelUp, 0.3f);
 		level_++;
 		lvUpTimer_ = 0;
-		ep_ = 0;
+		ep_ -= levelUpEp_;
 		skillPoint_++;
 		levelUpEp_ = levelUpEp_ + (int32_t)((float)level_ * magEp_);
 		maxHp_ += 2;
