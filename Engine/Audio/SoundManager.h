@@ -51,6 +51,7 @@ public: //サブクラス
 		userChoice,
 		userDecision,
 		openBox,
+		skillOpen,
 	};
 
 public:  //静的メンバ関数
