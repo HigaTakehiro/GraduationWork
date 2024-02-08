@@ -202,7 +202,9 @@ void LastBoss::Upda()
 		m_GuardTex[i]->SetPosition({ Action->GetBarrierPos(i) });
 		m_GuardTex[i]->SetScale({ 0.05f,0.05f,0.05f });
 		m_GuardTex[i]->SetRotation({ 0,0,0 });
-		m_GuardTex[i]->SetColor({ 1,1,1,Action->GetBarrierAlpha(i) });
+		m_GuardTex[i]->SetColor({ Action->GetBarrierCol(i).x,
+			Action->GetBarrierCol(i).y,Action->GetBarrierCol(i).z
+			,Action->GetBarrierAlpha(i) });
 		m_GuardTex[i]->Update();
 	}
 	m_SpellTex->SetPosition( {0,0,-2.f});

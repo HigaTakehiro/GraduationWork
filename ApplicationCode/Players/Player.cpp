@@ -968,6 +968,8 @@ void Player::HammeronHole()
 				hammer_->SetPosition(initHammerPos_);
 				hammer_->SetScale(initHammerScale_);
 				hammer_->SetRotation(initHammerRot_);
+				hammerPos_ = initHammerPos_;
+				hammerSize_ = initHammerScale_;
 
 				onHoleF = false;
 			}

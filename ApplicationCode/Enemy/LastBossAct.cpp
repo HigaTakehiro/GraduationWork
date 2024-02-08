@@ -47,7 +47,7 @@ std::random_device rnd;
 
 			HolePos[0] = posList1[rand1(mt)];
 			HolePos[1] = posList2[rand2(mt)];
-			
+			damff = false;
 			act_ = Act::ATTACK_Hole;
 		}
 		if(randact(mt)==1)
@@ -62,6 +62,7 @@ std::random_device rnd;
 			std::mt19937 mt(rnd());
 			std::uniform_int_distribution<> rand1(0, 3);
 			actionval = rand1(mt);
+			damff = false;
 			act_ = Act::ATTACK_Flame;
 		}
 		
@@ -396,9 +397,17 @@ void LastBossAct::Act_Barrier()
 		{
 
 			if (BarrierHp[i] > 0) {
-				Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 60, BarrierHp[i] > 0 && judg && Player_->getisHammerActive());
+				Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 30, BarrierHp[i] > 0 && judg && Player_->getisHammerActive());
 				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg && Player_->getisHammerActive(), 1.5f);
+				if (BarrierDamF[i])BarrierCol[i] = { 1,0,0 };
+				else {
+					BarrierCol[i].x = 1.f;
+					BarrierCol[i].y += 0.1f;
+					BarrierCol[i].z += 0.1f;
+				}
 			}
+			BarrierCol[i].y = std::clamp(BarrierCol[i].y, 0.f, 1.f);
+			BarrierCol[i].z = std::clamp(BarrierCol[i].z, 0.f, 1.f);
 			if (judg) { if (Player_->getisHammerActive()) Player_->SetIsHammerReflect(true); }
 			
 		}
