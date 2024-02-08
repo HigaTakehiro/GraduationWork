@@ -1,4 +1,4 @@
-// ボス名前 体力　防御　攻撃 Exp
-Dogom 15 10 3 5
-Togemaru 30 20 10 5
-LastBoss 40 26 20 5
+// ボス名前 体力　防御　攻撃
+Dogom 6 3 3
+Togemaru 10 6 6
+LastBoss 15 12 9
