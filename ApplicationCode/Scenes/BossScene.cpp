@@ -165,12 +165,13 @@ void BossScene::Update()
 	boss_->SetHummerPos(player_->GetHammer()->GetPosition());
 	shake_->Update();
 	colManager_->Update();
-	//boss_->SetHummerPos(player_->GetHammer()->GetPosition());
-	m_Stairs->Update();
-	if (boss_->GetClearF() && player_->GetNextFlor())
-	{
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			touchFlor = TRUE;
+
+	if (boss_->GetClearF()) {
+		if (player_->GetNextFlor()) {
+			m_Stairs->Update();
+			if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+				touchFlor = TRUE;
+			}
 		}
 	}
 	//衝突時一旦破棄

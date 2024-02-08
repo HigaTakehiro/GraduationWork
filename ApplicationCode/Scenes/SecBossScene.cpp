@@ -206,11 +206,12 @@ void SecBossScene::Update()
 	activeSkillPanel01_->Update({ 0.f, 0.f });
 	activeSkillPanel02_->Update({ 0.f, 0.f });
 
-	m_Stairs->Update();
-	if (boss_->GetClearF() && player_->GetNextFlor())
-	{
-		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
-			touchFlor = TRUE;
+	if (boss_->GetClearF()) {
+		if (player_->GetNextFlor()) {
+			m_Stairs->Update();
+			if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
+				touchFlor = TRUE;
+			}
 		}
 	}
 
