@@ -189,7 +189,7 @@ void LastBoss::Upda()
 	m_Body->SetScale(Action->GetScl());
 	m_Body->SetPosition({Action->GetPos().x,-2.f,Action->GetPos().z});
 	m_Body->SetRotation(Vector3(0, 0, 0));
-	m_Body->SetColor(color_rgb);
+	m_Body->SetColor({color_rgb.x+0.5f,color_rgb.y + 0.5f,color_rgb.z + 0.5f,color_rgb.w});
 	m_Body->Update();
 
 	Action->Attack_Spell();

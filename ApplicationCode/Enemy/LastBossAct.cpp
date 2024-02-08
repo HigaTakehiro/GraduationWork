@@ -323,6 +323,7 @@ void LastBossAct::Attack_Flame()
 
 void LastBossAct::Attack_Spell()
 {
+	if (Hp <= 0)return;
 	if (!meteof) {
 		beforeHp = Hp;
 		MeteoPos.y = 20;
@@ -444,6 +445,9 @@ void LastBossAct::Act_Barrier()
 		{
 
 			if (BarrierHp[i] > 0) {
+				if(judg&& Player_->getisHammerActive())
+				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+
 				Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 30, BarrierHp[i] > 0 && judg && Player_->getisHammerActive());
 				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg && !Player_->GetIsHammerRelease(), 1.f);
 				if (BarrierDamF[i])BarrierCol[i] = { 1,0,0 };
@@ -472,6 +476,9 @@ void LastBossAct::Act_Barrier()
 	bool isCollsion = Hp > 0 && !killdraw && Player_->GetIsAttack()  && Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 1.f, XMFLOAT2(Player_->GetHammmerPos().x, Player_->GetHammmerPos().z), 1.f);
 	if ( BarrierHp[0] <= 0 && BarrierHp[1] <= 0 && BarrierHp[2] <= 0)
 	{
+		if(isCollsion)
+		SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
+
 		Helper::DamageManager(Hp, DamageMath::ReturnDamage(Player_->GetDamageATK(),guardp), damff, damcool, 90, isCollsion);
 		Helper::ColKnock(Player_->GetPos(), { Pos_.x,Pos_.y,Pos_.z + 3.f }, Player_, isCollsion && !Player_->GetIsHammerRelease(), 1.f);
 	}
