@@ -14,7 +14,7 @@ void BossBase::RecvDamage(Vector3 pos)
 void BossBase::RecvDamageFlash()
 {
 	if (FlashF) {
-		if (++val > 60) {
+		if (++val > 40) {
 			val = 0.f;
 			FlashF = FALSE;
 		} else {
