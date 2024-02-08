@@ -114,17 +114,17 @@ void LastBoss::Upda()
 	for (size_t i = 0; i < 3; i++)
 	{
 		//if (i < 3) {
-		m_Shadow[i]->SetScale(Vector3(0.01f, 0.01f, 0.1f));
-		m_Shadow[i]->SetPosition({ Action->GetBarrierPos(i).x,-2.f,Action->GetBarrierPos(i).z+3.f });
+		m_Shadow[i]->SetScale(Vector3(0.02f, 0.02f, 0.1f));
+		m_Shadow[i]->SetPosition({ Action->GetBarrierPos(i).x,Action->GetBarrierPos(i).y-1.f,Action->GetBarrierPos(i).z });
 		//} else {
 	}
 	m_Shadow[3]->SetScale(Vector3(0.05f, 0.05f, 0.1f));
-	m_Shadow[3]->SetPosition({ Pos_.x,-2.f,Pos_.z+3.f });
+	m_Shadow[3]->SetPosition({ Pos_.x,Pos_.y-1.f,Pos_.z});
 	//}
 	for (size_t i = 0; i < 4; i++)
 	{
 		m_Shadow[i]->SetRotation(Vector3(90, 0, 0));
-		m_Shadow[i]->SetColor(XMFLOAT4(0, 0, 0, 1));
+		m_Shadow[i]->SetColor(XMFLOAT4(0, 0, 0, 0.6f));
 		m_Shadow[i]->Update();
 	}
 
@@ -296,8 +296,8 @@ void LastBoss::Draw()
 
 	if (m_player->GetPos().z > 12.f)return;
 	if (color_rgb.w > 0.f) {
-	for (size_t i = 0; i < m_Shadow.size(); i++)
-	{
+	for (size_t i = 0; i < m_Shadow.size(); i++){
+		if (Action->GetBarrierAlpha(i) <= 0.f)continue;
 		m_Shadow[i]->Draw();
 	}
 		m_Body->Draw();
