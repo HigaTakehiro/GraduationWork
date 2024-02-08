@@ -207,8 +207,8 @@ void SecBossScene::Update()
 	activeSkillPanel02_->Update({ 0.f, 0.f });
 
 	if (boss_->GetClearF()) {
+		m_Stairs->Update();
 		if (player_->GetNextFlor()) {
-			m_Stairs->Update();
 			if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 				touchFlor = TRUE;
 			}
