@@ -12,6 +12,7 @@
 #include"Helper.h"
 #include "PadInput.h"
 #include "SoundManager.h"
+#include "DamageMath.h"
 #include <ExternalFileLoader.h>
 #define BOSSMAP_C 0.f
 #define BOSSMAP_H 12.f
@@ -868,7 +869,7 @@ void Dogom::CoollisionFace()
 
 			if (!m_player->GetIsHammerRelease() && PadInput::GetIns()->PushButton(PadInput::Button_B))
 				m_player->SetIsHammerRelease(true);
-			m_player->SubHP(AttackValue);
+			m_player->SubHP(DamageMath::ReturnDamage(AttackValue, m_player->GetDef()));
 			ColF[0] = TRUE;
 		}
 	}
