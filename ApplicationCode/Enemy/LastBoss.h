@@ -36,6 +36,7 @@ private:
     std::array<std::unique_ptr<Object3d>, 2>m_HoleTex;
     std::array<float, 2>m_HoleRot;
     std::array<std::unique_ptr<Object3d>, 4>m_FlameTex;
+    std::array<std::unique_ptr<Object3d>, 4>m_Shadow;
     std::array<std::unique_ptr<Object3d>, 3>m_GuardTex;
     std::unique_ptr<Object3d>m_SpellTex;
     std::unique_ptr<Object3d>m_MeteoTex;

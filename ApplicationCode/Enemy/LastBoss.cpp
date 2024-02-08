@@ -27,8 +27,12 @@ void LastBoss::Init()
 	{
 		m_Model_Frames[i] = Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "normalFire.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f });
 		m_FlameTex[i] = Object3d::UniquePtrCreate(m_Model_Frames[0]);
+
+		m_Shadow[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
+		m_Shadow[i]->SetRotation(Vector3(90, 0, 0));
 	}
-	
+	//m_FlameTex[i] = Object3d::UniquePtrCreate(m_Model_Frames[0]);
+
 	for (size_t i = 0; i < 3; i++)
 	{
 		m_GuardTex[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "boss_shield.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)i, 0.0f }, { 64.0f, 64.0f }));
@@ -40,6 +44,7 @@ void LastBoss::Init()
 	//for (int32_t i = 0; i < m_SpearArray; i++) {
 	//}
 
+	
 	InitAnimatin();
 	m_Body = Object3d::UniquePtrCreate(m_Model_Idle[0]);
 	m_Body->SetColType(Object3d::CollisionType::Obb);
@@ -106,7 +111,22 @@ void LastBoss::Upda()
 //各種パラメータセット
 	m_HP = Action->GetHp();
 	//if (m_HP > 0) {
-	
+	for (size_t i = 0; i < 3; i++)
+	{
+		//if (i < 3) {
+		m_Shadow[i]->SetScale(Vector3(0.01f, 0.01f, 0.1f));
+		m_Shadow[i]->SetPosition({ Action->GetBarrierPos(i).x,-2.5f,Action->GetBarrierPos(i).z });
+		//} else {
+	}
+	m_Shadow[3]->SetScale(Vector3(0.05f, 0.05f, 0.1f));
+	m_Shadow[3]->SetPosition({ Action->GetPos().x,-2.5f,Action->GetPos().z });
+	//}
+	for (size_t i = 0; i < 4; i++)
+	{
+		m_Shadow[i]->SetColor(XMFLOAT4(0, 0, 0, 1));
+		m_Shadow[i]->Update();
+	}
+
 	//}
 	bool isCol = Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
 
@@ -274,8 +294,11 @@ void LastBoss::Draw()
 {
 
 	if (m_player->GetPos().z > 12.f)return;
-
 	if (color_rgb.w > 0.f) {
+	for (size_t i = 0; i < m_Shadow.size(); i++)
+	{
+		m_Shadow[i]->Draw();
+	}
 		m_Body->Draw();
 	}
 	if (m_HP > 0) {

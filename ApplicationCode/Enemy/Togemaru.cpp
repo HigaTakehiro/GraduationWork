@@ -5,6 +5,7 @@
 #include "ExternalFileLoader.h"
 #include "Helper.h"
 #include "Shapes.h"
+#include "SoundManager.h"
 
 #define MapX_Mx 10.f
 #define MapX_Mn -10.f
@@ -135,6 +136,10 @@ void Togemaru::Upda()
 
 	
 	bool isCol =m_HP>0&& Collision::HitCircle(XMFLOAT2(Pos_.x, Pos_.z + 3.f), 2.f, XMFLOAT2(m_player->GetHammmerPos().x, m_player->GetHammmerPos().z), 1.f);
+
+
+	if(judg1 && isCol)
+	SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
 
 //	if (!nowcrush) {
 		Helper::DamageManager(m_HP, DamageMath::ReturnDamage(m_player->GetDamageATK(), GuardValue), DamF, DamCoolTime, 60, judg1&& isCol);

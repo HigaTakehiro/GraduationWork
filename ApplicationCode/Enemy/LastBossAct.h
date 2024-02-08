@@ -146,6 +146,7 @@ public:
 	void SetAttackPoint(int av) { atkval = av; }
 	Vector3 GetRangeScl() { return RangeScale; }
 	Vector3 GetMeteoPos() { return MeteoPos; }
+	//Vector3 GetBarrierPos(int index) { return BarrierPos[index]; }
 	bool meteof;
 	BOOL damff;
 	int damcool;
