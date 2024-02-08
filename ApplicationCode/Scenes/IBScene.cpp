@@ -198,23 +198,6 @@ void IBScene::Update()
 	player_->Update();
 	fire_->SetPosition({ 0.0f,2.5f, 8.0f });
 	fire_->Update();
-	//デバッグカメラ移動処理
-	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
-		cameraPos_.z += 1.0f;
-		targetPos_.z += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f;
-		targetPos_.z -= 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
-		cameraPos_.x += 1.0f;
-		targetPos_.x += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
-		cameraPos_.x -= 1.0f;
-		targetPos_.x -= 1.0f;
-	}
 	//HPデバッグ処理
 
 	if (shake_->GetShakeFlag() == true) {
@@ -621,10 +604,6 @@ void IBScene::SkillUIUpdate()
 		}
 	}
 
-	if (KeyInput::GetIns()->TriggerKey(DIK_U) && KeyInput::GetIns()->TriggerKey(DIK_I)) {
-		playerUI_->AddSkillPoint(99);
-	}
-
 	if (skillFlag) {
 		activeSkillPanel01_->SetPos({ 155.f, 288.f });
 		activeSkillPanel02_->SetPos({ 320.f, 288.f });
@@ -829,6 +808,8 @@ void IBScene::AddSkill(int32_t arrayNum_1, int32_t arrayNum_2)
 		skillManager_->AddPlayerActiveSkill(hyperMode);
 		skillManager_->SetActiveSkillName01("HyperMode");
 	}
+
+	SoundManager::GetIns()->PlaySE(SoundManager::SEKey::skillOpen, 0.2f);
 }
 
 void IBScene::SaveFileOpen()
