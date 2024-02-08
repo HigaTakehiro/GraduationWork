@@ -115,11 +115,11 @@ void LastBoss::Upda()
 	{
 		//if (i < 3) {
 		m_Shadow[i]->SetScale(Vector3(0.01f, 0.01f, 0.1f));
-		m_Shadow[i]->SetPosition({ Action->GetBarrierPos(i).x,-2.f,Action->GetBarrierPos(i).z });
+		m_Shadow[i]->SetPosition({ Action->GetBarrierPos(i).x,-2.f,Action->GetBarrierPos(i).z+3.f });
 		//} else {
 	}
 	m_Shadow[3]->SetScale(Vector3(0.05f, 0.05f, 0.1f));
-	m_Shadow[3]->SetPosition({ Pos_.x,-2.f,Pos_.z });
+	m_Shadow[3]->SetPosition({ Pos_.x,-2.f,Pos_.z+3.f });
 	//}
 	for (size_t i = 0; i < 4; i++)
 	{
