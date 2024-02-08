@@ -160,7 +160,7 @@ void LastBossAct::Attack_Hole()
 
 		if(judg_Player)
 		{
-			Player_->SubHP(2);
+			Player_->SubHP(DamageMath::ReturnDamage(atkval, Player_->GetDef()));
 			Helper::ColKnock(Player_->GetPos(), { HolePos[i].x, HolePos[i].y, HolePos[i].z + 3.f }, Player_,judg_Player, 1.f);
 		}
 	}
@@ -308,7 +308,7 @@ void LastBossAct::Attack_Flame()
 			{
 				if (!Player_->GetIsHammerRelease() && PadInput::GetIns()->PushButton(PadInput::Button_B))
 					Player_->SetIsHammerRelease(true);
-				Player_->SubHP(2);
+				Player_->SubHP(DamageMath::ReturnDamage(atkval, Player_->GetDef()));
 				Helper::ColKnock(Player_->GetPos(), { FlamePos[i].x, FlamePos[i].y,FlamePos[i].z + 3.f }, Player_, judg, 1.f);
 			}
 		}
@@ -349,7 +349,7 @@ void LastBossAct::Attack_Spell()
 			if (judg) {
 				if (!Player_->GetIsHammerRelease() &&PadInput::GetIns()->PushButton(PadInput::Button_B))
 						Player_->SetIsHammerRelease(true);
-				Player_->SubHP(3);
+				Player_->SubHP(DamageMath::ReturnDamage(atkval*2, Player_->GetDef()));
 				Helper::ColKnock(Player_->GetPos(), { 0.f,-2.f,0.f}, Player_, judg, 1.f);
 
 			}
@@ -447,7 +447,7 @@ void LastBossAct::Act_Barrier()
 			if (BarrierHp[i] > 0) {
 				if(judg&& Player_->getisHammerActive())
 				SoundManager::GetIns()->PlaySE(SoundManager::SEKey::hammerAttack, 0.2f);
-
+				//bool fallham = Player_->GetIsFall();
 				Helper::DamageManager(BarrierHp[i], 1, BarrierDamF[i], BarrierDamCool[i], 30, BarrierHp[i] > 0 && judg && Player_->getisHammerActive());
 				Helper::ColKnock(Player_->GetPos(), { BarrierPos[i].x,BarrierPos[i].y, BarrierPos[i].z + 3.f }, Player_, BarrierHp[i] > 0 && judg && !Player_->GetIsHammerRelease(), 1.f);
 				if (BarrierDamF[i])BarrierCol[i] = { 1,0,0 };

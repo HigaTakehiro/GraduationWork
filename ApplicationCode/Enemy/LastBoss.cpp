@@ -76,9 +76,10 @@ void LastBoss::Init()
 
 	HPUiInit();
 	Action = new LastBossAct();
-Action->SetHp(BossMaxHP);
 
+	Action->SetHp(BossMaxHP);
 	Action->SetGuardPoint(GuardValue);
+	Action->SetAttackPoint(AttackValue);
 	particle = ParticleManager::UniquePtrCreate(DirectXSetting::GetIns()->GetDev(), camera);
 
 }

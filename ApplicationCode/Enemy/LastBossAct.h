@@ -143,11 +143,13 @@ public:
 	int guardp;
 	bool soundf;
 	void SetGuardPoint(int gv) { guardp = gv; }
+	void SetAttackPoint(int av) { atkval = av; }
 	Vector3 GetRangeScl() { return RangeScale; }
 	Vector3 GetMeteoPos() { return MeteoPos; }
 	bool meteof;
 	BOOL damff;
 	int damcool;
+	int atkval;
 	int hp;
 	bool hammeronHole[2];
 

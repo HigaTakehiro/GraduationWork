@@ -329,6 +329,7 @@ public: //メンバ関数
 	/// <returns>接地フラグ</returns>
 	bool GetIsFall() { return isFall_; }
 
+	void SetisFall(bool f) { isFall_ = f; }
 	/// <summary>
 	/// フォールハンマー接地フラグセット
 	/// </summary>
