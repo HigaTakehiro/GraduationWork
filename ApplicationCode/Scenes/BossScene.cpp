@@ -189,6 +189,15 @@ void BossScene::Update()
 	{
 		if (MouseInput::GetIns()->TriggerClick(MouseInput::LEFT_CLICK) || PadInput::GetIns()->TriggerButton(PadInput::Button_A)) {
 			if (StageCount::GetIns()->Now() <= 18) {
+				SceneManager::SetLevel(player_->GetLevel());
+				SceneManager::SetEP(player_->GetEP());
+				SceneManager::SetHP(player_->GetHP());
+				SceneManager::SetMaxHP(player_->GetMaxHP());
+				SceneManager::SetATK(player_->GetATK());
+				SceneManager::SetDEF(player_->GetDef());
+				SceneManager::SetSPD(player_->GetSPD());
+				SceneManager::SetSkillPoint(player_->GetSkillPoint());
+				SceneManager::SetLevelUpEP(player_->GetLevelUpEP());
 				SceneManager::SceneChange(SceneManager::SceneName::IB);
 			}
 			else {
