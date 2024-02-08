@@ -79,6 +79,7 @@ private://ƒoƒŠƒA
 
 	static constexpr int32_t barrierSize = 3;
 	std::array<Vector3, barrierSize>BarrierPos;
+	std::array<Vector3, barrierSize>BarrierCol;
 	std::array<float, barrierSize>BarrierAngle;
 	std::array<float, barrierSize>BarrierAlpha={1,1,1};
 	std::array<BOOL, barrierSize>BarrierDamF;
@@ -136,6 +137,8 @@ public:
 	Vector3 GetFlameScl(int ind) { return FlameScl[ind]; }
 
 	Vector3 GetBarrierPos(int ind) { return BarrierPos[ind]; }
+
+	Vector3 GetBarrierCol(int ind) { return BarrierCol[ind]; }
 	float GetBarrierAlpha(int ind) { return BarrierAlpha[ind]; }
 	int guardp;
 	void SetGuardPoint(int gv) { guardp = gv; }
