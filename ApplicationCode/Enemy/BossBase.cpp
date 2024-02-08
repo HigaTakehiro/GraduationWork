@@ -14,7 +14,7 @@ void BossBase::RecvDamage(Vector3 pos)
 void BossBase::RecvDamageFlash()
 {
 	if (FlashF) {
-		if (++val > 60) {
+		if (++val > 40) {
 			val = 0.f;
 			FlashF = FALSE;
 		} else {
@@ -68,7 +68,7 @@ void BossBase::HPUiUpda()
 	float sx, sy;
 	//0~400‚ÌŠÔ‚Å‚Ì•âŠ®Žæ‚é
 	sx = Helper::SmoothStep_Deb(0, BossMaxHP, m_HP) * 270.f;
-	sy = 50.f;
+	sy = 40.f;
 
 	NowHP = sx;
 	if (BodyRecvDam)
@@ -93,12 +93,12 @@ void BossBase::HPUiUpda()
 	m_HpTex_Frame->SetPosition(XMFLOAT2(px - 10.f, py - 20.f));
 	m_HpTex_Frame->SetSize(XMFLOAT2(430.f, 70.f));
 
-	m_HpTex_Inner->SetPosition(XMFLOAT2(px, py));
-	m_HpTex_Inner->SetSize(XMFLOAT2(m_hpInnerSizeX, sy));
+	m_HpTex_Inner->SetPosition(XMFLOAT2(px - 5.f, py - 15.f));
+	m_HpTex_Inner->SetSize(XMFLOAT2(m_hpInnerSizeX, sy + 20.f));
 
-	m_HpTex->SetColor(XMFLOAT3(1, 0, 0));
-	m_HpTex->SetPosition(XMFLOAT2(px, py));
-	m_HpTex->SetSize(XMFLOAT2(sx, sy));
+	m_HpTex->SetColor(XMFLOAT3(0.8f, 0, 0));
+	m_HpTex->SetPosition(XMFLOAT2(px - 5.f, py - 15.f));
+	m_HpTex->SetSize(XMFLOAT2(sx, sy + 20.f));
 
 }
 

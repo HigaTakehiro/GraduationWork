@@ -123,7 +123,7 @@ void Dogom::Upda()
 	};
 
 	if (m_HP <= 0 && !isGetExp) {
-		m_player->AddEP(Exp);
+		m_player->AddEP(30);
 		isGetExp = true;
 	}
 		//“oêI‚í‚Á‚½‚çs“®
@@ -866,7 +866,7 @@ void Dogom::CoollisionFace()
 			m_player->HitHammerToEnemy(vec[i], magniVal);
 			m_Knock = TRUE;
 
-			m_player->SubHP(1);
+			m_player->SubHP(AttackValue);
 			ColF[0] = TRUE;
 		}
 	}

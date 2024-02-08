@@ -27,10 +27,12 @@ private:
     Model* m_Model_Hole[3] = {};
        Model* m_Model_Walk[4] = {};
        Model* m_Model_Spell[4] = {};
+       Model* m_Model_Frames[4] = {};
        Model* m_Model_Idle[4] = {};
        Model* m_Model_Walk_Back[4] = {};
        Model* MeteoModel[2];
        int meteoanim;
+       int frameanim;
     std::array<std::unique_ptr<Object3d>, 2>m_HoleTex;
     std::array<float, 2>m_HoleRot;
     std::array<std::unique_ptr<Object3d>, 4>m_FlameTex;

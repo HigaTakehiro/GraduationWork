@@ -352,11 +352,14 @@ void SecBossScene::Draw()
 	map_->BridgeDraw();
 	player_->Draw();
 	invincibleParticle_->Draw(DirectXSetting::GetIns()->GetCmdList());
-	if (!TogemaruAct::depositDelF) {
-		Deposit_->Draw();
-	}
-	if (!TogemaruAct::depositDelF2) {
-		Deposit_2->Draw();
+
+	if (player_->GetPos().z <= 12.f) {
+		if (!TogemaruAct::depositDelF) {
+			Deposit_->Draw();
+		}
+		if (!TogemaruAct::depositDelF2) {
+			Deposit_2->Draw();
+		}
 	}
 	boss_->Draw2();
 	Deposit_->ParticleDraw();
