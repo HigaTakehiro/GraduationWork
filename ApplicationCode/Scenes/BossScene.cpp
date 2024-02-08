@@ -174,6 +174,14 @@ void BossScene::Update()
 			schange->SetFadeNum(0);
 		}
 	}
+	if (schange->GetEnd() == true) {
+		if (StageCount::GetIns()->Now() <= 18) {
+			SceneManager::SceneChange(SceneManager::SceneName::IB);
+		}
+		else {
+			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
+		}
+	}
 	schange->Change(0);
 	skillManager_->Update();
 	activeSkillPanel01_->SetIsActive(skillManager_->GetIsActiveCheck("HyperMode"));
@@ -186,14 +194,7 @@ void BossScene::Update()
 	//シーン切り替えmmm
 	SceneChange();
 
-	if (schange->GetEnd() == true) {
-		if (StageCount::GetIns()->Now() <= 18) {
-			SceneManager::SceneChange(SceneManager::SceneName::IB);
-		}
-		else {
-			SceneManager::SceneChange(SceneManager::SceneName::Tutorial);
-		}
-	}
+
 }
 
 void BossScene::Draw()
@@ -264,33 +265,35 @@ void BossScene::Finalize()
 void BossScene::SceneChange()
 {
 	if (!player_->GetIsDead())return;
-	SceneManager::SetLevel(player_->GetLevel());
-	SceneManager::SetEP(player_->GetEP());
-	SceneManager::SetHP(player_->GetHP());
-	SceneManager::SetMaxHP(player_->GetMaxHP());
-	SceneManager::SetATK(player_->GetATK());
-	SceneManager::SetDEF(player_->GetDef());
-	SceneManager::SetSPD(player_->GetSPD());
-	SceneManager::SetSkillPoint(player_->GetSkillPoint());
-	SceneManager::SetLevelUpEP(player_->GetLevelUpEP());
-	schange->SetFStart(true);
-	schange->SetFadeNum(0);
-	FILE* fp;
-	int i;
-	fp = fopen("Engine/Resources/GameData/save.csv", "w");
-	fprintf(fp, "%d", 0);
-	fclose(fp);
-	fp = fopen("Engine/Resources/GameData/save.csv", "r");
-	fscanf(fp, "%d", &i);
-	fclose(fp);
-	if (i == 2) {
+
+
+	bool Change = player_->GetNext();
+	if (Change || player_->GetIsDead()) {
+		SceneManager::SetLevel(player_->GetLevel());
+		SceneManager::SetEP(player_->GetEP());
+		SceneManager::SetHP(player_->GetHP());
+		SceneManager::SetMaxHP(player_->GetMaxHP());
+		SceneManager::SetATK(player_->GetATK());
+		SceneManager::SetDEF(player_->GetDef());
+		SceneManager::SetSPD(player_->GetSPD());
+		SceneManager::SetSkillPoint(player_->GetSkillPoint());
+		schange->SetFStart(true);
+		schange->SetFadeNum(0);
+		FILE* fp;
+		int i;
+		fp = fopen("Engine/Resources/GameData/save.csv", "w");
+		fprintf(fp, "%d", 0);
+		fclose(fp);
+		fp = fopen("Engine/Resources/GameData/save.csv", "r");
+		fscanf(fp, "%d", &i);
+		fclose(fp);
 		fp = fopen("Engine/Resources/GameData/save.csv", "r+");
 		i = i + 1;
 		fprintf(fp, "%d", i);
 		fclose(fp);
+		SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
+		SceneManager::SceneChange(SceneManager::SceneName::IB);
 	}
-	SoundManager::GetIns()->StopBGM(SoundManager::BGMKey::firstBoss);
-	SceneManager::SceneChange(SceneManager::SceneName::IB);
 }
 
 
