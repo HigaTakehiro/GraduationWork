@@ -392,7 +392,7 @@ private: //メンバ関数
 	/// </summary>
 	void FallHammerAttack();
 
-
+	void NextFloor();
 
 private: //メンバ変数
 	//座標
@@ -584,6 +584,7 @@ private: //メンバ変数
 	bool animationflag_ = false;
 	bool sestop_ = true;
 	bool hammernocach;
+	bool notmove_ = false;
 public:
 	bool GetCatch() { return hammernocach; }
 
