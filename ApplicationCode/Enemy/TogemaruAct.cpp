@@ -49,9 +49,7 @@ void TogemaruAct::Phase1()
 	depositDelF = false;
 	depositPos2 = { 5, -2.5f, -8.f };
 	depositDelF2 = false;
-	cameraPos = {};
-	oldCameraPos = {};
-	DefaultPos = {};
+	
 
 	TogemaruDeathF = false;
 	//イージング用{カウンタ上限,Y座標(上),Y座標(下)}
