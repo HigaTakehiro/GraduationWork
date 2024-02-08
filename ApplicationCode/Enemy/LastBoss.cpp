@@ -29,7 +29,7 @@ void LastBoss::Init()
 		m_FlameTex[i] = Object3d::UniquePtrCreate(m_Model_Frames[0]);
 
 		m_Shadow[i] = Object3d::UniquePtrCreate(Shapes::CreateSquare({ 0, 0 }, { 64.0f, 64.0f }, "Area.png", { 64.0f, 64.0f }, { 0.5f, 0.5f }, { 64.0f * (float)0, 0.0f }, { 64.0f, 64.0f }));
-		m_Shadow[i]->SetRotation(Vector3(90, 0, 0));
+		
 	}
 	//m_FlameTex[i] = Object3d::UniquePtrCreate(m_Model_Frames[0]);
 
@@ -115,14 +115,15 @@ void LastBoss::Upda()
 	{
 		//if (i < 3) {
 		m_Shadow[i]->SetScale(Vector3(0.01f, 0.01f, 0.1f));
-		m_Shadow[i]->SetPosition({ Action->GetBarrierPos(i).x,-2.5f,Action->GetBarrierPos(i).z });
+		m_Shadow[i]->SetPosition({ Action->GetBarrierPos(i).x,-2.f,Action->GetBarrierPos(i).z });
 		//} else {
 	}
 	m_Shadow[3]->SetScale(Vector3(0.05f, 0.05f, 0.1f));
-	m_Shadow[3]->SetPosition({ Action->GetPos().x,-2.5f,Action->GetPos().z });
+	m_Shadow[3]->SetPosition({ Pos_.x,-2.f,Pos_.z });
 	//}
 	for (size_t i = 0; i < 4; i++)
 	{
+		m_Shadow[i]->SetRotation(Vector3(90, 0, 0));
 		m_Shadow[i]->SetColor(XMFLOAT4(0, 0, 0, 1));
 		m_Shadow[i]->Update();
 	}
