@@ -89,7 +89,7 @@ private:
 	std::unique_ptr<SkillPanel> activeSkillPanel01_;
 	std::unique_ptr<SkillPanel> activeSkillPanel02_;
 	std::unique_ptr<ParticleManager> invincibleParticle_;
-
+	unique_ptr<Object3d> dome;
 	Shake* shake_;
 	std::unique_ptr<Sprite>m_ClearTex = nullptr;
 	XMFLOAT2 m_ClearTexScl;

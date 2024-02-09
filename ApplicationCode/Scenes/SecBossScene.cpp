@@ -124,39 +124,6 @@ void SecBossScene::Update()
 	//Vector3 //enemyPos[3] = {};
 
 
-	//デバッグカメラ移動処理
-	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
-		cameraPos_.z += 1.0f;
-		targetPos_.z += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f;
-		targetPos_.z -= 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
-		cameraPos_.x += 1.0f;
-		targetPos_.x += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
-		cameraPos_.x -= 1.0f;
-		targetPos_.x -= 1.0f;
-	}
-	//HPデバッグ処理
-	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
-		player_->SubHP(1);
-	}
-	if (KeyInput::GetIns()->TriggerKey(DIK_R)) {
-		player_->SetHP(3);
-	}
-
-	/*if (shake_->GetShakeFlag() == true) {
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
-	}*/
-
-
-	//}//
-		//boss_->SetCamera(camera_.get());
 	light_->Update();
 
 	//プレイヤーのOBB設定

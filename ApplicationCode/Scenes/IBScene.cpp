@@ -174,8 +174,6 @@ void IBScene::Update()
 {
 	SaveFileOpen();
 
-	MoveSavePoint();
-
 	Animation();
 
 	//スキルパネル更新
