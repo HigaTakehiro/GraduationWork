@@ -76,6 +76,12 @@ void LastBossScene::Initialize()
 	m_Stairs->BossInitialize(Vector3(0, -0.f, 0), player_);
 
 
+	dome = Object3d::UniquePtrCreate(ModelManager::GetIns()->GetModel("skydome"));
+	dome->Initialize();
+	dome->SetRotation({ 0.0f,90.f,0.0f });
+	dome->SetPosition({ 30.f,0.f,30.f });
+
+
 	SoundManager::GetIns()->StopAllBGM();
 	SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss, TRUE, 0.4f);
 	cameraPos_.y = 12;
@@ -100,46 +106,13 @@ void LastBossScene::Initialize()
 
 void LastBossScene::Update()
 {
+	dome->Update();
+
 	if (!boss_.get()) return;
 	//SoundManager::GetIns()->PlayBGM(SoundManager::BGMKey::firstBoss,TRUE,0.4f);
 
 	Vector3 hammerPos = player_->GetHammer()->GetMatWorld().r[3];
-	//Vector3 //enemyPos[3] = {};
 
-
-	//デバッグカメラ移動処理
-	if (KeyInput::GetIns()->HoldKey(DIK_W)) {
-		cameraPos_.z += 1.0f;
-		targetPos_.z += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_S)) {
-		cameraPos_.z -= 1.0f;
-		targetPos_.z -= 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_A)) {
-		cameraPos_.x += 1.0f;
-		targetPos_.x += 1.0f;
-	}
-	if (KeyInput::GetIns()->HoldKey(DIK_D)) {
-		cameraPos_.x -= 1.0f;
-		targetPos_.x -= 1.0f;
-	}
-	//HPデバッグ処理
-	if (KeyInput::GetIns()->TriggerKey(DIK_O)) {
-		player_->SubHP(1);
-	}
-	if (KeyInput::GetIns()->TriggerKey(DIK_R)) {
-		player_->SetHP(3);
-	}
-
-	/*if (shake_->GetShakeFlag() == true) {
-		cameraPos_.y += shake_->GetShakePos();
-		targetPos_.y += shake_->GetShakePos();
-	}*/
-
-
-	//}//
-		//boss_->SetCamera(camera_.get());
 	light_->Update();
 	ParticleCreate();
 
@@ -161,11 +134,7 @@ void LastBossScene::Update()
 
 	cameraPos_.x += TogemaruAct::cameraPos.x;
 	cameraPos_.y += TogemaruAct::cameraPos.y;
-	//cameraPos_.z = 0;
 
-	//cameraPos_ = { boss_->GetPos().x,boss_->GetPos().y + 2.5f,boss_->GetPos().z+8.f };
-	//targetPos_ = boss_->GetPos();
-	//if (boss_->GetAppearFlag() == FALSE) {
 	camera_->SetEye(cameraPos_);
 	camera_->SetTarget(targetPos_);
 
@@ -221,6 +190,7 @@ void LastBossScene::Draw()
 	background_->Draw();
 	Sprite::PostDraw();
 	Object3d::PreDraw(DirectXSetting::GetIns()->GetCmdList());
+	dome->Draw();
 	map_->MapDraw();
 	if (boss_->GetClearF())
 		m_Stairs->Draw();
